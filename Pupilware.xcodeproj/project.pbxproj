@@ -23,6 +23,8 @@
 		97A89CAF1C5B5EA600D9E193 /* tabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A89CAE1C5B5EA600D9E193 /* tabViewController.swift */; };
 		97A89CB11C5B6D7900D9E193 /* popOverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A89CB01C5B6D7900D9E193 /* popOverController.swift */; };
 		97A89CB31C5B72EE00D9E193 /* expModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A89CB21C5B72EE00D9E193 /* expModalVC.swift */; };
+		97DB32CB1C75AB930024A22F /* adminVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DB32CA1C75AB930024A22F /* adminVC.swift */; };
+		97DB32CD1C75ABB30024A22F /* luxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DB32CC1C75ABB30024A22F /* luxVC.swift */; };
 		97E94F391C5CAD2900D652CB /* Ransac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F371C5CAD2900D652CB /* Ransac.cpp */; };
 		97E94F3C1C5CAD4300D652CB /* Circle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F3A1C5CAD4300D652CB /* Circle.cpp */; };
 		97E94F411C5CAD5200D652CB /* findEyeCenter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F3D1C5CAD5200D652CB /* findEyeCenter.cpp */; };
@@ -70,6 +72,8 @@
 		97A89CAE1C5B5EA600D9E193 /* tabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tabViewController.swift; sourceTree = "<group>"; };
 		97A89CB01C5B6D7900D9E193 /* popOverController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = popOverController.swift; sourceTree = "<group>"; };
 		97A89CB21C5B72EE00D9E193 /* expModalVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = expModalVC.swift; sourceTree = "<group>"; };
+		97DB32CA1C75AB930024A22F /* adminVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = adminVC.swift; sourceTree = "<group>"; };
+		97DB32CC1C75ABB30024A22F /* luxVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = luxVC.swift; sourceTree = "<group>"; };
 		97E94F361C5CAD2800D652CB /* Pupilware-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Pupilware-Bridging-Header.h"; sourceTree = "<group>"; };
 		97E94F371C5CAD2900D652CB /* Ransac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ransac.cpp; sourceTree = "<group>"; };
 		97E94F381C5CAD2900D652CB /* Ransac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ransac.h; sourceTree = "<group>"; };
@@ -171,6 +175,8 @@
 			isa = PBXGroup;
 			children = (
 				97A3214A1C59CDB300B1EB98 /* Main.storyboard */,
+				97DB32CA1C75AB930024A22F /* adminVC.swift */,
+				97DB32CC1C75ABB30024A22F /* luxVC.swift */,
 				97A321591C59CFF100B1EB98 /* DataModel.swift */,
 				97A321481C59CDB300B1EB98 /* homeVC.swift */,
 				97A3215B1C59E1BB00B1EB98 /* subjectIDModalVC.swift */,
@@ -353,6 +359,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				97E94F7A1C5CB10C00D652CB /* PWUtilities.mm in Sources */,
+				97DB32CB1C75AB930024A22F /* adminVC.swift in Sources */,
 				97A89CB31C5B72EE00D9E193 /* expModalVC.swift in Sources */,
 				97E94F3C1C5CAD4300D652CB /* Circle.cpp in Sources */,
 				97E94F771C5CB10C00D652CB /* PWParameter.m in Sources */,
@@ -371,6 +378,7 @@
 				97E94F451C5CAD5E00D652CB /* helpers.cpp in Sources */,
 				971AB1DD1C683BC900E03643 /* calModalVC.swift in Sources */,
 				97A3215C1C59E1BB00B1EB98 /* subjectIDModalVC.swift in Sources */,
+				97DB32CD1C75ABB30024A22F /* luxVC.swift in Sources */,
 				97A321491C59CDB300B1EB98 /* homeVC.swift in Sources */,
 				97A321471C59CDB300B1EB98 /* AppDelegate.swift in Sources */,
 				97E94F781C5CB10C00D652CB /* PWPupilProcessor.mm in Sources */,

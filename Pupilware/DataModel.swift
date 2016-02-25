@@ -12,9 +12,16 @@ import Foundation
     static let sharedInstance = DataModel()
     var currentSubjectID:String = ""
     var allSubjectIDs:[String] = []
-    var digitIteration = 0
-    var targetIteration = 0
     var faceInView:Bool = false
+    var currentTest:DigitTest?
+    var digitIteration = 0
+    var digitTestProgress = [
+        0: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        2: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        3: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        4: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+    ]
     
     override init(){
         super.init()
@@ -30,6 +37,15 @@ import Foundation
     func archiveSubjectIDs(){
         let data = NSKeyedArchiver.archivedDataWithRootObject(allSubjectIDs)
         NSUserDefaults.standardUserDefaults().setObject(data, forKey: "allSubjectIDs")
+    }
+    
+    
+    func completeTest(lum:Int, digit:Int, iter:Int){
+        self.digitTestProgress[lum]![digit]![iter] = true
+    }
+    
+    func isTestComplete(lum:Int, digit:Int, iter:Int)->Bool{
+        return self.digitTestProgress[lum]![digit]![iter]
     }
     
     func digitsForTest(digits: Int, iter: Int)->[Int]{
@@ -72,4 +88,32 @@ import Foundation
         
         return []
     }
+}
+
+
+class DigitTest{
+    var digits:Int, iter:Int, lux:String, exact_lux:Double, subjectID:String
+    
+    init(subjectID:String, digits:Int, iter:Int, lux:String, exact_lux:Double){
+        self.digits = digits
+        self.iter = iter
+        self.lux = lux
+        self.exact_lux = exact_lux
+        self.subjectID = subjectID
+    }
+    
+    func writeJSON(){
+        let jsonObject: [String: AnyObject] = [
+            "userid": self.subjectID,
+            "type" : "target",
+            "digits" : self.digits,
+            "iteration": self.iter,
+            "lux level" : self.lux,
+            "exact lux" : self.exact_lux
+        ]
+        
+        let valid = NSJSONSerialization.isValidJSONObject(jsonObject)
+        
+    }
+    
 }

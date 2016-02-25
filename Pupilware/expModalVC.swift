@@ -14,6 +14,8 @@ class expModalVC: UIViewController{
     @IBOutlet weak var topBar: UINavigationItem!
     @IBOutlet weak var mainLabel: UILabel!
     @IBOutlet weak var indicator: UILabel!
+    @IBOutlet weak var progressBar: UIProgressView!
+    @IBOutlet weak var loadingView: UIView!
     var delegate:sendBackDelegate?
     var testName:String = "Experiment N"
     var digits:Int = 5
@@ -25,52 +27,75 @@ class expModalVC: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.topBar.title = testName
-        self.startDigitSpanFade()
         timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: "updateFaceView", userInfo: nil, repeats: true)
+        self.progressBar.setProgress(0, animated: true)
     }
     
     @IBAction func tapDone(sender: AnyObject) {
-        //delegate?.digitSpanTestComplete(lum, digits: digits, iter: iter)
+        delegate?.digitSpanTestComplete(lum, digits: digits, iter: iter)
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func updateFaceView(){
+        if (self.progressBar.progress >= 1){
+            self.loadingView.hidden = true
+            self.startDigitSpanTest()
+            timer?.invalidate()
+            return
+        }
+        
         if(self.model.faceInView){
+            self.indicator.text = "Keep Face In View"
             self.indicator.textColor = UIColor.greenColor().colorWithAlphaComponent(0.5)
+            self.progressBar.setProgress(self.progressBar.progress + 0.1, animated: true)
         }else{
+            self.indicator.text = "Face Not In View"
             self.indicator.textColor = UIColor.redColor().colorWithAlphaComponent(0.5)
+            self.progressBar.setProgress(0, animated: true)
         }
     }
     
-    func startDigitSpanFade()
+    func startDigitSpanTest()
     {
-        var hello:[Int] = model.digitsForTest(digits, iter: iter)
+        var numbers:[Int] = model.digitsForTest(digits, iter: iter)
         UIView.animateWithDuration(1.0, delay: 1.0, options: UIViewAnimationOptions.CurveEaseOut, animations:
             {
                 self.mainLabel!.alpha = 0.0
             },
             completion:
             {(finished: Bool) -> Void in
-                self.mainLabel!.text = String(hello[self.index])
+                self.mainLabel!.text = String(numbers[self.index])
                 // Fade in
-                UIView.animateWithDuration(1.0, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations:
+                UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations:
                     {
                         self.mainLabel!.alpha = 1.0
                     },
                     completion:
                     {(finished: Bool) -> Void in
                         self.index++
-                        if self.index < hello.count{
-                            self.startDigitSpanFade()
-                        }else{
-                            //FINISH AND DISMISS VIEW
+                        if self.index < numbers.count{
+                            self.startDigitSpanTest()
+                        }else if (self.index == numbers.count){
+                            self.mainLabel!.text = "repeat back"
+                            self.mainLabel.font = self.mainLabel.font.fontWithSize(25)
+                            UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations:
+                            {
+                                    self.mainLabel!.alpha = 1.0
+                            },
+                            completion:{(finished: Bool) -> Void in
+                                NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: "testCompleted", userInfo: nil, repeats: false)
+                            })
                         }
                 })
         })
     }
     
+    func testCompleted(){
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
     override func viewDidDisappear(animated: Bool) {
-        timer = NSTimer()
+        timer?.invalidate()
     }
     
 }

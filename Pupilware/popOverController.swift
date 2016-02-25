@@ -23,7 +23,17 @@ class popOverController: UITableViewController{
         if iterTable != nil{
             delegate?.iterChosen(indexPath.row + 1)
         }else if settingTable != nil{
-            delegate?.presentIDPicker()
+            switch indexPath.row{
+            case 0:
+                delegate?.presentIDPicker()
+            case 1:
+                delegate?.presentLuxMeter()
+            case 2:
+                delegate?.presentAdminPage()
+            case 2:
+                delegate?.presentAboutPage()
+            default:break
+            }
         }
         
     }
@@ -36,4 +46,7 @@ protocol sendBackDelegate{
     func subjectIDChosen()
     func calibrationComplete(lum:Int)
     func digitSpanTestComplete(lum:Int, digits:Int, iter:Int)
+    func presentLuxMeter()
+    func presentAboutPage()
+    func presentAdminPage()
 }

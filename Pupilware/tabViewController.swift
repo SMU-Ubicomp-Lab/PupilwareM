@@ -23,7 +23,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         if self.model.currentSubjectID == ""{
-            self.presentSubjectIDPicker()
+            self.presentSubjectID()
         }
         
         settingsCollection.allowsMultipleSelection = true
@@ -55,6 +55,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
 
     @IBAction func startDigitTest(sender: AnyObject) {
         //settup test settings
+        model.currentTest = DigitTest(subjectID: model.currentSubjectID, digits: self.digitNum, iter: self.iter, lux: self.expSegment.titleForSegmentAtIndex(self.expSegment.selectedSegmentIndex)!, exact_lux: Double(UIScreen.mainScreen().brightness))
         self.presentDigitSpanModal()
     }
     
@@ -78,7 +79,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     
     func presentIDPicker() {
         self.dismissViewControllerAnimated(true, completion:nil)
-        self.presentSubjectIDPicker()
+        self.presentSubjectID()
     }
     
     func subjectIDChosen() {
@@ -90,7 +91,20 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     }
     
     func digitSpanTestComplete(lum:Int, digits:Int, iter:Int){
+        model.completeTest(lum, digit: digits, iter: iter);
+    }
+    
+    func presentLuxMeter(){
+        self.dismissViewControllerAnimated(true, completion:nil)
+        self.presentModalView("lux")
+    }
+    func presentAboutPage(){
+        self.dismissViewControllerAnimated(true, completion:nil)
         
+    }
+    func presentAdminPage(){
+        self.dismissViewControllerAnimated(true, completion:nil)
+        self.presentModalView("admin")
     }
     
     //Collection View Delegate Functions________________________________
@@ -119,22 +133,25 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         top.layer.backgroundColor = UIColor.whiteColor().CGColor
         bottom.layer.backgroundColor = UIColor.whiteColor().CGColor
         
+        if (model.isTestComplete(self.expSegment.selectedSegmentIndex, digit: self.digitNum, iter: self.iter)){
+            title.textColor = UIColor.greenColor()
+        }else{
+             title.textColor = UIColor.lightGrayColor()
+        }
+        
         if (row < 4){
             cell.contentView.layer.backgroundColor = UIColor.clearColor().CGColor
             title.text = String(indexPath.row + 5) + " Digits"
             title.font = UIFont.boldSystemFontOfSize(17)
         }else if (row < 8){
             title.text = String(row/4)
-            title.textColor = UIColor.lightGrayColor()
             cell.contentView.addSubview(bottom)
         }else if (row < 16){
             title.text = String(row/4)
-            title.textColor = UIColor.lightGrayColor()
             cell.contentView.addSubview(top)
             cell.contentView.addSubview(bottom)
         }else{
             title.text = String(row/4)
-            title.textColor = UIColor.lightGrayColor()
             cell.contentView.addSubview(top)
         }
         
@@ -167,10 +184,11 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
                 prev!.selected = false
                 for view in prev!.contentView.subviews  as [UIView]{
                     if let label = view as? UILabel {
-                        if label.text != "Setup"{
+                        if (model.isTestComplete(self.expSegment.selectedSegmentIndex, digit: self.digitNum, iter: self.iter)){
+                             label.textColor = UIColor.greenColor()
+                        }else{
                             label.textColor = UIColor.lightGrayColor()
                         }
-                    
                     }else{
                         //view.layer.backgroundColor = UIColor.whiteColor().CGColor
                     }
@@ -203,6 +221,9 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     func presentDigitSpanModal(){
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("digitTest") as! expModalVC;
         vc.testName = String(self.digitNum) + " Digit: Iter " + String(self.iter) + " Test"
+        vc.digits = self.digitNum
+        vc.iter = self.iter
+        vc.lum = self.expSegment.selectedSegmentIndex
         vc.delegate = self
         let nav = UINavigationController(rootViewController: vc)
         self.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
@@ -248,10 +269,17 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         presentViewController(vc, animated: true, completion: nil)
     }
     
-    func presentSubjectIDPicker(){
+    func presentSubjectID(){
         let vc = (self.storyboard?.instantiateViewControllerWithIdentifier("subjectID"))! as! subjectIDModalVC
         vc.delegate = self
         let nav = UINavigationController(rootViewController: vc)
+        self.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
+        self.modalPresentationStyle = .CurrentContext
+        self.presentViewController(nav, animated: true, completion: nil)
+    }
+    
+    func presentModalView(id:String){
+        let nav = UINavigationController(rootViewController: (self.storyboard?.instantiateViewControllerWithIdentifier(id))!)
         self.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
         self.modalPresentationStyle = .CurrentContext
         self.presentViewController(nav, animated: true, completion: nil)
