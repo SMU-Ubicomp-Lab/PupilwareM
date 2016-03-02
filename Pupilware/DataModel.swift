@@ -41,6 +41,7 @@ import Foundation
     
     
     func completeTest(lum:Int, digit:Int, iter:Int){
+        //
         self.digitTestProgress[lum]![digit]![iter-1] = true
     }
     
