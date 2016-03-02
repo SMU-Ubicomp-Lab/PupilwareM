@@ -94,15 +94,31 @@
                                         <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="8"/>
                                         <collectionViewLayout key="collectionViewLayout" id="ZRL-Pj-jCT" customClass="UICollectionViewFlowLayout"/>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="header" id="4ud-qK-vcr">
-                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="header" id="4ud-qK-vcr" userLabel="customCell" customClass="iterCell" customModule="Pupilware" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="84" height="74"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="84" height="74"/>
                                                     <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gBS-PZ-Cqq">
+                                                            <rect key="frame" x="0.0" y="0.0" width="84" height="74"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </view>
                                                 <color key="backgroundColor" red="0.92941176469999998" green="0.92941176469999998" blue="0.92941176469999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstItem="gBS-PZ-Cqq" firstAttribute="width" secondItem="4ud-qK-vcr" secondAttribute="width" id="TQj-Uu-DEd"/>
+                                                    <constraint firstItem="gBS-PZ-Cqq" firstAttribute="height" secondItem="4ud-qK-vcr" secondAttribute="height" id="q2X-Hh-pUR"/>
+                                                </constraints>
+                                                <size key="customSize" width="84" height="74"/>
+                                                <connections>
+                                                    <outlet property="label" destination="gBS-PZ-Cqq" id="bTs-pX-cah"/>
+                                                </connections>
                                             </collectionViewCell>
                                         </cells>
                                         <connections>
@@ -216,7 +232,7 @@
                                             <constraint firstAttribute="width" constant="288" id="oTm-rD-wO1"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="100"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9kw-ZQ-iaj">
@@ -244,7 +260,7 @@
                                                     <constraint firstAttribute="width" constant="266" id="wG3-3e-pPa"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
@@ -283,18 +299,19 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Experiment N" id="TOM-ci-NAN">
-                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="gVT-ir-ZnO">
+                        <barButtonItem key="leftBarButtonItem" title="Finish" id="gVT-ir-ZnO">
                             <connections>
-                                <action selector="tapDone:" destination="XQ7-oo-hyi" id="I3V-gf-Tk7"/>
+                                <action selector="completePressed:" destination="XQ7-oo-hyi" id="hQR-FB-kkF"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Settings" id="zZr-eA-qoo">
+                        <barButtonItem key="rightBarButtonItem" title="Cancel" id="zZr-eA-qoo">
                             <connections>
                                 <action selector="tapDone:" destination="XQ7-oo-hyi" id="A10-R9-cQx"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="completeButton" destination="gVT-ir-ZnO" id="6mH-Gn-6N3"/>
                         <outlet property="indicator" destination="aMq-sp-NJD" id="j9h-Pu-ECx"/>
                         <outlet property="loadingView" destination="9kw-ZQ-iaj" id="iqS-ek-TVV"/>
                         <outlet property="mainLabel" destination="TeF-wZ-hCT" id="Ihd-dl-ReP"/>
@@ -796,7 +813,7 @@
                                     <constraint firstAttribute="width" constant="352" id="Xy7-Jg-eRQ"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="_" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VCs-Cc-yVC">
@@ -806,7 +823,7 @@
                                     <constraint firstAttribute="height" constant="21" id="rHM-np-aDy"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="dtR-Fv-PtZ">

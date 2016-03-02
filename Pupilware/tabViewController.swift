@@ -55,7 +55,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
 
     @IBAction func startDigitTest(sender: AnyObject) {
         //settup test settings
-        model.currentTest = DigitTest(subjectID: model.currentSubjectID, digits: self.digitNum, iter: self.iter, lux: self.expSegment.titleForSegmentAtIndex(self.expSegment.selectedSegmentIndex)!, exact_lux: Double(UIScreen.mainScreen().brightness))
+        model.currentTest = DigitTest(subjectID: model.currentSubjectID, digits: self.digitNum, iter: self.iter, lux: self.expSegment.selectedSegmentIndex, exact_lux: Double(UIScreen.mainScreen().brightness))
         self.presentDigitSpanModal()
     }
     
@@ -119,44 +119,44 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let row = indexPath.row
         
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("header", forIndexPath: indexPath) as UICollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("header", forIndexPath: indexPath) as! iterCell
         cell.layer.borderColor = UIColor.blackColor().CGColor
-        //cell.layer.borderWidth = 0.5
         cell.frame.size.width = self.settingsCollection.frame.width/4 - 10
         cell.frame.size.height = self.settingsCollection.frame.height/5
-        let title = UILabel(frame: CGRectMake(0, 0, cell.bounds.size.width, 40))
-        title.textAlignment = .Center
         cell.contentView.layer.backgroundColor = UIColor.whiteColor().CGColor
         cell.contentView.layer.cornerRadius = 5.0;
         let top = UIView(frame:CGRectMake(0,0,cell.bounds.size.width, 5))
         let bottom = UIView(frame:CGRectMake(0,cell.bounds.height-5,cell.bounds.size.width, 5))
         top.layer.backgroundColor = UIColor.whiteColor().CGColor
         bottom.layer.backgroundColor = UIColor.whiteColor().CGColor
+        cell.digit = (row%4) + 5
+        cell.iter = row/4
         
-        if (model.isTestComplete(self.expSegment.selectedSegmentIndex, digit: self.digitNum, iter: self.iter)){
-            title.textColor = UIColor.greenColor()
+        if (cell.iter != 0 && model.isTestComplete(self.expSegment.selectedSegmentIndex, digit: cell.digit, iter: cell.iter)){
+            cell.label.textColor = UIColor.greenColor()
         }else{
-             title.textColor = UIColor.lightGrayColor()
+            cell.label.textColor = UIColor.lightGrayColor()
         }
         
-        if (row < 4){
+        if (cell.iter == 0){
+            cell.header = true
             cell.contentView.layer.backgroundColor = UIColor.clearColor().CGColor
-            title.text = String(indexPath.row + 5) + " Digits"
-            title.font = UIFont.boldSystemFontOfSize(17)
-        }else if (row < 8){
-            title.text = String(row/4)
-            cell.contentView.addSubview(bottom)
-        }else if (row < 16){
-            title.text = String(row/4)
-            cell.contentView.addSubview(top)
-            cell.contentView.addSubview(bottom)
+            cell.label.text = String(indexPath.row + 5) + " Digits"
+            cell.label.font = UIFont.boldSystemFontOfSize(17)
         }else{
-            title.text = String(row/4)
-            cell.contentView.addSubview(top)
+            cell.header = false
+            cell.label.text = String(cell.iter)
+            if(cell.iter == 1){
+                cell.contentView.addSubview(bottom)
+            }else if (cell.iter == 4){
+                cell.contentView.addSubview(top)
+            }else{
+                cell.contentView.addSubview(top)
+                cell.contentView.addSubview(bottom)
+            }
         }
         
         cell.frame.origin.x += 5
-        cell.contentView.addSubview(title)
         return cell
     }
     
@@ -177,42 +177,22 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        //self.settingsCollection.reloadData()
-        if collectionView.indexPathsForSelectedItems()!.count > 1{
-            for i in (0...(collectionView.indexPathsForSelectedItems()!.count - 1)){
-                let prev = collectionView.cellForItemAtIndexPath(collectionView.indexPathsForSelectedItems()![i])
-                prev!.selected = false
-                for view in prev!.contentView.subviews  as [UIView]{
-                    if let label = view as? UILabel {
-                        if (model.isTestComplete(self.expSegment.selectedSegmentIndex, digit: self.digitNum, iter: self.iter)){
-                             label.textColor = UIColor.greenColor()
-                        }else{
-                            label.textColor = UIColor.lightGrayColor()
-                        }
-                    }else{
-                        //view.layer.backgroundColor = UIColor.whiteColor().CGColor
-                    }
-                }
+        for cell in collectionView.visibleCells() as! [iterCell] {
+            if (!cell.header && model.isTestComplete(self.expSegment.selectedSegmentIndex, digit: cell.digit, iter: cell.iter)){
+                cell.label.textColor = UIColor.greenColor()
+            }else{
+                cell.label.textColor = UIColor.lightGrayColor()
             }
         }
     
-        if indexPath.row < 4{
+        let cell = collectionView.cellForItemAtIndexPath(indexPath) as! iterCell
+        if (cell.header){
             return
         }else{
-            if let cell = collectionView.cellForItemAtIndexPath(indexPath) {
-                //UPDATE MODEL
-                for view in cell.contentView.subviews  as [UIView]{
-                    if let label = view as? UILabel {
-                        label.textColor = UIColor.blueColor()
-                        self.iter = indexPath.row / 4 
-                        self.digitNum = (indexPath.row % 4) + 5
-                    }
-                }
-                cell.selected = true
-                
-                self.startButton.enabled = true
-            }
-            return
+            cell.label.textColor = UIColor.blueColor()
+            self.iter = cell.iter
+            self.digitNum = cell.digit
+            self.startButton.enabled = true
         }
     }
     

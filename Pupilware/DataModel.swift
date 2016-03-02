@@ -16,12 +16,12 @@ import Foundation
     var currentTest:DigitTest?
     var digitIteration = 0
     var digitTestProgress = [
-        0: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        0: [5:[false, false, false, true],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         2: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         3: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         4: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
-    ]
+    ] as [Int:[Int:[Bool]]]
     
     override init(){
         super.init()
@@ -41,11 +41,11 @@ import Foundation
     
     
     func completeTest(lum:Int, digit:Int, iter:Int){
-        self.digitTestProgress[lum]![digit]![iter] = true
+        self.digitTestProgress[lum]![digit]![iter-1] = true
     }
     
     func isTestComplete(lum:Int, digit:Int, iter:Int)->Bool{
-        return self.digitTestProgress[lum]![digit]![iter]
+        return self.digitTestProgress[lum]![digit]![iter-1]
     }
     
     func digitsForTest(digits: Int, iter: Int)->[Int]{
@@ -85,16 +85,15 @@ import Foundation
         default:
             print("DIGIT TEST NOT FOUND")
         }
-        
         return []
     }
 }
 
 
 class DigitTest{
-    var digits:Int, iter:Int, lux:String, exact_lux:Double, subjectID:String
+    var digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String
     
-    init(subjectID:String, digits:Int, iter:Int, lux:String, exact_lux:Double){
+    init(subjectID:String, digits:Int, iter:Int, lux:Int, exact_lux:Double){
         self.digits = digits
         self.iter = iter
         self.lux = lux
@@ -102,7 +101,7 @@ class DigitTest{
         self.subjectID = subjectID
     }
     
-    func writeJSON(){
+   /* func writeJSON(){
         let jsonObject: [String: AnyObject] = [
             "userid": self.subjectID,
             "type" : "target",
@@ -112,8 +111,8 @@ class DigitTest{
             "exact lux" : self.exact_lux
         ]
         
-        let valid = NSJSONSerialization.isValidJSONObject(jsonObject)
+        //let valid = NSJSONSerialization.isValidJSONObject(jsonObject)
         
-    }
+    }*/
     
 }

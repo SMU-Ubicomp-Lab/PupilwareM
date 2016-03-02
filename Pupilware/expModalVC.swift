@@ -16,6 +16,7 @@ class expModalVC: UIViewController{
     @IBOutlet weak var indicator: UILabel!
     @IBOutlet weak var progressBar: UIProgressView!
     @IBOutlet weak var loadingView: UIView!
+    @IBOutlet weak var completeButton: UIBarButtonItem!
     var delegate:sendBackDelegate?
     var testName:String = "Experiment N"
     var digits:Int = 5
@@ -29,6 +30,7 @@ class expModalVC: UIViewController{
         self.topBar.title = testName
         timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: "updateFaceView", userInfo: nil, repeats: true)
         self.progressBar.setProgress(0, animated: true)
+        self.completeButton.enabled = false
     }
     
     @IBAction func tapDone(sender: AnyObject) {
@@ -91,7 +93,12 @@ class expModalVC: UIViewController{
     }
     
     func testCompleted(){
+        self.completeButton.enabled = true
+    }
+    
+    @IBAction func completePressed(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
+        delegate?.digitSpanTestComplete((model.currentTest?.lux)!, digits: (model.currentTest?.digits)!, iter: (model.currentTest?.iter)!)
     }
     
     override func viewDidDisappear(animated: Bool) {

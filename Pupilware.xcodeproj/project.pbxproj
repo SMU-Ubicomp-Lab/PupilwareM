@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9711B09A1C7F670F006EE548 /* iterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9711B0991C7F670F006EE548 /* iterCell.swift */; };
 		971AB1DD1C683BC900E03643 /* calModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 971AB1DC1C683BC900E03643 /* calModalVC.swift */; };
 		973A501F1C5D7A2A00EDDB20 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 973A501B1C5D79E000EDDB20 /* opencv2.framework */; };
 		973A50281C5DB5D600EDDB20 /* OpenCVBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 973A50271C5DB5D600EDDB20 /* OpenCVBridge.mm */; };
@@ -53,6 +54,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9711B0991C7F670F006EE548 /* iterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iterCell.swift; sourceTree = "<group>"; };
 		971AB1DC1C683BC900E03643 /* calModalVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = calModalVC.swift; sourceTree = "<group>"; };
 		973A501B1C5D79E000EDDB20 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		973A50261C5DB5D600EDDB20 /* OpenCVBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenCVBridge.h; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 				97A321481C59CDB300B1EB98 /* homeVC.swift */,
 				97A3215B1C59E1BB00B1EB98 /* subjectIDModalVC.swift */,
 				97A89CAE1C5B5EA600D9E193 /* tabViewController.swift */,
+				9711B0991C7F670F006EE548 /* iterCell.swift */,
 				97A89CB21C5B72EE00D9E193 /* expModalVC.swift */,
 				971AB1DC1C683BC900E03643 /* calModalVC.swift */,
 				97A89CB01C5B6D7900D9E193 /* popOverController.swift */,
@@ -381,6 +384,7 @@
 				97DB32CD1C75ABB30024A22F /* luxVC.swift in Sources */,
 				97A321491C59CDB300B1EB98 /* homeVC.swift in Sources */,
 				97A321471C59CDB300B1EB98 /* AppDelegate.swift in Sources */,
+				9711B09A1C7F670F006EE548 /* iterCell.swift in Sources */,
 				97E94F781C5CB10C00D652CB /* PWPupilProcessor.mm in Sources */,
 				97A3215A1C59CFF100B1EB98 /* DataModel.swift in Sources */,
 				973A50281C5DB5D600EDDB20 /* OpenCVBridge.mm in Sources */,
