@@ -24,112 +24,159 @@ using namespace cv;
 // http://stackoverflow.com/questions/10254141/how-to-convert-from-cvmat-to-uiimage-in-objective-c
 
 
-void createOpenCVImageFromCoreImage(cv::Mat& outputImage, CIContext* context, CIImage* ciFrameImage, CGRect rect){
-    CGImageRef imageCG = [context createCGImage:ciFrameImage fromRect:rect];
++ (CIImage*)OpenCVTransferAndReturnFaces:(CIFaceFeature *)faceFeature usingImage:(CIImage*)ciFrameImage andContext:(CIContext*)context andProcessor:(PWPupilProcessor *)processor andLeftEye:(CGPoint)leftEyePoint andRightEye:(CGPoint)rightEyePoint andIsFinished:(BOOL) isFinished  {
     
-    // OpenCV mat
-    CGColorSpaceRef colorSpace = CGImageGetColorSpace(imageCG);
-    CGFloat cols = rect.size.width;
-    CGFloat rows = rect.size.height;
-    cv::Mat cvImageMat(rows, cols, CV_8UC4); // 8 bits per component, 4 channel
+    // BEGIN == The following code is for transformation.
+//            CGRect faceRect = CGRectApplyAffineTransform(faceFeature.bounds, transform);
+//            
+//            const CGPoint leftEyePos = CGPointApplyAffineTransform(faceFeature.leftEyePosition, transform);
+//            rightEyePoint  = CGPointApplyAffineTransform(faceFeature.rightEyePosition, transform);
+//        
+//            CGPoint tmpLeftEyePos = leftEyePos;
+//            CGPoint originalLeftEyePos = leftEyePoint;
+//            leftEyePoint = leftEyePos;
+//        //
+
+    // END == Transformation Code
+    
+    // UIGraphicsBeginImageContext(faceFeature.bounds.size); // NOT SURE WHAT THIS WILL POSSIBLY DO
+
+    
+    //get face bounds and copy over smaller face image as CIIMage
+    CGRect faceRect = faceFeature.bounds;
     
     
-    // Image ref
-    CGContextRef contextRef = CGBitmapContextCreate(cvImageMat.data,                 // Pointer to backing data
-                                                           cols,                      // Width of bitmap
-                                                           rows,                     // Height of bitmap
+    // LEFT EYE, create rectangle, image reference, and openCV Mat
+    
+    // Creating left eye rectangle.
+    CGRect leftEyeRect;
+    leftEyeRect.origin.x =  leftEyePoint.x - 40;
+    leftEyeRect.origin.y = leftEyePoint.y - 40;
+    leftEyeRect.size.width = 80;
+    leftEyeRect.size.height = 80;
+    
+    // Left eye image reference
+    
+    CGImageRef leftEyeImageCG = [context createCGImage:ciFrameImage fromRect:leftEyeRect];
+    
+    // Left Eye OpenCV mat
+    cv::Mat leftEyeGrayMat;
+    CGColorSpaceRef leftEyeColorSpace = CGImageGetColorSpace(leftEyeImageCG);
+    CGFloat leftEyeCols = leftEyeRect.size.width;
+    CGFloat leftEyeRows = leftEyeRect.size.height;
+    cv::Mat leftEyeMat(leftEyeRows, leftEyeCols, CV_8UC4); // 8 bits per component, 4 channel
+    
+
+    // Image referecne for the left eye
+    
+    CGContextRef leftEyeContextRef = CGBitmapContextCreate(leftEyeMat.data,                 // Pointer to backing data
+                                                    leftEyeCols,                      // Width of bitmap
+                                                    leftEyeRows,                     // Height of bitmap
+                                                    8,                          // Bits per component
+                                                    leftEyeMat.step[0],              // Bytes per row
+                                                    leftEyeColorSpace,                 // Colorspace
+                                                    kCGImageAlphaNoneSkipLast |
+                                                    kCGBitmapByteOrderDefault); // Bitmap info flags
+    // do the copy
+//    CGContextDrawImage(leftEyeContextRef, CGRectMake(leftEyeRect.origin.x, leftEyeRect.origin.y, leftEyeCols, leftEyeRows), leftEyeImageCG);
+    
+       CGContextDrawImage(leftEyeContextRef, CGRectMake(0, 0, leftEyeCols, leftEyeRows), leftEyeImageCG);
+
+    
+    // release intermediary buffer objects
+    CGContextRelease(leftEyeContextRef);
+    CGImageRelease(leftEyeImageCG);
+    
+    // End Image reference for the left eye
+    
+    
+    // RIGHT EYE
+    // Creating right eye rectangle.
+    CGRect rightEyeRect;
+    rightEyeRect.origin.x = rightEyePoint.x-40;
+    rightEyeRect.origin.y = rightEyePoint.y-40;
+    rightEyeRect.size.width = 80;
+    rightEyeRect.size.height = 80;
+    
+
+    // Right eye image reference
+    CGImageRef rightEyeImageCG = [context createCGImage:ciFrameImage fromRect:rightEyeRect];
+    
+    // Right Eye OpenCV mat
+    cv::Mat rightEyeGrayMat;
+    CGColorSpaceRef rightEyeColorSpace = CGImageGetColorSpace(rightEyeImageCG);
+    CGFloat rightEyeCols = rightEyeRect.size.width;
+    CGFloat rightEyeRows = rightEyeRect.size.height;
+    cv::Mat rightEyeMat(rightEyeRows, rightEyeCols, CV_8UC4); // 8 bits per component, 4 channels
+
+    // Image referecne for the right eye
+    
+    CGContextRef rightEyeContextRef = CGBitmapContextCreate(rightEyeMat.data,                 // Pointer to backing data
+                                                           rightEyeCols,                      // Width of bitmap
+                                                           rightEyeRows,                     // Height of bitmap
                                                            8,                          // Bits per component
-                                                           cvImageMat.step[0],              // Bytes per row
-                                                           colorSpace,                 // Colorspace
+                                                           rightEyeMat.step[0],              // Bytes per row
+                                                           rightEyeColorSpace,                 // Colorspace
                                                            kCGImageAlphaNoneSkipLast |
                                                            kCGBitmapByteOrderDefault); // Bitmap info flags
     // do the copy
-    CGContextDrawImage(contextRef, CGRectMake(0, 0, cols, rows), imageCG);
+    CGContextDrawImage(rightEyeContextRef, CGRectMake(0, 0, rightEyeCols, rightEyeRows), rightEyeImageCG);
+    
+//    CGContextDrawImage(rightEyeContextRef, CGRectMake(rightEyeRect.origin.x, rightEyeRect.origin.y, rightEyeCols, rightEyeRows), rightEyeImageCG);
+
+    
+    // release intermediary buffer objects
+    CGContextRelease(rightEyeContextRef);
+    CGImageRelease(rightEyeImageCG);
+    
+    // End Image reference for the right eye
+    
+     // Face image reference
+    CGImageRef faceImageCG = [context createCGImage:ciFrameImage fromRect:faceRect];
+    
+    // setup the OPenCV mat -- Face Image --  fro copying into
+    cv::Mat frame_gray;
+    CGColorSpaceRef colorSpace = CGImageGetColorSpace(faceImageCG);
+    CGFloat cols = faceRect.size.width;
+    CGFloat rows = faceRect.size.height;
+    cv::Mat cvMat(rows, cols, CV_8UC4); // 8 bits per component, 4 channels
+    
+    
+    // setup the copy buffer (to copy from the GPU)
+    CGContextRef contextRef = CGBitmapContextCreate(cvMat.data,                 // Pointer to backing data
+                                                    cols,                      // Width of bitmap
+                                                    rows,                     // Height of bitmap
+                                                    8,                          // Bits per component
+                                                    cvMat.step[0],              // Bytes per row
+                                                    colorSpace,                 // Colorspace
+                                                    kCGImageAlphaNoneSkipLast |
+                                                    kCGBitmapByteOrderDefault); // Bitmap info flags
+    // do the copy
+    
+   // CGContextMoveToPoint(contextRef, faceRect.origin.x , faceRect.origin.y);
+
+    CGContextDrawImage(contextRef, CGRectMake(0, 0, cols, rows), faceImageCG);
     
     
     // release intermediary buffer objects
     CGContextRelease(contextRef);
-    CGImageRelease(imageCG);
+    CGImageRelease(faceImageCG);
     
-    outputImage = cvImageMat.clone(); // deep copy of the image and return 
-}
+    //insert processing here===================
+//    cvtColor( leftEyeMat, leftEyeGrayMat, CV_BGR2GRAY );
+//
+//    cvtColor( rightEyeMat, rightEyeGrayMat, CV_BGR2GRAY );
 
-
-+ (CIImage*)OpenCVTransferAndReturnFaces:(CIFaceFeature *)faceFeature
-                              usingImage:(CIImage*)ciFrameImage
-                              andContext:(CIContext*)context
-                            andProcessor:(PWPupilProcessor *)processor
-                              andLeftEye:(CGPoint)leftEyePoint
-                             andRightEye:(CGPoint)rightEyePoint
-                           andIsFinished:(BOOL) isFinished  {
-  
-    //get face bounds and copy over smaller face image as CIIMage
-    CGRect faceRect = faceFeature.bounds;
-    
-    const int eyeSize = 60;
-    
-    // LEFT EYE Rect
-    CGRect leftEyeRect;
-    leftEyeRect.origin.x =  leftEyePoint.x - 2*eyeSize/5;
-    leftEyeRect.origin.y = leftEyePoint.y - 1*eyeSize/2;
-    leftEyeRect.size.width = eyeSize;
-    leftEyeRect.size.height = eyeSize;
-    
-    // RIGHT EYE rect
-    CGRect rightEyeRect;
-    rightEyeRect.origin.x = rightEyePoint.x-2*eyeSize/5;
-    rightEyeRect.origin.y = rightEyePoint.y-1*eyeSize/2;
-    rightEyeRect.size.width = eyeSize;
-    rightEyeRect.size.height = eyeSize;
-    
-    
-    // Convert over the different bounds to OpenCV image mats
-    // This process does go onto the GPU and copies the data into RAM (might be a bottelneck)
-    
-    // Left Eye OpenCV mat
-    cv::Mat leftEyeGrayMat;
-    cv::Mat leftEyeMat; // 8 bits per component, 4 channel
-    createOpenCVImageFromCoreImage(leftEyeMat, context, ciFrameImage, leftEyeRect);
-
-    // Right Eye OpenCV mat
-    cv::Mat rightEyeGrayMat;
-    cv::Mat rightEyeMat;
-    createOpenCVImageFromCoreImage(rightEyeMat, context, ciFrameImage, rightEyeRect);
-    
-    // Face in OpenCV
-    cv::Mat faceGray;
-    cv::Mat face;
-    createOpenCVImageFromCoreImage(face, context, ciFrameImage, faceRect);
-    
-    //start processing========================
-    cvtColor( leftEyeMat, leftEyeGrayMat, CV_BGR2GRAY );
-    cvtColor( rightEyeMat, rightEyeGrayMat, CV_BGR2GRAY );
-    cvtColor( face, faceGray, CV_BGR2GRAY );
+    cvtColor( cvMat, frame_gray, CV_BGR2GRAY );
     
     
     cv::Mat cvMatToShowOnScreen;
     
-    CGAffineTransform transform = CGAffineTransformMakeScale(1, -1);
-    transform = CGAffineTransformTranslate(transform,
-                                           0, -ciFrameImage.extent.size.height);
-    const CGRect cvFaceRect = CGRectApplyAffineTransform(faceRect, transform);
-    const CGRect cvleftEyeRect = CGRectApplyAffineTransform(leftEyeRect, transform);
-    const CGRect cvrightEyeRect = CGRectApplyAffineTransform(rightEyeRect, transform);
-    
-    processor->faceAndEyeFeatureExtraction(faceGray,
-                                           leftEyeGrayMat,
-                                           rightEyeGrayMat,
-                                           leftEyeMat,
-                                           rightEyeMat,
-                                           cv::Rect(cvleftEyeRect.origin.x-cvFaceRect.origin.x,cvleftEyeRect.origin.y-cvFaceRect.origin.y, cvleftEyeRect.size.width, cvleftEyeRect.size.height ),
-                                           cv::Rect(cvrightEyeRect.origin.x-cvFaceRect.origin.x,cvrightEyeRect.origin.y-cvFaceRect.origin.y, cvrightEyeRect.size.width, cvrightEyeRect.size.height),
-                                           isFinished,
-                                           cvMatToShowOnScreen);
+    processor->faceAndEyeFeatureExtraction(frame_gray, leftEyeMat, rightEyeMat, leftEyeMat, rightEyeMat, cv::Rect(leftEyeRect.origin.x, leftEyeRect.origin.y, leftEyeCols, leftEyeRows), cv::Rect(rightEyeRect.origin.x, rightEyeRect.origin.y, rightEyeCols, rightEyeRows), isFinished, cvMatToShowOnScreen);
     
  //
     //end processing==========================
 
-    CGColorSpaceRef colorSpace;
     
     // convert back
     // setup NS byte buffer using the data from the cvMat to show
@@ -157,7 +204,6 @@ void createOpenCVImageFromCoreImage(cv::Mat& outputImage, CIContext* context, CI
                                         NULL,                                           // Decode
                                         false,                                          // Should interpolate
                                         kCGRenderingIntentDefault);                     // Intent
-    
     // do the copy inside of the object instantiation for retImage
     CIImage* retImage = [[CIImage alloc]initWithCGImage:imageRef];
     
