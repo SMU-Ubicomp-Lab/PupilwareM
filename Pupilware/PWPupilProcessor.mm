@@ -134,12 +134,24 @@ namespace pw
     // Class Implementation
     ///////////////////////////////////////////////////////////////////////////////
     
-    PWPupilProcessor::PWPupilProcessor(const std::string& videoFileName,
-                                       const std::string& outputFileName)
+    PWPupilProcessor::PWPupilProcessor(const std::string& leftOutputFileName,
+                                       const std::string& rightOutputFileName)
     {
-        loadVideo(videoFileName);
         
-        outvideo.open(outputFileName, 0, kRecordFPS, kRecordFrameSize);
+        
+        std::cout << "Opening Left output file name " <<  leftOutputFileName << std::endl;
+        std::cout << "Opening Right output file name " <<  rightOutputFileName << std::endl;
+        
+        
+        // Open the output files to save the videos for left and right eye.
+        leftOutvideo.open(leftOutputFileName, 0, kRecordFPS, kRecordFrameSize);
+        rightOutvideo.open(rightOutputFileName, 0, kRecordFPS, kRecordFrameSize);
+
+        if (leftOutvideo.isOpened() and rightOutvideo.isOpened())
+            NSLog(@"Succsssfully opened files to write");
+        else
+            NSLog(@"File did not  open");
+        
         
         isShouldWriteVideo          = false;
         isDrawFPS                   = true;
@@ -160,16 +172,66 @@ namespace pw
     
     PWPupilProcessor::~PWPupilProcessor()
     {
-        if(capture.isOpened())
+        // Close all the open files
+        if(leftEyeCapture.isOpened())
         {
-            capture.release();
+            leftEyeCapture.release();
+        }
+        if(rightEyeCapture.isOpened())
+        {
+            rightEyeCapture.release();
+        }
+
+    }
+    
+    cv::VideoCapture PWPupilProcessor::getVideoDevice(const std::string& eye_type)
+    {
+        if (eye_type == "leftEye")
+        {
+            return leftEyeCapture;
+        }
+        else
+        {
+            return rightEyeCapture;
         }
     }
     
-    cv::VideoCapture PWPupilProcessor::getVideoDevice()
+    void PWPupilProcessor::setVideoDevice(const std::string& eye_type, cv::VideoCapture& capture)
     {
-        return capture;
+        if (eye_type == "leftEye")
+        {
+            leftEyeCapture = capture;
+
+        }
+        else
+        {
+            rightEyeCapture = capture;
+        }
     }
+    
+    string type2str(int type) {
+        string r;
+        
+        uchar depth = type & CV_MAT_DEPTH_MASK;
+        uchar chans = 1 + (type >> CV_CN_SHIFT);
+        
+        switch ( depth ) {
+            case CV_8U:  r = "8U"; break;
+            case CV_8S:  r = "8S"; break;
+            case CV_16U: r = "16U"; break;
+            case CV_16S: r = "16S"; break;
+            case CV_32S: r = "32S"; break;
+            case CV_32F: r = "32F"; break;
+            case CV_64F: r = "64F"; break;
+            default:     r = "User"; break;
+        }
+        
+        r += "C";
+        r += (chans+'0');
+        
+        return r;
+    }
+
     
     float PWPupilProcessor::getPupilSize() const
     {
@@ -217,7 +279,10 @@ namespace pw
         return *std::max_element(resultGraph.begin()+offset, resultGraph.end()-offset);
     }
     
-    bool PWPupilProcessor::loadVideo( const std::string& videoFileName )
+    // This opens a video file for processing. File name is passed, which is either for the left
+    // eye or the right eye.
+    
+    bool PWPupilProcessor::loadVideo( const std::string& videoFileName, cv::VideoCapture& capture )
     {
         if (videoFileName != "")
         {
@@ -226,21 +291,18 @@ namespace pw
                 capture.release();
             }
             
-            std::cout << videoFileName << std::endl;
-            
             capture = cv::VideoCapture(videoFileName);
             
             if (!capture.isOpened())
             {
-                std::cout << "Video file not found?";
+                std::cout << "[WARNING] Video file not found/open?" << std::endl;
                 return false;
             }
-            
             return true;
         }
         else
         {
-            std::cout << "Video file is NULL, it may be in video mode?";
+            std::cout << "[WARNING] Video file is NULL, it may be in video mode?" << std::endl;;
             return false;
         }
     }
@@ -248,11 +310,14 @@ namespace pw
     
     float PWPupilProcessor::calBaselineFromCurrentSignal()
     {
+        NSLog(@"Inside calBaseline from current signal");
+        
         assert(pupil_mm.size() > 0);
         
         if (pupil_mm.size() <= 0)
         {
-            std::cout << "[Warning] pupil is empty. It is not enough to calculate baseline.\n";
+            std::cout << "[Warning] pupil is empty. It is not enough to calculate baseline.\n" << std::endl;
+            NSLog(@"Returning calbasline from current signal with 0.0");
             return 0.0f;
         }
         
@@ -271,6 +336,7 @@ namespace pw
                             pupil_mm.begin()+endFrame);
         
         float medianOfbaseline = median(baselineList);
+        // NSLog(@"Returning median of basline");
         
         return medianOfbaseline;
     }
@@ -342,6 +408,7 @@ namespace pw
     
     void PWPupilProcessor::process_signal()
     {
+        // NSLog(@"Inside process signal");
         
         // Do nothing if the data point less than median filter window size.
         if (left_eye_w_sb.size() < mbWindowSize_ud)
@@ -369,12 +436,13 @@ namespace pw
         {
             if( baseline == 0 )
             {
-                std::cout << "[Warning] There is no baseline. Please calibrate.\n";
+                NSLog(@"[Warning] There is no baseline. Please calibrate.");
                 baseline = calBaselineFromCurrentSignal();
             }
         }
         else
         {
+            NSLog(@"calling baseline from current signal ");
             baseline = calBaselineFromCurrentSignal();
         }
         
@@ -458,54 +526,26 @@ namespace pw
         
     }
     
-    // This function uses the eyeROI rectangle to find the eye center
-
-    //    cv::Point findEyeCenter2(Mat faceROI, cv::Mat eyeMAT, const std::string& name )
-    //    cv::Point findEyeCenter2(Mat faceROI, cv::Mat eyeMAT, const std::string& name )
-
-    cv::Point findEyeCenter2(Mat faceROI, cv::Rect eyeROI, const std::string& name )
-    {
-        Mat eyeMAT = faceROI(eyeROI);
-        
-        Mat eq;
-        cv::equalizeHist(eyeMAT, eq);
-        
-        Mat binary;
-        cv::threshold(eq, binary, 10, 255, CV_THRESH_BINARY_INV);
-        
-        Erosion(binary, binary);
-        
-        Mat difference = binary;
-        
-        float sumx=0, sumy=0;
-        float num_pixel = 0;
-        for(int x=0; x<difference.cols; x++) {
-            for(int y=0; y<difference.rows; y++) {
-                int val = *difference.ptr<uchar>(y,x);
-                if( val >= 50) {
-                    sumx += x;
-                    sumy += y;
-                    num_pixel++;
-                }
-            }
-        }
-        
-        if(sumx < 3 && sumy < 3) return cv::Point(0,0);
-        
-        cv::Point p(sumx/num_pixel, sumy/num_pixel);
-        
-        Moments m = moments(difference, false);
-        cv::Point p1(m.m10/m.m00, m.m01/m.m00);
-
-        return p;
-    }
-    
+     
     // This is the new function that basically does exactly the same thing except it uses eyeMat as an input to find eye center.
     
     cv::Point findEyeCenterUsingMat(Mat eyeMAT, const std::string& name )
     {
+              
         Mat eq;
-        cv::equalizeHist(eyeMAT, eq);
+        
+        string ty =  type2str( eyeMAT.type() );
+        printf("Find Eyes Using Mat Matrix: %s %dx%d \n", ty.c_str(), eyeMAT.cols, eyeMAT.rows );
+        
+        Mat grayEyeMat;
+        
+        if (eyeMAT.channels() > 1)
+            cvtColor(eyeMAT, grayEyeMat, CV_BGR2GRAY);
+        
+//        ty =  type2str( eyeMAT.type() );
+//        printf("Matrix: %s %dx%d \n", ty.c_str(), eyeMAT.cols, eyeMAT.rows );
+                
+        cv::equalizeHist(grayEyeMat, eq);
         
         Mat binary;
         cv::threshold(eq, binary, 10, 255, CV_THRESH_BINARY_INV);
@@ -538,74 +578,18 @@ namespace pw
 
         return p;
     }
-    
-    
-    // Find the eye region from the face and call the find eye center function to find left and right pupils
-    
-//    void PWPupilProcessor::findEyes(cv::Mat frame_gray, cv::Rect leftEyeRect, cv::Rect rightEyeRect, cv::Rect face)
-//    void PWPupilProcessor::findEyes(cv::Mat frame_gray, cv::Mat leftEyeMat, cv::Mat rightEyeMat, cv::Rect face)
-//
-//    {
-//        cv::Mat faceROI = frame_gray(face);
-//        cv::Mat debugFace = faceROI;
-//        if (kSmoothFaceImage) {
-//            double sigma = kSmoothFaceFactor * face.width;
-//            GaussianBlur( faceROI, faceROI, cv::Size( 0, 0 ), sigma);
-//        }
-//        
-//        //-- Find eye regions and draw them
-//        int eye_region_width = face.width * (kEyePercentWidth/100.0);
-//        int eye_region_height = face.width * (kEyePercentHeight/100.0);
-//        int eye_region_top = face.height * (kEyePercentTop/100.0);
-//        
-//        // Define the left and right eye regions
-//        
-//        cv::Rect leftEyeRegion(
-//                               eye_region_height,face.width*(kEyePercentSide/100.0),
-//                               eye_region_width,eye_region_width);
-//        cv::Rect rightEyeRegion(eye_region_height,face.width - eye_region_width - face.width*(kEyePercentSide/100.0),
-//                                eye_region_width,eye_region_width);
-//        
-//        //leftEyeRegion = leftEyeRect;
-//        //-- Find Eye Centers
-//        
-////        cv::Point leftPupil = findEyeCenter2(faceROI,leftEyeRegion,"Left Eye");
-////        cv::Point rightPupil = findEyeCenter2(faceROI,rightEyeRegion,"Right Eye");
-////        
-//        
-//        cv::Point leftPupil = findEyeCenter2(faceROI,leftEyeRegion,"Left Eye");
-//        cv::Point rightPupil = findEyeCenter2(faceROI,rightEyeRegion,"Right Eye");
-//
-//        cv::Mat tmpLeftEyeMat = leftEyeMat;
-//        cv::Mat tmpRightEyeMat = rightEyeMat;
-//        
-//        cv::Point leftPupilUsingMat = findEyeCenterUsingMat(leftEyeMat,"Left Eye");
-//        cv::Point rightPupilUsingMat = findEyeCenterUsingMat(rightEyeMat,"Right Eye");
-//
-//        
-//        // Set global variables. These global variables are later used in extract feature function.
-//        g_leftPupilCenter = leftPupilUsingMat;
-//        g_rightPupilCenter = rightPupilUsingMat;
-////        g_leftEyeRect = leftEyeRegion;
-////        g_rightEyeRect = rightEyeRegion;
-//
-//        
-//        
-//    }
-//    
-    
     
     void PWPupilProcessor::searchDarkestSpotWithInRange( int range, Mat& grayImage, cv::Point& inOutPoint )
     {
         assert( range % 2 > 0 ); //Accept only odd number.
         assert( !grayImage.empty() );
         
-        cv::Point initialPoint = inOutPoint; // saved point from last time it was extracted
+        cv::Point initialPoint = inOutPoint;
         unsigned char darkestValue = *grayImage.ptr<unsigned char>(initialPoint.y, initialPoint.x);
-        int haftRange = range/2; //floor operation
+        int haftRange = range/2;
         
         int left   = max(0,initialPoint.x- haftRange);
-        int top    = max(0,initialPoint.y- haftRange);
+        int top    = max(0,initialPoint.y);
         int right  = min( initialPoint.x + haftRange, grayImage.cols-1);
         int bottom = min( initialPoint.y + range, grayImage.rows-1 );
         
@@ -633,17 +617,17 @@ namespace pw
     
     // STARBURST
     
-    bool PWPupilProcessor::applyStarbust(const Mat& eyeROI,
-                                         const cv::Point& eyeCenter,
-                                         float& outWidth,
-                                         float& outHeight,
-                                         cv::Point& outCenterPoint,
-                                         const std::string& eye_type,
-                                         Mat& outDisplayImage )
+    bool PWPupilProcessor::applyStarbust( const Mat& eyeROI, const cv::Point& eyeCenter, float& outWidth, float& outHeight, cv::Point& outCenterPoint, const std::string& eye_type, Mat& outDisplayImage )
     {
         
         Mat gxyMatOfEye;
-        cvtColor(eyeROI,gxyMatOfEye,COLOR_BGR2GRAY);
+        
+        // NSLog(@"Numbe of channels in apply starbust %d",eyeROI.channels());
+
+        if (eyeROI.channels() == 1)
+            gxyMatOfEye = eyeROI;
+        else
+            cvtColor(eyeROI,gxyMatOfEye,COLOR_BGR2GRAY);
     
         
         cv::Rect pupil_area = cv::Rect(max(eyeCenter.x-20,0),
@@ -651,6 +635,8 @@ namespace pw
                                        min( gxyMatOfEye.cols - eyeCenter.x ,40),
                                        min( gxyMatOfEye.rows - eyeCenter.y ,40));
         
+        // NSLog(@"Calling median blur");
+
         medianBlur(gxyMatOfEye, gxyMatOfEye, 3);
         
         equalizeHist(gxyMatOfEye(pupil_area),
@@ -732,11 +718,11 @@ namespace pw
                 
                 circle( gxyMatOfEye_display, cv::Point(mean_point_x, mean_point_y), 1, Scalar(0,0,255));
                 
-                int r_x = (rand()%3)-2; // random -1 to 1
-                int r_y = (rand()%3)-4;
+//                int r_x = (rand()%5)-2; // random -1 to 1
+//                int r_y = (rand()%3)-4;
                 
-                //int r_x = 0;
-                //int r_y = -4;
+                int r_x = 0;
+                int r_y = -4;
                 
                 seedPoint.x = mean_point_x+r_x;
                 seedPoint.y = mean_point_y+r_y;
@@ -775,7 +761,7 @@ namespace pw
                 {
                 
                     oldsize = r.bestModel.GetRadius()*2.0f;
-                    outWidth = my_ellipse_2.size.width; //r.bestModel.GetRadius()*2.0f;
+                    outWidth = r.bestModel.GetRadius()*2.0f;
                     outHeight = r.bestModel.GetRadius()*2.0f;
                     outCenterPoint = my_ellipse_2.center;
                 }
@@ -801,12 +787,12 @@ namespace pw
     Mat leftOutput;
     Mat rightOutput;
   
-    void PWPupilProcessor::extractFeaturesAndSaveToGlobal(Mat& leftEyeROIMat, Mat& rightEyeROIMat, cv::Point leftCenter, cv::Point rightCenter)
+    void PWPupilProcessor::extractFeatures(Mat& leftEyeROIMat, Mat& rightEyeROIMat, cv::Point leftCenter, cv::Point rightCenter)
     {
         cv::Point leftPupilCenterInFaceCoor;
         cv::Point rightPupilCenterInFaceCoor;
         
-        //! Starbust Algorithm on both eyes separately
+        //! Starbust Algorithm on both eyes
         
         float pupilSizeLeftWidthSB = 0.0f;
         float pupilSizeRightWidthSB = 0.0f;
@@ -814,7 +800,6 @@ namespace pw
         float pupilSizeRightHeightSB = 0.0f;
         cv::Point leftEyeCenterSB;
         cv::Point rightEyeCenterSB;
-        
         
         applyStarbust( leftEyeROIMat, leftCenter, pupilSizeLeftWidthSB, pupilSizeLeftHeightSB,leftEyeCenterSB, "left", leftOutput);
         applyStarbust( rightEyeROIMat, rightCenter, pupilSizeRightWidthSB, pupilSizeRightHeightSB,rightEyeCenterSB, "right", rightOutput);
@@ -827,23 +812,20 @@ namespace pw
         
         cv::Point diffSB = leftPupilCenterInFaceCoor - rightPupilCenterInFaceCoor;
         float distBetweenEyesSB = sqrt( float( (diffSB.x * diffSB.x) + (diffSB.y * diffSB.y) ) );
-        
-//        g_distanceBetweenEyesP1_wc = distanceBetweenEye;
-//        g_distanceBetweenEyesP2_wc = distanceBetweenEyeP2;
+
         g_pupilSizeleft_w_sb = pupilSizeLeftWidthSB;
         g_pupilSizeRight_w_sb = pupilSizeRightWidthSB;
         g_pupilSizeleft_h_sb = pupilSizeLeftHeightSB;
         g_pupilSizeRight_h_sb = pupilSizeRightHeightSB;
         g_distanceBetweenEyesP2_sb = distBetweenEyesSB;
         
-        pupilSize = pupilSizeLeftWidthSB; // save as the primary pupil size
-        
     }
     
-    void PWPupilProcessor::combineImages( cv::Size canvasSize, Mat face, Mat leftEye, Mat rightEye, Mat& outImage )
+    
+    void PWPupilProcessor::combindImages( cv::Size canvasSize, Mat face, Mat leftEye, Mat rightEye, Mat& out )
     {
         //assert(face.cols >= face.rows);
-        outImage = face;
+        out = face;
         if(leftEye.rows==0) return;
         if(rightEye.rows==0) return;
         
@@ -859,43 +841,26 @@ namespace pw
         // float eyeRatio = (canvasSize.width/2) / static_cast<float>(leftEye.rows);
        cv::Size EyeScaledSize(canvasSize.width/3, canvasSize.height/2);
         
-        
-
         Mat scaledLeftEye;
         cv::resize( leftEye, scaledLeftEye, EyeScaledSize);
         
         Mat scaledRightEye;
         cv::resize( rightEye, scaledRightEye, EyeScaledSize);
         
- //       leftOutput = scaledLeftEye; // Testing this out.
-        
-        
-//        scaledLeftEye.copyTo( canvas(cv::Rect(0,0,EyeScaledSize.width, EyeScaledSize.height)) );
-
-        
         scale_face.copyTo( canvas(cv::Rect(0,0,FaceScaledSize.width, FaceScaledSize.height)) );
         
-        
-//        scaledLeftEye.copyTo( canvas(cv::Rect(0,0,EyeScaledSize.width, EyeScaledSize.height)) );
-
-//        scaledLeftEye.copyTo( canvas(cv::Rect(0,canvasSize.height-EyeScaledSize.height,EyeScaledSize.width, EyeScaledSize.height)) );
-//        scaledRightEye.copyTo( canvas(cv::Rect(EyeScaledSize.width,canvasSize.height-EyeScaledSize.height,EyeScaledSize.width, EyeScaledSize.height)) );
-//        
         scaledLeftEye.copyTo( canvas(cv::Rect(EyeScaledSize.width*1.5,(canvasSize.height-EyeScaledSize.height),EyeScaledSize.width, EyeScaledSize.height)) );
 
         
         scaledRightEye.copyTo( canvas(cv::Rect(EyeScaledSize.width*1.5,0,EyeScaledSize.width, EyeScaledSize.height)) );
-        
 
-         cv::cvtColor(canvas, outImage, CV_BGRA2RGB);
+         cv::cvtColor(canvas, out, CV_BGRA2RGB);
         
         
-         outImage = canvas;
+         out = canvas;
     }
     
 #ifdef __cplusplus
-    
-    
     
     int getFPS()
     {
@@ -911,83 +876,79 @@ namespace pw
     
     bool PWPupilProcessor::closeCapture()
     {
-        if(outvideo.isOpened())
+        if(leftOutvideo.isOpened())
         {
-            outvideo.release();
+            // NSLog(@"Closing left eye file");
+            leftOutvideo.release();
         }
+        if(rightOutvideo.isOpened())
+        {
+            // NSLog(@"Closing right eye file");
+            rightOutvideo.release();
+        }
+
         return true;
     }
     
  
     // NEW FUNCTION
     
-    bool PWPupilProcessor::faceAndEyeFeatureExtraction(cv::Mat srcImage,
-                                                       cv::Mat leftEyeMat,
-                                                       cv::Mat rightEyeMat,
-                                                       cv::Mat leftEyeMatColor,
-                                                       cv::Mat rightEyeMatColor,
-                                                       cv::Rect leftEyeRect,
-                                                       cv::Rect rightEyeRect,
-                                                       BOOL isFinished,
-                                                       cv::Mat& resultImage)
+    bool PWPupilProcessor::faceAndEyeFeatureExtraction(cv::Mat srcImage, cv::Mat leftEyeMat, cv::Mat rightEyeMat, cv::Mat leftEyeMatColor, cv::Mat rightEyeMatColor, cv::Rect leftEyeRect, cv::Rect rightEyeRect, BOOL isFinished, cv::Mat& resultImage)
     {
+        
+        string ty =  type2str( leftEyeMat.type() );
+        printf("FACE AND EYE ... Matrix: %s %dx%d \n", ty.c_str(), leftEyeMat.cols, leftEyeMat.rows );
+
         
         cv::Mat frame_gray;
         cv::Rect faceROI;
         
         cv::Mat faceGrayMat;
-        faceGrayMat = srcImage.clone();
+        faceGrayMat = srcImage;
         cv::Mat faceColorMat;
-        cvtColor(srcImage, faceColorMat, CV_GRAY2BGRA); // TODO: there is no color here???
         
-        cv::rectangle(faceColorMat, leftEyeRect, cv::Scalar(0,0,255));
-        cv::rectangle(faceColorMat, rightEyeRect, cv::Scalar(0,255,0));
-        
-        // just return if we are not processing anything
-        if (isFinished) // isFinished is probably not the right variable name here...
+        if (isFinished)
         {
-            resultImage = faceColorMat;
-            return true; // just return what we got so that the display works
+            resultImage = srcImage;
+            return true;
         }
+        // NSLog(@"Inside feature and eye extraction");
         
         
+        cvtColor(srcImage, faceColorMat, CV_GRAY2BGRA);
+
+        Mat gray_clone = faceGrayMat.clone();
         
-        
-        g_leftEyeRect = leftEyeRect; // set the global bounds so that eye distance can be calculated
+        g_leftEyeRect = leftEyeRect;
         g_rightEyeRect = rightEyeRect;
+
+        
+        cv::Point leftPupilUsingMat = findEyeCenterUsingMat(leftEyeMat,"Left Eye");
+        cv::Point rightPupilUsingMat = findEyeCenterUsingMat(rightEyeMat,"Right Eye");
         
         
+        // Set global variables. These global variables are later used in extract feature function.
+        g_leftPupilCenter = leftPupilUsingMat;
+        g_rightPupilCenter = rightPupilUsingMat;
+        
+
         Mat leftEyeROIMat = leftEyeMatColor;
         Mat rightEyeROIMat = rightEyeMatColor;
         
-        Mat tmp_leftEye = leftEyeMat;
-        Mat tmp_rightEye = rightEyeMat;
+        Mat tmp_leftEyeRect;
+        Mat tmp_rightEyeRect;
         
         
-        // send in the last pupil center (or initialized value if not set yet)
-        int maxDistanceFromCenterToLook = 13;
-        searchDarkestSpotWithInRange(maxDistanceFromCenterToLook,
-                                     tmp_leftEye,
-                                     g_leftPupilCenter); // g_*PupilCenter are outputs for darkest spot from pupil
+        cvtColor(leftEyeMat, tmp_leftEyeRect, CV_BGR2GRAY);
+        cvtColor(rightEyeMat, tmp_rightEyeRect, CV_BGR2GRAY);
+
         
-        searchDarkestSpotWithInRange(maxDistanceFromCenterToLook,
-                                     tmp_rightEye,
-                                     g_rightPupilCenter);
-        
-        
-        // now use the dark spots to get the width and height of the fits
-        
-        // the following features are set:
-        //      g_pupilSizeleft_w_sb is width from ellipse fitting in starburst
-        //      g_pupilSizeRight_w_sb is width from ellipse fitting in starburst
-        //      g_pupilSizeleft_h_sb is Radius from ellipse fitting in starburst
-        //      g_pupilSizeRight_h_sb is Radius from ellipse fitting in starburst
-        //      g_distanceBetweenEyesP2_sb is global distance in eyes
-        extractFeaturesAndSaveToGlobal(leftEyeROIMat,
-                                       rightEyeROIMat,
-                                       g_leftPupilCenter,
-                                       g_rightPupilCenter);
-        
+        searchDarkestSpotWithInRange(11,tmp_leftEyeRect, g_leftPupilCenter);
+        searchDarkestSpotWithInRange(11,tmp_rightEyeRect, g_rightPupilCenter);
+        extractFeatures(leftEyeROIMat,
+                        rightEyeROIMat,
+                        g_leftPupilCenter,
+                        g_rightPupilCenter);
         
         store_signal();
         
@@ -995,7 +956,8 @@ namespace pw
         
         Mat cmb;
         
-        combineImages(cv::Size(200, 300), faceColorMat, leftOutput, rightOutput, cmb);
+        combindImages(cv::Size(200, 300), faceColorMat, leftOutput, rightOutput, cmb);
+        
         
         resultImage = cmb;
         
@@ -1006,86 +968,82 @@ namespace pw
         
         if( isShouldWriteVideo )
         {
-            //Mat outputFrameToFileMat;
+            Mat outputFrameToFileMat;
             
-            cv::resize(faceColorMat, faceColorMat, kRecordFrameSize);
+           // cvtColor(leftEyeMat, leftEyeMat, CV_GRAY2BGR); // May need to add BGRA back
 
-            outvideo << leftOutput;
+            cv::resize(leftEyeMat, leftEyeMat, kRecordFrameSize);
+            
+         //   cvtColor(rightEyeMat, rightEyeMat, CV_GRAY2BGR);
+            
+            cv::resize(rightEyeMat, rightEyeMat, kRecordFrameSize);
+            
+            // NSLog(@"Number of channels %d", rightEyeMat.channels());
+
+            leftOutvideo << leftEyeMat;
+            rightOutvideo << rightEyeMat;
+
         }
-
         return true;
-        
-        
     }
     // END NEW FUNCTION TO PROCESS EYES AND COMBINE FACE TOGETHER
+    
+    
+    // Adding eyeFeature Extraction
+    
+    bool PWPupilProcessor::eyeFeatureExtraction(cv::Mat leftEyeMat, cv::Mat rightEyeMat, BOOL isFinished)
+    {
+        
+        if (isFinished)
+        {
+           // resultImage = srcImage;
+            return true;
+        }
+        
+        NSLog(@"Calling find eye center using Mat");
 
-    // OLD FUNCTION NOT BEING USED
-    // This is the OLD function -- Currently not being used.
-//    bool PWPupilProcessor::processImage(cv::Mat srcImage, cv::Mat& resultImage)
-//    {
-//        
-//        cv::Mat frame_gray;
-//        cv::Rect faceROI;
-//        
-//        
-//        cv::Mat faceGrayMat;
-//        faceGrayMat = srcImage;
-//        cv::Mat faceColorMat;
-//        
-//        cvtColor(srcImage, faceColorMat, CV_GRAY2BGR);
-//        //cv::resize(faceColorMat, faceColorMat, kRecordFrameSize); // Have removed it
-//        
-//        
-//        
-//        Mat gray_clone = faceGrayMat.clone();
-//        
-//        // To rotate
-//        //
-//        //        int len = std::max(gray_clone.cols, gray_clone.rows);
-//        //        cv::Point2f pt(len/2., len/2.);
-//        //        cv::Mat r = cv::getRotationMatrix2D(pt, 270.0, 1.0);
-//        //
-//        //        cv::warpAffine(gray_clone, gray_clone, r, cv::Size(len, len));
-//        //
-//        // To rotate end
-//        
-//        
-//        // findEyes(gray_clone, cv::Rect(0,0,gray_clone.cols, gray_clone.rows));
-//        
-//        Mat leftEyeROIMat = faceColorMat( g_leftEyeRect );
-//        Mat rightEyeROIMat = faceColorMat( g_rightEyeRect );
-//        
-//        Mat tmp_leftEyeRect = faceGrayMat(g_leftEyeRect);
-//        Mat tmp_rightEyeRect = faceGrayMat(g_rightEyeRect);
-//        
-//        searchDarkestSpotWithInRange(11,tmp_leftEyeRect, g_leftPupilCenter);
-//        searchDarkestSpotWithInRange(11,tmp_rightEyeRect, g_rightPupilCenter);
-//        extractFeatures(leftEyeROIMat,
-//                        rightEyeROIMat,
-//                        g_leftPupilCenter,
-//                        g_rightPupilCenter);
-//        
-//        
-//        store_signal();
-//        
-//        // Create output image.
-//        
-//        Mat cmb;
-//        
-//        combindImages(cv::Size(200, 300), faceColorMat, leftOutput, rightOutput, cmb);
-//        
-//        resultImage = cmb;
-//        
-//        
-//        // PupilSize from Starburst algorithm
-//        
-//        pupilSize = g_pupilSize;
-//        return true;
-//        
-//    }
-//    
-//
+        
+        //MOVED FROM THE FINDEYE CODE
+        
+        cv::Point leftPupilUsingMat = findEyeCenterUsingMat(leftEyeMat,"Left Eye");
+        cv::Point rightPupilUsingMat = findEyeCenterUsingMat(rightEyeMat,"Right Eye");
+        
+        // Set global variables. These global variables are later used in extract feature function.
+        g_leftPupilCenter = leftPupilUsingMat;
+        g_rightPupilCenter = rightPupilUsingMat;
+        
+        Mat tmp_leftEyeRect = leftEyeMat;
+        Mat tmp_rightEyeRect = rightEyeMat;
+        
+        searchDarkestSpotWithInRange(11,tmp_leftEyeRect, g_leftPupilCenter);
+        
+        searchDarkestSpotWithInRange(11,tmp_rightEyeRect, g_rightPupilCenter);
+        
+        extractFeatures(leftEyeMat,
+                        rightEyeMat,
+                        g_leftPupilCenter,
+                        g_rightPupilCenter);
+        
+        store_signal();
+        
+        
+        // PupilSize from Starburst algorithm
+        
+        pupilSize = g_pupilSize;
+        
+        NSLog(@"Pupil size %f", pupilSize);
+        
+        return true;
+    }
+    
+
+    
+    // End eye Feature Extraction
+
+
 }
+
+
 
 
 

@@ -10,6 +10,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import "commandControl.h"
 #import "VideoDisplayViewController.h"
+#import "MyCvVideoCamera.h"
 #import "PWParameter.h"
 
 @interface CalibrateViewController : UIViewController
@@ -23,6 +24,7 @@
 @property (nonatomic) NSInteger numberOfIteration;
 
 -(void) preparePupilProcessor;
+-(CvVideoCamera *)videoCamera;
 
 
 @end

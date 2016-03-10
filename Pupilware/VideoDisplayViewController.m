@@ -152,6 +152,8 @@
         
         nextVC.isRunnningFromVideoMode = true;
         nextVC.isCalibCogMax = (self.calibTypeSegment.selectedSegmentIndex == 1);
+        NSLog(@"Inside VideoDisplayViewController segue");
+
         
     }
 

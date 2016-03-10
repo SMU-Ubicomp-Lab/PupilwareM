@@ -15,7 +15,7 @@
 #define kCogHighSize    @"s_cogHighSize"
 
 // Debugging
-const bool kPlotVectorField = true;
+const bool kPlotVectorField = false;
 
 // Size constants
 const int kEyePercentTop = 30;

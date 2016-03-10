@@ -9,9 +9,11 @@
 #import "CalibrateViewController.h"
 #import "APLGraphView.h"
 #import <opencv2/highgui/cap_ios.h>
+#import "opencv2/highgui/ios.h"
 #import "PWPupilProcessor.h"
 #import "CalibrationResultViewController.h"
 #import "PWUtilities.h"
+#import "MyCvVideoCamera.h"
 
 #import "constants.h"
 #import "VideoAnalgesic.h"
@@ -25,13 +27,20 @@
 using namespace cv;
 using namespace pw;
 
+NSString *leftOutputVideoFileName = @"";
+NSString *rightOutputVideoFileName = @"";
+
+NSString *leftCalbFileName = @"";
+NSString *rightCalbFileName = @"";
+
 static const int kFramesPerSec = 15;
 
-@interface CalibrateViewController ()
+@interface CalibrateViewController () <CvVideoCameraDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *meanPupilSize;
 @property (weak, nonatomic) IBOutlet UIButton *myStartButton;
-@property (weak, nonatomic) IBOutlet UIView *imageView;
+@property (weak, nonatomic) IBOutlet UIView *imageView; // Changed this from UIView to UIImageView
+@property (strong, nonatomic) MyCvVideoCamera *videoCamera;
 
 @property (strong, nonatomic) NSMutableArray* parameters;
 
@@ -65,113 +74,193 @@ static const int kFramesPerSec = 15;
     
 }
 
+string type2str(int type) {
+    string r;
+    
+    uchar depth = type & CV_MAT_DEPTH_MASK;
+    uchar chans = 1 + (type >> CV_CN_SHIFT);
+    
+    switch ( depth ) {
+        case CV_8U:  r = "8U"; break;
+        case CV_8S:  r = "8S"; break;
+        case CV_16U: r = "16U"; break;
+        case CV_16S: r = "16S"; break;
+        case CV_32S: r = "32S"; break;
+        case CV_32F: r = "32F"; break;
+        case CV_64F: r = "64F"; break;
+        default:     r = "User"; break;
+    }
+    
+    r += "C";
+    r += (chans+'0');
+    
+    return r;
+}
+
+
 
 - (void)loadCamera
 {
+//    if (!isStarted)
+//        return;
     
     // remove the view's background color
     self.view.backgroundColor = nil;
     
-    NSLog(@"Inside loadCamera");
+    NSLog(@"Calibrate view: Inside loadCamera");
     
     __weak typeof(self) weakSelf = self;
     
     __block NSDictionary *opts = @{CIDetectorAccuracy: CIDetectorAccuracyLow, CIDetectorEyeBlink:@YES};
     CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeFace context:self.videoManager.ciContext options:opts];
     
+    
+    // Replace the following code with the code from the old process Image of reading the video file. Also add the face and feature extraction function. This should be simpler
+    
+    Mat leftEyeImage, rightEyeImage, tmpLeftEyeImage, tmpRightEyeImage;
+    
+    // First Iteration... still capture from camera.
     [self.videoManager setProcessBlock:^(CIImage *cameraImage){
         
         
-        opts = @{CIDetectorImageOrientation:@6};
+               opts = @{CIDetectorImageOrientation:@6};
         
-        NSArray *faceFeatures = [detector featuresInImage: cameraImage options:opts];
+               NSArray *faceFeatures = [detector featuresInImage: cameraImage options:opts];
         
         
-      //  CGAffineTransform transform = CGAffineTransformMakeScale(1, -1);
-        
-      //  transform = CGAffineTransformTranslate(transform,0, -imageView.bounds.size.height);
-        for(CIFaceFeature *face in faceFeatures ){
-            
-            if(!face.leftEyeClosed && ! face.rightEyeClosed){
-                
-                cameraImage = [OpenCVBridge OpenCVTransferAndReturnFaces:face usingImage:cameraImage andContext:weakSelf.videoManager.ciContext andProcessor:(processor) andLeftEye:face.leftEyePosition andRightEye:face.rightEyePosition andIsFinished:isFinished];
-            }
-        }
-        // TESTING NEW CODE BEGIN
-        
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           self.meanPupilSize.text = [NSString stringWithFormat:@"Pupil Size: %f",
-                                                      processor->getPupilSize()];
+               if (isFinished)
+               {
+                   if (self.isCalibCogMax)
+                   {
+                       isStarted = false;
+                       dispatch_async(dispatch_get_main_queue(),^{
+                           [self processData];
                        });
-        
-        if (isFinished)
-        {
-            
-            if( self.isCalibCogMax )
-            {
-                NSLog(@"Inside calling calibcogmax");
-                isStarted = false;
-                dispatch_async(dispatch_get_main_queue(),^{
-                    [self processData];
-                });
-            }
-            else
-            {
-                NSLog(@"Inside before calling advance iteration");
+                   }
+                   else
+                   {
+                       if(![self advanceIteration])
+                       {
+                           // Finished ALL iterations
+                           NSLog(@"Calling openresultview from under advance iteration ");
 
-                if(![self advanceIteration])
-                {
-                    NSLog(@"Inside calling advance iteration");
+                           
+                           isStarted = false;
+                           dispatch_async(dispatch_get_main_queue(),^{
+                               [self openResultView];
+                           });
+                       }
+                   }
+               }
+              else
+              {
+                  if (self.isRunnningFromVideoMode)
+                  {
+                      // Replace image from camera to video
+                      if (![self getVideoFrame:(cv::Mat &)leftEyeImage rightEye:(cv::Mat &)rightEyeImage])
+                      {
+                          // No more frames left in the video
+                          isFinished = true;
+                          dispatch_async(dispatch_get_main_queue(),^{
+                                            [self processData];});
+                        
+                          return cameraImage;
+                      }
+                      else
+                      {
+                          // Process image from the video
+                         
+                           //NSLog(@"Left image channels %d", leftEyeImage.channels());
+                           //NSLog(@"Right image channels %d", rightEyeImage.channels());
 
-                    isStarted = false;
-                    
-                    dispatch_async(dispatch_get_main_queue(),^{
-                        [self openResultView];
-                    });
-                }
-            }
-            
-        }
+                          //leftEyeImage.convertTo(leftEyeImage, CV_8UC3);
+                          
+                          NSLog(@"Channels before converting %d", rightEyeImage.channels());
+                          
+                          string ty =  type2str( leftEyeImage.type() );
+                          printf("Matrix: Left Eye %s %dx%d %d %d\n", ty.c_str(), leftEyeImage.cols, leftEyeImage.rows, leftEyeImage.type(), leftEyeImage.depth() );
+                          
+                          ty =  type2str( rightEyeImage.type() );
+                          printf("Matrix: Right Eye %s %dx%d \n", ty.c_str(), rightEyeImage.cols, rightEyeImage.rows );
 
+                          Mat leftEyeX(leftEyeImage);
+                          Mat rightEyeX(rightEyeImage);
+
+                          
+                          cvtColor(leftEyeX, leftEyeX, CV_BGR2GRAY);
+                          cvtColor(rightEyeX, rightEyeX, CV_BGR2GRAY);
+                          
+                          processor->eyeFeatureExtraction(leftEyeImage, rightEyeImage, isFinished);
+                      }
+                  }
+                  else
+                  {
+                      // Processing image from the camera.
+                      NSLog(@"Processing image from camera");
+                      for(CIFaceFeature *face in faceFeatures ){
+                          if(!face.leftEyeClosed && ! face.rightEyeClosed){
+                              // NSLog(@"Calling opencv bridge");
+                              cameraImage = [OpenCVBridge OpenCVTransferAndReturnFaces:face usingImage:cameraImage andContext:weakSelf.videoManager.ciContext andProcessor:(processor) andLeftEye:face.leftEyePosition andRightEye:face.rightEyePosition andIsFinished:isFinished];
+                          }
+                      }
+                      
+                  }
         
-//        dispatch_async(dispatch_get_main_queue(),
-//                       ^{
-//                           [self.graphView addX: processor->getPupilSize()
-//                                              y: processor->getPupilSize()
-//                                              z: processor->getPupilSize() ];
-//                       });
+                   NSLog(@"REPEATING");
+                   
+                   dispatch_async(dispatch_get_main_queue(),
+                           ^{
+                               self.meanPupilSize.text = [NSString stringWithFormat:@"Pupil Size: %f",
+                                                          processor->getPupilSize()];
+                           });
+                  }
+                NSLog(@"Returning camera image");
+
+                return cameraImage;
         
-        
-        // TESTING NEW CODE END
-        return cameraImage;
-    }];
-    
-    //[self changeColorMatching];
+           }];
 }
 
 
+                                
 
+
+-(CvVideoCamera *)videoCamera
+{
+    if(!_videoCamera)
+    {
+        _videoCamera= [[MyCvVideoCamera alloc ] initWithParentView:self.imageView];
+        _videoCamera.delegate = self;
+        _videoCamera.defaultAVCaptureDevicePosition=AVCaptureDevicePositionFront;
+        _videoCamera.defaultAVCaptureSessionPreset=AVCaptureSessionPresetHigh;
+        _videoCamera.defaultAVCaptureVideoOrientation=AVCaptureVideoOrientationPortrait;
+        _videoCamera.defaultFPS = kFramesPerSec;
+        _videoCamera.grayscaleMode = NO;
+        
+        
+    }
+    return  _videoCamera;
+}
 
 #pragma mark - View Controller Delegate
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+   // NSLog(@"Calibrate view controller view did load");
+
     self.iterationCounter = 0;
     self.numberOfIteration = 4;
     
-    [self loadCamera];
-
-    
     [self preparePupilProcessor];
     
-    NSLog(@"Finished prep process");
+    //[self loadCamera];
     
     if(!self.isCalibCogMax)
     {
-        const float kCaptureBaselineTime = 20.0f;
+       // NSLog(@"Inside calibrateview: setting timer");
+
+        const float kCaptureBaselineTime = 5.0f;
         [NSTimer scheduledTimerWithTimeInterval:kCaptureBaselineTime
                                          target:self
                                        selector:@selector(finishTheIteration)
@@ -208,35 +297,30 @@ static const int kFramesPerSec = 15;
 
 -(void)viewDidAppear:(BOOL)animated
 {
-   
+
 	[super viewDidAppear:animated];
-//	[self.videoCamera start];
     
     if(![self.videoManager isRunning])
         [self.videoManager start];
-    
-    NSLog(@"Started camera for calibrate");
-
-
 }
 
 
 -(void)viewWillDisappear:(BOOL)animated
 {
+
     if([self.videoManager isRunning])
         [self.videoManager stop];
     
     [super viewWillDisappear:animated];
     
-    //    [self.videoCamera stop];
-    //
-    //    [super viewWillDisappear:animated];
 }
 
 #pragma mark - Pupilware Processor
 
 -(void)initParameters
 {
+    // NSLog(@"Inside calibrateview init parameters");
+
     NSArray *markCosts = @[@1, @3];
     NSArray *threadholds = @[@25, @35];
     
@@ -269,30 +353,22 @@ static const int kFramesPerSec = 15;
 
 -(void)preparePupilProcessor
 {
-    NSString *videoFileName = @"";
-    NSString *videoFilePath = @"";
 
-    videoFileName = [NSString stringWithFormat:@"%@%@%@",
-                     self.participant ,
-                     self.experiment,
-                     self.iteration];
+    // Get the timestamp to save the file
+    NSString * timeStampValue = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
     
-    if (self.isRunnningFromVideoMode)
-    {
-        
-        //videoFilePath  = [self getInputVideoPath:videoFileName];
-        
-        videoFilePath  = [self getInputVideoPath:[NSString stringWithFormat:@"%@.mp4",videoFileName]];
-        
-        if ([videoFilePath  isEqual: @""])
-        {
-            NSLog(@"[Warning] %@ is not existed.", videoFilePath);
-            
-            return;
-        }
-    }
+    // NSLog(@"Time stamp %@", timeStampValue);
+    
+    leftOutputVideoFileName = [NSString stringWithFormat:@"%@%@%@",
+                         timeStampValue ,
+                         @"_",
+                         @"LeftEye"];
+    rightOutputVideoFileName = [NSString stringWithFormat:@"%@%@%@",
+                          timeStampValue ,
+                          @"_",
+                          @"RightEye"];
+    
 
-    
     // Do not want to run the process until pressing start.
     isFinished = false;
     isStarted = false;
@@ -300,13 +376,13 @@ static const int kFramesPerSec = 15;
     if( !processor )
     {
         
-        NSString* outputFilePath = [self getOutputFilePath:@"calb"];
+        leftCalbFileName = [self getOutputFilePath:leftOutputVideoFileName];
+        rightCalbFileName = [self getOutputFilePath:rightOutputVideoFileName];
 
-        
-        processor = new PWPupilProcessor( [videoFilePath UTF8String], [outputFilePath UTF8String]);
-        
-        NSLog(@" Finishing newing pupilprocessor ");
+        NSLog(@"VIdeo path = %@", leftCalbFileName);
+        processor = new PWPupilProcessor([leftCalbFileName UTF8String], [rightCalbFileName UTF8String]);
         processor->isShouldWriteVideo = true;
+
         [self loadSettingToProcessor];
     }
     
@@ -334,9 +410,9 @@ static const int kFramesPerSec = 15;
                         objectAtIndex:0];
     
     NSString *outputFilePath = [docDir stringByAppendingPathComponent:
-                                [NSString stringWithFormat:@"%@.mp4", outputFileName]];
+                                [NSString stringWithFormat:@"%@_Calib.mp4", outputFileName]];
     
-    NSLog(@"Output file name %s" ,[outputFilePath UTF8String]);
+    // NSLog(@"Output file name %s" ,[outputFilePath UTF8String]);
     
     NSFileManager *fm = [NSFileManager defaultManager];
     
@@ -351,6 +427,7 @@ static const int kFramesPerSec = 15;
 
 -(void)loadSettingToProcessor
 {
+
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     processor->eyeDistance_ud       = [defaults floatForKey:kEyeDistance];
@@ -399,10 +476,13 @@ static const int kFramesPerSec = 15;
 
 -(void)processData
 {
+
     processor->process_signal();
     
     if(self.isCalibCogMax)
     {
+        NSLog(@"Calling openresultview from process Data isCalibCogMax");
+
         std::vector<float> result = processor->getResultGraph();
         [self openResultView];
     }
@@ -413,10 +493,6 @@ static const int kFramesPerSec = 15;
         
         float stdV = calStd(result);
         float madV = calMad(result);
-        
-//        float med = median(result);
-//        float pMad = (stdV+med)/med;
-    
         
         stdValues.push_back(stdV);
         
@@ -431,12 +507,14 @@ static const int kFramesPerSec = 15;
 
 - (IBAction)showResult:(id)sender
 {
+    processor->closeCapture();
+
+    NSLog(@"Calling openresultview from SHOW RESULT");
     [self openResultView];
 }
 
 -(void)openResultView
 {
-    NSLog(@"Inside open result view -- result size %ld iteration %ld", results.size(), (long) self.numberOfIteration);
     if(self.isCalibCogMax)
     {
         CalibrationResultViewController *distVC = [self.storyboard
@@ -459,6 +537,7 @@ static const int kFramesPerSec = 15;
             return;
         }
     
+        NSLog(@"Calling calibration result view controller");
         
         CalibrationResultViewController *distVC = [self.storyboard
                                              instantiateViewControllerWithIdentifier:@"cbSummaryVC"];
@@ -481,26 +560,38 @@ static const int kFramesPerSec = 15;
     }
 }
 
+// Load the calibration video that are saved during the first iteration. There are two files
+// one for each eye.
+
 -(void)loadVideo:(NSString*) videoFileName
 {
-    NSLog(@"Inside load video");
-    NSString* videoFilePath  = [self getInputVideoPath:[NSString stringWithFormat:@"%@.mp4",videoFileName]];
-    
-    
-    if ([videoFilePath  isEqual: @""])
+
+    // If either of the file is missing then quit.
+    if ([leftCalbFileName  isEqual: @""] or [rightCalbFileName isEqual:@""])
     {
-        NSLog(@"[Warning] %@ is not existed.", videoFilePath);
-        
+        NSLog(@"[Warning] %@ or %@ do not exist.", leftCalbFileName, rightCalbFileName);
         return;
     }
     
     processor->closeCapture();
     
-    if (!processor->loadVideo([videoFilePath UTF8String]))
+    NSLog(@"Need to load calibration videos");
+    
+    VideoCapture leftCapture, rightCapture;
+    
+    if (!processor->loadVideo([leftCalbFileName UTF8String], leftCapture))
     {
-        NSLog(@"Video not found.");
+        NSLog(@"[Warning] Left Video not found.%@", leftCalbFileName);
     }
     
+    if (!processor->loadVideo([rightCalbFileName UTF8String], rightCapture))
+    {
+        NSLog(@"[Warning] Right Video not found.%@", rightCalbFileName);
+    }
+    
+    processor->setVideoDevice("leftEye", leftCapture);
+    processor->setVideoDevice("rightEye", rightCapture);
+
     processor->clearData();
     
 }
@@ -513,7 +604,7 @@ static const int kFramesPerSec = 15;
     processor->markCost = (int)((PWParameter*)[self.parameters objectAtIndex:iterNumber]).markCost;
     processor->threshold_ud = (int)((PWParameter*)[self.parameters objectAtIndex:iterNumber]).threadhold;
 
-    
+    // Now that we have gone through the first iteration
     [self loadVideo: @"calb"];
     
     self.isRunnningFromVideoMode = YES;
@@ -521,7 +612,7 @@ static const int kFramesPerSec = 15;
 
 -(BOOL)advanceIteration
 {
-    NSLog(@"Inside advance iteration %ld", (long)self.iterationCounter);
+    // NSLog(@"Inside advance iteration %ld", (long)self.iterationCounter);
     if( self.iterationCounter < self.numberOfIteration )
     {
         self.iterationCounter++;
@@ -529,6 +620,10 @@ static const int kFramesPerSec = 15;
         [self prepareNextIteration: self.iterationCounter];
         
         isFinished = false;
+        
+        NSLog(@"Inside advance iteration === %ld", (long)self.iterationCounter);
+
+
         
         return YES;
     }
@@ -540,82 +635,39 @@ static const int kFramesPerSec = 15;
 
 #pragma mark - OpenCV Delegate
 
--(BOOL)getVideoFrame:(Mat&)outFrame
+#ifdef __cplusplus
+
+-(void)processImage:(Mat&)image
 {
-    Mat videoFrame;
-    processor->getVideoDevice() >> videoFrame;
+    NSLog(@"Inside processImage of calib");
     
-    if(!videoFrame.empty())
+}
+
+#endif
+
+-(BOOL)getVideoFrame:(Mat&)leftOutFrame rightEye:(Mat&) rightOutFrame
+{
+    Mat leftVideoFrame, rightVideoFrame;
+    VideoCapture tmpcapture;
+    
+    tmpcapture = processor->getVideoDevice("leftEye");
+    tmpcapture = processor->getVideoDevice("rightEye");
+    
+    processor->getVideoDevice("leftEye") >> leftVideoFrame;
+    processor->getVideoDevice("rightEye") >> rightVideoFrame;
+    
+    if(!leftVideoFrame.empty() and !rightVideoFrame.empty())
     {
-        outFrame = videoFrame;
+        leftOutFrame = leftVideoFrame;
+        rightOutFrame = rightVideoFrame;
+        NSLog(@"Returning Yes");
         return YES;
     }
-    
+    NSLog(@"Returning NO");
     return NO;
 }
 
 #ifdef __cplusplus
--(void)processImage:(Mat&)image
-{
-    
-    if( !isStarted )
-        return;
-    
-
-    NSLog(@"Inside processImage of calib");
-    if (isFinished)
-    {
-        if( self.isCalibCogMax )
-        {
-            isStarted = false;
-            dispatch_async(dispatch_get_main_queue(),^{
-                [self processData];
-            });
-        }
-        else
-        {
-            if(![self advanceIteration])
-            {
-                isStarted = false;
-                
-                dispatch_async(dispatch_get_main_queue(),^{
-                    [self openResultView];
-                });
-            }
-        }
-        
-    }
-    else
-    {
-        // Replace image from camera with video frame.
-        if (self.isRunnningFromVideoMode)
-        {
-            if(![self getVideoFrame:image])
-            {
-                isFinished = true;
-                dispatch_async(dispatch_get_main_queue(),^{
-                    [self processData];
-                });
-                
-                return;
-            }
-        }
-
-        // Process the frame
-//        if (processor->processImage(image, image))
-//        {
-//            
-//            dispatch_async(dispatch_get_main_queue(),
-//                           ^{
-//                               self.meanPupilSize.text = [NSString stringWithFormat:@"Pupil Size: %f",
-//                                                          processor->getPupilSize()];
-//                           });
-//            
-//        }
-
-    }
-}
-
 #endif
 
 -(void)createLoadingView
@@ -630,9 +682,9 @@ static const int kFramesPerSec = 15;
 // Timer event!
 -(void)finishTheIteration
 {
-    
     //[self createLoadingView];
     isFinished = true;
+
     [self processData];
 }
 
@@ -640,7 +692,6 @@ static const int kFramesPerSec = 15;
 
 - (IBAction)startExperiment:(UIButton *)sender
 {
-    NSLog(@"Inside start Experiment with iteration %ld", (long)self.iterationCounter);
     if (isStarted)
     {
         [self finishTheIteration];
@@ -658,23 +709,8 @@ static const int kFramesPerSec = 15;
         [UIView animateWithDuration:2.0 animations:^{
             self.myStartButton.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:0.5];
         }];
+        [self loadCamera];
     }
 }
-
-
-
-// NEW FUNCTION
-
-bool faceAndEyeFeatureExtraction(cv::Mat srcImage, cv::Mat leftEyeMat, cv::Mat rightEyeMat, cv::Mat leftEyeMatColor, cv::Mat rightEyeMatColor, cv::Rect leftEyeRect, cv::Rect rightEyeRect, BOOL isFinished, cv::Mat& resultImage)
-{
-    
-   NSLog(@"inside the face and feature extraction module");
-    return true;
-    
-    
-}
-// END NEW FUNCTION TO PROCESS EYES AND COMBINE FACE TOGETHER
-
-
 
 @end

@@ -25,8 +25,8 @@ namespace pw
     {
     public:
         
-        PWPupilProcessor(const std::string& videoFileName,
-                         const std::string& outputFileName);
+        PWPupilProcessor(const std::string& leftOutputFileName,
+                         const std::string& rightOutputFileName);
         
         
         ~PWPupilProcessor();
@@ -45,7 +45,8 @@ namespace pw
         float   cogHigh;
         
 
-        cv::VideoCapture    getVideoDevice();
+        cv::VideoCapture    getVideoDevice(const std::string& eye_type);
+        void                setVideoDevice(const std::string& eye_type, cv::VideoCapture& capture);
         float               getPupilSize() const;
         size_t              getTotalFrames() const;
         float               getLeftEyeW(int idx) const;
@@ -61,7 +62,7 @@ namespace pw
         bool                isShouldWriteVideo;
         bool                isGetBaselineFromVideo;
     
-        bool loadVideo      ( const std::string& videoFileName );
+        bool loadVideo      ( const std::string& videoFileName, cv::VideoCapture& capture );
         bool closeCapture   ();
         void clearData      ();
         
@@ -71,6 +72,9 @@ namespace pw
         
         bool faceAndEyeFeatureExtraction(cv::Mat srcImage, cv::Mat leftEyeMat, cv::Mat rightEyeMat, cv::Mat leftEyeMatColor, cv::Mat rightEyeMatColor, cv::Rect leftEyeRect, cv::Rect rightEyeRect, BOOL isFinished, cv::Mat& resultImage);
         
+        
+        bool eyeFeatureExtraction( cv::Mat leftEyeMat, cv::Mat rightEyeMat,  BOOL isFinished);
+
 //        bool faceAndEyeFeatureExtraction(cv::Mat srcImage, CGRect leftEyeRect, CGRect rightEyeRect, cv::Mat& resultImage);
 
        
@@ -90,7 +94,14 @@ namespace pw
     private:
         
         cv::VideoCapture    capture;
+        cv::VideoCapture    *capturePtr;
+        cv::VideoCapture    leftEyeCapture;
+        cv::VideoCapture    rightEyeCapture;
+
         cv::VideoWriter     outvideo;
+        cv::VideoWriter     leftOutvideo;
+        cv::VideoWriter     rightOutvideo;
+
         
         float               pupilSize;
         
@@ -129,12 +140,12 @@ namespace pw
                                          const std::string& eye_type,
                                          cv::Mat& outDisplayImage );
         
-        void extractFeaturesAndSaveToGlobal(cv::Mat& leftEyeROIMat,
+        void extractFeatures            (cv::Mat& leftEyeROIMat,
                                          cv::Mat& rightEyeROIMat,
                                          cv::Point leftCenter,
                                          cv::Point rightCenter);
         
-        void combineImages              (cv::Size canvasSize,
+        void combindImages              (cv::Size canvasSize,
                                          cv::Mat face,
                                          cv::Mat leftEye,
                                          cv::Mat rightEye,

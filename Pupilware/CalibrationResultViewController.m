@@ -21,6 +21,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    NSLog(@"Inside calibration result view: viewDidLoad");
 
     NSNumber *min=[self.stdValues valueForKeyPath:@"@min.self"];
     self.minIdx = [self.stdValues indexOfObject:min];
@@ -57,6 +59,7 @@
     }
     else
     {
+        NSLog(@"Inside else of isCalibMax");
         
         [self setupGraph:self.myGraph isSelected:(0 == self.minIdx)];
         [self setupGraph:self.myGraph2 isSelected:(1 == self.minIdx)];

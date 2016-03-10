@@ -19,7 +19,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     // Do any additional setup after loading the view.
     _expTypeList = @[@"Baseline", @"Game", @"Digit5", @"Digit6", @"Digit7", @"Digit8", @"Digit9"];
     _iterationTypeList = @[@"Iter1", @"Iter2", @"Iter3", @"Iter4"];
@@ -138,14 +137,16 @@
      else
          nextVC.baseline = false;
      
+     if ([nextVC.experiment isEqualToString:@"Game"])
+         nextVC.game = true;
+     else
+         nextVC.game = false;
+     NSLog(@"Value of baseline %hhd%hhd", nextVC.baseline, nextVC.game);
      NSLog(@"Experiment Name   %s", [nextVC.experiment UTF8String]);
      NSLog(@"Participant Name   %s", [nextVC.participant UTF8String]);
 
 
  }
-}
-- (IBAction)dismissController:(UIButton *)sender {
-    [self dismissModalViewControllerAnimated:YES];
 }
 
 
