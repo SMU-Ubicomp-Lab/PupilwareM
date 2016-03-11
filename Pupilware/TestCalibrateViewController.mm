@@ -256,10 +256,10 @@ NSString *timeStampValue;
         
         // NSLog(@"Calling calibration result view controller");
         
-        CalibrationResultViewController *distVC = [self.storyboard
-                                                   instantiateViewControllerWithIdentifier:@"cbSummaryVC"];
+        /*CalibrationResultViewController *distVC = [self.storyboard
+                                                   instantiateViewControllerWithIdentifier:@"cbSummaryVC"];*/
         
-        if(distVC != nil)
+       /* if(distVC != nil)
         {
             distVC.dataPoints = vector2NSArray(results[0]);
             distVC.dataPoints2 = vector2NSArray(results[1]);
@@ -273,7 +273,7 @@ NSString *timeStampValue;
             distVC.parameters = self.parameters;
             
             [self presentViewController:distVC animated:YES completion:nil];
-        }
+        }*/
     }
 }
 
