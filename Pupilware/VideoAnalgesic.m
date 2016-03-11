@@ -30,10 +30,12 @@ static CGColorSpaceRef sDeviceRgbColorSpace = NULL;
 
 +(VideoAnalgesic*)captureManager{
     
-    NSLog(@"Inside capture Manager");
+    // NSLog(@"Inside capture Manager");
     @synchronized(self)
 	{
+        // NSLog(@"Inside syncrhonied self");
         if (video == nil) {
+            // NSLog(@"is video == nil ");
             video = [[VideoAnalgesic alloc]init];
             
             video->captureSessionQueue = dispatch_queue_create("capture_session_queue", NULL);
@@ -48,14 +50,12 @@ static CGColorSpaceRef sDeviceRgbColorSpace = NULL;
             
             
             video.eaglContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-            CGRect bounds = video.window.bounds;
-            video.videoPreviewView = [[GLKView alloc] initWithFrame:bounds context:video.eaglContext];
+            video.videoPreviewView = [[GLKView alloc] initWithFrame:video.window.bounds context:video.eaglContext];
             video.videoPreviewView.enableSetNeedsDisplay = NO;
             
             // because the native video image from the back camera is in UIDeviceOrientationLandscapeLeft (i.e. the home button is on the right), we need to apply a clockwise 90 degree transform so that we can draw the video preview as if we were in a landscape-oriented view; if you're using the front camera and you want to have a mirrored preview (so that the user is seeing themselves in the mirror), you need to apply an additional horizontal flip (by concatenating CGAffineTransformMakeScale(-1.0, 1.0) to the rotation transform)
             video.videoPreviewView.transform = CGAffineTransformMakeRotation(M_PI_2);
-            //CGRect bounds = video.window.bounds;
-            video.videoPreviewView.frame = bounds;
+            video.videoPreviewView.frame = video.window.bounds;
             
             // we make our video preview view a subview of the window, and send it to the back; this makes FHViewController's view (and its UI elements) on top of the video preview, and also makes video preview unaffected by device rotation
             [video.window addSubview:video.videoPreviewView];
@@ -76,6 +76,7 @@ static CGColorSpaceRef sDeviceRgbColorSpace = NULL;
         }
     }
     
+    // NSLog(@"Returnign video");
     return video;
 }
 
@@ -116,14 +117,8 @@ static CGColorSpaceRef sDeviceRgbColorSpace = NULL;
         [self _start];
         self->videoIsRunning = YES;
     }else{
-        NSLog(@"Could not start Analgesic video manager");
+        // NSLog(@"Could not start Analgesic video manager");
         self->videoIsRunning = NO;
-    }
-    
-    //[self.view.subviews containsObject:pageShadowView]
-    if (![video.window.subviews containsObject:video.videoPreviewView]){
-        [video.window addSubview:video.videoPreviewView];
-        [video.window sendSubviewToBack:video.videoPreviewView];
     }
     
 }
@@ -144,8 +139,6 @@ static CGColorSpaceRef sDeviceRgbColorSpace = NULL;
     _videoDevice = nil;
     self->videoIsRunning = NO;
     
-    //code modification for swift
-    [video.videoPreviewView removeFromSuperview];
 }
 
 -(BOOL)isRunning{

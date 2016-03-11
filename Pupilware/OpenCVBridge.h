@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreImage/CoreImage.h>
-#import "PWPupilProcessor.h"
+#import "PWPupilProcessor.hpp"
 #import "PWViewController.h"
 
 using namespace pw;

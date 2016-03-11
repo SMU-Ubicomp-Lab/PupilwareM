@@ -1,19 +1,20 @@
 //
-//  PWViewController.h
-//  Pupilware
+//  TestCalibrateViewController.h
+//  CogSense
 //
-//  Created by Mark Wang on 4/1/14.
-//  Copyright (c) 2014 SMU. All rights reserved.
+//  Created by Sohail Rafiqi on 3/10/16.
+//  Copyright © 2016 SMU. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import "commandControl.h"
-#import "VideoDisplayViewController.h"
 #import "MyCvVideoCamera.h"
 #import "PWParameter.h"
 
-@interface CalibrateViewController : UIViewController
+
+@interface TestCalibrateViewController : UIViewController
+
 
 @property (weak, nonatomic) NSString *participant;
 @property (weak, nonatomic) NSString *experiment;
@@ -22,9 +23,6 @@
 @property BOOL baseline;
 @property BOOL isCalibCogMax;
 @property (nonatomic) NSInteger numberOfIteration;
-
--(void) preparePupilProcessor;
--(CvVideoCamera *)videoCamera;
 
 
 @end

@@ -11,7 +11,7 @@
 #import "AVFoundation/AVFoundation.h"
 #import <opencv2/opencv.hpp>
 #import <opencv2/highgui/cap_ios.h>
-#import "PWPupilProcessor.h"
+#import "PWPupilProcessor.hpp"
 
 
 using namespace cv;
@@ -229,5 +229,47 @@ using namespace cv;
 +(void)testContext:(CIContext*)context{
     
 }
+
+//+ (CIImage*)OpenCVReturnEyes:(CIFaceFeature *)faceFeature usingImage:(CIImage*)ciFrameImage andContext:(CIContext*)context andProcessor:(PWPupilProcessor *)processor andLeftEye:(CGPoint)leftEyePoint andRightEye:(CGPoint)rightEyePoint andIsFinished:(BOOL) isFinished  {
+//    
+//    
+//    // convert back
+//    // setup NS byte buffer using the data from the cvMat to show
+//    NSData *data = [NSData dataWithBytes:cvMatToShowOnScreen.data length:cvMatToShowOnScreen.elemSize() * cvMatToShowOnScreen.total()];
+//    
+//    
+//    if (cvMatToShowOnScreen.elemSize() == 1) {
+//        colorSpace = CGColorSpaceCreateDeviceGray();
+//    } else {
+//        colorSpace = CGColorSpaceCreateDeviceRGB();
+//    }
+//    
+//    // setup buffering object
+//    CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef)data);
+//    
+//    // setup the copy to go from CPU to GPU
+//    CGImageRef imageRef = CGImageCreate(cvMatToShowOnScreen.cols,                                     // Width
+//                                        cvMatToShowOnScreen.rows,                                     // Height
+//                                        8,                                              // Bits per component
+//                                        8 * cvMatToShowOnScreen.elemSize(),                           // Bits per pixel
+//                                        cvMatToShowOnScreen.step[0],                                  // Bytes per row
+//                                        colorSpace,                                     // Colorspace
+//                                        kCGImageAlphaNone | kCGBitmapByteOrderDefault,  // Bitmap info flags
+//                                        provider,                                       // CGDataProviderRef
+//                                        NULL,                                           // Decode
+//                                        false,                                          // Should interpolate
+//                                        kCGRenderingIntentDefault);                     // Intent
+//    // do the copy inside of the object instantiation for retImage
+//    CIImage* retImage = [[CIImage alloc]initWithCGImage:imageRef];
+//    
+//    
+//    // clean up
+//    CGImageRelease(imageRef);
+//    CGDataProviderRelease(provider);
+//    CGColorSpaceRelease(colorSpace);
+//    
+//    return retImage;
+//    
+//}
 
 @end

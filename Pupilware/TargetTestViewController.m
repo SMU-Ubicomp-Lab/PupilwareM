@@ -40,7 +40,7 @@ NSInteger iteration = 0;
     // Dispose of any resources that can be recreated.
 }
 - (IBAction)startTargetTest:(UIButton *)sender {
-    NSLog(@"Inside start Target Test");
+   // NSLog(@"Inside start Target Test");
     self.outOfSequenceButton.hidden = false;
     self.startTargetTest.hidden = true;
     iteration++;
@@ -54,7 +54,7 @@ NSInteger iteration = 0;
     
     NSString *audioFile;
     audioFile = [NSString stringWithFormat:@"%@%@%@", @"Digit5", @"_", @"Iter1"];
-    NSLog(@"File aaaa name %s", [audioFile UTF8String]);
+    // NSLog(@"File aaaa name %s", [audioFile UTF8String]);
     
     NSString *soundFile=[[NSBundle mainBundle] pathForResource:audioFile ofType:@"mp3"];
     
@@ -80,7 +80,7 @@ NSInteger iteration = 0;
 - (IBAction)endTargetTestIteration:(UIButton *)sender {
     if (iteration == 4)
     {
-        NSLog(@"Exit now");
+        // NSLog(@"Exit now");
     
         self.startTargetTest.hidden = true;
         self.outOfSequenceButton.hidden = true;

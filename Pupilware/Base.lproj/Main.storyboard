@@ -684,7 +684,7 @@
             </objects>
             <point key="canvasLocation" x="2631" y="1389"/>
         </scene>
-        <!--Experiment N-->
+        <!--Calibration-->
         <scene sceneID="0Lw-q4-v8J">
             <objects>
                 <viewController storyboardIdentifier="calibrate" id="U1s-wl-Ivp" customClass="calModalVC" customModule="Pupilware" customModuleProvider="target" sceneMemberID="viewController">
@@ -710,7 +710,7 @@
                             <constraint firstItem="pvp-P7-8Nh" firstAttribute="trailing" secondItem="pcn-bt-TVQ" secondAttribute="trailingMargin" id="sSO-ah-Z3e"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Experiment N" id="ooc-Qp-fOk">
+                    <navigationItem key="navigationItem" title="Calibration" id="ooc-Qp-fOk">
                         <barButtonItem key="leftBarButtonItem" systemItem="done" id="CjA-6Y-OfI">
                             <connections>
                                 <action selector="tapDone:" destination="U1s-wl-Ivp" id="qyE-gm-YeL"/>
@@ -748,15 +748,15 @@
             </objects>
             <point key="canvasLocation" x="3295" y="15"/>
         </scene>
-        <!--View Controller-->
+        <!--Test Calibrate View Controller-->
         <scene sceneID="aQL-q8-jrc">
             <objects>
-                <viewController id="bq5-gb-7lX" customClass="PWViewController" sceneMemberID="viewController">
+                <viewController id="bq5-gb-7lX" customClass="TestCalibrateViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9Qm-sj-btd"/>
                         <viewControllerLayoutGuide type="bottom" id="iDl-6j-iTV"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="RJr-Ez-byw">
+                    <view key="view" contentMode="scaleToFill" id="RJr-Ez-byw" customClass="Calibration">
                         <rect key="frame" x="0.0" y="0.0" width="560" height="520"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>

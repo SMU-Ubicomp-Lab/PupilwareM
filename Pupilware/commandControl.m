@@ -130,7 +130,7 @@
      nextVC.iteration = [self.iterationTypeList objectAtIndex: iterID];
      nextVC.isRunnningFromVideoMode = false;
      
-     NSLog(@"Participant Id in segue %s", [nextVC.participant UTF8String]);
+     // NSLog(@"Participant Id in segue %s", [nextVC.participant UTF8String]);
 
      if ([nextVC.experiment isEqualToString:@"Baseline"])
          nextVC.baseline = true;
@@ -141,9 +141,9 @@
          nextVC.game = true;
      else
          nextVC.game = false;
-     NSLog(@"Value of baseline %hhd%hhd", nextVC.baseline, nextVC.game);
-     NSLog(@"Experiment Name   %s", [nextVC.experiment UTF8String]);
-     NSLog(@"Participant Name   %s", [nextVC.participant UTF8String]);
+//     NSLog(@"Value of baseline %hhd%hhd", nextVC.baseline, nextVC.game);
+//     NSLog(@"Experiment Name   %s", [nextVC.experiment UTF8String]);
+//     NSLog(@"Participant Name   %s", [nextVC.participant UTF8String]);
 
 
  }

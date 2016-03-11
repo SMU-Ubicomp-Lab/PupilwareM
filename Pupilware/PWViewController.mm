@@ -9,38 +9,41 @@
 #import "PWViewController.h"
 #import "APLGraphView.h"
 #import <opencv2/highgui/cap_ios.h>
-#import "PWPupilProcessor.h"
+#import "PWPupilProcessor.hpp"
 #import "DisplayDataViewController.h"
 #import "PWUtilities.h"
-#import "Pupilware-Swift.h"
+#import "MyCvVideoCamera.h"
 
 #import "constants.h"
 #import "VideoAnalgesic.h"
 #import "OpenCVBridge.h"
 
 @class commandControl;
-@class VideoDisplayViewController;
-@class DataModel;
+// @class VideoDisplayViewController;
 
 using namespace cv;
 using namespace pw;
 
-//static const int kFramesPerSec = 15;
+static const int kFramesPerSec = 15;
 
 
 @interface PWViewController () <CvVideoCameraDelegate>
 
 @property (strong,nonatomic) VideoAnalgesic *videoManager;
 @property (strong,nonatomic) CIVector *center;
-@property (strong,nonatomic) DataModel *model;
 
-@property (weak, nonatomic) IBOutlet UILabel *meanPupilSize;
-@property (weak, nonatomic) IBOutlet UIButton *myStartButton;
-@property (weak, nonatomic) IBOutlet UILabel *experimentTitle;
+    @property (weak, nonatomic) IBOutlet UILabel *meanPupilSize;
+    @property (weak, nonatomic) IBOutlet UIButton *myStartButton;
+    @property (weak, nonatomic) IBOutlet UILabel *experimentTitle;
  //   @property (weak, nonatomic) IBOutlet UIView *imageView;
-@property (weak, nonatomic) IBOutlet APLGraphView *graphView;
 
-- (IBAction)startExperiment:(UIButton *)sender;
+    @property (weak, nonatomic) IBOutlet APLGraphView *graphView;
+    @property (weak, nonatomic) IBOutlet UIWebView *gameView;
+
+    @property(strong, nonatomic) MyCvVideoCamera *videoCamera;
+
+
+    - (IBAction)startExperiment:(UIButton *)sender;
 
 
 @end
@@ -50,14 +53,17 @@ using namespace pw;
     PWPupilProcessor *processor;
     AVAudioPlayer *audioPlayer;
     bool isFinished;
-    UIView *imageView;
+    //UIView *imageView;
     NSString *participantID;
+    NSString * timeStampValue;
+
 }
 
 float radius;
 
 -(VideoAnalgesic*)videoManager{
     if(!_videoManager){
+        // NSLog(@"Settign video manager");
         _videoManager = [VideoAnalgesic captureManager];
         _videoManager.preset = AVCaptureSessionPresetMedium;
         [_videoManager setCameraPosition:AVCaptureDevicePositionFront];
@@ -70,48 +76,42 @@ float radius;
 - (void)loadCamera
 {
     
-    // remove the view's background color so that our view comes through (image is displayed in back of hierarchy)
+    // remove the view's background color
     self.view.backgroundColor = nil;
-    
     
     __weak typeof(self) weakSelf = self;
     
     __block NSDictionary *opts = @{CIDetectorAccuracy: CIDetectorAccuracyLow, CIDetectorEyeBlink:@YES};
     CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeFace context:self.videoManager.ciContext options:opts];
     
+    // Following block of code gets the image from the camera and calls OpenCVBridge. If either of the eyes
+    // are closed, then skip the frame.
+    
     [self.videoManager setProcessBlock:^(CIImage *cameraImage){
+        
+
         opts = @{CIDetectorImageOrientation:@6};
         
         NSArray *faceFeatures = [detector featuresInImage: cameraImage options:opts];
-        
-        
-        //CGAffineTransform transform = CGAffineTransformMakeScale(1, -1);
-        //transform = CGAffineTransformTranslate(transform,0, -imageView.bounds.size.height);
-        if ([faceFeatures count] > 0){
+
         for(CIFaceFeature *face in faceFeatures ){
-            if(!face.leftEyeClosed && !face.rightEyeClosed){
+
+            if(!face.leftEyeClosed && ! face.rightEyeClosed){
             
-                cameraImage = [OpenCVBridge OpenCVTransferAndReturnFaces:face
-                                                              usingImage:cameraImage
-                                                              andContext:weakSelf.videoManager.ciContext
-                                                            andProcessor:(processor)
-                                                              andLeftEye:face.leftEyePosition
-                                                             andRightEye:face.rightEyePosition
-                                                           andIsFinished:isFinished];
-                _model.faceInView = true;
+                cameraImage = [OpenCVBridge OpenCVTransferAndReturnFaces:face usingImage:cameraImage andContext:weakSelf.videoManager.ciContext andProcessor:(processor) andLeftEye:face.leftEyePosition andRightEye:face.rightEyePosition andIsFinished:isFinished];
             }
         }
-        }else{
-            _model.faceInView = false;
-        }
-        // TESTING NEW CODE BEGIN
-//        
-//        dispatch_async(dispatch_get_main_queue(),
-//                       ^{
-//                           self.meanPupilSize.text = [NSString stringWithFormat:@"Pupil Size: %f",
-//                                                      processor->getPupilSize()];
-//                       });
-//        
+        
+        // Displays the pupil size on the screen
+        
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           self.meanPupilSize.text = [NSString stringWithFormat:@"Pupil Size: %f",
+                                                      processor->getPupilSize()];
+                       });
+        
+        // Draws the graph on the screen
+
         dispatch_async(dispatch_get_main_queue(),
                        ^{
                            [self.graphView addX: processor->getPupilSize()
@@ -120,14 +120,25 @@ float radius;
                        });
 
         
-        // TESTING NEW CODE END
         return cameraImage;
     }];
-    
-    //[self changeColorMatching];
 }
 
-
+-(CvVideoCamera *)videoCamera
+{
+//    if(!_videoCamera)
+//    {
+//        _videoCamera= [[MyCvVideoCamera alloc ] initWithParentView:imageView];
+//        _videoCamera.delegate = self;
+//        _videoCamera.defaultAVCaptureDevicePosition=AVCaptureDevicePositionFront;
+//        _videoCamera.defaultAVCaptureSessionPreset=AVCaptureSessionPresetHigh;
+//        _videoCamera.defaultAVCaptureVideoOrientation=AVCaptureVideoOrientationPortrait;
+//        _videoCamera.defaultFPS = kFramesPerSec;
+//        _videoCamera.grayscaleMode = NO;
+//        
+//    }
+    return  _videoCamera;
+}
 
 
 -(void)changeColorMatching{
@@ -142,17 +153,30 @@ float radius;
 {
     [super viewDidLoad];
     
+   //  NSLog(@"Inside PWViewController");
+    
     _experimentTitle.text = [NSString stringWithFormat:@"%@%@%@", self.experiment, @"  ", self.iteration];
+    
     participantID = self.participant;
     
     [self loadCamera];
+
     [self preparePupilProcessor];
-    /*DataModel **/
-    _model = [DataModel sharedInstance];
+
 }
 
 
 - (void)dealloc
+{
+    if( processor )
+    {
+        delete processor;
+        processor = nullptr;
+    }
+}
+
+
+-(void)didReceiveMemoryWarning
 {
     if( processor )
     {
@@ -168,7 +192,6 @@ float radius;
     
     if(![self.videoManager isRunning])
         [self.videoManager start];
- 
 }
 
 
@@ -177,67 +200,47 @@ float radius;
     if([self.videoManager isRunning])
         [self.videoManager stop];
     
-    
-    
-    
     [super viewWillDisappear:animated];
-   
+
 }
 
 #pragma mark - Pupilware Processor
 
 -(void)preparePupilProcessor
 {
-    NSString *videoFileName = @"";
-    NSString *videoFilePath = @"";
+    // Define the file name for both left and right eyes. Instead of using the participant number
+    // and ID, we will use timestamp and designate left and right eye
+    
+    NSString *leftOutputVideoFileName = @"";
+    NSString *rightOutputVideoFileName = @"";
+    
+    timeStampValue = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
+    
+  //   NSLog(@"Time stamp %@", timeStampValue);
+    
+    leftOutputVideoFileName = [NSString stringWithFormat:@"%@%@%@",
+                     timeStampValue ,
+                     @"_",
+                     @"LeftEye"];
+    rightOutputVideoFileName = [NSString stringWithFormat:@"%@%@%@",
+                         timeStampValue ,
+                         @"_",
+                         @"RightEye"];
 
-    videoFileName = [NSString stringWithFormat:@"%@%@%@",
-                     self.participant ,
-                     self.experiment,
-                     self.iteration];
-
-    self.graphView.hidden = false;
-    if (!imageView)
-    {
-        imageView = [[UIView alloc] init];
-        [self.view addSubview:imageView];
-    }
-    [imageView setFrame:CGRectMake(13, 77, 294, 317)];
-    
-    
-    
-    if (self.isRunnningFromVideoMode)
-    {
-        
-        videoFilePath  = [self getInputVideoPath:videoFileName];
-        
-        if ([videoFilePath  isEqual: @""])
-        {
-            NSLog(@"[Warning] %@ is not existed.", videoFilePath);
-            
-            return;
-        }
-
-        _myStartButton.hidden = true;
-        
-        // Start run the processor immediately.
-        isFinished = false;
-    }
-    else
-    {
-        // Do not want to run the process until pressing start.
-        isFinished = true;
-    }
-    
+    // Do not want to run the process until pressing start.
+    isFinished = true;
     
     if( !processor )
     {
+        // Tag on the complete path to the file name. Pass this to the new PWPupilProcessor
         
-        NSString* outputFilePath = [self getOutputFilePath:videoFileName];
+        NSString* leftOutputFilePath = [self getOutputFilePath:leftOutputVideoFileName];
+        NSString* rightOutputFilePath = [self getOutputFilePath:rightOutputVideoFileName];
         
-        processor = new PWPupilProcessor([videoFilePath UTF8String], [outputFilePath UTF8String]);
+        processor = new PWPupilProcessor([leftOutputFilePath UTF8String], [rightOutputFilePath UTF8String]);
+        
         processor->isShouldWriteVideo = true;
-
+        
         [self loadSettingToProcessor];
         
     }
@@ -246,6 +249,7 @@ float radius;
 
 -(NSString*)getInputVideoPath:(NSString*) inputVideoFileName
 {
+    
     NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
                                                             NSUserDomainMask,
                                                             YES)
@@ -275,12 +279,14 @@ float radius;
     NSError *error;
     [fm removeItemAtPath:outputFilePath error:&error];
     
+    // NSLog(@"Output file path %@", outputFilePath);
     return outputFilePath;
 }
 
 
 -(void)loadSettingToProcessor
 {
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     processor->eyeDistance_ud       = [defaults floatForKey:kEyeDistance];
@@ -306,7 +312,7 @@ float radius;
                                                            )[0];
     featureFile = [docDir
                             stringByAppendingPathComponent:
-                            [NSString stringWithFormat:@"%@%@%@.csv", self.participant , self.experiment, self.iteration]];
+                            [NSString stringWithFormat:@"%@_%@.csv", timeStampValue,self.iteration]];
 
     if  (![[NSFileManager defaultManager] fileExistsAtPath:featureFile]) {
         [[NSFileManager defaultManager]
@@ -352,6 +358,17 @@ float radius;
     
 }
 
+#pragma mark - OpenCV Delegate
+
+#ifdef __cplusplus
+
+-(void)processImage:(Mat&)image
+{
+    NSLog(@"Inside processImage of calib");
+
+}
+
+#endif
 
 #pragma mark - UI Event Handlers
 
@@ -359,34 +376,39 @@ float radius;
 {
     isFinished = true;
     
-
+    // (@"INSIDE THE SHOWDATA");
+    processor->closeCapture();
+    
     [self processData];
 }
 
 
 - (IBAction)startExperiment:(UIButton *)sender {
     
-//    if ((!self.baseline))
-//    {
-//        NSString *audioFile;
-//        audioFile = [NSString stringWithFormat:@"%@%@%@", self.experiment, @"_", self.iteration];
-//
-//        NSString *soundFile=[[NSBundle mainBundle] pathForResource:audioFile ofType:@"mp3"];
-//
-//        NSError *error = nil;
-//
-//        audioPlayer = [[ AVAudioPlayer alloc] initWithContentsOfURL:[ NSURL fileURLWithPath: soundFile] error:&error];
-//        
-//        if (error)
-//        {
-//            NSLog(@"Error in audioPlayer: %@",[error localizedDescription]);
-//        }
-//        else
-//        {
-//            [audioPlayer play];
-//
-//        }
-//    }
+    // NSLog(@"Inside start experiment ");
+    if ((!self.baseline) and (!self.game))
+    {
+        // NSLog(@"Not a baseline and game ");
+
+        NSString *audioFile;
+        audioFile = [NSString stringWithFormat:@"%@%@%@", self.experiment, @"_", self.iteration];
+
+        NSString *soundFile=[[NSBundle mainBundle] pathForResource:audioFile ofType:@"mp3"];
+
+        NSError *error = nil;
+
+        audioPlayer = [[ AVAudioPlayer alloc] initWithContentsOfURL:[ NSURL fileURLWithPath: soundFile] error:&error];
+        
+        if (error)
+        {
+            NSLog(@"Error in audioPlayer: %@",[error localizedDescription]);
+        }
+        else
+        {
+            [audioPlayer play];
+
+        }
+    }
     
     isFinished = false;
 

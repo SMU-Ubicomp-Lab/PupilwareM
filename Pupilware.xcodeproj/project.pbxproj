@@ -24,6 +24,7 @@
 		97A89CAF1C5B5EA600D9E193 /* tabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A89CAE1C5B5EA600D9E193 /* tabViewController.swift */; };
 		97A89CB11C5B6D7900D9E193 /* popOverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A89CB01C5B6D7900D9E193 /* popOverController.swift */; };
 		97A89CB31C5B72EE00D9E193 /* expModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A89CB21C5B72EE00D9E193 /* expModalVC.swift */; };
+		97D487271C93302500774958 /* TestCalibrateViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97D487261C93302500774958 /* TestCalibrateViewController.mm */; };
 		97DB32CB1C75AB930024A22F /* adminVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DB32CA1C75AB930024A22F /* adminVC.swift */; };
 		97DB32CD1C75ABB30024A22F /* luxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DB32CC1C75ABB30024A22F /* luxVC.swift */; };
 		97E94F391C5CAD2900D652CB /* Ransac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F371C5CAD2900D652CB /* Ransac.cpp */; };
@@ -74,6 +75,8 @@
 		97A89CAE1C5B5EA600D9E193 /* tabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tabViewController.swift; sourceTree = "<group>"; };
 		97A89CB01C5B6D7900D9E193 /* popOverController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = popOverController.swift; sourceTree = "<group>"; };
 		97A89CB21C5B72EE00D9E193 /* expModalVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = expModalVC.swift; sourceTree = "<group>"; };
+		97D487251C93302500774958 /* TestCalibrateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestCalibrateViewController.h; sourceTree = "<group>"; };
+		97D487261C93302500774958 /* TestCalibrateViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCalibrateViewController.mm; sourceTree = "<group>"; };
 		97DB32CA1C75AB930024A22F /* adminVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = adminVC.swift; sourceTree = "<group>"; };
 		97DB32CC1C75ABB30024A22F /* luxVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = luxVC.swift; sourceTree = "<group>"; };
 		97E94F361C5CAD2800D652CB /* Pupilware-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Pupilware-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -187,6 +190,8 @@
 				97A89CB21C5B72EE00D9E193 /* expModalVC.swift */,
 				971AB1DC1C683BC900E03643 /* calModalVC.swift */,
 				97A89CB01C5B6D7900D9E193 /* popOverController.swift */,
+				97D487251C93302500774958 /* TestCalibrateViewController.h */,
+				97D487261C93302500774958 /* TestCalibrateViewController.mm */,
 				97E94F741C5CB10C00D652CB /* PWViewController.h */,
 				97E94F751C5CB10C00D652CB /* PWViewController.mm */,
 				97E965AC1C5D6CB400D652CB /* Libraries */,
@@ -385,6 +390,7 @@
 				97A321491C59CDB300B1EB98 /* homeVC.swift in Sources */,
 				97A321471C59CDB300B1EB98 /* AppDelegate.swift in Sources */,
 				9711B09A1C7F670F006EE548 /* iterCell.swift in Sources */,
+				97D487271C93302500774958 /* TestCalibrateViewController.mm in Sources */,
 				97E94F781C5CB10C00D652CB /* PWPupilProcessor.mm in Sources */,
 				97A3215A1C59CFF100B1EB98 /* DataModel.swift in Sources */,
 				973A50281C5DB5D600EDDB20 /* OpenCVBridge.mm in Sources */,

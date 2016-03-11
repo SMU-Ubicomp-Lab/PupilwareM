@@ -9,10 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import "commandControl.h"
-#import "VideoDisplayViewController.h"
-#import "Pupilware-Swift.h"
+#import "MyCvVideoCamera.h"
 
-//@class DataModel;
 
 
 @interface PWViewController : UIViewController
@@ -20,10 +18,12 @@
 @property (weak, nonatomic) NSString *participant;
 @property (weak, nonatomic) NSString *experiment;
 @property (weak, nonatomic) NSString *iteration;
-//@property (strong,nonatomic) DataModel *model;
 @property BOOL  isRunnningFromVideoMode;
 @property BOOL  baseline;
+@property BOOL  game;
 
 -(void) preparePupilProcessor;
+-(CvVideoCamera *)videoCamera;
+
 
 @end

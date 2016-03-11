@@ -26,15 +26,16 @@
 #include <numeric>
 
 
-#include "PWPupilProcessor.h"
+#include "PWPupilProcessor.hpp"
 #include "PWViewController.h"
 #include "PWUtilities.h"
 
 using namespace cv;
-cv::String face_cascade_name = "@/Users/srafiqi/haarcascade_frontalface_alt.xml";
+using namespace std;
+// cv::String face_cascade_name = "@/Users/srafiqi/haarcascade_frontalface_alt.xml";
 
 
-cv::CascadeClassifier face_cascade;
+// cv::CascadeClassifier face_cascade;
 std::string main_window_name = "Capture - Face detection";
 std::string face_window_name = "Capture - Face";
 cv::RNG rng(12345);
@@ -310,14 +311,14 @@ namespace pw
     
     float PWPupilProcessor::calBaselineFromCurrentSignal()
     {
-        NSLog(@"Inside calBaseline from current signal");
+        // NSLog(@"Inside calBaseline from current signal");
         
         assert(pupil_mm.size() > 0);
         
         if (pupil_mm.size() <= 0)
         {
             std::cout << "[Warning] pupil is empty. It is not enough to calculate baseline.\n" << std::endl;
-            NSLog(@"Returning calbasline from current signal with 0.0");
+            // NSLog(@"Returning calbasline from current signal with 0.0");
             return 0.0f;
         }
         
@@ -442,7 +443,7 @@ namespace pw
         }
         else
         {
-            NSLog(@"calling baseline from current signal ");
+            // NSLog(@"calling baseline from current signal ");
             baseline = calBaselineFromCurrentSignal();
         }
         
@@ -534,8 +535,8 @@ namespace pw
               
         Mat eq;
         
-        string ty =  type2str( eyeMAT.type() );
-        printf("Find Eyes Using Mat Matrix: %s %dx%d \n", ty.c_str(), eyeMAT.cols, eyeMAT.rows );
+//        string ty =  type2str( eyeMAT.type() );
+//        // printf("Find Eyes Using Mat Matrix: %s %dx%d \n", ty.c_str(), eyeMAT.cols, eyeMAT.rows );
         
         Mat grayEyeMat;
         
@@ -825,6 +826,7 @@ namespace pw
     void PWPupilProcessor::combindImages( cv::Size canvasSize, Mat face, Mat leftEye, Mat rightEye, Mat& out )
     {
         //assert(face.cols >= face.rows);
+        // NSLog(@"inside combind images");
         out = face;
         if(leftEye.rows==0) return;
         if(rightEye.rows==0) return;
@@ -856,7 +858,7 @@ namespace pw
 
          cv::cvtColor(canvas, out, CV_BGRA2RGB);
         
-        
+        // NSLog(@"Setting out to canvas");
          out = canvas;
     }
     
@@ -876,6 +878,7 @@ namespace pw
     
     bool PWPupilProcessor::closeCapture()
     {
+        // NSLog(@"Inside close capture");
         if(leftOutvideo.isOpened())
         {
             // NSLog(@"Closing left eye file");
@@ -896,8 +899,8 @@ namespace pw
     bool PWPupilProcessor::faceAndEyeFeatureExtraction(cv::Mat srcImage, cv::Mat leftEyeMat, cv::Mat rightEyeMat, cv::Mat leftEyeMatColor, cv::Mat rightEyeMatColor, cv::Rect leftEyeRect, cv::Rect rightEyeRect, BOOL isFinished, cv::Mat& resultImage)
     {
         
-        string ty =  type2str( leftEyeMat.type() );
-        printf("FACE AND EYE ... Matrix: %s %dx%d \n", ty.c_str(), leftEyeMat.cols, leftEyeMat.rows );
+//        string ty =  type2str( leftEyeMat.type() );
+//        printf("FACE AND EYE ... Matrix: %s %dx%d \n", ty.c_str(), leftEyeMat.cols, leftEyeMat.rows );
 
         
         cv::Mat frame_gray;
@@ -958,7 +961,7 @@ namespace pw
         
         combindImages(cv::Size(200, 300), faceColorMat, leftOutput, rightOutput, cmb);
         
-        
+        // NSLog(@"Returning combined image");
         resultImage = cmb;
         
         
@@ -1000,7 +1003,7 @@ namespace pw
             return true;
         }
         
-        NSLog(@"Calling find eye center using Mat");
+        // NSLog(@"Calling find eye center using Mat");
 
         
         //MOVED FROM THE FINDEYE CODE

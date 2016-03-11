@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 SMU. All rights reserved.
 //
 
-#import "SettingsViewController.h"
+/*#import "SettingsViewController.h"
 #import "constants.h"
 
 @interface SettingsViewController ()
@@ -125,7 +125,7 @@
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
 }
-*/
+
 
 
 - (void)viewDidUnload
@@ -133,4 +133,4 @@
     [super viewDidUnload];
  }
 
-@end
+@end*/
