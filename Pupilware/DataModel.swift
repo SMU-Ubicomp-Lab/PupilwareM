@@ -23,6 +23,7 @@ import Foundation
         4: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
     ] as [Int:[Int:[Bool]]]
     
+    
     override init(){
         super.init()
         self.fetchSubjectIDs()

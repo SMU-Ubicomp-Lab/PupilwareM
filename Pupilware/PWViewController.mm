@@ -13,12 +13,14 @@
 #import "DisplayDataViewController.h"
 #import "PWUtilities.h"
 #import "MyCvVideoCamera.h"
+#import "Pupilware-Swift.h"
 
 #import "constants.h"
 #import "VideoAnalgesic.h"
 #import "OpenCVBridge.h"
 
 @class commandControl;
+@class DataModel;
 // @class VideoDisplayViewController;
 
 using namespace cv;
@@ -31,6 +33,7 @@ static const int kFramesPerSec = 15;
 
 @property (strong,nonatomic) VideoAnalgesic *videoManager;
 @property (strong,nonatomic) CIVector *center;
+@property (strong,nonatomic) DataModel *model;
 
     @property (weak, nonatomic) IBOutlet UILabel *meanPupilSize;
     @property (weak, nonatomic) IBOutlet UIButton *myStartButton;
@@ -93,13 +96,18 @@ float radius;
         opts = @{CIDetectorImageOrientation:@6};
         
         NSArray *faceFeatures = [detector featuresInImage: cameraImage options:opts];
+        if ([faceFeatures count] > 0){
+            for(CIFaceFeature *face in faceFeatures ){
 
-        for(CIFaceFeature *face in faceFeatures ){
-
-            if(!face.leftEyeClosed && ! face.rightEyeClosed){
+                if(!face.leftEyeClosed && ! face.rightEyeClosed){
             
-                cameraImage = [OpenCVBridge OpenCVTransferAndReturnFaces:face usingImage:cameraImage andContext:weakSelf.videoManager.ciContext andProcessor:(processor) andLeftEye:face.leftEyePosition andRightEye:face.rightEyePosition andIsFinished:isFinished];
+                    cameraImage = [OpenCVBridge OpenCVTransferAndReturnFaces:face usingImage:cameraImage andContext:weakSelf.videoManager.ciContext andProcessor:(processor) andLeftEye:face.leftEyePosition andRightEye:face.rightEyePosition andIsFinished:isFinished];
+                }
             }
+            
+            _model.faceInView = true;
+        }else{
+            _model.faceInView = false;
         }
         
         // Displays the pupil size on the screen
@@ -137,6 +145,7 @@ float radius;
 //        _videoCamera.grayscaleMode = NO;
 //        
 //    }
+    
     return  _videoCamera;
 }
 
@@ -163,6 +172,7 @@ float radius;
 
     [self preparePupilProcessor];
 
+    _model = [DataModel sharedInstance];
 }
 
 
@@ -409,6 +419,8 @@ float radius;
 
         }
     }
+    
+    
     
     isFinished = false;
 

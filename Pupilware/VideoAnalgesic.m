@@ -121,6 +121,11 @@ static CGColorSpaceRef sDeviceRgbColorSpace = NULL;
         self->videoIsRunning = NO;
     }
     
+    if (![video.window.subviews containsObject:video.videoPreviewView]){
+        [video.window addSubview:video.videoPreviewView];
+        [video.window sendSubviewToBack:video.videoPreviewView];
+    }
+    
 }
 
 - (void)stop
@@ -139,6 +144,8 @@ static CGColorSpaceRef sDeviceRgbColorSpace = NULL;
     _videoDevice = nil;
     self->videoIsRunning = NO;
     
+    //code modification for swift
+    [video.videoPreviewView removeFromSuperview];
 }
 
 -(BOOL)isRunning{
