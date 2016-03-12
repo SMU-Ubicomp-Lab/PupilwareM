@@ -107,6 +107,11 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         self.presentModalView("admin")
     }
     
+    func presentSettingsPage() {
+        self.dismissViewControllerAnimated(true, completion:nil)
+        self.presentModalView("setters")
+    }
+    
     //Collection View Delegate Functions________________________________
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1

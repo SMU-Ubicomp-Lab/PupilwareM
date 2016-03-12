@@ -15,8 +15,9 @@ import Foundation
     var faceInView:Bool = false
     var currentTest:DigitTest?
     var digitIteration = 0
+    var settings = (dist:60, movAvg:11, medBlur:11, baseStart:20, baseEnd:40, thresh:15, markCost:1, baseline: 0, cogHigh:0)
     var digitTestProgress = [
-        0: [5:[false, false, false, true],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        0: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         2: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         3: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],

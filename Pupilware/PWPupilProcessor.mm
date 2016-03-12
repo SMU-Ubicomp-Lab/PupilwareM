@@ -313,7 +313,8 @@ namespace pw
     {
         // NSLog(@"Inside calBaseline from current signal");
         
-        assert(pupil_mm.size() > 0);
+        //assert(pupil_mm.size() > 0);
+        
         
         if (pupil_mm.size() <= 0)
         {

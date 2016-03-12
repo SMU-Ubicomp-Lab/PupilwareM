@@ -30,7 +30,9 @@ class popOverController: UITableViewController{
                 delegate?.presentLuxMeter()
             case 2:
                 delegate?.presentAdminPage()
-            case 2:
+            case 3:
+                delegate?.presentSettingsPage()
+            case 4:
                 delegate?.presentAboutPage()
             default:break
             }
@@ -49,4 +51,5 @@ protocol sendBackDelegate{
     func presentLuxMeter()
     func presentAboutPage()
     func presentAdminPage()
+    func presentSettingsPage()
 }

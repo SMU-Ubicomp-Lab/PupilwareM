@@ -46,8 +46,6 @@ class expModalVC: UIViewController{
             return
         }
         
-        print(self.model.faceInView)
-        
         if(self.model.faceInView){
             self.indicator.text = "Keep Face In View"
             self.indicator.textColor = UIColor.greenColor().colorWithAlphaComponent(0.5)

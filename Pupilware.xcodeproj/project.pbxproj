@@ -25,6 +25,7 @@
 		97A89CB11C5B6D7900D9E193 /* popOverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A89CB01C5B6D7900D9E193 /* popOverController.swift */; };
 		97A89CB31C5B72EE00D9E193 /* expModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A89CB21C5B72EE00D9E193 /* expModalVC.swift */; };
 		97D487271C93302500774958 /* TestCalibrateViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97D487261C93302500774958 /* TestCalibrateViewController.mm */; };
+		97D487291C933F0A00774958 /* settingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97D487281C933F0A00774958 /* settingsVC.swift */; };
 		97DB32CB1C75AB930024A22F /* adminVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DB32CA1C75AB930024A22F /* adminVC.swift */; };
 		97DB32CD1C75ABB30024A22F /* luxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DB32CC1C75ABB30024A22F /* luxVC.swift */; };
 		97E94F391C5CAD2900D652CB /* Ransac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F371C5CAD2900D652CB /* Ransac.cpp */; };
@@ -77,6 +78,7 @@
 		97A89CB21C5B72EE00D9E193 /* expModalVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = expModalVC.swift; sourceTree = "<group>"; };
 		97D487251C93302500774958 /* TestCalibrateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestCalibrateViewController.h; sourceTree = "<group>"; };
 		97D487261C93302500774958 /* TestCalibrateViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCalibrateViewController.mm; sourceTree = "<group>"; };
+		97D487281C933F0A00774958 /* settingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = settingsVC.swift; sourceTree = "<group>"; };
 		97DB32CA1C75AB930024A22F /* adminVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = adminVC.swift; sourceTree = "<group>"; };
 		97DB32CC1C75ABB30024A22F /* luxVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = luxVC.swift; sourceTree = "<group>"; };
 		97E94F361C5CAD2800D652CB /* Pupilware-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Pupilware-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 			children = (
 				97A3214A1C59CDB300B1EB98 /* Main.storyboard */,
 				97DB32CA1C75AB930024A22F /* adminVC.swift */,
+				97D487281C933F0A00774958 /* settingsVC.swift */,
 				97DB32CC1C75ABB30024A22F /* luxVC.swift */,
 				97A321591C59CFF100B1EB98 /* DataModel.swift */,
 				97A321481C59CDB300B1EB98 /* homeVC.swift */,
@@ -392,6 +395,7 @@
 				9711B09A1C7F670F006EE548 /* iterCell.swift in Sources */,
 				97D487271C93302500774958 /* TestCalibrateViewController.mm in Sources */,
 				97E94F781C5CB10C00D652CB /* PWPupilProcessor.mm in Sources */,
+				97D487291C933F0A00774958 /* settingsVC.swift in Sources */,
 				97A3215A1C59CFF100B1EB98 /* DataModel.swift in Sources */,
 				973A50281C5DB5D600EDDB20 /* OpenCVBridge.mm in Sources */,
 			);
@@ -517,6 +521,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -535,6 +540,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = smu.Pupilware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Pupilware/Pupilware-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALID_ARCHS = "armv7 armv7s arm64";
@@ -547,6 +553,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -565,6 +572,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = smu.Pupilware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Pupilware/Pupilware-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALID_ARCHS = "armv7 armv7s arm64";

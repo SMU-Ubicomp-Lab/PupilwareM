@@ -14,6 +14,7 @@
 #import "CalibrationResultViewController.h"
 #import "PWUtilities.h"
 #import "MyCvVideoCamera.h"
+#import "Pupilware-Swift.h"
 
 #import "constants.h"
 #import "VideoAnalgesic.h"
@@ -40,12 +41,15 @@ NSString *timeStampValue;
     @property (weak, nonatomic) IBOutlet UILabel *meanPupilSize;
     @property (weak, nonatomic) IBOutlet UIButton *myStartButton;
     @property (weak, nonatomic) IBOutlet UILabel *experimentTitle;
+    @property (strong,nonatomic) DataModel *model;
     //   @property (weak, nonatomic) IBOutlet UIView *imageView;
 
     @property (weak, nonatomic) IBOutlet APLGraphView *graphView;
     @property (weak, nonatomic) IBOutlet UIWebView *gameView;
     @property (nonatomic) NSInteger iterationCounter;
     @property (strong, nonatomic) NSMutableArray* parameters;
+
+    @property (strong, nonatomic) NSMutableArray* pickedMutations;
 
 
 
@@ -70,13 +74,21 @@ NSString *timeStampValue;
     
 }
 
+
+const int kThreadhold = 0;
+const int kPrior = 1;
+const int kStd = 2;
+const int kmWindow = 3;
+const int kgWindow = 4;
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
    //  NSLog(@"Inside ViewDid Load of Test Calibrate");
 
     self.iterationCounter = 0;
-    self.numberOfIteration = 4;
+    self.numberOfIteration = 6;
 
 
     
@@ -148,7 +160,6 @@ NSString *timeStampValue;
 {
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
     processor->eyeDistance_ud       = 60.0;//[defaults floatForKey:kEyeDistance];
     processor->windowSize_ud        = 11;//(int)[defaults integerForKey:kWindowSize];
     processor->mbWindowSize_ud      = 11;//(int)[defaults integerForKey:kMbWindowSize];
@@ -158,6 +169,55 @@ NSString *timeStampValue;
     processor->markCost             = 1;//(int)[defaults integerForKey:kMarkCost];
     processor->baseline             = 0.0;//[defaults floatForKey:kBaseline];
     processor->cogHigh              = 0.0;//[defaults floatForKey:kCogHighSize];
+    
+    
+    // initial parameter grid
+    self.parameters = [NSMutableArray new];
+    
+    [self.parameters addObject:@[@15,@25,@35]];
+    [self.parameters addObject:@[@1,@2,@3]];
+    [self.parameters addObject:@[@1,@1,@1]];
+    [self.parameters addObject:@[@11,@21,@31]];
+    [self.parameters addObject:@[@11,@21,@31]];
+    
+    
+    self.pickedMutations = [[NSMutableArray alloc]init];
+    
+    NSMutableArray* allPosibleMutations = [[NSMutableArray alloc] init];
+    
+    for (NSNumber *threadhold in self.parameters[kThreadhold])
+        for (NSNumber *prior in self.parameters[kPrior])
+            for (NSNumber *std in self.parameters[kStd])
+                for (NSNumber *mwindowSize in self.parameters[kmWindow])
+                    for (NSNumber *gwindowSize in self.parameters[kgWindow])
+
+                        {
+                            [allPosibleMutations addObject:@[
+                                                             threadhold,
+                                                             prior,
+                                                             std,
+                                                             mwindowSize,
+                                                             gwindowSize
+                                                             ]];
+                        }
+    
+    
+    NSUInteger N = [allPosibleMutations count];
+    for (int i; i <= N; i++) {
+        NSUInteger randomIndex = arc4random() % [allPosibleMutations count];
+        
+        [self.pickedMutations addObject:allPosibleMutations[randomIndex]];
+        [allPosibleMutations removeObjectAtIndex:randomIndex];
+        
+        //NSLog(@"%@", allPosibleMutations[randomIndex]);
+    }
+    
+
+
+    //NSLog(@"%@", self.pickedMutations);
+    //NSLog(@"%@", self.pickedMutations);
+    
+    
 }
 
 -(void)processData
@@ -341,8 +401,26 @@ NSString *timeStampValue;
     processor->isShouldWriteVideo = false;
     processor->isShouldDetectFace = false;
     
-    processor->markCost = (int)((PWParameter*)[self.parameters objectAtIndex:iterNumber]).markCost;
-    processor->threshold_ud = (int)((PWParameter*)[self.parameters objectAtIndex:iterNumber]).threadhold;
+
+    
+//    const int kThreadhold = 0;
+//    const int kPrior = 1;
+//    const int kStd = 2;
+//    const int kmWindow = 3;
+//    const int kgWindow = 4;
+
+
+    processor->threshold_ud = [self.pickedMutations[iterNumber][kThreadhold] integerValue];
+    processor->markCost = [self.pickedMutations[iterNumber][kPrior] integerValue];
+
+    
+    processor->windowSize_ud        = [self.pickedMutations[iterNumber][kmWindow] integerValue];
+    processor->mbWindowSize_ud      = [self.pickedMutations[iterNumber][kgWindow] integerValue];
+    
+//    processor->starburstStd = random(1,1,1);
+    
+    
+    
     // NSLog(@"Loadinv video ");
     // Now that we have gone through the first iteration
     [self loadVideo: @"calb"];
