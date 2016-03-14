@@ -104,7 +104,7 @@ import Foundation
 
 class DigitTest{
     var digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String
-    var labels = (rightEye:"", leftEye:"", csvFile:"")
+    var labels = (rightEye:"", leftEye:"", csvFile:"", rightEyeBase:"", leftEyeBase:"", csvFileBase:"")
     
     init(subjectID:String, digits:Int, iter:Int, lux:Int, exact_lux:Double){
         self.digits = digits
@@ -112,9 +112,9 @@ class DigitTest{
         self.lux = lux
         self.exact_lux = exact_lux
         self.subjectID = subjectID
-        self.labels.rightEye = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_righteye"
-        self.labels.leftEye = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_lefteye"
-        self.labels.csvFile = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_data"
+        self.labels.rightEyeBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_righteye"
+        self.labels.leftEyeBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_lefteye"
+        self.labels.csvFileBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_data"
     }
     
     func getTimeStamp()->String{
@@ -129,6 +129,9 @@ class DigitTest{
         var attempt = 1
         while (attempt <= 999){
             let fileName = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_\(String(format: "%03d", attempt)).json)"
+            self.labels.rightEye = "\(self.labels.rightEyeBase)_\(String(format: "%03d", attempt))"
+            self.labels.leftEye = "\(self.labels.leftEyeBase)_\(String(format: "%03d", attempt))"
+            self.labels.csvFile = "\(self.labels.csvFileBase)_\(String(format: "%03d", attempt))"
             if(self.writeJSONFile(fileName)){
                 break
             }
