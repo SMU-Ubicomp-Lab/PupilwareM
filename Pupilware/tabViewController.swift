@@ -17,6 +17,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     @IBOutlet var containerView: UIView!
     @IBOutlet weak var contTitle: UILabel!
     @IBOutlet weak var expBlock: UIView!
+    @IBOutlet weak var collectionView: UICollectionView!
     var digitNum = 5
     var iter = 1
     
@@ -34,6 +35,12 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     
     @IBAction func tapSettings(sender: AnyObject) {
         self.presentSettingsPopover(sender)
+    }
+    
+    @IBAction func lumChanged(sender: AnyObject) {
+        self.collectionView.reloadItemsAtIndexPaths(self.collectionView.indexPathsForVisibleItems())
+        self.expBlock.hidden = false
+        
     }
     
     @IBAction func changeLightingSegment(sender: AnyObject) {

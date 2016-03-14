@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -83,6 +84,7 @@
                                 </segments>
                                 <connections>
                                     <action selector="changeLightingSegment:" destination="N9n-Aa-AWL" eventType="valueChanged" id="Odj-gX-ZJe"/>
+                                    <action selector="lumChanged:" destination="N9n-Aa-AWL" eventType="valueChanged" id="JRV-wc-uYa"/>
                                 </connections>
                             </segmentedControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oUJ-CU-lYh">
@@ -192,6 +194,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="collectionView" destination="hEU-GR-NRf" id="6Xb-66-b8k"/>
                         <outlet property="contTitle" destination="bfN-W4-Joz" id="PAN-gC-Mby"/>
                         <outlet property="containerView" destination="oUJ-CU-lYh" id="S2y-Lb-Tap"/>
                         <outlet property="expBlock" destination="b73-6d-Q4k" id="YVf-tz-16F"/>
