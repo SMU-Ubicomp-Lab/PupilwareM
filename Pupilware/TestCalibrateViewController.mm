@@ -190,7 +190,6 @@ const int kgWindow = 4;
             for (NSNumber *std in self.parameters[kStd])
                 for (NSNumber *mwindowSize in self.parameters[kmWindow])
                     for (NSNumber *gwindowSize in self.parameters[kgWindow])
-
                         {
                             [allPosibleMutations addObject:@[
                                                              threadhold,
@@ -203,14 +202,11 @@ const int kgWindow = 4;
     
     
     NSUInteger N = [allPosibleMutations count];
-    for (int i; i <= N; i++) {
+    for (int i; i < N; i++) {
         NSUInteger randomIndex = arc4random() % [allPosibleMutations count];
-        
-        [self.pickedMutations addObject:allPosibleMutations[randomIndex]];
-        [allPosibleMutations removeObjectAtIndex:randomIndex];
-        
-        //NSLog(@"%@", allPosibleMutations[randomIndex]);
+        [allPosibleMutations exchangeObjectAtIndex:i withObjectAtIndex:randomIndex];
     }
+    self.pickedMutations = allPosibleMutations;
     
 
 

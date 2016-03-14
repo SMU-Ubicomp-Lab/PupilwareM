@@ -125,8 +125,19 @@ class DigitTest{
         return formatter.stringFromDate(currentDateTime)
     }
     
-    func writeJSON(){
-        let fileName = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter).json"
+    func writeData(){
+        var attempt = 1
+        while (attempt <= 999){
+            let fileName = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_\(String(format: "%03d", attempt)).json)"
+            if(self.writeJSONFile(fileName)){
+                break
+            }
+            attempt += 1
+            print("WRITE FAILED CRITICAL ERROR ATTEMPT: \(attempt)")
+        }
+    }
+    
+    func writeJSONFile(fileName:String)->Bool{
         let data: [String: AnyObject] = [
             "user_id": self.subjectID,
             "type" : "target",
@@ -173,6 +184,8 @@ class DigitTest{
             }
         } else {
             print("File already exists")
+            return false
         }
+        return true
     }
 }
