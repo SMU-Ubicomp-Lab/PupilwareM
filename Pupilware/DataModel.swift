@@ -103,8 +103,8 @@ import Foundation
 
 
 class DigitTest{
-    var digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String
-    var labels = (rightEye:"", leftEye:"", csvFile:"", rightEyeBase:"", leftEyeBase:"", csvFileBase:"")
+    var digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
+    var labels = (rightEye:"", leftEye:"", csvFile:"", calFile:"", rightEyeBase:"", leftEyeBase:"", csvFileBase:"", calFileBase:"")
     
     init(subjectID:String, digits:Int, iter:Int, lux:Int, exact_lux:Double){
         self.digits = digits
@@ -112,9 +112,11 @@ class DigitTest{
         self.lux = lux
         self.exact_lux = exact_lux
         self.subjectID = subjectID
+        self.angle = 0
         self.labels.rightEyeBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_righteye"
         self.labels.leftEyeBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_lefteye"
         self.labels.csvFileBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_data"
+        self.labels.calFileBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_calibration"
     }
     
     func getTimeStamp()->String{
@@ -132,6 +134,7 @@ class DigitTest{
             self.labels.rightEye = "\(self.labels.rightEyeBase)_\(String(format: "%03d", attempt))"
             self.labels.leftEye = "\(self.labels.leftEyeBase)_\(String(format: "%03d", attempt))"
             self.labels.csvFile = "\(self.labels.csvFileBase)_\(String(format: "%03d", attempt))"
+            self.labels.calFile = "\(self.labels.calFileBase)_\(String(format: "%03d", attempt))"
             if(self.writeJSONFile(fileName)){
                 break
             }
@@ -143,14 +146,16 @@ class DigitTest{
     func writeJSONFile(fileName:String)->Bool{
         let data: [String: AnyObject] = [
             "user_id": self.subjectID,
-            "type" : "target",
+            "type" : "digit span",
             "digits" : self.digits,
             "iteration": self.iter,
             "lux_level" : self.lux,
             "exact_lux_level" : self.exact_lux,
+            "angle" : self.angle,
             "right_eye_file_name" : self.labels.rightEye,
             "left_eye_file_name" : self.labels.leftEye,
             "csv_data_file_name" : self.labels.csvFile,
+            "calibration_file" : self.labels.calFile,
             "write_time" : self.getTimeStamp()
         ]
         
