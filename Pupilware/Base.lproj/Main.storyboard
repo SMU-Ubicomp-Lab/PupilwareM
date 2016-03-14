@@ -256,8 +256,8 @@
                                                 <rect key="contentStretch" x="1" y="0.0" width="1" height="1"/>
                                                 <color key="progressTintColor" red="0.0" green="0.75157298660000005" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             </progressView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Setting Up Expiriment" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ln-xF-epx">
-                                                <rect key="frame" x="167" y="8" width="266" height="46"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Setting Up Experiment" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ln-xF-epx">
+                                                <rect key="frame" x="166" y="8" width="268" height="46"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="46" id="vnM-ON-0sD"/>
                                                     <constraint firstAttribute="width" constant="266" id="wG3-3e-pPa"/>
@@ -302,14 +302,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Experiment N" id="TOM-ci-NAN">
-                        <barButtonItem key="leftBarButtonItem" title="Finish" id="gVT-ir-ZnO">
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="gVT-ir-ZnO">
                             <connections>
                                 <action selector="completePressed:" destination="XQ7-oo-hyi" id="hQR-FB-kkF"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Cancel" id="zZr-eA-qoo">
-                            <connections>
-                                <action selector="tapDone:" destination="XQ7-oo-hyi" id="A10-R9-cQx"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -605,7 +600,7 @@
         <scene sceneID="tcP-CH-gJ9">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jtn-tl-2JC" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Digit Span Test" image="beaker.png" selectedImage="beaker.png" id="Ki5-YD-2X3"/>
+                    <tabBarItem key="tabBarItem" title="Digit Span Test" image="hash.png" selectedImage="hash.png" id="Ki5-YD-2X3"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="jng-cd-x2n">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -624,7 +619,7 @@
         <scene sceneID="AHp-q2-ate">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Y9A-vL-5dW" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Target Test" image="calibrate.png" selectedImage="calibrate.png" id="c9t-lq-EMm"/>
+                    <tabBarItem key="tabBarItem" title="Target Test" image="target.png" selectedImage="target.png" id="c9t-lq-EMm"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="DRD-3a-WKY">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -686,18 +681,6 @@
                     <view key="view" contentMode="scaleToFill" id="4w1-mP-Brd">
                         <rect key="frame" x="0.0" y="0.0" width="560" height="520"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VQS-nH-iGl">
-                                <rect key="frame" x="518" y="490" width="22" height="22"/>
-                                <connections>
-                                    <action selector="startExperiment:" destination="Bvi-Hr-i5i" eventType="touchUpInside" id="3th-9f-jnF"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <constraints>
-                            <constraint firstItem="VQS-nH-iGl" firstAttribute="trailing" secondItem="4w1-mP-Brd" secondAttribute="trailingMargin" id="uvT-ZH-vJW"/>
-                            <constraint firstItem="jiB-8w-x6Y" firstAttribute="top" secondItem="VQS-nH-iGl" secondAttribute="bottom" constant="8" symbolic="YES" id="xlM-ZP-zS7"/>
-                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xgv-Qd-LX6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -734,11 +717,6 @@
                         <barButtonItem key="leftBarButtonItem" systemItem="done" id="CjA-6Y-OfI">
                             <connections>
                                 <action selector="tapDone:" destination="U1s-wl-Ivp" id="qyE-gm-YeL"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Settings" id="Wck-uX-bz4">
-                            <connections>
-                                <action selector="tapDone:" destination="U1s-wl-Ivp" id="tAc-Uh-1ej"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -779,18 +757,6 @@
                     <view key="view" contentMode="scaleToFill" id="RJr-Ez-byw" customClass="Calibration">
                         <rect key="frame" x="0.0" y="0.0" width="560" height="520"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v5e-rS-SQA">
-                                <rect key="frame" x="518" y="490" width="22" height="22"/>
-                                <connections>
-                                    <action selector="startExperiment:" destination="bq5-gb-7lX" eventType="touchUpInside" id="X0b-IJ-XtZ"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <constraints>
-                            <constraint firstItem="iDl-6j-iTV" firstAttribute="top" secondItem="v5e-rS-SQA" secondAttribute="bottom" constant="8" symbolic="YES" id="Td3-Ax-MWH"/>
-                            <constraint firstItem="v5e-rS-SQA" firstAttribute="trailing" secondItem="RJr-Ez-byw" secondAttribute="trailingMargin" id="zBC-ni-IsA"/>
-                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="39W-Cp-oEM" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1138,8 +1104,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="beaker.png" width="20" height="28"/>
-        <image name="calibrate.png" width="25" height="27"/>
         <image name="gear.png" width="20" height="20"/>
+        <image name="hash.png" width="30" height="30"/>
+        <image name="target.png" width="30" height="30"/>
     </resources>
 </document>

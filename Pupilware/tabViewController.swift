@@ -38,7 +38,11 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     }
     
     @IBAction func lumChanged(sender: AnyObject) {
-        self.collectionView.reloadItemsAtIndexPaths(self.collectionView.indexPathsForVisibleItems())
+        //self.collectionView.reloadInputViews()
+        for cell in collectionView.visibleCells() as! [iterCell] {
+            cell.removeFromSuperview()
+        }
+        self.collectionView.reloadData()
         self.expBlock.hidden = false
         
     }
@@ -134,13 +138,13 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("header", forIndexPath: indexPath) as! iterCell
         cell.layer.borderColor = UIColor.blackColor().CGColor
         cell.frame.size.width = self.settingsCollection.frame.width/4 - 10
-        cell.frame.size.height = self.settingsCollection.frame.height/5
+        cell.frame.size.height = self.settingsCollection.frame.height/5 - 10
         cell.contentView.layer.backgroundColor = UIColor.whiteColor().CGColor
         cell.contentView.layer.cornerRadius = 5.0;
-        let top = UIView(frame:CGRectMake(0,0,cell.bounds.size.width, 5))
-        let bottom = UIView(frame:CGRectMake(0,cell.bounds.height-5,cell.bounds.size.width, 5))
-        top.layer.backgroundColor = UIColor.whiteColor().CGColor
-        bottom.layer.backgroundColor = UIColor.whiteColor().CGColor
+        //let top = UIView(frame:CGRectMake(0,0,cell.bounds.size.width, 5))
+        //let bottom = UIView(frame:CGRectMake(0,cell.bounds.height-5,cell.bounds.size.width, 5))
+        //top.layer.backgroundColor = UIColor.greenColor().CGColor
+        //bottom.layer.backgroundColor = UIColor.blackColor().CGColor
         cell.digit = (row%4) + 5
         cell.iter = row/4
         
@@ -158,14 +162,14 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         }else{
             cell.header = false
             cell.label.text = String(cell.iter)
-            if(cell.iter == 1){
+            /*if(cell.iter == 1){
                 cell.contentView.addSubview(bottom)
             }else if (cell.iter == 4){
                 cell.contentView.addSubview(top)
             }else{
                 cell.contentView.addSubview(top)
                 cell.contentView.addSubview(bottom)
-            }
+            }*/
         }
         
         cell.frame.origin.x += 5
@@ -173,7 +177,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSize(width: self.settingsCollection.frame.width/4 - 1,height: self.settingsCollection.frame.height/5 - 1);
+        return CGSize(width: self.settingsCollection.frame.width/4 - 1,height: self.settingsCollection.frame.height/5 - 10);
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
@@ -185,7 +189,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
-        return 0;
+        return 10;
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {

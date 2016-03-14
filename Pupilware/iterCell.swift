@@ -15,4 +15,9 @@ class iterCell: UICollectionViewCell{
     var digit = -1
     var iter = -1
     
+    convenience override init (frame: CGRect){
+        self.init(frame: frame)
+        //self.collectionElement = passedCollectionElement
+    }
+    
 }
