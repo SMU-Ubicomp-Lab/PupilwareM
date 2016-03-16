@@ -225,8 +225,8 @@ float radius;
     NSString *rightOutputVideoFileName = @"";
     
     timeStampValue = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
-    
-  //   NSLog(@"Time stamp %@", timeStampValue);
+
+    // NEED TO CHANGE THE FOLLOWING
     
     leftOutputVideoFileName = [NSString stringWithFormat:@"%@%@%@",
                      timeStampValue ,

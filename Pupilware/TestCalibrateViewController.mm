@@ -21,6 +21,7 @@
 #import "OpenCVBridge.h"
 
 @class commandControl;
+@class DataModel;
 // @class VideoDisplayViewController;
 
 using namespace cv;
@@ -31,8 +32,6 @@ NSString *rightOutputVideoFileName = @"";
 NSString *leftCalbFileName = @"";
 NSString *rightCalbFileName = @"";
 NSString *timeStampValue;
-
-
 
 
 @interface TestCalibrateViewController () <CvVideoCameraDelegate>
@@ -89,8 +88,10 @@ const int kgWindow = 4;
 
     self.iterationCounter = 0;
     self.numberOfIteration = 6;
+    _model = [DataModel sharedInstance];
 
-
+    // NSLog(@"Current subject id %@", _model.currentT);
+    
     
     [self preparePupilProcessor];
     isFinished = false;
@@ -252,6 +253,7 @@ const int kgWindow = 4;
     NSString *featureFile;
     NSFileHandle *fileHandle;
     
+
     NSString *docDir = NSSearchPathForDirectoriesInDomains(
                                                            NSDocumentDirectory,
                                                            NSUserDomainMask, YES
@@ -348,7 +350,7 @@ const int kgWindow = 4;
     
     processor->closeCapture();
     
-    // NSLog(@"Need to load calibration videos");
+     NSLog(@"Need to load calibration videos");
     
     VideoCapture leftCapture, rightCapture;
     
@@ -426,7 +428,7 @@ const int kgWindow = 4;
 
 -(BOOL)advanceIteration
 {
-   //  NSLog(@"Inside advance iteration %ld", (long)self.iterationCounter);
+     NSLog(@"Inside advance iteration %ld", (long)self.iterationCounter);
     if( self.iterationCounter < self.numberOfIteration )
     {
         self.iterationCounter++;
@@ -490,7 +492,7 @@ const int kgWindow = 4;
                 if(![self advanceIteration])
                 {
                     // Finished ALL iterations
-                   //  NSLog(@"Calling openresultview from under advance iteration ");
+                     NSLog(@"Finished all iterations -- Calling openresultview from under advance iteration ");
                     
                     
                     isStarted = false;
@@ -563,7 +565,7 @@ const int kgWindow = 4;
                                                           processor->getPupilSize()];
                            });
         }
-        // NSLog(@"Returning camera image");
+         // NSLog(@"Returning camera image");
         
         return cameraImage;
 
@@ -589,7 +591,7 @@ const int kgWindow = 4;
     NSError *error;
     [fm removeItemAtPath:outputFilePath error:&error];
     
-   //  NSLog(@"Output file path %@", outputFilePath);
+     NSLog(@"Output file path %@", outputFilePath);
     return outputFilePath;
 }
 
@@ -600,16 +602,24 @@ const int kgWindow = 4;
     // Get the timestamp to save the file
     timeStampValue = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
 
-    // NSLog(@"Time stamp %@", timeStampValue);
-
-    leftOutputVideoFileName = [NSString stringWithFormat:@"%@%@%@",
-                         timeStampValue ,
-                         @"_",
-                         @"LeftEye"];
-    rightOutputVideoFileName = [NSString stringWithFormat:@"%@%@%@",
-                          timeStampValue ,
-                          @"_",
-                          @"RightEye"];
+     NSLog(@"Time stamp %@", timeStampValue);
+    
+    // This is where I have to call the singleton function
+    
+    NSLog(@"subject ID %@", _model.currentSubjectID);
+    
+    leftOutputVideoFileName = [NSString stringWithFormat:@"%@%@%@%@%@",
+                               _model.currentSubjectID,
+                               @"_",
+                               timeStampValue ,
+                               @"_",
+                               @"LeftEye"];
+    rightOutputVideoFileName = [NSString stringWithFormat:@"%@%@%@%@%@",
+                                _model.currentSubjectID,
+                                @"_",
+                                timeStampValue ,
+                                @"_",
+                                @"RightEye"];
 
 
     // Do not want to run the process until pressing start.
@@ -622,7 +632,7 @@ const int kgWindow = 4;
         leftCalbFileName = [self getOutputFilePath:leftOutputVideoFileName];
         rightCalbFileName = [self getOutputFilePath:rightOutputVideoFileName];
 
-        // NSLog(@"VIdeo path = %@", leftCalbFileName);
+         NSLog(@"VIdeo path = %@", leftCalbFileName);
         processor = new PWPupilProcessor([leftCalbFileName UTF8String], [rightCalbFileName UTF8String]);
         processor->isShouldWriteVideo = true;
 
