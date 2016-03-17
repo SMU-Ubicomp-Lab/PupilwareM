@@ -17,10 +17,10 @@ import Foundation
     var digitIteration = 0
     var settings = (dist:60, movAvg:11, medBlur:11, baseStart:20, baseEnd:40, thresh:15, markCost:1, baseline: 0, cogHigh:0)
     var digitTestProgress = [
-        0: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        0: [5:[true, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         2: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
-        3: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        3: [5:[false, false, false, true],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         4: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
     ] as [Int:[Int:[Bool]]]
     
@@ -39,6 +39,22 @@ import Foundation
     func archiveSubjectIDs(){
         let data = NSKeyedArchiver.archivedDataWithRootObject(allSubjectIDs)
         NSUserDefaults.standardUserDefaults().setObject(data, forKey: "allSubjectIDs")
+    }
+    
+    func getRighEyeName()->NSString{
+        return self.currentTest!.labels.rightEye
+    }
+    
+    func getLeftEyeName()->NSString{
+        return self.currentTest!.labels.leftEye
+    }
+    
+    func getCSVFileName()->NSString{
+        return self.currentTest!.labels.csvFile
+    }
+    
+    func calParamFileName()->NSString{
+        return self.currentTest!.labels.calFile
     }
     
     func resetProgress(){
@@ -102,7 +118,7 @@ import Foundation
 }
 
 
-class DigitTest{
+@objc class DigitTest: NSObject{
     var digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
     var labels = (rightEye:"", leftEye:"", csvFile:"", calFile:"", rightEyeBase:"", leftEyeBase:"", csvFileBase:"", calFileBase:"")
     

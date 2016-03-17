@@ -94,7 +94,12 @@
                                         <rect key="frame" x="0.0" y="102" width="560" height="257"/>
                                         <color key="backgroundColor" red="0.92941176469999998" green="0.92941176469999998" blue="0.92941176469999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="8"/>
-                                        <collectionViewLayout key="collectionViewLayout" id="ZRL-Pj-jCT" customClass="UICollectionViewFlowLayout"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="24p-IB-bqY">
+                                            <size key="itemSize" width="50" height="50"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="header" id="4ud-qK-vcr" userLabel="customCell" customClass="iterCell" customModule="Pupilware" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="84" height="74"/>
@@ -194,7 +199,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="collectionView" destination="hEU-GR-NRf" id="6Xb-66-b8k"/>
                         <outlet property="contTitle" destination="bfN-W4-Joz" id="PAN-gC-Mby"/>
                         <outlet property="containerView" destination="oUJ-CU-lYh" id="S2y-Lb-Tap"/>
                         <outlet property="expBlock" destination="b73-6d-Q4k" id="YVf-tz-16F"/>

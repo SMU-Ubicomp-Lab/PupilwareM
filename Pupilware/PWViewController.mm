@@ -105,9 +105,9 @@ float radius;
                 }
             }
             
-            _model.faceInView = true;
+            self.model.faceInView = true;
         }else{
-            _model.faceInView = false;
+            self.model.faceInView = false;
         }
         
         // Displays the pupil size on the screen
@@ -154,7 +154,12 @@ float radius;
     [self.videoManager shouldColorMatch:YES];
 }
 
-
+-(DataModel*)model{
+    if(!_model){
+        _model = [DataModel sharedInstance];
+    }
+    return _model;
+}
 
 #pragma mark - View Controller Delegate
 
@@ -171,8 +176,6 @@ float radius;
     [self loadCamera];
 
     [self preparePupilProcessor];
-
-    _model = [DataModel sharedInstance];
 }
 
 
@@ -211,7 +214,6 @@ float radius;
         [self.videoManager stop];
     
     [super viewWillDisappear:animated];
-
 }
 
 #pragma mark - Pupilware Processor
@@ -221,21 +223,7 @@ float radius;
     // Define the file name for both left and right eyes. Instead of using the participant number
     // and ID, we will use timestamp and designate left and right eye
     
-    NSString *leftOutputVideoFileName = @"";
-    NSString *rightOutputVideoFileName = @"";
-    
     timeStampValue = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
-
-    // NEED TO CHANGE THE FOLLOWING
-    
-    leftOutputVideoFileName = [NSString stringWithFormat:@"%@%@%@",
-                     timeStampValue ,
-                     @"_",
-                     @"LeftEye"];
-    rightOutputVideoFileName = [NSString stringWithFormat:@"%@%@%@",
-                         timeStampValue ,
-                         @"_",
-                         @"RightEye"];
 
     // Do not want to run the process until pressing start.
     isFinished = true;
@@ -243,9 +231,9 @@ float radius;
     if( !processor )
     {
         // Tag on the complete path to the file name. Pass this to the new PWPupilProcessor
-        
-        NSString* leftOutputFilePath = [self getOutputFilePath:leftOutputVideoFileName];
-        NSString* rightOutputFilePath = [self getOutputFilePath:rightOutputVideoFileName];
+        [self.model.currentTest writeData];
+        NSString* leftOutputFilePath = [self getOutputFilePath:self.model.getLeftEyeName];
+        NSString* rightOutputFilePath = [self getOutputFilePath:self.model.getRighEyeName];
         
         processor = new PWPupilProcessor([leftOutputFilePath UTF8String], [rightOutputFilePath UTF8String]);
         
@@ -280,7 +268,7 @@ float radius;
                         objectAtIndex:0];
     
     NSString *outputFilePath = [docDir stringByAppendingPathComponent:
-                                [NSString stringWithFormat:@"%@_out.mp4", outputFileName]];
+                                [NSString stringWithFormat:@"%@.mp4", outputFileName]];
     
     NSFileManager *fm = [NSFileManager defaultManager];
     

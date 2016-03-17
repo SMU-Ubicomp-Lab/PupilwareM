@@ -17,7 +17,6 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     @IBOutlet var containerView: UIView!
     @IBOutlet weak var contTitle: UILabel!
     @IBOutlet weak var expBlock: UIView!
-    @IBOutlet weak var collectionView: UICollectionView!
     var digitNum = 5
     var iter = 1
     
@@ -27,10 +26,12 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
             self.presentSubjectID()
         }
         
-        settingsCollection.allowsMultipleSelection = true
-        containerView.layer.cornerRadius = 5
-        expBlock.layer.cornerRadius = 5
-        contTitle.text = "Welcome " + model.currentSubjectID
+        expBlock.hidden = true
+        
+        self.settingsCollection.allowsMultipleSelection = true
+        self.containerView.layer.cornerRadius = 5
+        self.expBlock.layer.cornerRadius = 5
+        self.contTitle.text = "Welcome " + model.currentSubjectID
     }
     
     @IBAction func tapSettings(sender: AnyObject) {
@@ -39,10 +40,10 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     
     @IBAction func lumChanged(sender: AnyObject) {
         //self.collectionView.reloadInputViews()
-        for cell in collectionView.visibleCells() as! [iterCell] {
+        for cell in self.settingsCollection.visibleCells() as! [iterCell] {
             cell.removeFromSuperview()
         }
-        self.collectionView.reloadData()
+        self.settingsCollection.reloadData()
         self.expBlock.hidden = false
         
     }
@@ -67,6 +68,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     @IBAction func startDigitTest(sender: AnyObject) {
         //settup test settings
         model.currentTest = DigitTest(subjectID: model.currentSubjectID, digits: self.digitNum, iter: self.iter, lux: self.expSegment.selectedSegmentIndex, exact_lux: Double(UIScreen.mainScreen().brightness))
+        print("TEST SET**********************")
         self.presentDigitSpanModal()
     }
     
@@ -103,6 +105,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     
     func digitSpanTestComplete(lum:Int, digits:Int, iter:Int){
         model.completeTest(lum, digit: digits, iter: iter);
+        model.currentTest = nil
     }
     
     func presentLuxMeter(){
@@ -129,55 +132,38 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
+        return 16
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let row = indexPath.row
-        
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("header", forIndexPath: indexPath) as! iterCell
-        cell.layer.borderColor = UIColor.blackColor().CGColor
         cell.frame.size.width = self.settingsCollection.frame.width/4 - 10
-        cell.frame.size.height = self.settingsCollection.frame.height/5 - 10
-        cell.contentView.layer.backgroundColor = UIColor.whiteColor().CGColor
-        cell.contentView.layer.cornerRadius = 5.0;
-        //let top = UIView(frame:CGRectMake(0,0,cell.bounds.size.width, 5))
-        //let bottom = UIView(frame:CGRectMake(0,cell.bounds.height-5,cell.bounds.size.width, 5))
-        //top.layer.backgroundColor = UIColor.greenColor().CGColor
-        //bottom.layer.backgroundColor = UIColor.blackColor().CGColor
-        cell.digit = (row%4) + 5
-        cell.iter = row/4
-        
-        if (cell.iter != 0 && model.isTestComplete(self.expSegment.selectedSegmentIndex, digit: cell.digit, iter: cell.iter)){
-            cell.label.textColor = UIColor.greenColor()
-        }else{
-            cell.label.textColor = UIColor.lightGrayColor()
-        }
+        cell.frame.size.height = self.settingsCollection.frame.height/4 - 10
+        cell.digit = (indexPath.row%4) + 5
+        cell.iter = indexPath.row/4
         
         if (cell.iter == 0){
             cell.header = true
-            cell.contentView.layer.backgroundColor = UIColor.clearColor().CGColor
             cell.label.text = String(indexPath.row + 5) + " Digits"
             cell.label.font = UIFont.boldSystemFontOfSize(17)
         }else{
             cell.header = false
             cell.label.text = String(cell.iter)
-            /*if(cell.iter == 1){
-                cell.contentView.addSubview(bottom)
-            }else if (cell.iter == 4){
-                cell.contentView.addSubview(top)
-            }else{
-                cell.contentView.addSubview(top)
-                cell.contentView.addSubview(bottom)
-            }*/
         }
         
-        cell.frame.origin.x += 5
+        cell.clearContent()
+        if (!cell.header && model.isTestComplete(self.expSegment.selectedSegmentIndex, digit: cell.digit, iter: cell.iter)){
+            cell.setDone()
+        }else{
+            cell.reset()
+        }
+        
+        //cell.frame.origin.x += 5
         return cell
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSize(width: self.settingsCollection.frame.width/4 - 1,height: self.settingsCollection.frame.height/5 - 10);
+        return CGSize(width: self.settingsCollection.frame.width/4 - 1,height: self.settingsCollection.frame.height/4 - 10);
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
@@ -194,10 +180,9 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         for cell in collectionView.visibleCells() as! [iterCell] {
+            cell.reset()
             if (!cell.header && model.isTestComplete(self.expSegment.selectedSegmentIndex, digit: cell.digit, iter: cell.iter)){
-                cell.label.textColor = UIColor.greenColor()
-            }else{
-                cell.label.textColor = UIColor.lightGrayColor()
+                cell.setDone()
             }
         }
     
@@ -205,7 +190,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         if (cell.header){
             return
         }else{
-            cell.label.textColor = UIColor.blueColor()
+            cell.setSelected()
             self.iter = cell.iter
             self.digitNum = cell.digit
             self.startButton.enabled = true

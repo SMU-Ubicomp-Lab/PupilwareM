@@ -415,7 +415,7 @@ const int kgWindow = 4;
     processor->windowSize_ud        = [self.pickedMutations[iterNumber][kmWindow] integerValue];
     processor->mbWindowSize_ud      = [self.pickedMutations[iterNumber][kgWindow] integerValue];
     
-//    processor->starburstStd = random(1,1,1);
+//    processor->starburstStd = [self.pickedMutations[iterNumber][kSTD] integerValue];
     
     
     

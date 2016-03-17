@@ -31,6 +31,9 @@ class expModalVC: UIViewController{
         timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: "updateFaceView", userInfo: nil, repeats: true)
         self.progressBar.setProgress(0, animated: true)
         self.completeButton.enabled = false
+        
+        print("*******************************")
+        print(model.currentTest!)
     }
     
     @IBAction func tapDone(sender: AnyObject) {
