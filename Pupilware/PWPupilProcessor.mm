@@ -160,8 +160,8 @@ namespace pw
         isGetBaselineFromVideo      = false;
         
         eyeDistance_ud       = 60.0f;
-        windowSize_ud        = 10;
-        mbWindowSize_ud      = 10;
+        windowSize_ud        = 11;
+        mbWindowSize_ud      = 11;
         baselineStart_ud     = 0;
         baselineEnd_ud       = 20;
         threshold_ud         = 20;

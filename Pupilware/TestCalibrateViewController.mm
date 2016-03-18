@@ -290,6 +290,8 @@ const int kgWindow = 4;
 
 -(void)openResultView
 {
+    [self viewWillDisappear:YES]; // Added this to stop calibration. Probably not the best way to do this.
+
     if(self.isCalibCogMax)
     {
         CalibrationResultViewController *distVC = [self.storyboard
@@ -582,7 +584,7 @@ const int kgWindow = 4;
                         objectAtIndex:0];
     
     NSString *outputFilePath = [docDir stringByAppendingPathComponent:
-                                [NSString stringWithFormat:@"%@_out.mp4", outputFileName]];
+                                [NSString stringWithFormat:@"%@_calb.mp4", outputFileName]];
     
     NSFileManager *fm = [NSFileManager defaultManager];
     

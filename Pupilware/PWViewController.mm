@@ -167,6 +167,8 @@ float radius;
 {
     [super viewDidLoad];
     
+    isFinished = false;
+    
    //  NSLog(@"Inside PWViewController");
     
     _experimentTitle.text = [NSString stringWithFormat:@"%@%@%@", self.experiment, @"  ", self.iteration];
@@ -213,6 +215,12 @@ float radius;
     if([self.videoManager isRunning])
         [self.videoManager stop];
     
+    // Added following two lines to close the capture files and process data
+    //
+    processor->closeCapture();
+    
+    [self processData];
+    
     [super viewWillDisappear:animated];
 }
 
@@ -226,7 +234,7 @@ float radius;
     timeStampValue = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
 
     // Do not want to run the process until pressing start.
-    isFinished = true;
+    // isFinished = true; // NOT SURE IF THIS IS WHAT I WANT TO DO.
     
     if( !processor )
     {
@@ -287,15 +295,15 @@ float radius;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    processor->eyeDistance_ud       = [defaults floatForKey:kEyeDistance];
-    processor->windowSize_ud        = (int)[defaults integerForKey:kWindowSize];
-    processor->mbWindowSize_ud      = (int)[defaults integerForKey:kMbWindowSize];
-    processor->baselineStart_ud     = (int)[defaults integerForKey:kBaselineStart];
-    processor->baselineEnd_ud       = (int)[defaults integerForKey:kBaselineEnd];
-    processor->threshold_ud         = (int)[defaults integerForKey:kThreshold];
-    processor->markCost             = (int)[defaults integerForKey:kMarkCost];
-    processor->baseline             = [defaults floatForKey:kBaseline];
-    processor->cogHigh              = [defaults floatForKey:kCogHighSize];
+//    processor->eyeDistance_ud       = [defaults floatForKey:kEyeDistance];
+//    processor->windowSize_ud        = (int)[defaults integerForKey:kWindowSize];
+//    processor->mbWindowSize_ud      = (int)[defaults integerForKey:kMbWindowSize];
+//    processor->baselineStart_ud     = (int)[defaults integerForKey:kBaselineStart];
+//    processor->baselineEnd_ud       = (int)[defaults integerForKey:kBaselineEnd];
+//    processor->threshold_ud         = (int)[defaults integerForKey:kThreshold];
+//    processor->markCost             = (int)[defaults integerForKey:kMarkCost];
+//    processor->baseline             = [defaults floatForKey:kBaseline];
+//    processor->cogHigh              = [defaults floatForKey:kCogHighSize];
 }
 
 
@@ -338,22 +346,24 @@ float radius;
   
     processor->process_signal();
     
+    NSLog(@"Inside process Data");
     
-    std::vector<float> result = processor->getResultGraph();
+    // std::vector<float> result = processor->getResultGraph();
     
     [self writeSignalToFile];
-    
-    DisplayDataViewController *distVC = [self.storyboard
-                                         instantiateViewControllerWithIdentifier:@"summaryVC"];
-    
-    if(distVC != nil)
-    {
-        distVC.dataPoints = vector2NSArray(result);
-        distVC.cogLevel = @(processor->getCognitiveLevel());
-        
-        [self presentViewController:distVC animated:YES completion:nil];
-    }
-    
+//    
+//    DisplayDataViewController *distVC = [self.storyboard
+//                                         instantiateViewControllerWithIdentifier:@"summaryVC"];
+//    
+//    if(distVC != nil)
+//    {
+//        distVC.dataPoints = vector2NSArray(result);
+//        distVC.cogLevel = @(processor->getCognitiveLevel());
+//        
+//        [self presentViewController:distVC animated:YES completion:nil];
+//    }
+//    NSLog(@"Finished process Data");
+//    
 }
 
 #pragma mark - OpenCV Delegate
