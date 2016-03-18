@@ -90,6 +90,10 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oUJ-CU-lYh">
                                 <rect key="frame" x="20" y="108" width="560" height="435"/>
                                 <subviews>
+                                    <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b73-6d-Q4k">
+                                        <rect key="frame" x="0.0" y="102" width="560" height="333"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="hEU-GR-NRf">
                                         <rect key="frame" x="0.0" y="102" width="560" height="257"/>
                                         <color key="backgroundColor" red="0.92941176469999998" green="0.92941176469999998" blue="0.92941176469999998" alpha="1" colorSpace="calibratedRGB"/>
@@ -98,11 +102,11 @@
                                             <size key="itemSize" width="50" height="50"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                            <inset key="sectionInset" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="header" id="4ud-qK-vcr" userLabel="customCell" customClass="iterCell" customModule="Pupilware" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="84" height="74"/>
+                                                <rect key="frame" x="10" y="0.0" width="84" height="74"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="84" height="74"/>
@@ -140,10 +144,6 @@
                                             <action selector="startDigitTest:" destination="N9n-Aa-AWL" eventType="touchUpInside" id="66g-77-8XT"/>
                                         </connections>
                                     </button>
-                                    <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b73-6d-Q4k">
-                                        <rect key="frame" x="0.0" y="102" width="560" height="333"/>
-                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                    </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Digit Span Test" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bfN-W4-Joz">
                                         <rect key="frame" x="8" y="8" width="544" height="33"/>
                                         <constraints>

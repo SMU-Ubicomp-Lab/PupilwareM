@@ -39,13 +39,8 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     }
     
     @IBAction func lumChanged(sender: AnyObject) {
-        //self.collectionView.reloadInputViews()
-        for cell in self.settingsCollection.visibleCells() as! [iterCell] {
-            cell.removeFromSuperview()
-        }
         self.settingsCollection.reloadData()
         self.expBlock.hidden = false
-        
     }
     
     @IBAction func changeLightingSegment(sender: AnyObject) {
@@ -136,7 +131,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("header", forIndexPath: indexPath) as! iterCell
+        let cell:iterCell = collectionView.dequeueReusableCellWithReuseIdentifier("header", forIndexPath: indexPath) as! iterCell
         cell.frame.size.width = self.settingsCollection.frame.width/4 - 10
         cell.frame.size.height = self.settingsCollection.frame.height/4 - 10
         cell.digit = (indexPath.row%4) + 5
@@ -145,17 +140,15 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         if (cell.iter == 0){
             cell.header = true
             cell.label.text = String(indexPath.row + 5) + " Digits"
-            cell.label.font = UIFont.boldSystemFontOfSize(17)
         }else{
             cell.header = false
             cell.label.text = String(cell.iter)
         }
         
-        cell.clearContent()
+        cell.resetCell()
+        
         if (!cell.header && model.isTestComplete(self.expSegment.selectedSegmentIndex, digit: cell.digit, iter: cell.iter)){
             cell.setDone()
-        }else{
-            cell.reset()
         }
         
         //cell.frame.origin.x += 5
@@ -163,11 +156,11 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSize(width: self.settingsCollection.frame.width/4 - 1,height: self.settingsCollection.frame.height/4 - 10);
+        return CGSize(width: self.settingsCollection.frame.width/4 - 10,height: self.settingsCollection.frame.height/4 - 10);
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-        return UIEdgeInsetsMake(0, 0, 0, 0);
+        return UIEdgeInsetsMake(0, 10, 0, 10);
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
@@ -180,7 +173,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         for cell in collectionView.visibleCells() as! [iterCell] {
-            cell.reset()
+            cell.resetCell()
             if (!cell.header && model.isTestComplete(self.expSegment.selectedSegmentIndex, digit: cell.digit, iter: cell.iter)){
                 cell.setDone()
             }

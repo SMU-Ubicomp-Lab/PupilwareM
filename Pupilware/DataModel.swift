@@ -8,22 +8,22 @@
 
 import Foundation
 
-@objc class DataModel:NSObject{
+@objc class DataModel: NSObject, NSCoding{
     static let sharedInstance = DataModel()
     var currentSubjectID:String = ""
     var allSubjectIDs:[String] = []
     var faceInView:Bool = false
     var currentTest:DigitTest?
     var digitIteration = 0
+    var calibrationNum = 1
     var settings = (dist:60, movAvg:11, medBlur:11, baseStart:20, baseEnd:40, thresh:15, markCost:1, baseline: 0, cogHigh:0)
     var digitTestProgress = [
         0: [5:[true, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         2: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
-        3: [5:[false, false, false, true],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        3: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         4: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
     ] as [Int:[Int:[Bool]]]
-    
     
     override init(){
         super.init()
@@ -55,6 +55,26 @@ import Foundation
     
     func calParamFileName()->NSString{
         return self.currentTest!.labels.calFile
+    }
+    
+    func saveNewCalibrationFiles(){
+        calibrationNum++
+    }
+    
+    func getCalibrationRightEye()->NSString{
+        return String(calibrationNum) + "_calibration_right_eye";
+    }
+    
+    func getCalibrationLeftEye()->NSString{
+        return String(calibrationNum) + "_calibration_left_eye";
+    }
+    
+    required init(coder decoder: NSCoder) {
+        self.calibrationNum = decoder.decodeIntegerForKey("caliNum")
+    }
+    
+    func encodeWithCoder(coder: NSCoder) {
+        coder.encodeInt(Int32(self.calibrationNum), forKey: "caliNum")
     }
     
     func resetProgress(){
@@ -119,6 +139,7 @@ import Foundation
 
 
 @objc class DigitTest: NSObject{
+    let model = DataModel.sharedInstance
     var digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
     var labels = (rightEye:"", leftEye:"", csvFile:"", calFile:"", rightEyeBase:"", leftEyeBase:"", csvFileBase:"", calFileBase:"")
     
@@ -171,7 +192,9 @@ import Foundation
             "right_eye_file_name" : self.labels.rightEye,
             "left_eye_file_name" : self.labels.leftEye,
             "csv_data_file_name" : self.labels.csvFile,
-            "calibration_file" : self.labels.calFile,
+            "calibration_right_eye" : model.getCalibrationRightEye(),
+            "calibration_left_eye" : model.getCalibrationLeftEye(),
+            "parameter_file" : self.labels.calFile,
             "write_time" : self.getTimeStamp()
         ]
         
@@ -179,7 +202,7 @@ import Foundation
         do {
             jsonData = try NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions())
             let jsonString = String(data: jsonData, encoding: NSUTF8StringEncoding)
-            print(jsonString)
+            print(jsonString!)
         } catch let error as NSError {
             print("Array to JSON conversion failed: \(error.localizedDescription)")
         }
