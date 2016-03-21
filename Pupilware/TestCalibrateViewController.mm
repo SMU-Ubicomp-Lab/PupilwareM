@@ -80,6 +80,15 @@ const int kStd = 2;
 const int kmWindow = 3;
 const int kgWindow = 4;
 
+-(DataModel*)model{
+    NSLog(@"Calling mdoel");
+    if(!_model){
+        NSLog(@"instantiating _model");
+        _model = [DataModel sharedInstance];
+        NSLog(@"curent test %@", _model.currentTest);
+    }
+    return _model;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -88,12 +97,13 @@ const int kgWindow = 4;
 
     self.iterationCounter = 0;
     self.numberOfIteration = 6;
-    _model = [DataModel sharedInstance];
+    // _model = [DataModel sharedInstance];
 
     // NSLog(@"Current subject id %@", _model.currentT);
     
     
-    [self preparePupilProcessor];
+    
+//    [self preparePupilProcessor];
     isFinished = false;
     
        if(!self.isCalibCogMax)
@@ -110,6 +120,8 @@ const int kgWindow = 4;
 
 
     [self loadCamera];
+    [self preparePupilProcessor];
+
     
     
     // Do any additional setup after loading the view.
@@ -175,12 +187,11 @@ const int kgWindow = 4;
     // initial parameter grid
     self.parameters = [NSMutableArray new];
     
-    [self.parameters addObject:@[@15,@25,@35]];
-    [self.parameters addObject:@[@1,@2,@3]];
-    [self.parameters addObject:@[@1,@1,@1]];
-    [self.parameters addObject:@[@11,@21,@31]];
-    [self.parameters addObject:@[@11,@21,@31]];
-    
+    [self.parameters addObject:@[@15,@25,@35]]; // kThreshold
+    [self.parameters addObject:@[@1,@2,@3]]; // kPrior
+    [self.parameters addObject:@[@1,@1,@1]]; // kstd
+    [self.parameters addObject:@[@11,@21,@31]]; // mwindowSize
+    [self.parameters addObject:@[@11,@21,@31]]; // gwindowSize
     
     self.pickedMutations = [[NSMutableArray alloc]init];
     
@@ -231,8 +242,12 @@ const int kgWindow = 4;
     }
     else
     {
+        NSLog(@"Inside process Data after process signals");
         std::vector<float> result = processor->getPupilPixel();
         results.push_back(result);
+        
+        for (int i = 0; i < result.size(); i++)
+            NSLog(@"Result at %f", result[i]);
         
         float stdV = calStd(result);
         float madV = calMad(result);
@@ -314,6 +329,42 @@ const int kgWindow = 4;
             return;
         }
         
+         NSArray* madValues = vector2NSArray(stdValues);
+        NSLog(@"MadValues %@",madValues);
+        
+        NSNumber* minvalue =[madValues valueForKeyPath:@"@min.floatValue"];
+        NSUInteger indexOfMinValue = [madValues indexOfObject:minvalue];
+        
+        if (indexOfMinValue>[self.pickedMutations count]) {
+            NSLog(@"Error: min value out of bound %d", indexOfMinValue);
+            return;
+        }
+        
+        NSLog(@"Value %@, Index %d",minvalue, indexOfMinValue);
+        NSLog(@"%@",self.pickedMutations[indexOfMinValue]);
+        
+        for( int i=0;i<=6;i++)
+        {
+            NSLog(@"size %@; paramiter %@",madValues[i], self.pickedMutations[i]);
+        }
+        
+        
+        //    const int kThreadhold = 0;
+        //    const int kPrior = 1;
+        //    const int kStd = 2;
+        //    const int kmWindow = 3;
+        //    const int kgWindow = 4;
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setInteger:[self.pickedMutations[indexOfMinValue][kThreadhold] intValue] forKey:@"s_threshold"];
+        [defaults setInteger:[self.pickedMutations[indexOfMinValue][kPrior] intValue] forKey:@"s_markCost"];
+        // [defaults setInteger:[self.pickedMutations[indexOfMinValue][kStd] intValue] forKey:@"s_threshold"];
+        [defaults setInteger:[self.pickedMutations[indexOfMinValue][kmWindow] intValue] forKey:@"s_mbWindowSize"];
+        [defaults setInteger:[self.pickedMutations[indexOfMinValue][kgWindow] intValue] forKey:@"s_windowSize"];
+
+        
+        [defaults synchronize];
+                
         // NSLog(@"Calling calibration result view controller");
         
         /*CalibrationResultViewController *distVC = [self.storyboard
@@ -608,16 +659,16 @@ const int kgWindow = 4;
     
     // This is where I have to call the singleton function
     
-    NSLog(@"subject ID %@", _model.currentSubjectID);
+    NSLog(@"subject ID %@", self.model.currentSubjectID);
     
     leftOutputVideoFileName = [NSString stringWithFormat:@"%@%@%@%@%@",
-                               _model.currentSubjectID,
+                               self.model.currentSubjectID,
                                @"_",
                                timeStampValue ,
                                @"_",
                                @"LeftEye"];
     rightOutputVideoFileName = [NSString stringWithFormat:@"%@%@%@%@%@",
-                                _model.currentSubjectID,
+                                self.model.currentSubjectID,
                                 @"_",
                                 timeStampValue ,
                                 @"_",
@@ -630,7 +681,37 @@ const int kgWindow = 4;
 
     if( !processor )
     {
+//        
+//        NSString* leftOutputFilePath = [self getOutputFilePath:_model.getLeftEyeName];
+//        NSString* rightOutputFilePath = [self getOutputFilePath:_model.getRighEyeName];
+        
+//        NSLog(@"Calling writeData");
+//        [self.model.currentTest writeData];
+//        
+//        NSLog(@"calling getCSVFilename");
+//
+//        NSString* csvFileName = self.model.getLeftEyeName;
+//        
+//        NSLog(@"csvFilename %@", csvFileName);
+        
+//        NSLog(@"left file name from getLeftEyeName %@", leftOutputFilePath);
+//        NSLog(@"Right file name from getRightEyeName %@", rightOutputFilePath);
+//
 
+        
+        // Tag on the complete path to the file name. Pass this to the new PWPupilProcessor
+     //   [self.model.currentTest writeData];
+                
+        
+        NSLog(@"tmp Left %@", self.model.getCalibrationLeftEye);
+        NSLog(@"tmp right %@", self.model.getCalibrationRightEye);
+
+        
+        leftOutputVideoFileName =self.model.getCalibrationLeftEye;
+        rightOutputVideoFileName =self.model.getCalibrationRightEye;
+        // self.model.saveNewCalibrationFiles;
+
+        
         leftCalbFileName = [self getOutputFilePath:leftOutputVideoFileName];
         rightCalbFileName = [self getOutputFilePath:rightOutputVideoFileName];
 

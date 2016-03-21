@@ -59,6 +59,8 @@ static const int kFramesPerSec = 15;
     //UIView *imageView;
     NSString *participantID;
     NSString * timeStampValue;
+    NSString * csvFileName;
+
 
 }
 
@@ -242,6 +244,7 @@ float radius;
         [self.model.currentTest writeData];
         NSString* leftOutputFilePath = [self getOutputFilePath:self.model.getLeftEyeName];
         NSString* rightOutputFilePath = [self getOutputFilePath:self.model.getRighEyeName];
+        csvFileName = self.model.getCSVFileName;
         
         processor = new PWPupilProcessor([leftOutputFilePath UTF8String], [rightOutputFilePath UTF8String]);
         
@@ -295,15 +298,18 @@ float radius;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-//    processor->eyeDistance_ud       = [defaults floatForKey:kEyeDistance];
-//    processor->windowSize_ud        = (int)[defaults integerForKey:kWindowSize];
-//    processor->mbWindowSize_ud      = (int)[defaults integerForKey:kMbWindowSize];
-//    processor->baselineStart_ud     = (int)[defaults integerForKey:kBaselineStart];
-//    processor->baselineEnd_ud       = (int)[defaults integerForKey:kBaselineEnd];
-//    processor->threshold_ud         = (int)[defaults integerForKey:kThreshold];
-//    processor->markCost             = (int)[defaults integerForKey:kMarkCost];
-//    processor->baseline             = [defaults floatForKey:kBaseline];
-//    processor->cogHigh              = [defaults floatForKey:kCogHighSize];
+    processor->eyeDistance_ud       = [defaults floatForKey:kEyeDistance];
+    processor->windowSize_ud        = (int)[defaults integerForKey:kWindowSize];
+    processor->mbWindowSize_ud      = (int)[defaults integerForKey:kMbWindowSize];
+    processor->baselineStart_ud     = (int)[defaults integerForKey:kBaselineStart];
+    processor->baselineEnd_ud       = (int)[defaults integerForKey:kBaselineEnd];
+    processor->threshold_ud         = (int)[defaults integerForKey:kThreshold];
+    processor->markCost             = (int)[defaults integerForKey:kMarkCost];
+    processor->baseline             = [defaults floatForKey:kBaseline];
+    processor->cogHigh              = [defaults floatForKey:kCogHighSize];
+    
+    NSLog(@"Default values in PWViewCOntroller");
+    NSLog(@"Eye Distance %f, window size %d, mbWindowsize %d, baseline start %d, basline end %d, threshold %d, mark cost %d, Baseline %f, coghigh %f", processor->eyeDistance_ud, processor->windowSize_ud, processor->mbWindowSize_ud, processor->baselineStart_ud, processor->baselineEnd_ud, processor->threshold_ud, processor->markCost, processor->baseline, processor->cogHigh);
 }
 
 
@@ -312,13 +318,19 @@ float radius;
     NSString *featureFile;
     NSFileHandle *fileHandle;
     
+    
     NSString *docDir = NSSearchPathForDirectoriesInDomains(
                                                            NSDocumentDirectory,
                                                            NSUserDomainMask, YES
                                                            )[0];
+//    featureFile = [docDir
+//                            stringByAppendingPathComponent:
+//                            [NSString stringWithFormat:@"%@_%@.csv", timeStampValue,self.iteration]];
+    
     featureFile = [docDir
-                            stringByAppendingPathComponent:
-                            [NSString stringWithFormat:@"%@_%@.csv", timeStampValue,self.iteration]];
+                   stringByAppendingPathComponent:
+                   [NSString stringWithFormat:@"%@.csv", csvFileName]];
+
 
     if  (![[NSFileManager defaultManager] fileExistsAtPath:featureFile]) {
         [[NSFileManager defaultManager]
