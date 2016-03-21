@@ -94,6 +94,14 @@ import Foundation
             3: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
             4: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
             ] as [Int:[Int:[Bool]]]
+        
+        digitTestAngleProgress = [
+            0: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+            1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+            2: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+            3: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+            4: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+            ] as [Int:[Int:[Bool]]]
     }
     
     
@@ -206,7 +214,7 @@ import Foundation
     func writeData(){
         var attempt = 1
         while (attempt <= 999){
-            let fileName = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_\(String(format: "%03d", attempt)).json)"
+            let fileName = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_\(String(format: "%03d", attempt)).json"
             self.labels.rightEye = "\(self.labels.rightEyeBase)_\(String(format: "%03d", attempt))"
             self.labels.leftEye = "\(self.labels.leftEyeBase)_\(String(format: "%03d", attempt))"
             self.labels.csvFile = "\(self.labels.csvFileBase)_\(String(format: "%03d", attempt))"
