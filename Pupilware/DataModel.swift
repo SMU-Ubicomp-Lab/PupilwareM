@@ -17,13 +17,22 @@ import Foundation
     var digitIteration = 0
     var calibrationNum = 1
     var settings = (dist:60, movAvg:11, medBlur:11, baseStart:20, baseEnd:40, thresh:15, markCost:1, baseline: 0, cogHigh:0)
-    var digitTestProgress = [
-        0: [5:[true, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+    var lumMode = true
+    var digitTestLumProgress = [
+        0: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         2: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         3: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         4: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
     ] as [Int:[Int:[Bool]]]
+    
+    var digitTestAngleProgress = [
+        0: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        2: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        3: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        4: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        ] as [Int:[Int:[Bool]]]
     
     override init(){
         super.init()
@@ -78,7 +87,7 @@ import Foundation
     }
     
     func resetProgress(){
-        digitTestProgress = [
+        digitTestLumProgress = [
             0: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
             1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
             2: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
@@ -89,51 +98,19 @@ import Foundation
     
     
     func completeTest(lum:Int, digit:Int, iter:Int){
-        self.digitTestProgress[lum]![digit]![iter-1] = true
+        if self.lumMode{
+            self.digitTestLumProgress[lum]![digit]![iter-1] = true
+        }else{
+            self.digitTestAngleProgress[lum]![digit]![iter-1] = true
+        }
     }
     
     func isTestComplete(lum:Int, digit:Int, iter:Int)->Bool{
-        return self.digitTestProgress[lum]![digit]![iter-1]
-    }
-    
-    func digitsForTest(digits: Int, iter: Int)->[Int]{
-        switch digits{
-        case 5:
-            switch iter{
-            case 1:return [1, 2, 3, 4, 5]
-            case 2:return [1, 2, 3, 4, 5]
-            case 3:return [1, 2, 3, 4, 5]
-            case 4:return [1, 2, 3, 4, 5]
-            default:print("DIGIT TEST NOT FOUND")
-            }
-        case 6:
-            switch iter{
-            case 1:return [1, 2, 3, 4, 5, 6]
-            case 2:return [1, 2, 3, 4, 5, 6]
-            case 3:return [1, 2, 3, 4, 5, 6]
-            case 4:return [1, 2, 3, 4, 5, 6]
-            default:print("DIGIT TEST NOT FOUND")
-            }
-        case 7:
-            switch iter{
-            case 1:return [1, 2, 3, 4, 5, 6, 7]
-            case 2:return [1, 2, 3, 4, 5, 6, 7]
-            case 3:return [1, 2, 3, 4, 5, 6, 7]
-            case 4:return [1, 2, 3, 4, 5, 6, 7]
-            default:print("DIGIT TEST NOT FOUND")
-            }
-        case 8:
-            switch iter{
-            case 1:return [1, 2, 3, 4, 5, 6, 7, 8]
-            case 2:return [1, 2, 3, 4, 5, 6, 7, 8]
-            case 3:return [1, 2, 3, 4, 5, 6, 7, 8]
-            case 4:return [1, 2, 3, 4, 5, 6, 7, 8]
-            default:print("DIGIT TEST NOT FOUND")
-            }
-        default:
-            print("DIGIT TEST NOT FOUND")
+        if self.lumMode{
+            return self.digitTestLumProgress[lum]![digit]![iter-1]
+        }else{
+            return self.digitTestAngleProgress[lum]![digit]![iter-1]
         }
-        return []
     }
 }
 
@@ -142,6 +119,7 @@ import Foundation
     let model = DataModel.sharedInstance
     var digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
     var labels = (rightEye:"", leftEye:"", csvFile:"", calFile:"", rightEyeBase:"", leftEyeBase:"", csvFileBase:"", calFileBase:"")
+    
     
     init(subjectID:String, digits:Int, iter:Int, lux:Int, exact_lux:Double){
         self.digits = digits
@@ -154,6 +132,63 @@ import Foundation
         self.labels.leftEyeBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_lefteye"
         self.labels.csvFileBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_data"
         self.labels.calFileBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_calibration"
+    }
+    
+    init(subjectID:String, digits:Int, iter:Int, angle:Int, exact_lux:Double){
+        self.digits = digits
+        self.iter = iter
+        self.lux = 0
+        self.exact_lux = exact_lux
+        self.subjectID = subjectID
+        self.angle = angle
+        self.labels.rightEyeBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_righteye"
+        self.labels.leftEyeBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_lefteye"
+        self.labels.csvFileBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_data"
+        self.labels.calFileBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_calibration"
+    }
+    
+    func completeTest(){
+        model.completeTest(lux, digit: digits, iter: iter)
+    }
+    
+    func getDigits()->[Int]{
+        switch digits{
+            case 5:
+                switch iter{
+                case 1:return [1, 2, 3, 4, 5]
+                case 2:return [1, 2, 3, 4, 5]
+                case 3:return [1, 2, 3, 4, 5]
+                case 4:return [1, 2, 3, 4, 5]
+                default:print("DIGIT TEST NOT FOUND")
+                }
+            case 6:
+                switch iter{
+                case 1:return [1, 2, 3, 4, 5, 6]
+                case 2:return [1, 2, 3, 4, 5, 6]
+                case 3:return [1, 2, 3, 4, 5, 6]
+                case 4:return [1, 2, 3, 4, 5, 6]
+                default:print("DIGIT TEST NOT FOUND")
+                }
+            case 7:
+                switch iter{
+                case 1:return [1, 2, 3, 4, 5, 6, 7]
+                case 2:return [1, 2, 3, 4, 5, 6, 7]
+                case 3:return [1, 2, 3, 4, 5, 6, 7]
+                case 4:return [1, 2, 3, 4, 5, 6, 7]
+                default:print("DIGIT TEST NOT FOUND")
+                }
+            case 8:
+                switch iter{
+                case 1:return [1, 2, 3, 4, 5, 6, 7, 8]
+                case 2:return [1, 2, 3, 4, 5, 6, 7, 8]
+                case 3:return [1, 2, 3, 4, 5, 6, 7, 8]
+                case 4:return [1, 2, 3, 4, 5, 6, 7, 8]
+                default:print("DIGIT TEST NOT FOUND")
+                }
+            default:
+                print("DIGIT TEST NOT FOUND")
+            }
+        return []
     }
     
     func getTimeStamp()->String{

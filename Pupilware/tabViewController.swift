@@ -22,11 +22,9 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if self.model.currentSubjectID == ""{
+        if (self.model.currentSubjectID == ""){
             self.presentSubjectID()
         }
-        
-        expBlock.hidden = true
         
         self.settingsCollection.allowsMultipleSelection = true
         self.containerView.layer.cornerRadius = 5
@@ -62,8 +60,11 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
 
     @IBAction func startDigitTest(sender: AnyObject) {
         //settup test settings
-        model.currentTest = DigitTest(subjectID: model.currentSubjectID, digits: self.digitNum, iter: self.iter, lux: self.expSegment.selectedSegmentIndex, exact_lux: Double(UIScreen.mainScreen().brightness))
-        print("TEST SET**********************")
+        if (model.lumMode){
+            model.currentTest = DigitTest(subjectID: model.currentSubjectID, digits: self.digitNum, iter: self.iter, lux: self.expSegment.selectedSegmentIndex+1, exact_lux: Double(UIScreen.mainScreen().brightness))
+        }else{
+            model.currentTest = DigitTest(subjectID: model.currentSubjectID, digits: self.digitNum, iter: self.iter, angle: self.expSegment.selectedSegmentIndex+1, exact_lux: Double(UIScreen.mainScreen().brightness))
+        }
         self.presentDigitSpanModal()
     }
     
@@ -94,12 +95,12 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         contTitle.text = "Welcome " + model.currentSubjectID
     }
     
-    func calibrationComplete(lum:Int){
+    func calibrationComplete(){
         expBlock.hidden = true
     }
     
-    func digitSpanTestComplete(lum:Int, digits:Int, iter:Int){
-        model.completeTest(lum, digit: digits, iter: iter);
+    func digitSpanTestComplete(){
+        model.currentTest?.completeTest()
         model.currentTest = nil
     }
     
@@ -107,10 +108,25 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         self.dismissViewControllerAnimated(true, completion:nil)
         self.presentModalView("lux")
     }
-    func presentAboutPage(){
+    
+    func switchModes(){
         self.dismissViewControllerAnimated(true, completion:nil)
-        
+        model.lumMode = !model.lumMode
+        if (model.lumMode){
+            self.expSegment.setTitle("Lum 0", forSegmentAtIndex: 0)
+            self.expSegment.setTitle("Lum 1", forSegmentAtIndex: 1)
+            self.expSegment.setTitle("Lum 2", forSegmentAtIndex: 2)
+            self.expSegment.setTitle("Lum 3", forSegmentAtIndex: 3)
+            self.expSegment.setTitle("Lum 4", forSegmentAtIndex: 4)
+        }else{
+            self.expSegment.setTitle("Angle 1", forSegmentAtIndex: 0)
+            self.expSegment.setTitle("Angle 2", forSegmentAtIndex: 1)
+            self.expSegment.setTitle("Angle 3", forSegmentAtIndex: 2)
+            self.expSegment.setTitle("Angle 4", forSegmentAtIndex: 3)
+            self.expSegment.setTitle("Angle 5", forSegmentAtIndex: 4)
+        }
     }
+    
     func presentAdminPage(){
         self.dismissViewControllerAnimated(true, completion:nil)
         self.presentModalView("admin")
@@ -195,9 +211,6 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     func presentDigitSpanModal(){
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("digitTest") as! expModalVC;
         vc.testName = String(self.digitNum) + " Digit: Iter " + String(self.iter) + " Test"
-        vc.digits = self.digitNum
-        vc.iter = self.iter
-        vc.lum = self.expSegment.selectedSegmentIndex
         vc.delegate = self
         let nav = UINavigationController(rootViewController: vc)
         self.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
@@ -207,8 +220,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     
     func presentCalibrationModal(){
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("calibrate") as! calModalVC;
-        vc.testName = "Lum " + String(expSegment.selectedSegmentIndex + 1) + ": Calibration"
-        vc.lum = expSegment.selectedSegmentIndex + 1
+        vc.testName =   self.expSegment.titleForSegmentAtIndex(self.expSegment.selectedSegmentIndex)! + ": Calibration"
         vc.delegate = self
         let nav = UINavigationController(rootViewController: vc)
         self.modalTransitionStyle = UIModalTransitionStyle.CoverVertical

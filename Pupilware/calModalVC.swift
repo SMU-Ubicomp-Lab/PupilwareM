@@ -14,7 +14,6 @@ class calModalVC: UIViewController{
     var testName:String = "Calibration"
     @IBOutlet weak var topBar: UINavigationItem!
     var delegate:sendBackDelegate?
-    var lum:Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +21,7 @@ class calModalVC: UIViewController{
     }
     
     @IBAction func tapDone(sender: AnyObject) {
-        delegate?.calibrationComplete(lum)
+        delegate?.calibrationComplete()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     

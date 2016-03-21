@@ -19,9 +19,6 @@ class expModalVC: UIViewController{
     @IBOutlet weak var completeButton: UIBarButtonItem!
     var delegate:sendBackDelegate?
     var testName:String = "Experiment N"
-    var digits:Int = 5
-    var lum:Int = 1
-    var iter:Int = 1
     var index:Int = 0
     var timer:NSTimer?
     
@@ -37,7 +34,7 @@ class expModalVC: UIViewController{
     }
     
     @IBAction func tapDone(sender: AnyObject) {
-        delegate?.digitSpanTestComplete(lum, digits: digits, iter: iter)
+        delegate?.digitSpanTestComplete()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -62,7 +59,7 @@ class expModalVC: UIViewController{
     
     func startDigitSpanTest()
     {
-        var numbers:[Int] = model.digitsForTest(digits, iter: iter)
+        var numbers:[Int] = (model.currentTest?.getDigits())!
         UIView.animateWithDuration(1.0, delay: 1.0, options: UIViewAnimationOptions.CurveEaseOut, animations:
             {
                 self.mainLabel!.alpha = 0.0
@@ -101,7 +98,7 @@ class expModalVC: UIViewController{
     
     @IBAction func completePressed(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
-        delegate?.digitSpanTestComplete((model.currentTest?.lux)!, digits: (model.currentTest?.digits)!, iter: (model.currentTest?.iter)!)
+        delegate?.digitSpanTestComplete()
     }
     
     override func viewDidDisappear(animated: Bool) {

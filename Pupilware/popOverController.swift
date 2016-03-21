@@ -33,7 +33,7 @@ class popOverController: UITableViewController{
             case 3:
                 delegate?.presentSettingsPage()
             case 4:
-                delegate?.presentAboutPage()
+                delegate?.switchModes()
             default:break
             }
         }
@@ -46,10 +46,10 @@ protocol sendBackDelegate{
     func iterChosen(iter:Int)
     func presentIDPicker()
     func subjectIDChosen()
-    func calibrationComplete(lum:Int)
-    func digitSpanTestComplete(lum:Int, digits:Int, iter:Int)
+    func calibrationComplete()
+    func digitSpanTestComplete()
     func presentLuxMeter()
-    func presentAboutPage()
+    func switchModes()
     func presentAdminPage()
     func presentSettingsPage()
 }
