@@ -100,8 +100,11 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     }
     
     func digitSpanTestComplete(){
+        print(model.digitTestLumProgress)
         model.currentTest?.completeTest()
         model.currentTest = nil
+        print(model.digitTestLumProgress)
+        self.settingsCollection.reloadData()
     }
     
     func presentLuxMeter(){
@@ -113,11 +116,11 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         self.dismissViewControllerAnimated(true, completion:nil)
         model.lumMode = !model.lumMode
         if (model.lumMode){
-            self.expSegment.setTitle("Lum 0", forSegmentAtIndex: 0)
-            self.expSegment.setTitle("Lum 1", forSegmentAtIndex: 1)
-            self.expSegment.setTitle("Lum 2", forSegmentAtIndex: 2)
-            self.expSegment.setTitle("Lum 3", forSegmentAtIndex: 3)
-            self.expSegment.setTitle("Lum 4", forSegmentAtIndex: 4)
+            self.expSegment.setTitle("Lum 1", forSegmentAtIndex: 0)
+            self.expSegment.setTitle("Lum 2", forSegmentAtIndex: 1)
+            self.expSegment.setTitle("Lum 3", forSegmentAtIndex: 2)
+            self.expSegment.setTitle("Lum 4", forSegmentAtIndex: 3)
+            self.expSegment.setTitle("Lum 5", forSegmentAtIndex: 4)
         }else{
             self.expSegment.setTitle("Angle 1", forSegmentAtIndex: 0)
             self.expSegment.setTitle("Angle 2", forSegmentAtIndex: 1)
@@ -125,6 +128,8 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
             self.expSegment.setTitle("Angle 4", forSegmentAtIndex: 3)
             self.expSegment.setTitle("Angle 5", forSegmentAtIndex: 4)
         }
+        
+        self.settingsCollection.reloadData()
     }
     
     func presentAdminPage(){
@@ -167,7 +172,6 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
             cell.setDone()
         }
         
-        //cell.frame.origin.x += 5
         return cell
     }
     

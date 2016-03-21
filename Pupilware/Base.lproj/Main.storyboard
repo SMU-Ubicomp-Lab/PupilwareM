@@ -260,11 +260,11 @@
                                                 <rect key="contentStretch" x="1" y="0.0" width="1" height="1"/>
                                                 <color key="progressTintColor" red="0.0" green="0.75157298660000005" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             </progressView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Setting Up Experiment" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ln-xF-epx">
-                                                <rect key="frame" x="166" y="8" width="268" height="46"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Setting Up Experiment" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ln-xF-epx">
+                                                <rect key="frame" x="29" y="8" width="543" height="46"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="46" id="vnM-ON-0sD"/>
-                                                    <constraint firstAttribute="width" constant="266" id="wG3-3e-pPa"/>
+                                                    <constraint firstAttribute="width" constant="543" id="wG3-3e-pPa"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>

@@ -19,19 +19,19 @@ import Foundation
     var settings = (dist:60, movAvg:11, medBlur:11, baseStart:20, baseEnd:40, thresh:15, markCost:1, baseline: 0, cogHigh:0)
     var lumMode = true
     var digitTestLumProgress = [
-        0: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         2: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         3: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         4: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        5: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
     ] as [Int:[Int:[Bool]]]
     
     var digitTestAngleProgress = [
-        0: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         2: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         3: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         4: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        5: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         ] as [Int:[Int:[Bool]]]
     
     override init(){
@@ -107,9 +107,9 @@ import Foundation
     
     func isTestComplete(lum:Int, digit:Int, iter:Int)->Bool{
         if self.lumMode{
-            return self.digitTestLumProgress[lum]![digit]![iter-1]
+            return self.digitTestLumProgress[lum+1]![digit]![iter-1]
         }else{
-            return self.digitTestAngleProgress[lum]![digit]![iter-1]
+            return self.digitTestAngleProgress[lum+1]![digit]![iter-1]
         }
     }
 }
@@ -127,7 +127,7 @@ import Foundation
         self.lux = lux
         self.exact_lux = exact_lux
         self.subjectID = subjectID
-        self.angle = 0
+        self.angle = -1
         self.labels.rightEyeBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_righteye"
         self.labels.leftEyeBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_lefteye"
         self.labels.csvFileBase = "\(subjectID)_lux\(lux)_\(digits)digits_iter\(iter)_data"
@@ -137,7 +137,7 @@ import Foundation
     init(subjectID:String, digits:Int, iter:Int, angle:Int, exact_lux:Double){
         self.digits = digits
         self.iter = iter
-        self.lux = 0
+        self.lux = -1
         self.exact_lux = exact_lux
         self.subjectID = subjectID
         self.angle = angle
@@ -148,7 +148,11 @@ import Foundation
     }
     
     func completeTest(){
-        model.completeTest(lux, digit: digits, iter: iter)
+        if lux == -1{
+             model.completeTest(angle, digit: digits, iter: iter)
+        }else{
+            model.completeTest(lux, digit: digits, iter: iter)
+        }
     }
     
     func getDigits()->[Int]{
