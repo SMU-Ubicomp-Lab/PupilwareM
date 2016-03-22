@@ -108,8 +108,11 @@ float radius;
             }
             
             self.model.faceInView = true;
+            [self.model.bridgeDelegate faceInView];
+            
         }else{
             self.model.faceInView = false;
+            [self.model.bridgeDelegate faceNotInView];
         }
         
         // Displays the pupil size on the screen

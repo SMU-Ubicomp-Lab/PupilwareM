@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pupilware/TestCalibrateViewController.mm"
-            timestampString = "479672690.18259"
+            timestampString = "480374892.561574"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "422"
-            endingLineNumber = "422"
-            landmarkName = "-prepareNextIteration:"
+            startingLineNumber = "421"
+            endingLineNumber = "421"
+            landmarkName = "-loadVideo:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

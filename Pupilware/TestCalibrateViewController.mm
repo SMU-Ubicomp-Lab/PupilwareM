@@ -81,11 +81,8 @@ const int kmWindow = 3;
 const int kgWindow = 4;
 
 -(DataModel*)model{
-    NSLog(@"Calling mdoel");
     if(!_model){
-        NSLog(@"instantiating _model");
         _model = [DataModel sharedInstance];
-        NSLog(@"curent test %@", _model.currentTest);
     }
     return _model;
 }
@@ -121,9 +118,6 @@ const int kgWindow = 4;
 
     [self loadCamera];
     [self preparePupilProcessor];
-
-    
-    
     // Do any additional setup after loading the view.
 }
 
@@ -133,6 +127,10 @@ const int kgWindow = 4;
     isFinished = true;
 
     [self processData];
+    
+    if(self.iterationCounter == self.numberOfIteration-1){
+        NSLog(@"FINISH");
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -173,7 +171,7 @@ const int kgWindow = 4;
 {
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    processor->eyeDistance_ud       = 60.0;//[defaults floatForKey:kEyeDistance];
+    processor->eyeDistance_ud       = [self.model getDist];//[defaults floatForKey:kEyeDistance];
     processor->windowSize_ud        = 11;//(int)[defaults integerForKey:kWindowSize];
     processor->mbWindowSize_ud      = 11;//(int)[defaults integerForKey:kMbWindowSize];
     processor->baselineStart_ud     = 20;//(int)[defaults integerForKey:kBaselineStart];
@@ -242,6 +240,7 @@ const int kgWindow = 4;
     }
     else
     {
+        [self.model.bridgeDelegate trackingFaceDone];
         NSLog(@"Inside process Data after process signals");
         std::vector<float> result = processor->getPupilPixel();
         results.push_back(result);
@@ -546,11 +545,11 @@ const int kgWindow = 4;
                 {
                     // Finished ALL iterations
                      NSLog(@"Finished all iterations -- Calling openresultview from under advance iteration ");
-                    
+                    [self.model.bridgeDelegate finishCalibration];
                     
                     isStarted = false;
                     dispatch_async(dispatch_get_main_queue(),^{
-                        [self openResultView];
+                        [self.model.bridgeDelegate finishCalibration];
                     });
                 }
             }
@@ -635,7 +634,7 @@ const int kgWindow = 4;
                         objectAtIndex:0];
     
     NSString *outputFilePath = [docDir stringByAppendingPathComponent:
-                                [NSString stringWithFormat:@"%@_calb.mp4", outputFileName]];
+                                [NSString stringWithFormat:@"%@.mp4", outputFileName]];
     
     NSFileManager *fm = [NSFileManager defaultManager];
     
@@ -661,6 +660,7 @@ const int kgWindow = 4;
     
     NSLog(@"subject ID %@", self.model.currentSubjectID);
     
+    /*
     leftOutputVideoFileName = [NSString stringWithFormat:@"%@%@%@%@%@",
                                self.model.currentSubjectID,
                                @"_",
@@ -673,7 +673,8 @@ const int kgWindow = 4;
                                 timeStampValue ,
                                 @"_",
                                 @"RightEye"];
-
+     */
+    
 
     // Do not want to run the process until pressing start.
     isFinished = false;
@@ -706,7 +707,7 @@ const int kgWindow = 4;
         NSLog(@"tmp Left %@", self.model.getCalibrationLeftEye);
         NSLog(@"tmp right %@", self.model.getCalibrationRightEye);
 
-        
+        [self.model setNewCalibrationFiles];
         leftOutputVideoFileName =self.model.getCalibrationLeftEye;
         rightOutputVideoFileName =self.model.getCalibrationRightEye;
         // self.model.saveNewCalibrationFiles;
@@ -721,6 +722,7 @@ const int kgWindow = 4;
 
         [self loadSettingToProcessor];
     }
+    
 }
 
 /*

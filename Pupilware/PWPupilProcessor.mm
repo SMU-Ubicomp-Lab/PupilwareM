@@ -890,7 +890,6 @@ namespace pw
             // NSLog(@"Closing right eye file");
             rightOutvideo.release();
         }
-
         return true;
     }
     

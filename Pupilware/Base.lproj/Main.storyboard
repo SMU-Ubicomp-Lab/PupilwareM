@@ -835,6 +835,8 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="loadingIcon" destination="9j3-JO-xGF" id="Ym9-RL-yj5"/>
+                        <outlet property="mainLabel" destination="dVk-Xl-Dhe" id="Agi-h6-Fzh"/>
                         <outlet property="topBar" destination="ooc-Qp-fOk" id="WzF-Pl-EvO"/>
                     </connections>
                 </viewController>

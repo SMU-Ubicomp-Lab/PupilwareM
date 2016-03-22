@@ -18,6 +18,7 @@ import Foundation
     var calibration_files = (right_eye:"", left_eye:"")
     var settings = (dist:60, movAvg:11, medBlur:11, baseStart:20, baseEnd:40, thresh:15, markCost:1, baseline: 0, cogHigh:0)
     var lumMode = true
+    var bridgeDelegate:BridgeDelegate?
     var digitTestLumProgress = [
         1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         2: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
@@ -461,4 +462,12 @@ class DigitTest: Test{
         }
         return true
     }
+}
+
+@objc protocol BridgeDelegate{
+    func trackingFaceDone()
+    func startTrackingFace()
+    func finishCalibration()
+    func faceInView()
+    func faceNotInView()
 }

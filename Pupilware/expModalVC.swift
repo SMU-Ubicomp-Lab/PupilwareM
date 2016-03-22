@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class expModalVC: UIViewController{
+class expModalVC: UIViewController, BridgeDelegate{
     let model = DataModel.sharedInstance
     @IBOutlet weak var topBar: UINavigationItem!
     @IBOutlet weak var mainLabel: UILabel!
@@ -24,6 +24,7 @@ class expModalVC: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.model.bridgeDelegate = self
         self.topBar.title = testName
         timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: "updateFaceView", userInfo: nil, repeats: true)
         self.progressBar.setProgress(0, animated: true)
@@ -32,6 +33,24 @@ class expModalVC: UIViewController{
         print("*******************************")
         print(model.currentTest!)
     }
+    
+    //DELEGATE FUNCTIONS
+    func trackingFaceDone(){
+        
+    }
+    func startTrackingFace(){
+        
+    }
+    func finishCalibration(){
+        
+    }
+    func faceInView(){
+        
+    }
+    func faceNotInView(){
+        
+    }
+    
     
     @IBAction func tapDone(sender: AnyObject) {
         delegate?.digitSpanTestComplete()
