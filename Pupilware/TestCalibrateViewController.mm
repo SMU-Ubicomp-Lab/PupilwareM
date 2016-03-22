@@ -85,7 +85,6 @@ const int kgWindow = 4;
     if(!_model){
         NSLog(@"instantiating _model");
         _model = [DataModel sharedInstance];
-        NSLog(@"curent test %@", _model.currentTest);
     }
     return _model;
 }
@@ -173,16 +172,32 @@ const int kgWindow = 4;
 {
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    processor->eyeDistance_ud       = 60.0;//[defaults floatForKey:kEyeDistance];
-    processor->windowSize_ud        = 11;//(int)[defaults integerForKey:kWindowSize];
-    processor->mbWindowSize_ud      = 11;//(int)[defaults integerForKey:kMbWindowSize];
-    processor->baselineStart_ud     = 20;//(int)[defaults integerForKey:kBaselineStart];
-    processor->baselineEnd_ud       = 40;//(int)[defaults integerForKey:kBaselineEnd];
-    processor->threshold_ud         = 15;//(int)[defaults integerForKey:kThreshold];
-    processor->markCost             = 1;//(int)[defaults integerForKey:kMarkCost];
-    processor->baseline             = 0.0;//[defaults floatForKey:kBaseline];
-    processor->cogHigh              = 0.0;//[defaults floatForKey:kCogHighSize];
+//    processor->eyeDistance_ud       = 60.0;//[defaults floatForKey:kEyeDistance];
+//    processor->windowSize_ud        = 11;//(int)[defaults integerForKey:kWindowSize];
+//    processor->mbWindowSize_ud      = 11;//(int)[defaults integerForKey:kMbWindowSize];
+//    processor->baselineStart_ud     = 20;//(int)[defaults integerForKey:kBaselineStart];
+//    processor->baselineEnd_ud       = 40;//(int)[defaults integerForKey:kBaselineEnd];
+//    processor->threshold_ud         = 15;//(int)[defaults integerForKey:kThreshold];
+//    processor->markCost             = 1;//(int)[defaults integerForKey:kMarkCost];
+//    processor->baseline             = 0.0;//[defaults floatForKey:kBaseline];
+//    processor->cogHigh              = 0.0;//[defaults floatForKey:kCogHighSize];
+//    
     
+    
+    processor->eyeDistance_ud       = self.model.getDist;
+    processor->windowSize_ud        = self.model.getMovAvg;
+    processor->mbWindowSize_ud      = self.model.getmedBlur;
+    processor->baselineStart_ud     = self.model.getBaseStart;
+    processor->baselineEnd_ud       = self.model.getBaseEnd;
+    processor->threshold_ud         = self.model.getThresh;
+    processor->markCost             = self.model.getMarkCost;
+    processor->baseline             = self.model.getBaseline;
+    processor->cogHigh              = self.model.getCogHigh;
+
+    
+    NSLog(@"Default values in TestViewController ");
+    NSLog(@"Eye Distance %f, window size %d, mbWindowsize %d, baseline start %d, basline end %d, threshold %d, mark cost %d, Baseline %f, coghigh %f", processor->eyeDistance_ud, processor->windowSize_ud, processor->mbWindowSize_ud, processor->baselineStart_ud, processor->baselineEnd_ud, processor->threshold_ud, processor->markCost, processor->baseline, processor->cogHigh);
+
     
     // initial parameter grid
     self.parameters = [NSMutableArray new];
@@ -364,7 +379,7 @@ const int kgWindow = 4;
 
         
         [defaults synchronize];
-                
+                        
         // NSLog(@"Calling calibration result view controller");
         
         /*CalibrationResultViewController *distVC = [self.storyboard
@@ -705,11 +720,14 @@ const int kgWindow = 4;
         
         NSLog(@"tmp Left %@", self.model.getCalibrationLeftEye);
         NSLog(@"tmp right %@", self.model.getCalibrationRightEye);
-
+    
         
         leftOutputVideoFileName =self.model.getCalibrationLeftEye;
         rightOutputVideoFileName =self.model.getCalibrationRightEye;
         // self.model.saveNewCalibrationFiles;
+        
+        NSLog(@"Eye Distance %d", self.model.getDist);
+
 
         
         leftCalbFileName = [self getOutputFilePath:leftOutputVideoFileName];
