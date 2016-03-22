@@ -171,29 +171,6 @@ const int kgWindow = 4;
 {
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-<<<<<<< HEAD
-    processor->eyeDistance_ud       = [self.model getDist];//[defaults floatForKey:kEyeDistance];
-    processor->windowSize_ud        = 11;//(int)[defaults integerForKey:kWindowSize];
-    processor->mbWindowSize_ud      = 11;//(int)[defaults integerForKey:kMbWindowSize];
-    processor->baselineStart_ud     = 20;//(int)[defaults integerForKey:kBaselineStart];
-    processor->baselineEnd_ud       = 40;//(int)[defaults integerForKey:kBaselineEnd];
-    processor->threshold_ud         = 15;//(int)[defaults integerForKey:kThreshold];
-    processor->markCost             = 1;//(int)[defaults integerForKey:kMarkCost];
-    processor->baseline             = 0.0;//[defaults floatForKey:kBaseline];
-    processor->cogHigh              = 0.0;//[defaults floatForKey:kCogHighSize];
-=======
-//    processor->eyeDistance_ud       = 60.0;//[defaults floatForKey:kEyeDistance];
-//    processor->windowSize_ud        = 11;//(int)[defaults integerForKey:kWindowSize];
-//    processor->mbWindowSize_ud      = 11;//(int)[defaults integerForKey:kMbWindowSize];
-//    processor->baselineStart_ud     = 20;//(int)[defaults integerForKey:kBaselineStart];
-//    processor->baselineEnd_ud       = 40;//(int)[defaults integerForKey:kBaselineEnd];
-//    processor->threshold_ud         = 15;//(int)[defaults integerForKey:kThreshold];
-//    processor->markCost             = 1;//(int)[defaults integerForKey:kMarkCost];
-//    processor->baseline             = 0.0;//[defaults floatForKey:kBaseline];
-//    processor->cogHigh              = 0.0;//[defaults floatForKey:kCogHighSize];
-//    
->>>>>>> origin/master
-    
     
     processor->eyeDistance_ud       = self.model.getDist;
     processor->windowSize_ud        = self.model.getMovAvg;
@@ -734,13 +711,8 @@ const int kgWindow = 4;
         
         NSLog(@"tmp Left %@", self.model.getCalibrationLeftEye);
         NSLog(@"tmp right %@", self.model.getCalibrationRightEye);
-<<<<<<< HEAD
 
         [self.model setNewCalibrationFiles];
-=======
-    
-        
->>>>>>> origin/master
         leftOutputVideoFileName =self.model.getCalibrationLeftEye;
         rightOutputVideoFileName =self.model.getCalibrationRightEye;
         // self.model.saveNewCalibrationFiles;
