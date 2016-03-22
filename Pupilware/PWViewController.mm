@@ -244,10 +244,11 @@ float radius;
     if( !processor )
     {
         // Tag on the complete path to the file name. Pass this to the new PWPupilProcessor
-        [self.model writeMetaData];
         NSString* leftOutputFilePath = [self getOutputFilePath:self.model.getLeftEyeName];
         NSString* rightOutputFilePath = [self getOutputFilePath:self.model.getRighEyeName];
         csvFileName = self.model.getCSVFileName;
+        
+        NSLog(@"Eye Distance %d", self.model.getDist);
         
         processor = new PWPupilProcessor([leftOutputFilePath UTF8String], [rightOutputFilePath UTF8String]);
         
@@ -301,15 +302,17 @@ float radius;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    processor->eyeDistance_ud       = [defaults floatForKey:kEyeDistance];
-    processor->windowSize_ud        = (int)[defaults integerForKey:kWindowSize];
-    processor->mbWindowSize_ud      = (int)[defaults integerForKey:kMbWindowSize];
-    processor->baselineStart_ud     = (int)[defaults integerForKey:kBaselineStart];
-    processor->baselineEnd_ud       = (int)[defaults integerForKey:kBaselineEnd];
-    processor->threshold_ud         = (int)[defaults integerForKey:kThreshold];
-    processor->markCost             = (int)[defaults integerForKey:kMarkCost];
-    processor->baseline             = [defaults floatForKey:kBaseline];
-    processor->cogHigh              = [defaults floatForKey:kCogHighSize];
+    processor->eyeDistance_ud       = self.model.getDist;
+    processor->windowSize_ud        = self.model.getMovAvg;
+    processor->mbWindowSize_ud      = self.model.getmedBlur;
+    processor->baselineStart_ud     = self.model.getBaseStart;
+    processor->baselineEnd_ud       = self.model.getBaseEnd;
+    processor->threshold_ud         = self.model.getThresh;
+    processor->markCost             = self.model.getMarkCost;
+    processor->baseline             = self.model.getBaseline;
+    processor->cogHigh              = self.model.getCogHigh;
+    
+
     
     NSLog(@"Default values in PWViewCOntroller");
     NSLog(@"Eye Distance %f, window size %d, mbWindowsize %d, baseline start %d, basline end %d, threshold %d, mark cost %d, Baseline %f, coghigh %f", processor->eyeDistance_ud, processor->windowSize_ud, processor->mbWindowSize_ud, processor->baselineStart_ud, processor->baselineEnd_ud, processor->threshold_ud, processor->markCost, processor->baseline, processor->cogHigh);
