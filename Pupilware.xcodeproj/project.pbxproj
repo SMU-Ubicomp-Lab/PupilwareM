@@ -14,6 +14,7 @@
 		9748FF711C6092B700143D54 /* calibrate.png in Resources */ = {isa = PBXBuildFile; fileRef = 9748FF6E1C6092B700143D54 /* calibrate.png */; };
 		9748FF721C6092B700143D54 /* gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 9748FF6F1C6092B700143D54 /* gear.png */; };
 		9748FF731C6092B700143D54 /* beaker.png in Resources */ = {isa = PBXBuildFile; fileRef = 9748FF701C6092B700143D54 /* beaker.png */; };
+		975C29031CA074210001FF95 /* targetSetupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975C29021CA074210001FF95 /* targetSetupVC.swift */; };
 		976803C81C97429E003D63C8 /* hash.png in Resources */ = {isa = PBXBuildFile; fileRef = 976803C61C97429E003D63C8 /* hash.png */; };
 		976803C91C97429E003D63C8 /* target.png in Resources */ = {isa = PBXBuildFile; fileRef = 976803C71C97429E003D63C8 /* target.png */; };
 		97A321471C59CDB300B1EB98 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A321461C59CDB300B1EB98 /* AppDelegate.swift */; };
@@ -66,6 +67,7 @@
 		9748FF6E1C6092B700143D54 /* calibrate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calibrate.png; sourceTree = "<group>"; };
 		9748FF6F1C6092B700143D54 /* gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gear.png; sourceTree = "<group>"; };
 		9748FF701C6092B700143D54 /* beaker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = beaker.png; sourceTree = "<group>"; };
+		975C29021CA074210001FF95 /* targetSetupVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = targetSetupVC.swift; sourceTree = "<group>"; };
 		976803C61C97429E003D63C8 /* hash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hash.png; sourceTree = "<group>"; };
 		976803C71C97429E003D63C8 /* target.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = target.png; sourceTree = "<group>"; };
 		97A321431C59CDB300B1EB98 /* Pupilware.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pupilware.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -188,6 +190,7 @@
 				97A3214A1C59CDB300B1EB98 /* Main.storyboard */,
 				97A321591C59CFF100B1EB98 /* DataModel.swift */,
 				97A89CAE1C5B5EA600D9E193 /* tabViewController.swift */,
+				975C29021CA074210001FF95 /* targetSetupVC.swift */,
 				97DB32CA1C75AB930024A22F /* adminVC.swift */,
 				97D487281C933F0A00774958 /* settingsVC.swift */,
 				97DB32CC1C75ABB30024A22F /* luxVC.swift */,
@@ -399,6 +402,7 @@
 				97A3215C1C59E1BB00B1EB98 /* subjectIDModalVC.swift in Sources */,
 				97DB32CD1C75ABB30024A22F /* luxVC.swift in Sources */,
 				97A321491C59CDB300B1EB98 /* homeVC.swift in Sources */,
+				975C29031CA074210001FF95 /* targetSetupVC.swift in Sources */,
 				97A321471C59CDB300B1EB98 /* AppDelegate.swift in Sources */,
 				9711B09A1C7F670F006EE548 /* iterCell.swift in Sources */,
 				97D487271C93302500774958 /* TestCalibrateViewController.mm in Sources */,

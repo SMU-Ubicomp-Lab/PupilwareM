@@ -241,7 +241,7 @@ float radius;
     if( !processor )
     {
         // Tag on the complete path to the file name. Pass this to the new PWPupilProcessor
-        [self.model.currentTest writeData];
+        [self.model writeMetaData];
         NSString* leftOutputFilePath = [self getOutputFilePath:self.model.getLeftEyeName];
         NSString* rightOutputFilePath = [self getOutputFilePath:self.model.getRighEyeName];
         csvFileName = self.model.getCSVFileName;
