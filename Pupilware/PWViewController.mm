@@ -108,11 +108,18 @@ float radius;
             }
             
             self.model.faceInView = true;
-            [self.model.bridgeDelegate faceInView];
+            dispatch_async(dispatch_get_main_queue(),
+                           ^{
+                               [self.model.bridgeDelegate faceInView];
+                           });
+            //[self.model.bridgeDelegate faceInView];
             
         }else{
             self.model.faceInView = false;
-            [self.model.bridgeDelegate faceNotInView];
+            dispatch_async(dispatch_get_main_queue(),
+                           ^{
+                               [self.model.bridgeDelegate faceNotInView];
+                           });
         }
         
         // Displays the pupil size on the screen

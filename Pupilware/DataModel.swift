@@ -27,7 +27,15 @@ import Foundation
         5: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
     ] as [Int:[Int:[Bool]]]
     
-    var digitTestAngleProgress = [0:[false, false, false, false],1:[false, false, false, false],2:[false, false, false, false],3:[false, false, false, false]] as [Int:[Bool]]
+    var digitTestAngleProgress = [
+        1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        2: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        3: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        4: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        5: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+        ] as [Int:[Int:[Bool]]]
+    
+    var targetTestProgress = [false,false,false,false]
     
     override init(){
         super.init()
@@ -98,24 +106,38 @@ import Foundation
             4: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
             ] as [Int:[Int:[Bool]]]
         
-        digitTestAngleProgress = [0:[false, false, false, false],1:[false, false, false, false],1:[false, false, false, false],3:[false, false, false, false]] as [Int:[Bool]]
+        digitTestAngleProgress = [
+            1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+            2: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+            3: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+            4: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+            5: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
+            ] as [Int:[Int:[Bool]]]
     }
     
     
-    func completeTest(lum:Int, digit:Int, iter:Int){
-        if self.lumMode{
+    func completeDigitTest(lum:Int, digit:Int, iter:Int){
+        if (self.lumMode){
             self.digitTestLumProgress[lum]![digit]![iter-1] = true
         }else{
-            self.digitTestAngleProgress[digit]![iter-1] = true
+            self.digitTestAngleProgress[lum]![digit]![iter-1] = true
         }
     }
     
-    func isTestComplete(lum:Int, digit:Int, iter:Int)->Bool{
+    func compeleteTargetTest(missing_digit:Int){
+        
+    }
+    
+    func isDigitTestComplete(lum:Int, digit:Int, iter:Int)->Bool{
         if self.lumMode{
             return self.digitTestLumProgress[lum+1]![digit]![iter-1]
         }else{
-            return self.digitTestAngleProgress[digit]![iter-1]
+            return self.digitTestAngleProgress[lum+1]![digit]![iter-1]
         }
+    }
+    
+    func isTargetTestComplete(iter:Int)->Bool{
+        return self.targetTestProgress[iter-1]
     }
 }
 
@@ -167,43 +189,19 @@ class TargetTest: Test{
     }
     
     func completeTest(){
-        //model.completeTest(angle, digit: digits, iter: iter)
+        model.compeleteTargetTest(iter)
     }
     
     func getDigits()->[Int]{
-        switch missing_digits{
+        switch iter{
         case 0:
-            switch iter{
-            case 1:return [1, 2, 3, 4, 5]
-            case 2:return [1, 2, 3, 4, 5]
-            case 3:return [1, 2, 3, 4, 5]
-            case 4:return [1, 2, 3, 4, 5]
-            default:print("DIGIT TEST NOT FOUND")
-            }
+            return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
         case 1:
-            switch iter{
-            case 1:return [1, 2, 3, 4, 5, 6]
-            case 2:return [1, 2, 3, 4, 5, 6]
-            case 3:return [1, 2, 3, 4, 5, 6]
-            case 4:return [1, 2, 3, 4, 5, 6]
-            default:print("DIGIT TEST NOT FOUND")
-            }
+            return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
         case 2:
-            switch iter{
-            case 1:return [1, 2, 3, 4, 5, 6, 7]
-            case 2:return [1, 2, 3, 4, 5, 6, 7]
-            case 3:return [1, 2, 3, 4, 5, 6, 7]
-            case 4:return [1, 2, 3, 4, 5, 6, 7]
-            default:print("DIGIT TEST NOT FOUND")
-            }
+            return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
         case 3:
-            switch iter{
-            case 1:return [1, 2, 3, 4, 5, 6, 7, 8]
-            case 2:return [1, 2, 3, 4, 5, 6, 7, 8]
-            case 3:return [1, 2, 3, 4, 5, 6, 7, 8]
-            case 4:return [1, 2, 3, 4, 5, 6, 7, 8]
-            default:print("DIGIT TEST NOT FOUND")
-            }
+            return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
         default:
             print("TARGET TEST NOT FOUND")
         }
@@ -340,9 +338,9 @@ class DigitTest: Test{
     
     func completeTest(){
         if lux == -1{
-             model.completeTest(angle, digit: digits, iter: iter)
+             model.completeDigitTest(angle, digit: digits, iter: iter)
         }else{
-            model.completeTest(lux, digit: digits, iter: iter)
+            model.completeDigitTest(lux, digit: digits, iter: iter)
         }
     }
     

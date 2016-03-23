@@ -33,7 +33,6 @@ class calModalVC: UIViewController, BridgeDelegate{
     }
     
     func finishCalibration(){
-        print("RUNNING")
         delegate?.calibrationComplete()
         self.dismissViewControllerAnimated(true, completion: nil)
     }

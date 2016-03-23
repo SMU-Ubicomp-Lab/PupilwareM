@@ -26,6 +26,8 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
             self.presentSubjectID()
         }
         
+        self.expBlock.hidden = true
+        
         self.settingsCollection.allowsMultipleSelection = true
         self.containerView.layer.cornerRadius = 5
         self.expBlock.layer.cornerRadius = 5
@@ -168,7 +170,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         
         cell.resetCell()
         
-        if (!cell.header && model.isTestComplete(self.expSegment.selectedSegmentIndex, digit: cell.digit, iter: cell.iter)){
+        if (!cell.header && model.isDigitTestComplete(self.expSegment.selectedSegmentIndex, digit: cell.digit, iter: cell.iter)){
             cell.setDone()
         }
         
@@ -194,7 +196,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         for cell in collectionView.visibleCells() as! [iterCell] {
             cell.resetCell()
-            if (!cell.header && model.isTestComplete(self.expSegment.selectedSegmentIndex, digit: cell.digit, iter: cell.iter)){
+            if (!cell.header && model.isDigitTestComplete(self.expSegment.selectedSegmentIndex, digit: cell.digit, iter: cell.iter)){
                 cell.setDone()
             }
         }

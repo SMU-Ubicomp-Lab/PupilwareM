@@ -20,18 +20,15 @@ class expModalVC: UIViewController, BridgeDelegate{
     var delegate:sendBackDelegate?
     var testName:String = "Experiment N"
     var index:Int = 0
-    var timer:NSTimer?
+    var testStarted:Bool = false
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.model.bridgeDelegate = self
         self.topBar.title = testName
-        timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: "updateFaceView", userInfo: nil, repeats: true)
         self.progressBar.setProgress(0, animated: true)
         self.completeButton.enabled = false
-        
-        print("*******************************")
-        print(model.currentTest!)
     }
     
     //DELEGATE FUNCTIONS
@@ -45,35 +42,30 @@ class expModalVC: UIViewController, BridgeDelegate{
         
     }
     func faceInView(){
+        if self.testStarted{return}
         
+        if (self.progressBar.progress >= 1){
+            self.loadingView.hidden = true
+            self.startDigitSpanTest()
+            self.testStarted = true
+            return
+        }
+        
+        self.indicator.text = "Keep Face In View"
+        self.indicator.textColor = UIColor.greenColor().colorWithAlphaComponent(0.5)
+        self.progressBar.setProgress(self.progressBar.progress + 0.01, animated: true)
     }
+    
     func faceNotInView(){
-        
+        self.indicator.text = "Face Not In View"
+        self.indicator.textColor = UIColor.redColor().colorWithAlphaComponent(0.5)
+        self.progressBar.setProgress(0, animated: true)
     }
     
     
     @IBAction func tapDone(sender: AnyObject) {
         delegate?.digitSpanTestComplete()
         self.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func updateFaceView(){
-        if (self.progressBar.progress >= 1){
-            self.loadingView.hidden = true
-            self.startDigitSpanTest()
-            timer?.invalidate()
-            return
-        }
-        
-        if(self.model.faceInView){
-            self.indicator.text = "Keep Face In View"
-            self.indicator.textColor = UIColor.greenColor().colorWithAlphaComponent(0.5)
-            self.progressBar.setProgress(self.progressBar.progress + 0.1, animated: true)
-        }else{
-            self.indicator.text = "Face Not In View"
-            self.indicator.textColor = UIColor.redColor().colorWithAlphaComponent(0.5)
-            self.progressBar.setProgress(0, animated: true)
-        }
     }
     
     func startDigitSpanTest()
@@ -121,7 +113,6 @@ class expModalVC: UIViewController, BridgeDelegate{
     }
     
     override func viewDidDisappear(animated: Bool) {
-        timer?.invalidate()
     }
     
 }

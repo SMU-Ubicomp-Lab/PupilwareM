@@ -245,7 +245,9 @@ const int kgWindow = 4;
     }
     else
     {
-        [self.model.bridgeDelegate trackingFaceDone];
+        dispatch_async(dispatch_get_main_queue(),^{
+            [self.model.bridgeDelegate trackingFaceDone];
+        });
         NSLog(@"Inside process Data after process signals");
         std::vector<float> result = processor->getPupilPixel();
         results.push_back(result);
@@ -550,7 +552,6 @@ const int kgWindow = 4;
                 {
                     // Finished ALL iterations
                      NSLog(@"Finished all iterations -- Calling openresultview from under advance iteration ");
-                    [self.model.bridgeDelegate finishCalibration];
                     
                     isStarted = false;
                     dispatch_async(dispatch_get_main_queue(),^{

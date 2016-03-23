@@ -112,19 +112,19 @@ class targetSetupVC: UIViewController, UIPopoverPresentationControllerDelegate, 
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 0
+        return 5
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell:iterCell = collectionView.dequeueReusableCellWithReuseIdentifier("header", forIndexPath: indexPath) as! iterCell
-        cell.frame.size.width = self.targetCollection.frame.width/4 - 10
-        cell.frame.size.height = self.targetCollection.frame.height/4 - 10
+        cell.frame.size.width = self.targetCollection.frame.width - 10
+        cell.frame.size.height = self.targetCollection.frame.height/5 - 10
         cell.digit = (indexPath.row%4) + 5
-        cell.iter = indexPath.row/4
+        cell.iter = indexPath.row
         
         if (cell.iter == 0){
             cell.header = true
-            cell.label.text = String(indexPath.row + 5) + " Digits"
+            cell.label.text = "Target Iterations"
         }else{
             cell.header = false
             cell.label.text = String(cell.iter)
@@ -132,15 +132,15 @@ class targetSetupVC: UIViewController, UIPopoverPresentationControllerDelegate, 
         
         cell.resetCell()
         
-        /*if (!cell.header && model.isTestComplete(self.expSegment.selectedSegmentIndex, digit: cell.digit, iter: cell.iter)){
+        if (!cell.header && model.isTargetTestComplete(cell.iter)){
             cell.setDone()
-        }*/
+        }
         
         return cell
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSize(width: self.targetCollection.frame.width/4 - 10,height: self.targetCollection.frame.height/4 - 10);
+        return CGSize(width: self.targetCollection.frame.width - 10,height: self.targetCollection.frame.height/5 - 10);
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
@@ -158,9 +158,9 @@ class targetSetupVC: UIViewController, UIPopoverPresentationControllerDelegate, 
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         for cell in collectionView.visibleCells() as! [iterCell] {
             cell.resetCell()
-            /*if (!cell.header && model.isTestComplete(self.expSegment.selectedSegmentIndex, digit: cell.digit, iter: cell.iter)){
+            if (!cell.header && model.isTargetTestComplete(cell.iter)){
                 cell.setDone()
-            }*/
+            }
         }
         
         let cell = collectionView.cellForItemAtIndexPath(indexPath) as! iterCell
