@@ -827,7 +827,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Calibration" id="ooc-Qp-fOk">
-                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="CjA-6Y-OfI">
+                        <barButtonItem key="rightBarButtonItem" title="Cancel" id="CjA-6Y-OfI">
                             <connections>
                                 <action selector="tapDone:" destination="U1s-wl-Ivp" id="qyE-gm-YeL"/>
                             </connections>

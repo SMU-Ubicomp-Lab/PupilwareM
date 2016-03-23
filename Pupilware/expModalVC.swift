@@ -71,7 +71,7 @@ class expModalVC: UIViewController, BridgeDelegate{
     func startDigitSpanTest()
     {
         var numbers:[Int] = (model.currentTest?.getDigits())!
-        UIView.animateWithDuration(1.0, delay: 1.0, options: UIViewAnimationOptions.CurveEaseOut, animations:
+        UIView.animateWithDuration(0.5, delay: 1.0, options: UIViewAnimationOptions.CurveEaseOut, animations:
             {
                 self.mainLabel!.alpha = 0.0
             },
@@ -79,7 +79,7 @@ class expModalVC: UIViewController, BridgeDelegate{
             {(finished: Bool) -> Void in
                 self.mainLabel!.text = String(numbers[self.index])
                 // Fade in
-                UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations:
+                UIView.animateWithDuration(0.25, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations:
                     {
                         self.mainLabel!.alpha = 1.0
                     },
