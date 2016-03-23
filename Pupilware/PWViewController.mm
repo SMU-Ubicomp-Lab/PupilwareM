@@ -308,15 +308,17 @@ float radius;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     processor->eyeDistance_ud       = self.model.getDist;
-    processor->windowSize_ud        = self.model.getMovAvg;
-    processor->mbWindowSize_ud      = self.model.getmedBlur;
     processor->baselineStart_ud     = self.model.getBaseStart;
     processor->baselineEnd_ud       = self.model.getBaseEnd;
-    processor->threshold_ud         = self.model.getThresh;
-    processor->markCost             = self.model.getMarkCost;
     processor->baseline             = self.model.getBaseline;
     processor->cogHigh              = self.model.getCogHigh;
     
+    // Following four parameters are optimal parameters resulting from the calibration process
+    
+    processor->windowSize_ud        = (int)[defaults integerForKey:kWindowSize];
+    processor->mbWindowSize_ud      = (int)[defaults integerForKey:kMbWindowSize];
+    processor->threshold_ud         = (int)[defaults integerForKey:kThreshold];
+    processor->markCost             = (int)[defaults integerForKey:kMarkCost];
 
     
     NSLog(@"Default values in PWViewCOntroller");

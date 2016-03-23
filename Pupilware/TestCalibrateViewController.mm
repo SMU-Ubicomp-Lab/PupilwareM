@@ -553,6 +553,10 @@ const int kgWindow = 4;
                     
                     isStarted = false;
                     dispatch_async(dispatch_get_main_queue(),^{
+                        [self openResultView];
+                    });
+
+                    dispatch_async(dispatch_get_main_queue(),^{
                         [self.model.bridgeDelegate finishCalibration];
                     });
                 }
