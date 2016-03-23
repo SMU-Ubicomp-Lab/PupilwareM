@@ -279,9 +279,7 @@ const int kgWindow = 4;
                                                            NSDocumentDirectory,
                                                            NSUserDomainMask, YES
                                                            )[0];
-    featureFile = [docDir
-                   stringByAppendingPathComponent:
-                   [NSString stringWithFormat:@"%@_%ld.csv", timeStampValue, (long)self.iterationCounter]];
+    featureFile = [docDir stringByAppendingPathComponent: self.model.getCalibrationParams];
     
     if  (![[NSFileManager defaultManager] fileExistsAtPath:featureFile]) {
         [[NSFileManager defaultManager]
@@ -639,8 +637,7 @@ const int kgWindow = 4;
                                                             YES)
                         objectAtIndex:0];
     
-    NSString *outputFilePath = [docDir stringByAppendingPathComponent:
-                                [NSString stringWithFormat:@"%@.mp4", outputFileName]];
+    NSString *outputFilePath = [docDir stringByAppendingPathComponent: outputFileName];
     
     NSFileManager *fm = [NSFileManager defaultManager];
     
@@ -716,7 +713,6 @@ const int kgWindow = 4;
         [self.model setNewCalibrationFiles];
         leftOutputVideoFileName =self.model.getCalibrationLeftEye;
         rightOutputVideoFileName =self.model.getCalibrationRightEye;
-        // self.model.saveNewCalibrationFiles;
         
         NSLog(@"Eye Distance %d", self.model.getDist);
 
@@ -724,8 +720,9 @@ const int kgWindow = 4;
         
         leftCalbFileName = [self getOutputFilePath:leftOutputVideoFileName];
         rightCalbFileName = [self getOutputFilePath:rightOutputVideoFileName];
+        NSLog(rightCalbFileName);
 
-         NSLog(@"VIdeo path = %@", leftCalbFileName);
+         NSLog(@"Video path = %@", leftCalbFileName);
         processor = new PWPupilProcessor([leftCalbFileName UTF8String], [rightCalbFileName UTF8String]);
         processor->isShouldWriteVideo = true;
 

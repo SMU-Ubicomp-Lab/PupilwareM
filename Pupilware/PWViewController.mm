@@ -275,8 +275,7 @@ float radius;
                                                             YES)
                         objectAtIndex:0];
     
-    NSString *inputFilePath = [docDir stringByAppendingPathComponent:
-                               [NSString stringWithFormat:@"%@.mp4",inputVideoFileName]];
+    NSString *inputFilePath = [docDir stringByAppendingPathComponent: inputVideoFileName];
     
     return inputFilePath;
 }
@@ -289,8 +288,7 @@ float radius;
                                                             YES)
                         objectAtIndex:0];
     
-    NSString *outputFilePath = [docDir stringByAppendingPathComponent:
-                                [NSString stringWithFormat:@"%@.mp4", outputFileName]];
+    NSString *outputFilePath = [docDir stringByAppendingPathComponent: outputFileName];
     
     NSFileManager *fm = [NSFileManager defaultManager];
     
@@ -336,13 +334,8 @@ float radius;
                                                            NSDocumentDirectory,
                                                            NSUserDomainMask, YES
                                                            )[0];
-//    featureFile = [docDir
-//                            stringByAppendingPathComponent:
-//                            [NSString stringWithFormat:@"%@_%@.csv", timeStampValue,self.iteration]];
     
-    featureFile = [docDir
-                   stringByAppendingPathComponent:
-                   [NSString stringWithFormat:@"%@.csv", csvFileName]];
+    featureFile = [docDir stringByAppendingPathComponent: csvFileName];
 
 
     if  (![[NSFileManager defaultManager] fileExistsAtPath:featureFile]) {

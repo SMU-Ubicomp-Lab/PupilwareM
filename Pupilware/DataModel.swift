@@ -15,7 +15,7 @@ import Foundation
     var faceInView:Bool = false
     var currentTest:Test?
     var digitIteration = 0
-    var calibration_files = (right_eye:"", left_eye:"")
+    var calibration_files = (right_eye:"", left_eye:"", params:"")
     var settings = (dist:60, movAvg:11, medBlur:11, baseStart:20, baseEnd:40, thresh:15, markCost:1, baseline: 0, cogHigh:0)
     var lumMode = true
     var bridgeDelegate:BridgeDelegate?
@@ -85,8 +85,9 @@ import Foundation
     
     func setNewCalibrationFiles(){
         let id:String = String(Int64(NSDate().timeIntervalSince1970*1000.0))
-        calibration_files.left_eye = "calibration_right_eye_\(id)"
-        calibration_files.left_eye = "calibration_left_eye_\(id)"
+        calibration_files.right_eye = "calibration_right_eye_\(id).mp4"
+        calibration_files.left_eye = "calibration_left_eye_\(id).mp4"
+        calibration_files.params = "calibration_params_\(id).csv"
     }
     
     func getCalibrationRightEye()->NSString{
@@ -95,6 +96,10 @@ import Foundation
     
     func getCalibrationLeftEye()->NSString{
         return calibration_files.left_eye
+    }
+    
+    func getCalibrationParams()->NSString{
+        return calibration_files.params
     }
     
     func resetProgress(){
@@ -124,16 +129,16 @@ import Foundation
         }
     }
     
-    func compeleteTargetTest(iter:Int){
-        self.targetTestProgress[iter] = true
-    }
-    
     func isDigitTestComplete(lum:Int, digit:Int, iter:Int)->Bool{
         if self.lumMode{
             return self.digitTestLumProgress[lum+1]![digit]![iter-1]
         }else{
             return self.digitTestAngleProgress[lum+1]![digit]![iter-1]
         }
+    }
+    
+    func compeleteTargetTest(iter:Int){
+        self.targetTestProgress[iter-1] = true
     }
     
     func isTargetTestComplete(iter:Int)->Bool{
@@ -149,7 +154,6 @@ protocol Test{
     func getLeftEyeFileName()->String
     func getCSVFileName()->String
     func getCALFileName()->String
-    
 }
 
 class TargetTest: Test{
@@ -166,10 +170,10 @@ class TargetTest: Test{
         self.exact_lux = exact_lux
         self.subjectID = subjectID
         self.angle = -1
-        self.labels.rightEye = "righteye_\(self.ID)"
-        self.labels.leftEye = "lefteye_\(self.ID)"
-        self.labels.csvFile = "test_data_\(self.ID)"
-        self.labels.calFile = "calibration_data_\(self.ID)"
+        self.labels.rightEye = "righteye_\(self.ID).mp4"
+        self.labels.leftEye = "lefteye_\(self.ID).mp4"
+        self.labels.csvFile = "test_data_\(self.ID).csv"
+        self.labels.calFile = "calibration_data_\(self.ID).csv"
     }
     
     func getRighEyeFileName() -> String {
@@ -190,6 +194,7 @@ class TargetTest: Test{
     
     func completeTest(){
         model.compeleteTargetTest(iter)
+        self.writeData()
     }
     
     func getDigits()->[Int]{
@@ -242,7 +247,7 @@ class TargetTest: Test{
             "csv_data_file_name" : self.labels.csvFile,
             "calibration_right_eye" : model.getCalibrationRightEye(),
             "calibration_left_eye" : model.getCalibrationLeftEye(),
-            "parameter_file" : self.labels.calFile,
+            "parameter_file" : model.getCalibrationParams(),
             "write_time" : self.getTimeStamp(),
             "ID" : self.ID
         ]
@@ -301,10 +306,10 @@ class DigitTest: Test{
         self.exact_lux = exact_lux
         self.subjectID = subjectID
         self.angle = -1
-        self.labels.rightEye = "righteye_\(self.ID)"
-        self.labels.leftEye = "lefteye_\(self.ID)"
-        self.labels.csvFile = "test_data_\(self.ID)"
-        self.labels.calFile = "calibration_data_\(self.ID)"
+        self.labels.rightEye = "righteye_\(self.ID).mp4"
+        self.labels.leftEye = "lefteye_\(self.ID).mp4"
+        self.labels.csvFile = "test_data_\(self.ID).csv"
+        self.labels.calFile = "calibration_data_\(self.ID).csv"
     }
     
     init(subjectID:String, digits:Int, iter:Int, angle:Int, exact_lux:Double){
@@ -314,10 +319,10 @@ class DigitTest: Test{
         self.exact_lux = exact_lux
         self.subjectID = subjectID
         self.angle = angle
-        self.labels.rightEye = "righteye_\(self.ID)"
-        self.labels.leftEye = "lefteye_\(self.ID)"
-        self.labels.csvFile = "test_data_\(self.ID)"
-        self.labels.calFile = "calibration_data_\(self.ID)"
+        self.labels.rightEye = "righteye_\(self.ID).mp4"
+        self.labels.leftEye = "lefteye_\(self.ID).mp4"
+        self.labels.csvFile = "test_data_\(self.ID).csv"
+        self.labels.calFile = "calibration_data_\(self.ID).csv"
     }
     
     func getRighEyeFileName() -> String {
@@ -342,6 +347,7 @@ class DigitTest: Test{
         }else{
             model.completeDigitTest(lux, digit: digits, iter: iter)
         }
+        self.writeData()
     }
     
     func getDigits()->[Int]{
@@ -418,7 +424,7 @@ class DigitTest: Test{
             "csv_data_file_name" : self.labels.csvFile,
             "calibration_right_eye" : model.getCalibrationRightEye(),
             "calibration_left_eye" : model.getCalibrationLeftEye(),
-            "parameter_file" : self.labels.calFile,
+            "parameter_file" : model.getCalibrationParams(),
             "write_time" : self.getTimeStamp(),
             "ID" : self.ID
         ]
