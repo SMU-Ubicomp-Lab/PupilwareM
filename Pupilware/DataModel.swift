@@ -124,8 +124,8 @@ import Foundation
         }
     }
     
-    func compeleteTargetTest(missing_digit:Int){
-        
+    func compeleteTargetTest(iter:Int){
+        self.targetTestProgress[iter] = true
     }
     
     func isDigitTestComplete(lum:Int, digit:Int, iter:Int)->Bool{

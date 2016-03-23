@@ -26,7 +26,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
             self.presentSubjectID()
         }
         
-        self.expBlock.hidden = true
+        //self.expBlock.hidden = true
         
         self.settingsCollection.allowsMultipleSelection = true
         self.containerView.layer.cornerRadius = 5
