@@ -15,7 +15,7 @@ import Foundation
     var faceInView:Bool = false
     var currentTest:Test?
     var digitIteration = 0
-    var calibration_files = (right_eye:"", left_eye:"", params:"")
+    var calibration_files = (right_eye:"", left_eye:"", params:"", data:"")
     var settings = (dist:60, movAvg:11, medBlur:11, baseStart:20, baseEnd:40, thresh:15, markCost:1, baseline: 0, cogHigh:0)
     var lumMode = true
     var bridgeDelegate:BridgeDelegate?
@@ -88,6 +88,8 @@ import Foundation
         calibration_files.right_eye = "calibration_right_eye_\(id).mp4"
         calibration_files.left_eye = "calibration_left_eye_\(id).mp4"
         calibration_files.params = "calibration_params_\(id).csv"
+        calibration_files.data = "calibration_data_\(id)"
+
     }
     
     func getCalibrationRightEye()->NSString{
@@ -101,6 +103,11 @@ import Foundation
     func getCalibrationParams()->NSString{
         return calibration_files.params
     }
+
+    func getCalibrationData()->NSString{
+        return calibration_files.data
+    }
+
     
     func resetProgress(){
         digitTestLumProgress = [
@@ -248,6 +255,7 @@ class TargetTest: Test{
             "calibration_right_eye" : model.getCalibrationRightEye(),
             "calibration_left_eye" : model.getCalibrationLeftEye(),
             "parameter_file" : model.getCalibrationParams(),
+            "calibration_data_file" : model.getCalibrationData(),
             "write_time" : self.getTimeStamp(),
             "ID" : self.ID
         ]
@@ -425,6 +433,7 @@ class DigitTest: Test{
             "calibration_right_eye" : model.getCalibrationRightEye(),
             "calibration_left_eye" : model.getCalibrationLeftEye(),
             "parameter_file" : model.getCalibrationParams(),
+            "calibration_data_file" : model.getCalibrationData(),
             "write_time" : self.getTimeStamp(),
             "ID" : self.ID
         ]

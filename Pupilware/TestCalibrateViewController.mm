@@ -32,6 +32,7 @@ NSString *rightOutputVideoFileName = @"";
 NSString *leftCalbFileName = @"";
 NSString *rightCalbFileName = @"";
 NSString *timeStampValue;
+std::vector<float> result;
 
 
 @interface TestCalibrateViewController () <CvVideoCameraDelegate>
@@ -249,7 +250,7 @@ const int kgWindow = 4;
             [self.model.bridgeDelegate trackingFaceDone];
         });
         NSLog(@"Inside process Data after process signals");
-        std::vector<float> result = processor->getPupilPixel();
+        result = processor->getPupilPixel();
         results.push_back(result);
         
         for (int i = 0; i < result.size(); i++)
@@ -279,7 +280,12 @@ const int kgWindow = 4;
                                                            NSDocumentDirectory,
                                                            NSUserDomainMask, YES
                                                            )[0];
-    featureFile = [docDir stringByAppendingPathComponent: self.model.getCalibrationParams];
+    
+    featureFile = [docDir
+                   stringByAppendingPathComponent:
+                   [NSString stringWithFormat:@"%@_%ld.csv", self.model.getCalibrationData, (long)self.iterationCounter]];
+
+   // featureFile = [docDir stringByAppendingPathComponent:self.model.getCalibrationData];
     
     if  (![[NSFileManager defaultManager] fileExistsAtPath:featureFile]) {
         [[NSFileManager defaultManager]
@@ -310,6 +316,32 @@ const int kgWindow = 4;
 -(void)openResultView
 {
     [self viewWillDisappear:YES]; // Added this to stop calibration. Probably not the best way to do this.
+    
+    //
+    
+    NSString *calibrationParamFile;
+    NSFileHandle *paramFileHandle;
+    
+    
+    NSString *docDir = NSSearchPathForDirectoriesInDomains(
+                                                           NSDocumentDirectory,
+                                                           NSUserDomainMask, YES
+                                                           )[0];
+
+    
+     calibrationParamFile = [docDir stringByAppendingPathComponent:self.model.getCalibrationParams];
+    
+    if  (![[NSFileManager defaultManager] fileExistsAtPath:calibrationParamFile]) {
+        [[NSFileManager defaultManager]
+         createFileAtPath:calibrationParamFile contents:nil attributes:nil];
+    }
+    
+    paramFileHandle = [NSFileHandle
+                  fileHandleForUpdatingAtPath:calibrationParamFile];
+    
+
+    
+    //
 
     if(self.isCalibCogMax)
     {
@@ -350,6 +382,9 @@ const int kgWindow = 4;
         for( int i=0;i<=6;i++)
         {
             NSLog(@"size %@; paramiter %@",madValues[i], self.pickedMutations[i]);
+            NSString *text=[NSString stringWithFormat:@"%@\n",self.pickedMutations[i]];
+            
+            [paramFileHandle writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
         }
         
         
@@ -718,7 +753,7 @@ const int kgWindow = 4;
         leftOutputVideoFileName =self.model.getCalibrationLeftEye;
         rightOutputVideoFileName =self.model.getCalibrationRightEye;
         
-        NSLog(@"Eye Distance %d", self.model.getDist);
+        // NSLog(@"Eye Distance %d", self.model.getDist);
 
 
         
