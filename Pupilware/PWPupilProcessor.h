@@ -82,6 +82,15 @@ namespace pw
         void process_signal ();
         const std::vector<float>& getPupilMM() const;
         const std::vector<float>& getPupilPixel() const;
+        const std::vector<float>& getEyeDist() const;
+        
+        // Eye Center
+        
+        const std::vector<cv::Point>& getRightEyeCenter() const;
+        const std::vector<cv::Point>& getLeftEyeCenter() const;
+        
+        const std::vector<int>& testMyFunction() const;
+
         
         // Return 0.0 - 1.0:
         // 0.0 is baseline

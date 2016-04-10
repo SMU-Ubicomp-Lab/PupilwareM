@@ -1,5 +1,5 @@
 //
-//  PWPupilProcessor.h
+//  PWPupilProcessor.hpp
 //  Pupilware
 //
 //  Authors : Chatchai Wangwiwattana
@@ -82,6 +82,12 @@ namespace pw
         void process_signal ();
         const std::vector<float>& getPupilMM() const;
         const std::vector<float>& getPupilPixel() const;
+        const std::vector<float>& getEyeDist() const;
+        const std::vector<cv::Point>& getLeftEyeCenter() const;
+        const std::vector<cv::Point>& getRightEyeCenter() const;
+
+
+
         
         // Return 0.0 - 1.0:
         // 0.0 is baseline
@@ -113,6 +119,7 @@ namespace pw
         std::vector<cv::Point>  right_eye_center;
         std::vector<cv::Point>  left_eye_center;
         std::vector<float>  resultGraph;
+        std::vector<std::vector<std::vector<int> > > pupil_results;
         
         ///////////////////////////////////////////////////////////////////////////////
         // Member function

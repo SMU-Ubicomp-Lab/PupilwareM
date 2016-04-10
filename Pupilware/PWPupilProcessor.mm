@@ -273,7 +273,22 @@ namespace pw
     {
         return right_eye_w_sb;
     }
+    
+    const std::vector<float>& PWPupilProcessor::getEyeDist() const
+    {
+        return eye_dist_sb;
+    }
+    
+    const std::vector<cv::Point>& PWPupilProcessor::getLeftEyeCenter() const
+    {
+        return left_eye_center;
+    }
 
+    const std::vector<cv::Point>& PWPupilProcessor::getRightEyeCenter() const
+    {
+        return right_eye_center;
+    }
+    
     float PWPupilProcessor::getResultPeak() const
     {
         int offset = resultGraph.size() * 0.20;
@@ -464,7 +479,9 @@ namespace pw
         std::vector<float>pChangeNoNan;
         pChange.copyTo(pChangeNoNan, mark);
         
-        //printv(pChangeNoNan);
+        NSLog(@"printing pchange vector");
+        
+        printv(pChangeNoNan);
         
         resultGraph = pChangeNoNan;
         
@@ -487,17 +504,28 @@ namespace pw
     // Signal Processing
     void PWPupilProcessor::store_signal()
     {        
+        // diameter of the left eye in pixels
         left_eye_w_sb.push_back(g_pupilSizeleft_w_sb);
+        
+        // diameter of the right eye in pixels
         right_eye_w_sb.push_back(g_pupilSizeRight_w_sb);
+        
+        // Euclidean distance between the center of left and right eyes
         eye_dist_sb.push_back(g_distanceBetweenEyesP2_sb);
         
         
         /*!WORNNING use only right eye for now */
 #pragma warning -- use only right eye for now.
+        
+        // Pupil size in mm
         g_pupilSize = convert_pixel_to_mm((g_pupilSizeRight_w_sb),
                                             g_distanceBetweenEyesP2_sb, eyeDistance_ud);
 
+        // Center point of the right and left eyes
         right_eye_center.push_back(g_rightPupilCenter);
+        
+        left_eye_center.push_back(g_rightPupilCenter);
+
         
         
 //        *g_left_w_sb.ptr<float>(0, signal_counter) = g_pupilSizeleft_w_sb;

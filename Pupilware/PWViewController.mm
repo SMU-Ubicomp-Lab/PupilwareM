@@ -255,6 +255,8 @@ float radius;
         NSString* rightOutputFilePath = [self getOutputFilePath:self.model.getRighEyeName];
         csvFileName = self.model.getCSVFileName;
         
+        NSLog(@"CSV File name %@", csvFileName);
+        
         NSLog(@"Eye Distance %d", self.model.getDist);
         
         processor = new PWPupilProcessor([leftOutputFilePath UTF8String], [rightOutputFilePath UTF8String]);
@@ -350,11 +352,28 @@ float radius;
 
 
     std::vector<float> result = processor->getResultGraph();
+    std::vector<float> pupilInPixel = processor->getPupilPixel();
+    std::vector<float> pupilInMM = processor->getPupilMM();
+    std::vector<float> eyeDistanceInPixel = processor->getEyeDist();
+    std::vector<cv::Point> eyeCenterRight = processor->getRightEyeCenter();
+    std::vector<cv::Point> eyeCenterLeft = processor->getLeftEyeCenter();
     
+    NSLog(@"result size %d and pupilPixel size %d", (int)result.size(), (int)pupilInPixel.size());
+    NSLog(@"pupil in mm  %d and eye distance %d", (int)pupilInMM.size(), (int)eyeDistanceInPixel.size());
+    NSLog(@"Right eye center %d, %d",  (int)eyeCenterRight.size(), eyeCenterRight[1].x);
+    NSLog(@"Left eye center %d, %d",  (int)eyeCenterLeft.size(), eyeCenterLeft[1].x);
+
+
+    NSString *text=[NSString stringWithFormat:@"Dilation , Pixel , MM, EyeDistance, LeftEye.x, LeftEye.y, RightEye.x, RightEye.y \n"];
+    [fileHandle writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+
+
     for( size_t i=0; i< (size_t)result.size(); i++ )
     {
 
-        NSString *text=[NSString stringWithFormat:@"%f\n",result[i]];
+        text=[NSString stringWithFormat:@"%f , %f , %f , %f, %d, %d, %d, %d\n",result[i], pupilInPixel[i], pupilInMM[i], eyeDistanceInPixel[i], eyeCenterLeft[i].x, eyeCenterLeft[i].y, eyeCenterRight[i].x, eyeCenterRight[i].y];
+        
+        NSLog(@"Writing data to the file %@", text );
 
         [fileHandle writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
     }
