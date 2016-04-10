@@ -358,14 +358,34 @@ class DigitTest: Test{
         self.writeData()
     }
     
+    func getListOfDigits(digits:Int)->[Int]
+    {
+        var result:[Int] = []
+        for _ in 0..<digits{
+            result.append(Int(arc4random() % 9))
+        }
+        return result
+    }
+    
     func getDigits()->[Int]{
         switch digits{
             case 5:
                 switch iter{
-                case 1:return [1, 2, 3, 4, 5]
-                case 2:return [1, 2, 3, 4, 5]
-                case 3:return [1, 2, 3, 4, 5]
-                case 4:return [1, 2, 3, 4, 5]
+                case 1:
+                    //case 1:return [1, 2, 3, 4, 5]
+                    return getListOfDigits(5)
+                case 2:
+                    //return [1, 2, 3, 4, 5]
+                    return getListOfDigits(5)
+
+                case 3:
+                    //return [1, 2, 3, 4, 5]
+                    return getListOfDigits(5)
+
+                case 4:
+                    // return [1, 2, 3, 4, 5]
+                    return getListOfDigits(5)
+
                 default:print("DIGIT TEST NOT FOUND")
                 }
             case 6:
