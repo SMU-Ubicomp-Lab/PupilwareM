@@ -42,7 +42,6 @@ cv::RNG rng(12345);
 cv::Mat debugImage;
 cv::Mat skinCrCbHist = cv::Mat::zeros(cv::Size(256, 256), CV_8UC1);
 
-int frameNumber = 0;
 int signal_counter = 0;
 
 float eyeDistanceInMM = 64.15f;
@@ -59,6 +58,9 @@ float g_pupilSizeleft_h_sb;
 float g_pupilSizeRight_h_sb;
 float g_distanceBetweenEyesP2_sb;
 float g_pupilSize;
+std::vector <cv::Point> g_leftPupilCenterVector;
+std::vector <cv::Point> g_rightPupilCenterVector;
+
 
 cv::Point g_leftPupilCenter;
 cv::Point g_rightPupilCenter;
@@ -67,8 +69,9 @@ cv::Rect g_rightEyeRect;
 
 NSString *videoFile;
 
-const cv::Size kRecordFrameSize(500,500);
+const cv::Size kRecordFrameSize(80,80);
 const int kRecordFPS = 25;
+const int firstIteration = 1;
 
 
 const unsigned int k_signal_buffer_size = 15*3;
@@ -154,6 +157,7 @@ namespace pw
             NSLog(@"File did not  open");
         
         
+        frameNumber                 = 0;
         isShouldWriteVideo          = false;
         isDrawFPS                   = true;
         isShouldDetectFace          = true;
@@ -300,6 +304,7 @@ namespace pw
     
     bool PWPupilProcessor::loadVideo( const std::string& videoFileName, cv::VideoCapture& capture )
     {
+        NSLog(@"Loading the video");
         if (videoFileName != "")
         {
             if (capture.isOpened())
@@ -651,6 +656,8 @@ namespace pw
     {
         
         Mat gxyMatOfEye;
+
+        NSLog(@"Inside the apply Starbust threshold %d and mark cost %d", threshold_ud, markCost);
         
         // NSLog(@"Numbe of channels in apply starbust %d",eyeROI.channels());
 
@@ -694,7 +701,7 @@ namespace pw
         
         cv::Point seedPoint = cv::Point(eyeCenter.x, eyeCenter.y);
         
-        float d_cost = markCost;
+        float d_cost = markCost; //
         
         for( int iter = 0; iter < 5; iter++ )
         {
@@ -706,7 +713,7 @@ namespace pw
                 cv::Point walking_point = seedPoint;
                 int walking_intensity = 0;
                 int increment = 1;
-                int th = 25;
+                int th = 25; // Threshold of the next pixel.. using to find the edge of the pupil
                 
                 for( int i=0; ( (walking_intensity - *seed_intensity - (d_cost*(20-i))) <= th ) && i < 20; i+= increment )
                 {
@@ -943,7 +950,7 @@ namespace pw
             resultImage = srcImage;
             return true;
         }
-        // NSLog(@"Inside feature and eye extraction");
+         NSLog(@"Inside feature and eye extraction");
         
         
         cvtColor(srcImage, faceColorMat, CV_GRAY2BGRA);
@@ -957,6 +964,10 @@ namespace pw
         cv::Point leftPupilUsingMat = findEyeCenterUsingMat(leftEyeMat,"Left Eye");
         cv::Point rightPupilUsingMat = findEyeCenterUsingMat(rightEyeMat,"Right Eye");
         
+        NSLog(@"FaceFeature Center point left pupil x %d left pupil y %d", leftPupilUsingMat.x, leftPupilUsingMat.y);
+        
+        NSLog(@"FaceFeature Center point right pupil x %d right pupil y %d ", rightPupilUsingMat.x, rightPupilUsingMat.y);
+
         
         // Set global variables. These global variables are later used in extract feature function.
         g_leftPupilCenter = leftPupilUsingMat;
@@ -976,6 +987,13 @@ namespace pw
         
         searchDarkestSpotWithInRange(11,tmp_leftEyeRect, g_leftPupilCenter);
         searchDarkestSpotWithInRange(11,tmp_rightEyeRect, g_rightPupilCenter);
+        
+        
+        
+        NSLog(@"FaceFeature Center after search darkest left pupil x %d left pupil y %d", g_leftPupilCenter.x, g_leftPupilCenter.y);
+        
+        NSLog(@"FaceFeature Center after search darkest right pupil x %d right pupil y %d ", g_rightPupilCenter.x, g_rightPupilCenter.y);
+
         extractFeatures(leftEyeROIMat,
                         rightEyeROIMat,
                         g_leftPupilCenter,
@@ -1022,7 +1040,7 @@ namespace pw
     
     // Adding eyeFeature Extraction
     
-    bool PWPupilProcessor::eyeFeatureExtraction(cv::Mat leftEyeMat, cv::Mat rightEyeMat, BOOL isFinished)
+    bool PWPupilProcessor::eyeFeatureExtraction(cv::Mat leftEyeMat, cv::Mat rightEyeMat, BOOL isFinished, int iteration)
     {
         
         if (isFinished)
@@ -1031,24 +1049,45 @@ namespace pw
             return true;
         }
         
-        // NSLog(@"Calling find eye center using Mat");
+        NSLog(@"Iteration number %d", iteration);        
+        
+        // Save the pupil center in the first iteration so that we don't have to repeat the same process again
+        // Pupil center values are being saved in the left and right pupil center vector.
+        
+        
+        if (iteration == firstIteration)
+        {
+            //NSLog(@"Inside the first iteration Loop");
+            cv::Point leftPupilUsingMat = findEyeCenterUsingMat(leftEyeMat,"Left Eye");
+            cv::Point rightPupilUsingMat = findEyeCenterUsingMat(rightEyeMat,"Right Eye");
 
+            // Set global variables. These global variables are later used in extract feature function.
+            g_leftPupilCenter = leftPupilUsingMat;
+            g_rightPupilCenter = rightPupilUsingMat;
+            
+            
+            Mat tmp_leftEyeRect = leftEyeMat;
+            Mat tmp_rightEyeRect = rightEyeMat;
+            
+            searchDarkestSpotWithInRange(11,tmp_leftEyeRect, g_leftPupilCenter);
+            
+            searchDarkestSpotWithInRange(11,tmp_rightEyeRect, g_rightPupilCenter);
+            
+            g_leftPupilCenterVector.push_back(g_leftPupilCenter); // This is where to store the center values
+            g_rightPupilCenterVector.push_back(g_rightPupilCenter); // This is where to store the center values
+
+        }
+        else
+        {
+            // All iterations after the first one we take the center values off of the vector and use them.
+            // This save processing time for finding the pupil center.
+            
+            g_leftPupilCenter = g_leftPupilCenterVector[frameNumber];
+            g_rightPupilCenter = g_rightPupilCenterVector[frameNumber];
+            
+            frameNumber++;
+        }
         
-        //MOVED FROM THE FINDEYE CODE
-        
-        cv::Point leftPupilUsingMat = findEyeCenterUsingMat(leftEyeMat,"Left Eye");
-        cv::Point rightPupilUsingMat = findEyeCenterUsingMat(rightEyeMat,"Right Eye");
-        
-        // Set global variables. These global variables are later used in extract feature function.
-        g_leftPupilCenter = leftPupilUsingMat;
-        g_rightPupilCenter = rightPupilUsingMat;
-        
-        Mat tmp_leftEyeRect = leftEyeMat;
-        Mat tmp_rightEyeRect = rightEyeMat;
-        
-        searchDarkestSpotWithInRange(11,tmp_leftEyeRect, g_leftPupilCenter);
-        
-        searchDarkestSpotWithInRange(11,tmp_rightEyeRect, g_rightPupilCenter);
         
         extractFeatures(leftEyeMat,
                         rightEyeMat,

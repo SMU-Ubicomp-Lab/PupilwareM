@@ -126,7 +126,7 @@ const int kgWindow = 4;
 {
     // [self createLoadingView];
     isFinished = true;
-
+    NSLog(@"Inside finish iteration");
     [self processData];
     
     if(self.iterationCounter == self.numberOfIteration-1){
@@ -217,16 +217,19 @@ const int kgWindow = 4;
                         }
     
     
-    NSUInteger N = [allPosibleMutations count];
-    for (int i; i < N; i++) {
+    int N = [allPosibleMutations count];
+    NSLog(@"Total count of possible mutation %d", N);
+    for (int i=0; i < N; i++) {
+        NSLog(@"inside the Loop of mutation");
         NSUInteger randomIndex = arc4random() % [allPosibleMutations count];
         [allPosibleMutations exchangeObjectAtIndex:i withObjectAtIndex:randomIndex];
+        NSLog(@"index %d, random index %d", i, randomIndex);
     }
     self.pickedMutations = allPosibleMutations;
     
 
 
-    //NSLog(@"%@", self.pickedMutations);
+    NSLog(@"Picked Mutations %@", self.pickedMutations);
     //NSLog(@"%@", self.pickedMutations);
     
     
@@ -234,6 +237,7 @@ const int kgWindow = 4;
 
 -(void)processData
 {
+    NSLog(@"Inside processData");
     
     processor->process_signal();
     
@@ -432,7 +436,7 @@ const int kgWindow = 4;
 
 -(void)loadVideo:(NSString*) videoFileName
 {
-   //  NSLog(@"inside load video");
+     NSLog(@"inside load video");
     // If either of the file is missing then quit.
     if ([leftCalbFileName  isEqual: @""] or [rightCalbFileName isEqual:@""])
     {
@@ -500,7 +504,7 @@ const int kgWindow = 4;
 //    const int kgWindow = 4;
 
 
-    processor->threshold_ud = [self.pickedMutations[iterNumber][kThreadhold] integerValue];
+    processor->threshold_ud = [self.pickedMutations[iterNumber][kThreadhold] integerValue]; // Degree of offset.. modified starburst
     processor->markCost = [self.pickedMutations[iterNumber][kPrior] integerValue];
 
     
@@ -509,7 +513,7 @@ const int kgWindow = 4;
     
 //    processor->starburstStd = [self.pickedMutations[iterNumber][kSTD] integerValue];
     
-    
+    NSLog(@"Preparing for next iteration %d , %d, %d, %d", processor->threshold_ud, processor->markCost, processor->windowSize_ud, processor->mbWindowSize_ud);
     
     // NSLog(@"Loadinv video ");
     // Now that we have gone through the first iteration
@@ -524,6 +528,7 @@ const int kgWindow = 4;
     if( self.iterationCounter < self.numberOfIteration )
     {
         self.iterationCounter++;
+        processor->frameNumber = 0;
         
         [self prepareNextIteration: self.iterationCounter];
         
@@ -548,7 +553,7 @@ const int kgWindow = 4;
     // remove the view's background color
     self.view.backgroundColor = nil;
     
-   //  NSLog(@"Inside the Load Camera");
+     NSLog(@"Inside the Load Camera");
     
     __weak typeof(self) weakSelf = self;
     
@@ -635,7 +640,9 @@ const int kgWindow = 4;
                     cvtColor(leftEyeX, leftEyeX, CV_BGR2GRAY);
                     cvtColor(rightEyeX, rightEyeX, CV_BGR2GRAY);
                     
-                    processor->eyeFeatureExtraction(leftEyeImage, rightEyeImage, isFinished);
+                    NSLog(@"ITERATION COUNTER %d", self.iterationCounter);
+                    
+                    processor->eyeFeatureExtraction(leftEyeImage, rightEyeImage, isFinished, self.iterationCounter);
                     
                 }
             }

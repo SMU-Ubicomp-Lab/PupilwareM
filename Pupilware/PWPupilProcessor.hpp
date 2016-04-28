@@ -43,6 +43,7 @@ namespace pw
         int     markCost;
         float   baseline;
         float   cogHigh;
+        int     frameNumber;
         
 
         cv::VideoCapture    getVideoDevice(const std::string& eye_type);
@@ -73,7 +74,7 @@ namespace pw
         bool faceAndEyeFeatureExtraction(cv::Mat srcImage, cv::Mat leftEyeMat, cv::Mat rightEyeMat, cv::Mat leftEyeMatColor, cv::Mat rightEyeMatColor, cv::Rect leftEyeRect, cv::Rect rightEyeRect, BOOL isFinished, cv::Mat& resultImage);
         
         
-        bool eyeFeatureExtraction( cv::Mat leftEyeMat, cv::Mat rightEyeMat,  BOOL isFinished);
+        bool eyeFeatureExtraction( cv::Mat leftEyeMat, cv::Mat rightEyeMat,  BOOL isFinished, int iteration);
 
 //        bool faceAndEyeFeatureExtraction(cv::Mat srcImage, CGRect leftEyeRect, CGRect rightEyeRect, cv::Mat& resultImage);
 
