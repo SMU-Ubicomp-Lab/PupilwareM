@@ -40,10 +40,14 @@ namespace pw
         int     baselineStart_ud;
         int     baselineEnd_ud;
         int     threshold_ud;
+        int     intensityThreshold_ud;
         int     markCost;
         float   baseline;
         float   cogHigh;
         int     frameNumber;
+        std::vector<cv::Mat> leftOutputMatVideoVector;
+        std::vector<cv::Mat> rightOutputMatVideoVector;
+
         
 
         cv::VideoCapture    getVideoDevice(const std::string& eye_type);
@@ -56,6 +60,7 @@ namespace pw
         
         std::vector<float>  getResultGraph() const;
         float               getResultPeak() const;
+        // cv::Mat             getLeftFrame() const;
         
         
         bool                isShouldDetectFace;
@@ -108,6 +113,7 @@ namespace pw
         cv::VideoWriter     outvideo;
         cv::VideoWriter     leftOutvideo;
         cv::VideoWriter     rightOutvideo;
+       
 
         
         float               pupilSize;

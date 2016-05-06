@@ -80,6 +80,7 @@ const int kPrior = 1;
 const int kStd = 2;
 const int kmWindow = 3;
 const int kgWindow = 4;
+const int kIntensityThreshold = 5;
 
 -(DataModel*)model{
     if(!_model){
@@ -93,8 +94,11 @@ const int kgWindow = 4;
     
    //  NSLog(@"Inside ViewDid Load of Test Calibrate");
 
+    timeStampValue = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
+    NSLog(@"TimeStamp at the start %@", timeStampValue);
+    
     self.iterationCounter = 0;
-    self.numberOfIteration = 6;
+    self.numberOfIteration = 10;
     // _model = [DataModel sharedInstance];
 
     // NSLog(@"Current subject id %@", _model.currentT);
@@ -108,7 +112,7 @@ const int kgWindow = 4;
             {
                // NSLog(@"Inside calibrateview: setting timer");
         
-                const float kCaptureBaselineTime = 5.0f;
+                const float kCaptureBaselineTime = 10.0f;
                 [NSTimer scheduledTimerWithTimeInterval:kCaptureBaselineTime
                                                  target:self
                                                selector:@selector(finishTheIteration)
@@ -126,7 +130,8 @@ const int kgWindow = 4;
 {
     // [self createLoadingView];
     isFinished = true;
-    NSLog(@"Inside finish iteration");
+     NSLog(@"Inside finish iteration");
+
     [self processData];
     
     if(self.iterationCounter == self.numberOfIteration-1){
@@ -184,8 +189,8 @@ const int kgWindow = 4;
     processor->cogHigh              = self.model.getCogHigh;
 
     
-    NSLog(@"Default values in TestViewController ");
-    NSLog(@"Eye Distance %f, window size %d, mbWindowsize %d, baseline start %d, basline end %d, threshold %d, mark cost %d, Baseline %f, coghigh %f", processor->eyeDistance_ud, processor->windowSize_ud, processor->mbWindowSize_ud, processor->baselineStart_ud, processor->baselineEnd_ud, processor->threshold_ud, processor->markCost, processor->baseline, processor->cogHigh);
+//    NSLog(@"Default values in TestViewController ");
+//    NSLog(@"Eye Distance %f, window size %d, mbWindowsize %d, baseline start %d, basline end %d, threshold %d, mark cost %d, Baseline %f, coghigh %f", processor->eyeDistance_ud, processor->windowSize_ud, processor->mbWindowSize_ud, processor->baselineStart_ud, processor->baselineEnd_ud, processor->threshold_ud, processor->markCost, processor->baseline, processor->cogHigh);
 
     
     // initial parameter grid
@@ -196,6 +201,8 @@ const int kgWindow = 4;
     [self.parameters addObject:@[@1,@1,@1]]; // kstd
     [self.parameters addObject:@[@11,@21,@31]]; // mwindowSize
     [self.parameters addObject:@[@11,@21,@31]]; // gwindowSize
+    [self.parameters addObject:@[@15,@20,@25]]; // kIntensityThreshold
+
     
     self.pickedMutations = [[NSMutableArray alloc]init];
     
@@ -206,30 +213,29 @@ const int kgWindow = 4;
             for (NSNumber *std in self.parameters[kStd])
                 for (NSNumber *mwindowSize in self.parameters[kmWindow])
                     for (NSNumber *gwindowSize in self.parameters[kgWindow])
+                        for (NSNumber *intensityThresh in self.parameters[kIntensityThreshold])
                         {
                             [allPosibleMutations addObject:@[
                                                              threadhold,
                                                              prior,
                                                              std,
                                                              mwindowSize,
-                                                             gwindowSize
+                                                             gwindowSize,
+                                                             intensityThresh
                                                              ]];
                         }
     
     
     int N = [allPosibleMutations count];
-    NSLog(@"Total count of possible mutation %d", N);
     for (int i=0; i < N; i++) {
-        NSLog(@"inside the Loop of mutation");
         NSUInteger randomIndex = arc4random() % [allPosibleMutations count];
         [allPosibleMutations exchangeObjectAtIndex:i withObjectAtIndex:randomIndex];
-        NSLog(@"index %d, random index %d", i, randomIndex);
     }
     self.pickedMutations = allPosibleMutations;
     
 
 
-    NSLog(@"Picked Mutations %@", self.pickedMutations);
+    // NSLog(@"Picked Mutations %@", self.pickedMutations);
     //NSLog(@"%@", self.pickedMutations);
     
     
@@ -237,7 +243,7 @@ const int kgWindow = 4;
 
 -(void)processData
 {
-    NSLog(@"Inside processData");
+    //NSLog(@"Inside processData");
     
     processor->process_signal();
     
@@ -253,24 +259,26 @@ const int kgWindow = 4;
         dispatch_async(dispatch_get_main_queue(),^{
             [self.model.bridgeDelegate trackingFaceDone];
         });
-        NSLog(@"Inside process Data after process signals");
+       // NSLog(@"Inside process Data after process signals");
         result = processor->getPupilPixel();
         results.push_back(result);
         
-        for (int i = 0; i < result.size(); i++)
-            NSLog(@"Result at %f", result[i]);
+//        for (int i = 0; i < result.size(); i++)
+//            NSLog(@"Result at %f", result[i]);
         
         float stdV = calStd(result);
         float madV = calMad(result);
         
         stdValues.push_back(stdV);
         
+        // NSLog(@"Result Size %ld", result.size());
+        
         float currentBaseline = processor->calBaselineFromCurrentSignal();
         baselineValues.push_back(currentBaseline);
         
         [self writeSignalToFile:result];
         
-        NSLog(@"STD is %f : MAD is %f", stdV, currentBaseline);
+       // NSLog(@"STD is %f : MAD is %f", stdV, currentBaseline);
     }
 }
 
@@ -313,7 +321,7 @@ const int kgWindow = 4;
 {
     processor->closeCapture();
     
-   //  NSLog(@"Calling openresultview from SHOW RESULT");
+     NSLog(@"Calling openresultview from SHOW RESULT");
     [self openResultView];
 }
 
@@ -370,7 +378,7 @@ const int kgWindow = 4;
         }
         
          NSArray* madValues = vector2NSArray(stdValues);
-        NSLog(@"MadValues %@",madValues);
+         NSLog(@"MadValues %@",madValues);
         
         NSNumber* minvalue =[madValues valueForKeyPath:@"@min.floatValue"];
         NSUInteger indexOfMinValue = [madValues indexOfObject:minvalue];
@@ -383,9 +391,9 @@ const int kgWindow = 4;
         NSLog(@"Value %@, Index %d",minvalue, indexOfMinValue);
         NSLog(@"%@",self.pickedMutations[indexOfMinValue]);
         
-        for( int i=0;i<=6;i++)
+        for( int i=0;i<=self.numberOfIteration;i++)
         {
-            NSLog(@"size %@; paramiter %@",madValues[i], self.pickedMutations[i]);
+           // NSLog(@"size %@; paramiter %@",madValues[i], self.pickedMutations[i]);
             NSString *text=[NSString stringWithFormat:@"%@\n",self.pickedMutations[i]];
             
             [paramFileHandle writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
@@ -404,10 +412,15 @@ const int kgWindow = 4;
         // [defaults setInteger:[self.pickedMutations[indexOfMinValue][kStd] intValue] forKey:@"s_threshold"];
         [defaults setInteger:[self.pickedMutations[indexOfMinValue][kmWindow] intValue] forKey:@"s_mbWindowSize"];
         [defaults setInteger:[self.pickedMutations[indexOfMinValue][kgWindow] intValue] forKey:@"s_windowSize"];
+        [defaults setInteger:[self.pickedMutations[indexOfMinValue][kIntensityThreshold] intValue] forKey:@"s_intensityThreshold"];
+
 
         
         [defaults synchronize];
-                        
+        
+        timeStampValue = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
+        NSLog(@"TimeStamp at the end %@", timeStampValue);
+        
         // NSLog(@"Calling calibration result view controller");
         
         /*CalibrationResultViewController *distVC = [self.storyboard
@@ -436,7 +449,8 @@ const int kgWindow = 4;
 
 -(void)loadVideo:(NSString*) videoFileName
 {
-     NSLog(@"inside load video");
+
+     // NSLog(@"inside load video");
     // If either of the file is missing then quit.
     if ([leftCalbFileName  isEqual: @""] or [rightCalbFileName isEqual:@""])
     {
@@ -446,7 +460,7 @@ const int kgWindow = 4;
     
     processor->closeCapture();
     
-     NSLog(@"Need to load calibration videos");
+    // NSLog(@"Need to load calibration videos");
     
     VideoCapture leftCapture, rightCapture;
     
@@ -511,9 +525,11 @@ const int kgWindow = 4;
     processor->windowSize_ud        = [self.pickedMutations[iterNumber][kmWindow] integerValue];
     processor->mbWindowSize_ud      = [self.pickedMutations[iterNumber][kgWindow] integerValue];
     
+    processor->intensityThreshold_ud      = [self.pickedMutations[iterNumber][kIntensityThreshold] integerValue];
+
 //    processor->starburstStd = [self.pickedMutations[iterNumber][kSTD] integerValue];
     
-    NSLog(@"Preparing for next iteration %d , %d, %d, %d", processor->threshold_ud, processor->markCost, processor->windowSize_ud, processor->mbWindowSize_ud);
+    //NSLog(@"Preparing for next iteration %d , %d, %d, %d", processor->threshold_ud, processor->markCost, processor->windowSize_ud, processor->mbWindowSize_ud);
     
     // NSLog(@"Loadinv video ");
     // Now that we have gone through the first iteration
@@ -524,7 +540,7 @@ const int kgWindow = 4;
 
 -(BOOL)advanceIteration
 {
-     NSLog(@"Inside advance iteration %ld", (long)self.iterationCounter);
+     // NSLog(@"Inside advance iteration %ld", (long)self.iterationCounter);
     if( self.iterationCounter < self.numberOfIteration )
     {
         self.iterationCounter++;
@@ -534,7 +550,7 @@ const int kgWindow = 4;
         
         isFinished = false;
         
-        NSLog(@"Inside advance iteration === %ld", (long)self.iterationCounter);
+       // NSLog(@"Inside advance iteration === %ld", (long)self.iterationCounter);
         
         
         
@@ -553,7 +569,7 @@ const int kgWindow = 4;
     // remove the view's background color
     self.view.backgroundColor = nil;
     
-     NSLog(@"Inside the Load Camera");
+   //  NSLog(@"Inside the Load Camera");
     
     __weak typeof(self) weakSelf = self;
     
@@ -640,7 +656,7 @@ const int kgWindow = 4;
                     cvtColor(leftEyeX, leftEyeX, CV_BGR2GRAY);
                     cvtColor(rightEyeX, rightEyeX, CV_BGR2GRAY);
                     
-                    NSLog(@"ITERATION COUNTER %d", self.iterationCounter);
+                   // NSLog(@"ITERATION COUNTER %d", self.iterationCounter);
                     
                     processor->eyeFeatureExtraction(leftEyeImage, rightEyeImage, isFinished, self.iterationCounter);
                     
@@ -649,7 +665,7 @@ const int kgWindow = 4;
             else
             {
                 // Processing image from the camera.
-                NSLog(@"Processing image from camera");
+               // NSLog(@"Processing image from camera");
                 for(CIFaceFeature *face in faceFeatures ){
                     if(!face.leftEyeClosed && ! face.rightEyeClosed){
                         // NSLog(@"Calling opencv bridge");
@@ -692,7 +708,7 @@ const int kgWindow = 4;
     NSError *error;
     [fm removeItemAtPath:outputFilePath error:&error];
     
-     NSLog(@"Output file path %@", outputFilePath);
+     //NSLog(@"Output file path %@", outputFilePath);
     return outputFilePath;
 }
 
@@ -701,13 +717,13 @@ const int kgWindow = 4;
 {
 
     // Get the timestamp to save the file
-    timeStampValue = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
+//    timeStampValue = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
 
-     NSLog(@"Time stamp %@", timeStampValue);
+     // NSLog(@"Time stamp %@", timeStampValue);
     
     // This is where I have to call the singleton function
     
-    NSLog(@"subject ID %@", self.model.currentSubjectID);
+    // NSLog(@"subject ID %@", self.model.currentSubjectID);
     
     /*
     leftOutputVideoFileName = [NSString stringWithFormat:@"%@%@%@%@%@",
@@ -753,8 +769,8 @@ const int kgWindow = 4;
      //   [self.model.currentTest writeData];
                 
         
-        NSLog(@"tmp Left %@", self.model.getCalibrationLeftEye);
-        NSLog(@"tmp right %@", self.model.getCalibrationRightEye);
+       // NSLog(@"tmp Left %@", self.model.getCalibrationLeftEye);
+       // NSLog(@"tmp right %@", self.model.getCalibrationRightEye);
 
         [self.model setNewCalibrationFiles];
         leftOutputVideoFileName =self.model.getCalibrationLeftEye;
@@ -766,9 +782,9 @@ const int kgWindow = 4;
         
         leftCalbFileName = [self getOutputFilePath:leftOutputVideoFileName];
         rightCalbFileName = [self getOutputFilePath:rightOutputVideoFileName];
-        NSLog(rightCalbFileName);
+        // NSLog(rightCalbFileName);
 
-         NSLog(@"Video path = %@", leftCalbFileName);
+      //   NSLog(@"Video path = %@", leftCalbFileName);
         processor = new PWPupilProcessor([leftCalbFileName UTF8String], [rightCalbFileName UTF8String]);
         processor->isShouldWriteVideo = true;
 

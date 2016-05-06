@@ -10,6 +10,7 @@
 #define kBaselineEnd    @"s_baselineEnd"
 #define kThreshold      @"s_threshold"
 #define kMarkCost       @"s_markCost"
+#define kIntensityThrehold @"s_intensityThreshold"
 
 #define kBaseline       @"s_baseLine"
 #define kCogHighSize    @"s_cogHighSize"

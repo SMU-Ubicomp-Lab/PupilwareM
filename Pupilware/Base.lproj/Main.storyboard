@@ -812,7 +812,7 @@
                                         <rect key="frame" x="290" y="300" width="20" height="20"/>
                                     </activityIndicatorView>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="9j3-JO-xGF" firstAttribute="top" secondItem="dVk-Xl-Dhe" secondAttribute="bottom" constant="8" symbolic="YES" id="Q4s-Vl-oRq"/>
                                     <constraint firstItem="dVk-Xl-Dhe" firstAttribute="centerY" secondItem="kbC-pA-0sD" secondAttribute="centerY" id="R2H-Dy-zrO"/>
