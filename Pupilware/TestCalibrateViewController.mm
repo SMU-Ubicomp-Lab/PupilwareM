@@ -98,7 +98,7 @@ const int kIntensityThreshold = 5;
     NSLog(@"TimeStamp at the start %@", timeStampValue);
     
     self.iterationCounter = 0;
-    self.numberOfIteration = 10;
+    self.numberOfIteration = 60;
     // _model = [DataModel sharedInstance];
 
     // NSLog(@"Current subject id %@", _model.currentT);
@@ -137,6 +137,7 @@ const int kIntensityThreshold = 5;
     if(self.iterationCounter == self.numberOfIteration-1){
         NSLog(@"FINISH");
     }
+    processor->closeCapture(); // NEW CHANGE - Close the video files after the first iteration.
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -278,7 +279,7 @@ const int kIntensityThreshold = 5;
         
         [self writeSignalToFile:result];
         
-       // NSLog(@"STD is %f : MAD is %f", stdV, currentBaseline);
+        NSLog(@"STD is %f : MAD is %f", stdV, currentBaseline);
     }
 }
 
@@ -451,33 +452,83 @@ const int kIntensityThreshold = 5;
 {
 
      // NSLog(@"inside load video");
-    // If either of the file is missing then quit.
-    if ([leftCalbFileName  isEqual: @""] or [rightCalbFileName isEqual:@""])
-    {
-        NSLog(@"[Warning] %@ or %@ do not exist.", leftCalbFileName, rightCalbFileName);
-        return;
-    }
-    
-    processor->closeCapture();
-    
-    // NSLog(@"Need to load calibration videos");
-    
-    VideoCapture leftCapture, rightCapture;
-    
-    if (!processor->loadVideo([leftCalbFileName UTF8String], leftCapture))
-    {
-        NSLog(@"[Warning] Left Video not found.%@", leftCalbFileName);
-    }
-    
-    if (!processor->loadVideo([rightCalbFileName UTF8String], rightCapture))
-    {
-        NSLog(@"[Warning] Right Video not found.%@", rightCalbFileName);
-    }
-    
-    processor->setVideoDevice("leftEye", leftCapture);
-    processor->setVideoDevice("rightEye", rightCapture);
+//    // If either of the file is missing then quit.
+//    if ([leftCalbFileName  isEqual: @""] or [rightCalbFileName isEqual:@""])
+//    {
+//        NSLog(@"[Warning] %@ or %@ do not exist.", leftCalbFileName, rightCalbFileName);
+//        return;
+//    }
+//    
+//    processor->closeCapture();
+//    
+//    // NSLog(@"Need to load calibration videos");
+//    
+//    VideoCapture leftCapture, rightCapture;
+//    
+//    if (!processor->loadVideo([leftCalbFileName UTF8String], leftCapture))
+//    {
+//        NSLog(@"[Warning] Left Video not found.%@", leftCalbFileName);
+//    }
+//    
+//    if (!processor->loadVideo([rightCalbFileName UTF8String], rightCapture))
+//    {
+//        NSLog(@"[Warning] Right Video not found.%@", rightCalbFileName);
+//    }
+//    
+//    processor->setVideoDevice("leftEye", leftCapture);
+//    processor->setVideoDevice("rightEye", rightCapture);
     
     processor->clearData();
+    
+    //  NEW CHANGE -- This code is executed after we have captured from the live video
+    // and saved each frame as a cv::Mat in left and right vector.
+    
+    // Let's try this
+    cv::Mat leftEyeVideoImage, rightEyeVideoImage;
+    
+    // NSLog(@"Total Frame in video processing %ld", processor->leftOutputMatVideoVector.size());
+    
+    
+    for (int i=0; i <  self.numberOfIteration; i++)
+    {
+        // NSLog(@"Iteration Number %d", i);
+        // processor->clearData();
+        
+        
+        processor->threshold_ud = [self.pickedMutations[i][kThreadhold] integerValue]; // Degree of offset.. modified starburst
+        processor->markCost = [self.pickedMutations[i][kPrior] integerValue];
+        
+        
+        processor->windowSize_ud        = [self.pickedMutations[i][kmWindow] integerValue];
+        processor->mbWindowSize_ud      = [self.pickedMutations[i][kgWindow] integerValue];
+        
+        processor->intensityThreshold_ud      = [self.pickedMutations[i][kIntensityThreshold] integerValue];
+        isFinished = false;
+        processor->frameNumber = 0;
+        
+        
+        
+        for (int j=0; j < processor->leftOutputMatVideoVector.size(); j++)
+        {
+            // NSLog(@"Inside J Loop %d", j);
+            leftEyeVideoImage = processor->leftOutputMatVideoVector[j];
+            rightEyeVideoImage = processor->rightOutputMatVideoVector[j];
+            self.iterationCounter = i;
+            
+            processor->eyeFeatureExtraction(leftEyeVideoImage, rightEyeVideoImage, isFinished, i);
+            
+        }
+        
+        // No more frames left in the video
+        dispatch_sync(dispatch_get_main_queue(), ^{[self processData];});
+//        dispatch_async(dispatch_get_main_queue(),^{
+//            [self processData];});
+        processor->clearData();
+
+    }
+    isFinished = true;
+
+    // End of New change
     
 }
 
@@ -553,8 +604,11 @@ const int kIntensityThreshold = 5;
        // NSLog(@"Inside advance iteration === %ld", (long)self.iterationCounter);
         
         
+        // NEW CHANGE. Return NO so that we will get out of the loop
         
-        return YES;
+        // return YES;
+        
+        return NO;
     }
     else
     {
@@ -623,44 +677,46 @@ const int kIntensityThreshold = 5;
             if (self.isRunnningFromVideoMode)
             {
                 // Replace image from camera to video
-                if (![self getVideoFrame:(cv::Mat &)leftEyeImage rightEye:(cv::Mat &)rightEyeImage])
-                {
-                    // No more frames left in the video
-                    isFinished = true;
-                    dispatch_async(dispatch_get_main_queue(),^{
-                        [self processData];});
-                    
-                    return cameraImage;
-                }
-                else
-                {
-                    // Process image from the video
-                    
-                    //NSLog(@"Left image channels %d", leftEyeImage.channels());
-                    //NSLog(@"Right image channels %d", rightEyeImage.channels());
-                    
-                    //leftEyeImage.convertTo(leftEyeImage, CV_8UC3);
-                    
-                    // NSLog(@"Channels before converting %d", rightEyeImage.channels());
-                    
-//                    string ty =  type2str( leftEyeImage.type() );
-//                    printf("Matrix: Left Eye %s %dx%d %d %d\n", ty.c_str(), leftEyeImage.cols, leftEyeImage.rows, leftEyeImage.type(), leftEyeImage.depth() );
+                // NEW CHANGE -- COMMENT OUT THE FOLLOWIGN CODE
+                
+//                if (![self getVideoFrame:(cv::Mat &)leftEyeImage rightEye:(cv::Mat &)rightEyeImage])
+//                {
+//                    // No more frames left in the video
+//                    isFinished = true;
+//                    dispatch_async(dispatch_get_main_queue(),^{
+//                        [self processData];});
 //                    
-//                    ty =  type2str( rightEyeImage.type() );
-//                    printf("Matrix: Right Eye %s %dx%d \n", ty.c_str(), rightEyeImage.cols, rightEyeImage.rows );
-                    
-                    Mat leftEyeX(leftEyeImage);
-                    Mat rightEyeX(rightEyeImage);
-                    
-                    
-                    cvtColor(leftEyeX, leftEyeX, CV_BGR2GRAY);
-                    cvtColor(rightEyeX, rightEyeX, CV_BGR2GRAY);
-                    
-                   // NSLog(@"ITERATION COUNTER %d", self.iterationCounter);
-                    
-                    processor->eyeFeatureExtraction(leftEyeImage, rightEyeImage, isFinished, self.iterationCounter);
-                    
-                }
+//                    return cameraImage;
+//                }
+//                else
+//                {
+//                    // Process image from the video
+//                    
+//                    //NSLog(@"Left image channels %d", leftEyeImage.channels());
+//                    //NSLog(@"Right image channels %d", rightEyeImage.channels());
+//                    
+//                    //leftEyeImage.convertTo(leftEyeImage, CV_8UC3);
+//                    
+//                    // NSLog(@"Channels before converting %d", rightEyeImage.channels());
+//                    
+////                    string ty =  type2str( leftEyeImage.type() );
+////                    printf("Matrix: Left Eye %s %dx%d %d %d\n", ty.c_str(), leftEyeImage.cols, leftEyeImage.rows, leftEyeImage.type(), leftEyeImage.depth() );
+////                    
+////                    ty =  type2str( rightEyeImage.type() );
+////                    printf("Matrix: Right Eye %s %dx%d \n", ty.c_str(), rightEyeImage.cols, rightEyeImage.rows );
+//                    
+//                    Mat leftEyeX(leftEyeImage);
+//                    Mat rightEyeX(rightEyeImage);
+//                    
+//                    
+//                    cvtColor(leftEyeX, leftEyeX, CV_BGR2GRAY);
+//                    cvtColor(rightEyeX, rightEyeX, CV_BGR2GRAY);
+//                    
+//                   // NSLog(@"ITERATION COUNTER %d", self.iterationCounter);
+//                    
+//                    processor->eyeFeatureExtraction(leftEyeImage, rightEyeImage, isFinished, self.iterationCounter);
+//                    
+//                }
             }
             else
             {

@@ -71,7 +71,7 @@ NSString *videoFile;
 
 const cv::Size kRecordFrameSize(80,80);
 const int kRecordFPS = 25;
-const int firstIteration = 1;
+const int firstIteration = 0;
 
 
 const unsigned int k_signal_buffer_size = 15*3;
