@@ -48,8 +48,13 @@ std::vector<float> result;
     @property (weak, nonatomic) IBOutlet UIWebView *gameView;
     @property (nonatomic) NSInteger iterationCounter;
     @property (strong, nonatomic) NSMutableArray* parameters;
+    @property (strong, nonatomic) NSMutableArray* imageProcessingParams;
+    @property (strong, nonatomic) NSMutableArray* postProcessingParams;
+
 
     @property (strong, nonatomic) NSMutableArray* pickedMutations;
+    @property (strong, nonatomic) NSMutableArray* postProcPickedMutations;
+
 
 
 
@@ -74,13 +79,24 @@ std::vector<float> result;
     
 }
 
-
-const int kThreadhold = 0;
+//// Image processing index for the possible values.
+const int kDegreeOfOffset = 0;
 const int kPrior = 1;
 const int kStd = 2;
-const int kmWindow = 3;
-const int kgWindow = 4;
-const int kIntensityThreshold = 5;
+const int kIntensityThreshold = 3;
+
+//// Post processing index of possible variables
+const int kmWindow = 0;
+const int kgWindow = 1;
+
+
+
+//const int kThreadhold = 0;
+//const int kPrior = 1;
+//const int kStd = 2;
+//const int kmWindow = 3;
+//const int kgWindow = 4;
+//const int kIntensityThreshold = 5;
 
 -(DataModel*)model{
     if(!_model){
@@ -98,7 +114,7 @@ const int kIntensityThreshold = 5;
     NSLog(@"TimeStamp at the start %@", timeStampValue);
     
     self.iterationCounter = 0;
-    self.numberOfIteration = 60;
+    self.numberOfIteration = 200;
     // _model = [DataModel sharedInstance];
 
     // NSLog(@"Current subject id %@", _model.currentT);
@@ -196,45 +212,83 @@ const int kIntensityThreshold = 5;
     
     // initial parameter grid
     self.parameters = [NSMutableArray new];
+    self.imageProcessingParams = [NSMutableArray new];
+    self.postProcessingParams = [NSMutableArray new];
     
-    [self.parameters addObject:@[@15,@25,@35]]; // kThreshold
-    [self.parameters addObject:@[@1,@2,@3]]; // kPrior
-    [self.parameters addObject:@[@1,@1,@1]]; // kstd
-    [self.parameters addObject:@[@11,@21,@31]]; // mwindowSize
-    [self.parameters addObject:@[@11,@21,@31]]; // gwindowSize
-    [self.parameters addObject:@[@15,@20,@25]]; // kIntensityThreshold
+    [self.imageProcessingParams addObject:@[@15,@25,@30, @35]]; // kThreshold
+    [self.imageProcessingParams addObject:@[@1,@2,@3, @4]]; // kPrior
+    [self.imageProcessingParams addObject:@[@15,@20,@25, @30]]; // kIntensityThreshold
+    [self.imageProcessingParams addObject:@[@1,@1,@1, @1]]; // kstd
+
+    [self.postProcessingParams addObject:@[@11,@21,@31]]; // mwindowSize
+    [self.postProcessingParams addObject:@[@11,@21,@31]]; // gwindowSize
+
+    
+//    [self.parameters addObject:@[@15,@25,@35]]; // kThreshold
+//    [self.parameters addObject:@[@1,@2,@3]]; // kPrior
+//    [self.parameters addObject:@[@1,@1,@1]]; // kstd
+//    [self.parameters addObject:@[@11,@21,@31]]; // mwindowSize
+//    [self.parameters addObject:@[@11,@21,@31]]; // gwindowSize
+//    [self.parameters addObject:@[@15,@20,@25]]; // kIntensityThreshold
 
     
     self.pickedMutations = [[NSMutableArray alloc]init];
     
     NSMutableArray* allPosibleMutations = [[NSMutableArray alloc] init];
     
-    for (NSNumber *threadhold in self.parameters[kThreadhold])
-        for (NSNumber *prior in self.parameters[kPrior])
-            for (NSNumber *std in self.parameters[kStd])
-                for (NSNumber *mwindowSize in self.parameters[kmWindow])
-                    for (NSNumber *gwindowSize in self.parameters[kgWindow])
-                        for (NSNumber *intensityThresh in self.parameters[kIntensityThreshold])
+    for (NSNumber *threadhold in self.imageProcessingParams[kDegreeOfOffset])
+        for (NSNumber *prior in self.imageProcessingParams[kPrior])
+            for (NSNumber *std in self.imageProcessingParams[kStd])
+                for (NSNumber *intensityThresh in self.imageProcessingParams[kIntensityThreshold])
                         {
                             [allPosibleMutations addObject:@[
                                                              threadhold,
                                                              prior,
                                                              std,
-                                                             mwindowSize,
-                                                             gwindowSize,
                                                              intensityThresh
                                                              ]];
                         }
     
-    
+
     int N = [allPosibleMutations count];
-    for (int i=0; i < N; i++) {
+    
+    NSLog(@"Total possible mutation %d", N);
+    
+    for (int i=0; i < N ; i++) {
         NSUInteger randomIndex = arc4random() % [allPosibleMutations count];
         [allPosibleMutations exchangeObjectAtIndex:i withObjectAtIndex:randomIndex];
     }
     self.pickedMutations = allPosibleMutations;
     
+   // Post processing parameters
+    
+    NSMutableArray* postProcessingPossibleMutations = [[NSMutableArray alloc] init];
+    self.postProcPickedMutations = [[NSMutableArray alloc]init];
 
+
+    for (NSNumber *mwindowSize in self.postProcessingParams[kmWindow])
+        for (NSNumber *gwindowSize in self.imageProcessingParams[kgWindow])
+                {
+                    [postProcessingPossibleMutations addObject:@[
+                                                    mwindowSize,
+                                                    gwindowSize
+                                                     ]];
+                }
+    
+    
+    int postProcN = [postProcessingPossibleMutations count];
+    
+    NSLog(@"Total post processing possible mutation %d", postProcN);
+    
+    for (int i=0; i < postProcN; i++) {
+        NSUInteger randomIndex = arc4random() % [postProcessingPossibleMutations count];
+        [allPosibleMutations exchangeObjectAtIndex:i withObjectAtIndex:randomIndex];
+    }
+    self.postProcPickedMutations = postProcessingPossibleMutations;
+
+    
+    
+    //
 
     // NSLog(@"Picked Mutations %@", self.pickedMutations);
     //NSLog(@"%@", self.pickedMutations);
@@ -264,6 +318,8 @@ const int kIntensityThreshold = 5;
         result = processor->getPupilPixel();
         results.push_back(result);
         
+        NSLog(@"RR Results Size %ld", results.size());
+        
 //        for (int i = 0; i < result.size(); i++)
 //            NSLog(@"Result at %f", result[i]);
         
@@ -282,6 +338,48 @@ const int kIntensityThreshold = 5;
         NSLog(@"STD is %f : MAD is %f", stdV, currentBaseline);
     }
 }
+
+- (void) writeResultsToFile:(vector<std::vector<float>>) data
+{
+    NSString *featureFile;
+    NSFileHandle *fileHandle;
+    
+    
+    NSString *docDir = NSSearchPathForDirectoriesInDomains(
+                                                           NSDocumentDirectory,
+                                                           NSUserDomainMask, YES
+                                                           )[0];
+    
+    featureFile = [docDir
+                   stringByAppendingPathComponent:
+                   [NSString stringWithFormat:@"%@_Results.csv", self.model.getCalibrationData]];
+    
+    // featureFile = [docDir stringByAppendingPathComponent:self.model.getCalibrationData];
+    
+    if  (![[NSFileManager defaultManager] fileExistsAtPath:featureFile]) {
+        [[NSFileManager defaultManager]
+         createFileAtPath:featureFile contents:nil attributes:nil];
+    }
+    
+    fileHandle = [NSFileHandle
+                  fileHandleForUpdatingAtPath:featureFile];
+
+    for( int i=0; i< (int)data.size(); i++ )
+    {
+        for( size_t j=0; j< (size_t)data[i].size(); j++ )
+        {
+            
+            NSString *text=[NSString stringWithFormat:@"%f,",data[i][j]];
+            
+            [fileHandle writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+        NSString *text=[NSString stringWithFormat:@"\n"];
+        
+        [fileHandle writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+}
+
+
 
 - (void) writeSignalToFile:(std::vector<float>) data
 {
@@ -385,14 +483,14 @@ const int kIntensityThreshold = 5;
         NSUInteger indexOfMinValue = [madValues indexOfObject:minvalue];
         
         if (indexOfMinValue>[self.pickedMutations count]) {
-            NSLog(@"Error: min value out of bound %d", indexOfMinValue);
+            NSLog(@"Error: min value out of bound %ld", indexOfMinValue);
             return;
         }
         
-        NSLog(@"Value %@, Index %d",minvalue, indexOfMinValue);
+        NSLog(@"Value %@, Index %ld",minvalue, indexOfMinValue);
         NSLog(@"%@",self.pickedMutations[indexOfMinValue]);
         
-        for( int i=0;i<=self.numberOfIteration;i++)
+        for( int i=0;i<= self.numberOfIteration;i++)
         {
            // NSLog(@"size %@; paramiter %@",madValues[i], self.pickedMutations[i]);
             NSString *text=[NSString stringWithFormat:@"%@\n",self.pickedMutations[i]];
@@ -408,14 +506,12 @@ const int kIntensityThreshold = 5;
         //    const int kgWindow = 4;
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setInteger:[self.pickedMutations[indexOfMinValue][kThreadhold] intValue] forKey:@"s_threshold"];
+        [defaults setInteger:[self.pickedMutations[indexOfMinValue][kDegreeOfOffset] intValue] forKey:@"s_threshold"];
         [defaults setInteger:[self.pickedMutations[indexOfMinValue][kPrior] intValue] forKey:@"s_markCost"];
         // [defaults setInteger:[self.pickedMutations[indexOfMinValue][kStd] intValue] forKey:@"s_threshold"];
         [defaults setInteger:[self.pickedMutations[indexOfMinValue][kmWindow] intValue] forKey:@"s_mbWindowSize"];
         [defaults setInteger:[self.pickedMutations[indexOfMinValue][kgWindow] intValue] forKey:@"s_windowSize"];
         [defaults setInteger:[self.pickedMutations[indexOfMinValue][kIntensityThreshold] intValue] forKey:@"s_intensityThreshold"];
-
-
         
         [defaults synchronize];
         
@@ -482,12 +578,13 @@ const int kIntensityThreshold = 5;
     
     //  NEW CHANGE -- This code is executed after we have captured from the live video
     // and saved each frame as a cv::Mat in left and right vector.
-    
+
     // Let's try this
     cv::Mat leftEyeVideoImage, rightEyeVideoImage;
     
     // NSLog(@"Total Frame in video processing %ld", processor->leftOutputMatVideoVector.size());
     
+    NSLog(@"Total number of mutations in loadvideo %d", self.numberOfIteration);
     
     for (int i=0; i <  self.numberOfIteration; i++)
     {
@@ -495,25 +592,24 @@ const int kIntensityThreshold = 5;
         // processor->clearData();
         
         
-        processor->threshold_ud = [self.pickedMutations[i][kThreadhold] integerValue]; // Degree of offset.. modified starburst
+        processor->threshold_ud = [self.pickedMutations[i][kDegreeOfOffset] integerValue]; // Degree of offset.. modified starburst
         processor->markCost = [self.pickedMutations[i][kPrior] integerValue];
         
-        
-        processor->windowSize_ud        = [self.pickedMutations[i][kmWindow] integerValue];
-        processor->mbWindowSize_ud      = [self.pickedMutations[i][kgWindow] integerValue];
+        NSLog(@"Value of kmWindow size %d and %d", processor->mbWindowSize_ud, processor->windowSize_ud);
+//        processor->windowSize_ud        = [self.pickedMutations[i][kmWindow] integerValue];
+//        processor->mbWindowSize_ud      = [self.pickedMutations[i][kgWindow] integerValue];
         
         processor->intensityThreshold_ud      = [self.pickedMutations[i][kIntensityThreshold] integerValue];
         isFinished = false;
         processor->frameNumber = 0;
         
-        
+        self.iterationCounter = i;
         
         for (int j=0; j < processor->leftOutputMatVideoVector.size(); j++)
         {
-            // NSLog(@"Inside J Loop %d", j);
+             NSLog(@"Inside J Loop %d", j);
             leftEyeVideoImage = processor->leftOutputMatVideoVector[j];
             rightEyeVideoImage = processor->rightOutputMatVideoVector[j];
-            self.iterationCounter = i;
             
             processor->eyeFeatureExtraction(leftEyeVideoImage, rightEyeVideoImage, isFinished, i);
             
@@ -527,6 +623,8 @@ const int kIntensityThreshold = 5;
 
     }
     isFinished = true;
+
+    [self writeResultsToFile:results];
 
     // End of New change
     
@@ -569,12 +667,12 @@ const int kIntensityThreshold = 5;
 //    const int kgWindow = 4;
 
 
-    processor->threshold_ud = [self.pickedMutations[iterNumber][kThreadhold] integerValue]; // Degree of offset.. modified starburst
+    processor->threshold_ud = [self.pickedMutations[iterNumber][kDegreeOfOffset] integerValue]; // Degree of offset.. modified starburst
     processor->markCost = [self.pickedMutations[iterNumber][kPrior] integerValue];
 
     
-    processor->windowSize_ud        = [self.pickedMutations[iterNumber][kmWindow] integerValue];
-    processor->mbWindowSize_ud      = [self.pickedMutations[iterNumber][kgWindow] integerValue];
+//    processor->windowSize_ud        = [self.pickedMutations[iterNumber][kmWindow] integerValue];
+//    processor->mbWindowSize_ud      = [self.pickedMutations[iterNumber][kgWindow] integerValue];
     
     processor->intensityThreshold_ud      = [self.pickedMutations[iterNumber][kIntensityThreshold] integerValue];
 
