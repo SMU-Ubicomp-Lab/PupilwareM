@@ -196,8 +196,8 @@ const int kgWindow = 1;
     self.imageProcessingParams = [NSMutableArray new];
     self.postProcessingParams = [NSMutableArray new];
     
-    [self.imageProcessingParams addObject:@[@15,@25,@30, @35]]; // kThreshold
-    [self.imageProcessingParams addObject:@[@1,@2,@3, @4]]; // kPrior
+    [self.imageProcessingParams addObject:@[@15,@25,@30, @35]]; // kThreshold -- Degree of offset
+    [self.imageProcessingParams addObject:@[@1,@2,@3, @4]]; // kPrior -- MarkCost
     [self.imageProcessingParams addObject:@[@15,@20,@25, @30]]; // kIntensityThreshold
     [self.imageProcessingParams addObject:@[@1,@1,@1, @1]]; // kstd
 
@@ -455,12 +455,9 @@ const int kgWindow = 1;
     
     processor->clearData();
     
-    //NSLog(@"Inside load video frame");
-    
     //  NEW CHANGE -- This code is executed after we have captured from the live video
     // and saved each frame as a cv::Mat in left and right vector.
     
-    // Let's try this
     cv::Mat leftEyeVideoImage, rightEyeVideoImage;
     
     // For each of the iteration we process all video frames taken from the camera
@@ -515,30 +512,18 @@ const int kgWindow = 1;
 
 -(BOOL)prepareVideoLoad
 {
-    //NSLog(@"Inside prepare video load iteration %d", self.iterationCounter );
+    isFinished = false;
+    processor->isShouldWriteVideo = false;
+    processor->isShouldDetectFace = false;
     
-    
+    // Should only call loadVideoFrame if we have not gone
+    // through all of the iterations
+
     if( self.iterationCounter < self.numberOfIteration-1 )
     {
-        isFinished = false;
-        
-        
-        // NEW CHANGE. Return NO so that we will get out of the loop
-        
-        processor->isShouldWriteVideo = false;
-        processor->isShouldDetectFace = false;
-        
-    
-        // Now that we have gone through the first iteration
-        [self loadVideoFrames];
-        
-        //self.isRunnningFromVideoMode = YES;
-
-        
+            [self loadVideoFrames];
     }
     return NO;
-
- 
 }
 
 
