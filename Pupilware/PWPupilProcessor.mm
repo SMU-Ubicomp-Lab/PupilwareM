@@ -143,8 +143,8 @@ namespace pw
     {
         
         
-        std::cout << "Opening Left output file name " <<  leftOutputFileName << std::endl;
-        std::cout << "Opening Right output file name " <<  rightOutputFileName << std::endl;
+//        std::cout << "Opening Left output file name " <<  leftOutputFileName << std::endl;
+//        std::cout << "Opening Right output file name " <<  rightOutputFileName << std::endl;
         
         
         // Open the output files to save the videos for left and right eye.
@@ -435,7 +435,7 @@ namespace pw
     
     void PWPupilProcessor::process_signal()
     {
-         // NSLog(@"Inside process signal left Eye SB %ld window size %d", left_eye_w_sb.size(), mbWindowSize_ud);
+         // NSLog(@"Inside process signal window size %d mb window size %d", windowSize_ud, mbWindowSize_ud);
         
         // Do nothing if the data point less than median filter window size.
         if (left_eye_w_sb.size() < mbWindowSize_ud)
@@ -1073,7 +1073,7 @@ namespace pw
         
         if (iteration == firstIteration)
         {
-             NSLog(@"Inside the first iteration Loop");
+            // NSLog(@"Inside the first iteration Loop");
             cv::Point leftPupilUsingMat = findEyeCenterUsingMat(leftEyeMat,"Left Eye");
             cv::Point rightPupilUsingMat = findEyeCenterUsingMat(rightEyeMat,"Right Eye");
 
@@ -1089,7 +1089,7 @@ namespace pw
             
             searchDarkestSpotWithInRange(11,tmp_rightEyeRect, g_rightPupilCenter);
             
-            std::cout << "Adding to the pupil center vector" << endl;
+           // std::cout << "Adding to the pupil center vector" << endl;
             
             g_leftPupilCenterVector.push_back(g_leftPupilCenter); // This is where to store the center values
             g_rightPupilCenterVector.push_back(g_rightPupilCenter); // This is where to store the center values
@@ -1099,8 +1099,8 @@ namespace pw
         {
             // All iterations after the first one we take the center values off of the vector and use them.
             // This save processing time for finding the pupil center.
-            std::cout << "Inside subsequent iterations " << iteration << "Frame Number " << frameNumber << endl;
-            std::cout << "Total frames in the pupil center vectro " << g_leftPupilCenterVector.size() << endl;
+//            std::cout << "Inside subsequent iterations " << iteration << "Frame Number " << frameNumber << endl;
+//            std::cout << "Total frames in the pupil center vectro " << g_leftPupilCenterVector.size() << endl;
             g_leftPupilCenter = g_leftPupilCenterVector[frameNumber];
             g_rightPupilCenter = g_rightPupilCenterVector[frameNumber];
             
