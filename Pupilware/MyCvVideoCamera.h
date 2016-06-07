@@ -9,7 +9,7 @@
 #ifndef CogSense_MyCvVideoCamera_h
 #define CogSense_MyCvVideoCamera_h
 
-#import <opencv2/highgui/cap_ios.h>
+#import <opencv2/videoio/cap_ios.h>
 
 @interface MyCvVideoCamera : CvVideoCamera
 

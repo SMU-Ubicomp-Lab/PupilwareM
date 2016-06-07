@@ -8,7 +8,7 @@
 
 #import "TestCalibrateViewController.h"
 #import "APLGraphView.h"
-#import <opencv2/highgui/cap_ios.h>
+#import <opencv2/videoio/cap_ios.h>
 #import "PWPupilProcessor.hpp"
 #import "DisplayDataViewController.h"
 #import "CalibrationResultViewController.h"
@@ -25,6 +25,7 @@
 // @class VideoDisplayViewController;
 
 using namespace cv;
+using namespace std;
 
 NSString *leftOutputVideoFileName = @"";
 NSString *rightOutputVideoFileName = @"";
