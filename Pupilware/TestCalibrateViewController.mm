@@ -19,6 +19,7 @@
 #import "constants.h"
 #import "VideoAnalgesic.h"
 #import "OpenCVBridge.h"
+#import "NMSimplex.h"
 
 @class commandControl;
 @class DataModel;
@@ -74,16 +75,7 @@ std::vector<float> result;
     std::vector<float> baselineValues;
     
     bool isStarted;
-    
-
-    
 }
-
-//// Image processing index for the possible values.
-const int kDegreeOfOffset = 0;
-const int kPrior = 1;
-const int kStd = 2;
-const int kIntensityThreshold = 3;
 
 //// Post processing index of possible variables
 const int kmWindow = 0;
@@ -110,7 +102,7 @@ const int kgWindow = 1;
     
        if(!self.isCalibCogMax)
             {
-                const float kCaptureBaselineTime = 10.0f;
+                const float kCaptureBaselineTime = 10.0f;  //Allow 10 secs to collect frames before analysis data
                 [NSTimer scheduledTimerWithTimeInterval:kCaptureBaselineTime
                                                  target:self
                                                selector:@selector(finishTheIteration)
@@ -194,103 +186,66 @@ const int kgWindow = 1;
 
     // initial parameter grid
     self.parameters = [NSMutableArray new];
-    self.imageProcessingParams = [NSMutableArray new];
     self.postProcessingParams = [NSMutableArray new];
     
-    [self.imageProcessingParams addObject:@[@15,@25,@30, @35]]; // kThreshold -- Degree of offset
-    [self.imageProcessingParams addObject:@[@1,@2,@3, @4]]; // kPrior -- MarkCost
-    [self.imageProcessingParams addObject:@[@15,@20,@25, @30]]; // kIntensityThreshold
-    [self.imageProcessingParams addObject:@[@1,@1,@1, @1]]; // kstd
-
-    [self.postProcessingParams addObject:@[@11,@21,@31]]; // mwindowSize
-    [self.postProcessingParams addObject:@[@11,@21,@31]]; // gwindowSize
-
-    
-    self.pickedMutations = [[NSMutableArray alloc]init];
-    
-    NSMutableArray* allPosibleMutations = [[NSMutableArray alloc] init];
-    
-    for (NSNumber *threadhold in self.imageProcessingParams[kDegreeOfOffset])
-        for (NSNumber *prior in self.imageProcessingParams[kPrior])
-            for (NSNumber *std in self.imageProcessingParams[kStd])
-                for (NSNumber *intensityThresh in self.imageProcessingParams[kIntensityThreshold])
-                        {
-                            [allPosibleMutations addObject:@[
-                                                             threadhold,
-                                                             prior,
-                                                             std,
-                                                             intensityThresh
-                                                             ]];
-                        }
-    
-
-    int N = [allPosibleMutations count];
-    
-    NSLog(@"Total possible mutation for image processing params %d", N);
-    
-    for (int i=0; i < N ; i++) {
-        NSUInteger randomIndex = arc4random() % [allPosibleMutations count];
-        [allPosibleMutations exchangeObjectAtIndex:i withObjectAtIndex:randomIndex];
-    }
-    self.pickedMutations = allPosibleMutations;
     
    // Post processing parameters
     
-    NSMutableArray* postProcessingPossibleMutations = [[NSMutableArray alloc] init];
-    self.postProcPickedMutations = [[NSMutableArray alloc]init];
-
-
-    for (NSNumber *mwindowSize in self.postProcessingParams[kmWindow])
-        for (NSNumber *gwindowSize in self.imageProcessingParams[kgWindow])
-                {
-                    [postProcessingPossibleMutations addObject:@[
-                                                    mwindowSize,
-                                                    gwindowSize
-                                                     ]];
-                }
-    
-    
-    int postProcN = [postProcessingPossibleMutations count];
-    
-    NSLog(@"Total post processing possible mutation %d", postProcN);
-    
-    for (int i=0; i < postProcN; i++) {
-        NSUInteger randomIndex = arc4random() % [postProcessingPossibleMutations count];
-        [allPosibleMutations exchangeObjectAtIndex:i withObjectAtIndex:randomIndex];
-    }
-    self.postProcPickedMutations = postProcessingPossibleMutations;
+//    NSMutableArray* postProcessingPossibleMutations = [[NSMutableArray alloc] init];
+//    self.postProcPickedMutations = [[NSMutableArray alloc]init];
+//
+//
+//    for (NSNumber *mwindowSize in self.postProcessingParams[kmWindow])
+//        for (NSNumber *gwindowSize in self.imageProcessingParams[kgWindow])
+//                {
+//                    [postProcessingPossibleMutations addObject:@[
+//                                                    mwindowSize,
+//                                                    gwindowSize
+//                                                     ]];
+//                }
+//    
+//    
+//    int postProcN = [postProcessingPossibleMutations count];
+//    
+//    NSLog(@"Total post processing possible mutation %d", postProcN);
+//    
+//    for (int i=0; i < postProcN; i++) {
+//        NSUInteger randomIndex = arc4random() % [postProcessingPossibleMutations count];
+//        [postProcessingPossibleMutations exchangeObjectAtIndex:i withObjectAtIndex:randomIndex];
+//    }
+//    self.postProcPickedMutations = postProcessingPossibleMutations;
 }
 
--(void)processData
-{
-    
-    processor->process_signal();
-    
-    if(self.isCalibCogMax)
-    {
-        std::vector<float> result = processor->getResultGraph();
-        [self openResultView];
-    }
-    else
-    {
-        dispatch_async(dispatch_get_main_queue(),^{
-            [self.model.bridgeDelegate trackingFaceDone];
-        });
-        result = processor->getPupilPixel();
-        results.push_back(result);
-        
-        float stdV = calStd(result);
-        float madV = calMad(result);
-        
-        stdValues.push_back(stdV);
-        
-        
-        float currentBaseline = processor->calBaselineFromCurrentSignal();
-        baselineValues.push_back(currentBaseline);
-        
-        NSLog(@"STD is %f : MAD is %f", stdV, currentBaseline);
-    }
-}
+//-(void)processData
+//{
+//    
+//    processor->process_signal();
+//    
+//    if(self.isCalibCogMax) // isCalibCogMax never assigned ?
+//    {
+//        std::vector<float> result = processor->getResultGraph();
+//        [self openResultView];
+//    }
+//    else
+//    {
+//        dispatch_async(dispatch_get_main_queue(),^{
+//            [self.model.bridgeDelegate trackingFaceDone];
+//        });
+//        result = processor->getPupilPixel();
+//        results.push_back(result);
+//        
+//        float stdV = calStd(result);
+//        float madV = calMad(result);
+//        
+//        stdValues.push_back(stdV);
+//        
+//        
+//        float currentBaseline = processor->calBaselineFromCurrentSignal();
+//        baselineValues.push_back(currentBaseline);
+//        
+//        NSLog(@"STD is %f : MAD is %f", stdV, currentBaseline);
+//    }
+//}
 
 - (void) writeResultsToFile:(vector<std::vector<float>>) data
 {
@@ -414,15 +369,6 @@ const int kgWindow = 1;
             [paramFileHandle writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
         }
         
-        
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setInteger:[self.pickedMutations[indexOfMinValue][kDegreeOfOffset] intValue] forKey:@"s_threshold"];
-        [defaults setInteger:[self.pickedMutations[indexOfMinValue][kPrior] intValue] forKey:@"s_markCost"];
-        // [defaults setInteger:[self.pickedMutations[indexOfMinValue][kStd] intValue] forKey:@"s_threshold"];
-        [defaults setInteger:[self.pickedMutations[indexOfMinValue][kIntensityThreshold] intValue] forKey:@"s_intensityThreshold"];
-        
-        [defaults synchronize];
-        
         timeStampValue = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
         NSLog(@"TimeStamp at the end %@", timeStampValue);
     }
@@ -456,58 +402,37 @@ const int kgWindow = 1;
     
     processor->clearData();
     
-    //  NEW CHANGE -- This code is executed after we have captured from the live video
-    // and saved each frame as a cv::Mat in left and right vector.
+    TermCriteria  	termcrit = TermCriteria(TermCriteria::MAX_ITER+TermCriteria::EPS, 50, 0.000001);
+    //Apply Nelder Mead Search to find the best parameters
+    cv::Ptr<cv::DownhillSolver> solver=cv::DownhillSolver::create();
+    cv::Ptr<NMSimplex> ptr_F = cv::makePtr<NMSimplex>();
     
-    cv::Mat leftEyeVideoImage, rightEyeVideoImage;
+    ptr_F->setUp(processor);
     
-    // For each of the iteration we process all video frames taken from the camera
-    // and saved to leftOutputMatVideoVector and rightOutputMatVideoVector
+    cv::Mat x=(cv::Mat_<double>(1,3)<<10.0,15.0, 20.0),
+    step=(cv::Mat_<double>(3,1)<<5.0, 5.0, 5.0);
+    //etalon_x=(cv::Mat_<double>(1,2)<<-0.0,0.0);
+    //double etalon_res=0.0;
+    solver->setFunction(ptr_F);
+    solver->setInitStep(step);
+    solver->setTermCriteria(termcrit);
+    double res=solver->minimize(x);
     
-    for (int i=0; i <  self.numberOfIteration; i++)
-    {
-        
-        // Degree of offset.. modified starburst
-        // STD is omitted as it is not currently being used,
-        // but whenever that is added we will need to add the above line for STD as well
-        
-        processor->threshold_ud                     = [self.pickedMutations[i][kDegreeOfOffset] integerValue];
-        processor->markCost                         = [self.pickedMutations[i][kPrior] integerValue];
-        processor->intensityThreshold_ud            = [self.pickedMutations[i][kIntensityThreshold] integerValue];
-        
-        
-        isFinished = false;
-        
-        // Start from the 0th frame, video frames are saved in leftOutputMatVideoVector &
-        // rightOutputMatVideoVector for left and right eyes. In each iteration we process
-        // all of those frames starting from 0.
-        
-        processor->frameNumber = 0;
-        
-        self.iterationCounter = i;
-        
-        for (int j=0; j < processor->leftOutputMatVideoVector.size(); j++)
-        {
-            // NSLog(@"Inside J Loop %d", j);
-            leftEyeVideoImage = processor->leftOutputMatVideoVector[j];
-            rightEyeVideoImage = processor->rightOutputMatVideoVector[j];
-            
-            processor->eyeFeatureExtraction(leftEyeVideoImage, rightEyeVideoImage, isFinished, i);
-        }
-        
-        // No more frames left in the video
-        dispatch_sync(dispatch_get_main_queue(), ^{[self processData];});
-        //        dispatch_async(dispatch_get_main_queue(),^{
-        //            [self processData];});
-        processor->clearData();
-        
-    }
+    NSLog(@"Dump x %f", x.at<double>(0, 0));
+    NSLog(@"Dump x %f", x.at<double>(0, 1));
+    NSLog(@"Dump x %f", x.at<double>(0, 2));
+    
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setInteger: x.at<double>(0,0) forKey:@"s_threshold"];
+    [defaults setInteger: x.at<double>(0,1) forKey:@"s_markCost"];
+    [defaults setInteger: x.at<double>(0,2) forKey:@"s_intensityThreshold"];
+    
+    [defaults synchronize];
+
     isFinished = true;
     
-    [self writeResultsToFile:results];
-    
-    // End of New change
-    
+    //[self writeResultsToFile:results];
 }
 
 
@@ -517,13 +442,7 @@ const int kgWindow = 1;
     processor->isShouldWriteVideo = false;
     processor->isShouldDetectFace = false;
     
-    // Should only call loadVideoFrame if we have not gone
-    // through all of the iterations
-
-    if( self.iterationCounter < self.numberOfIteration-1 )
-    {
-            [self loadVideoFrames];
-    }
+    [self loadVideoFrames];
     return NO;
 }
 
@@ -558,12 +477,12 @@ const int kgWindow = 1;
         
         if (isFinished)
         {
-            if (self.isCalibCogMax)
+            if (self.isCalibCogMax) // isCalibCogMax never aasigned ?
             {
-                isStarted = false;
-                dispatch_async(dispatch_get_main_queue(),^{
-                    [self processData];
-                });
+//                isStarted = false;
+//                dispatch_async(dispatch_get_main_queue(),^{
+//                    [self processData];
+//                });
             }
             else
             {
@@ -584,9 +503,8 @@ const int kgWindow = 1;
                 }
             }
         }
-        else
+        else  //Collect frames used for later calibration
         {
-           
                 // Processing image from the camera.
                 for(CIFaceFeature *face in faceFeatures ){
                     if(!face.leftEyeClosed && ! face.rightEyeClosed){
@@ -657,14 +575,21 @@ const int kgWindow = 1;
     
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+NSArray* vector2NSArray( std::vector<float> v )
+{
+    if(v.size() <= 0 )
+        return nil;
+    
+    float percentTrim = 0.05;
+    int trimSize = v.size()*percentTrim;
+    
+    NSMutableArray *buffer = [[NSMutableArray alloc] init];
+    for( int i=trimSize; i<v.size()-trimSize; i++)
+    {
+        [buffer addObject:@(v[i])];
+    }
+    
+    return [NSArray arrayWithArray:buffer];
 }
-*/
 
 @end

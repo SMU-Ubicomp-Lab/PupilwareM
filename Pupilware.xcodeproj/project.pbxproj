@@ -56,6 +56,7 @@
 		97E94F7B1C5CB10C00D652CB /* PWViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F751C5CB10C00D652CB /* PWViewController.mm */; };
 		97E94F7E1C5CB16800D652CB /* VideoAnalgesic.m in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F7D1C5CB16800D652CB /* VideoAnalgesic.m */; };
 		AE7728201D0653530096CCBD /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE77281F1D0653530096CCBD /* opencv2.framework */; };
+		AE7728231D08BDD40096CCBD /* NMSimplex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE7728211D08BDD40096CCBD /* NMSimplex.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -130,6 +131,9 @@
 		97E94F7F1C5CB1F800D652CB /* constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
 		97E965AB1C5CBA3F00D652CB /* PupilPrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PupilPrefixHeader.pch; path = ../PupilPrefixHeader.pch; sourceTree = "<group>"; };
 		AE77281F1D0653530096CCBD /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		AE7728211D08BDD40096CCBD /* NMSimplex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NMSimplex.cpp; sourceTree = "<group>"; };
+		AE7728221D08BDD40096CCBD /* NMSimplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMSimplex.h; sourceTree = "<group>"; };
+		AE98F3681D105E5D00F5FA0C /* PWPupilProcessor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PWPupilProcessor.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -264,6 +268,7 @@
 				97E94F6D1C5CB10C00D652CB /* PWParameter.h */,
 				97E94F6E1C5CB10C00D652CB /* PWParameter.m */,
 				97E94F6F1C5CB10C00D652CB /* PWPupilProcessor.h */,
+				AE98F3681D105E5D00F5FA0C /* PWPupilProcessor.hpp */,
 				97E94F701C5CB10C00D652CB /* PWPupilProcessor.mm */,
 				97E94F721C5CB10C00D652CB /* PWUtilities.h */,
 				97E94F731C5CB10C00D652CB /* PWUtilities.mm */,
@@ -299,6 +304,8 @@
 				97E94F381C5CAD2900D652CB /* Ransac.h */,
 				97E94F3A1C5CAD4300D652CB /* Circle.cpp */,
 				97E94F7F1C5CB1F800D652CB /* constants.h */,
+				AE7728211D08BDD40096CCBD /* NMSimplex.cpp */,
+				AE7728221D08BDD40096CCBD /* NMSimplex.h */,
 			);
 			name = CPP;
 			sourceTree = "<group>";
@@ -408,6 +415,7 @@
 				97D487271C93302500774958 /* TestCalibrateViewController.mm in Sources */,
 				97E94F781C5CB10C00D652CB /* PWPupilProcessor.mm in Sources */,
 				97D487291C933F0A00774958 /* settingsVC.swift in Sources */,
+				AE7728231D08BDD40096CCBD /* NMSimplex.cpp in Sources */,
 				97A3215A1C59CFF100B1EB98 /* DataModel.swift in Sources */,
 				973A50281C5DB5D600EDDB20 /* OpenCVBridge.mm in Sources */,
 			);
