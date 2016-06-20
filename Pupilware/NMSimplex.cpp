@@ -29,8 +29,9 @@ double NMSimplex::calc(const double* x) const {
         leftEyeVideoImage = processor->leftOutputMatVideoVector[j];
         rightEyeVideoImage = processor->rightOutputMatVideoVector[j];
         
-        processor->eyeFeatureExtraction(leftEyeVideoImage, rightEyeVideoImage);
+        processor->eyeFeatureExtraction(leftEyeVideoImage, rightEyeVideoImage, j);
     }
+    processor->firstIteration = 0;
     processor->process_signal();
     results = processor->getPupilPixel();
     float stdV = calStd(results);

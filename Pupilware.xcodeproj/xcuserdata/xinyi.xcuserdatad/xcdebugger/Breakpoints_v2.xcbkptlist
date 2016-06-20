@@ -134,7 +134,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pupilware/NMSimplex.cpp"
@@ -150,15 +150,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pupilware/NMSimplex.cpp"
-            timestampString = "488060770.253905"
+            timestampString = "488125867.583071"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
             landmarkName = "NMSimplex::calc(const double* x)"
             landmarkType = "5">
          </BreakpointContent>
@@ -166,32 +166,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pupilware/PWPupilProcessor.mm"
-            timestampString = "488060021.922637"
+            timestampString = "488125867.583071"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1064"
-            endingLineNumber = "1064"
-            landmarkName = "PWPupilProcessor::eyeFeatureExtraction(cv::Mat leftEyeMat, cv::Mat rightEyeMat)"
+            startingLineNumber = "1063"
+            endingLineNumber = "1063"
+            landmarkName = "PWPupilProcessor::eyeFeatureExtraction(cv::Mat leftEyeMat, cv::Mat rightEyeMat, int frameNumber)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pupilware/PWPupilProcessor.mm"
-            timestampString = "488060001.622595"
+            timestampString = "488125867.583071"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1101"
-            endingLineNumber = "1101"
-            landmarkName = "PWPupilProcessor::eyeFeatureExtraction(cv::Mat leftEyeMat, cv::Mat rightEyeMat)"
+            startingLineNumber = "1097"
+            endingLineNumber = "1097"
+            landmarkName = "PWPupilProcessor::eyeFeatureExtraction(cv::Mat leftEyeMat, cv::Mat rightEyeMat, int frameNumber)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
