@@ -75,6 +75,7 @@ std::vector<float> result;
     std::vector<float> baselineValues;
     
     bool isStarted;
+    bool calibrationFinish;
 }
 
 //// Post processing index of possible variables
@@ -98,6 +99,7 @@ const int kgWindow = 1;
     self.iterationCounter = 0;
     self.numberOfIteration = 60;
     isFinished = false;
+    calibrationFinish = false;
 
     
        if(!self.isCalibCogMax)
@@ -399,6 +401,7 @@ const int kgWindow = 1;
 
 -(void)loadVideoFrames
 {
+    NSLog(@"In load Frames");
     
     processor->clearData();
     
@@ -431,6 +434,7 @@ const int kgWindow = 1;
     [defaults synchronize];
 
     isFinished = true;
+    calibrationFinish = true;
     
     //[self writeResultsToFile:results];
 }
@@ -449,7 +453,6 @@ const int kgWindow = 1;
 
 - (void)loadCamera
 {
-    
     // remove the view's background color
     self.view.backgroundColor = nil;
     
@@ -477,17 +480,19 @@ const int kgWindow = 1;
         
         if (isFinished)
         {
-            if (self.isCalibCogMax) // isCalibCogMax never aasigned ?
-            {
+//            if (self.isCalibCogMax) // isCalibCogMax never aasigned ?
+//            {
 //                isStarted = false;
 //                dispatch_async(dispatch_get_main_queue(),^{
 //                    [self processData];
 //                });
+//            }
+            if (calibrationFinish) {
+                NSLog(@"calibration finished");
             }
             else
             {
                 if(![self prepareVideoLoad])
-
                 {
                     // Finished ALL iterations
                     // NSLog(@"Finished all iterations -- Calling openresultview from under advance iteration ");
