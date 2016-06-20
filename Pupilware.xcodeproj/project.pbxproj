@@ -59,6 +59,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5CED353E1D18489A002C714B /* PWViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWViewController.h; sourceTree = "<group>"; };
 		9711B0991C7F670F006EE548 /* iterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iterCell.swift; sourceTree = "<group>"; };
 		971AB1DC1C683BC900E03643 /* calModalVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = calModalVC.swift; sourceTree = "<group>"; };
 		973A501B1C5D79E000EDDB20 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
@@ -124,7 +125,6 @@
 		97E94F701C5CB10C00D652CB /* PWPupilProcessor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWPupilProcessor.mm; sourceTree = "<group>"; };
 		97E94F721C5CB10C00D652CB /* PWUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWUtilities.h; sourceTree = "<group>"; };
 		97E94F731C5CB10C00D652CB /* PWUtilities.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWUtilities.mm; sourceTree = "<group>"; };
-		97E94F741C5CB10C00D652CB /* PWViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PWViewController.h; path = /Users/raymondmartin/Documents/Github/IOS/Pupilware/Pupilware/PWViewController.h; sourceTree = "<absolute>"; };
 		97E94F751C5CB10C00D652CB /* PWViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWViewController.mm; sourceTree = "<group>"; };
 		97E94F7C1C5CB16800D652CB /* VideoAnalgesic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoAnalgesic.h; sourceTree = "<group>"; };
 		97E94F7D1C5CB16800D652CB /* VideoAnalgesic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoAnalgesic.m; sourceTree = "<group>"; };
@@ -202,7 +202,7 @@
 				97A89CB01C5B6D7900D9E193 /* popOverController.swift */,
 				97D487251C93302500774958 /* TestCalibrateViewController.h */,
 				97D487261C93302500774958 /* TestCalibrateViewController.mm */,
-				97E94F741C5CB10C00D652CB /* PWViewController.h */,
+				5CED353E1D18489A002C714B /* PWViewController.h */,
 				97E94F751C5CB10C00D652CB /* PWViewController.mm */,
 				97E965AC1C5D6CB400D652CB /* Libraries */,
 				973A50291C5DBE6200EDDB20 /* Config */,
