@@ -10,7 +10,7 @@
 
 #import "AVFoundation/AVFoundation.h"
 #import <opencv2/opencv.hpp>
-#import <opencv2/highgui/cap_ios.h>
+#import <opencv2/videoio/cap_ios.h>
 #import "PWPupilProcessor.hpp"
 
 

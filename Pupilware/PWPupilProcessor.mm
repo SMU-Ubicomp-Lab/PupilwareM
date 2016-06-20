@@ -71,8 +71,6 @@ NSString *videoFile;
 
 const cv::Size kRecordFrameSize(80,80);
 const int kRecordFPS = 25;
-const int firstIteration = 0;
-
 
 const unsigned int k_signal_buffer_size = 15*3;
 Mat g_signal = Mat(1, k_signal_buffer_size, CV_32F);
@@ -158,6 +156,7 @@ namespace pw
         
         
         frameNumber                 = 0;
+        firstIteration              = 1;
         isShouldWriteVideo          = false;
         isDrawFPS                   = true;
         isShouldDetectFace          = true;
@@ -944,7 +943,7 @@ namespace pw
  
     // NEW FUNCTION
     
-    bool PWPupilProcessor::faceAndEyeFeatureExtraction(cv::Mat srcImage, cv::Mat leftEyeMat, cv::Mat rightEyeMat, cv::Mat leftEyeMatColor, cv::Mat rightEyeMatColor, cv::Rect leftEyeRect, cv::Rect rightEyeRect, BOOL isFinished, cv::Mat& resultImage)
+    bool PWPupilProcessor::faceAndEyeFeatureExtraction(cv::Mat srcImage, cv::Mat leftEyeMat, cv::Mat rightEyeMat, cv::Mat leftEyeMatColor, cv::Mat rightEyeMatColor, cv::Rect leftEyeRect, cv::Rect rightEyeRect, bool isFinished, cv::Mat& resultImage)
     {
         
 //        string ty =  type2str( leftEyeMat.type() );
@@ -1055,23 +1054,13 @@ namespace pw
     
     // Adding eyeFeature Extraction
     
-    bool PWPupilProcessor::eyeFeatureExtraction(cv::Mat leftEyeMat, cv::Mat rightEyeMat, BOOL isFinished, int iteration)
+    bool PWPupilProcessor::eyeFeatureExtraction(cv::Mat leftEyeMat, cv::Mat rightEyeMat, int frameNumber)
     {
-        
-        if (isFinished)
-        {
-            // NSLog(@"IS FINISHED IS SET TO TRUE.. ");
-           // resultImage = srcImage;
-            return true;
-        }
-        
-     //   NSLog(@"Iteration number %d", iteration);
-        
         // Save the pupil center in the first iteration so that we don't have to repeat the same process again
         // Pupil center values are being saved in the left and right pupil center vector.
         
         
-        if (iteration == firstIteration)
+        if (firstIteration == 1)
         {
             // NSLog(@"Inside the first iteration Loop");
             cv::Point leftPupilUsingMat = findEyeCenterUsingMat(leftEyeMat,"Left Eye");
@@ -1103,11 +1092,11 @@ namespace pw
 //            std::cout << "Total frames in the pupil center vectro " << g_leftPupilCenterVector.size() << endl;
             g_leftPupilCenter = g_leftPupilCenterVector[frameNumber];
             g_rightPupilCenter = g_rightPupilCenterVector[frameNumber];
-            
-            frameNumber++;
         }
         
-        
+        if (!leftEyeMat.dims || !rightEyeMat.dims) {
+            return true;
+        }
         
         extractFeatures(leftEyeMat,
                         rightEyeMat,

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		9711B09A1C7F670F006EE548 /* iterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9711B0991C7F670F006EE548 /* iterCell.swift */; };
 		971AB1DD1C683BC900E03643 /* calModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 971AB1DC1C683BC900E03643 /* calModalVC.swift */; };
-		973A501F1C5D7A2A00EDDB20 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 973A501B1C5D79E000EDDB20 /* opencv2.framework */; };
 		973A50281C5DB5D600EDDB20 /* OpenCVBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 973A50271C5DB5D600EDDB20 /* OpenCVBridge.mm */; };
 		9748FF711C6092B700143D54 /* calibrate.png in Resources */ = {isa = PBXBuildFile; fileRef = 9748FF6E1C6092B700143D54 /* calibrate.png */; };
 		9748FF721C6092B700143D54 /* gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 9748FF6F1C6092B700143D54 /* gear.png */; };
@@ -56,13 +55,14 @@
 		97E94F7A1C5CB10C00D652CB /* PWUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F731C5CB10C00D652CB /* PWUtilities.mm */; };
 		97E94F7B1C5CB10C00D652CB /* PWViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F751C5CB10C00D652CB /* PWViewController.mm */; };
 		97E94F7E1C5CB16800D652CB /* VideoAnalgesic.m in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F7D1C5CB16800D652CB /* VideoAnalgesic.m */; };
+		AE7728201D0653530096CCBD /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE77281F1D0653530096CCBD /* opencv2.framework */; };
+		AE7728231D08BDD40096CCBD /* NMSimplex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE7728211D08BDD40096CCBD /* NMSimplex.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5CED353E1D18489A002C714B /* PWViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWViewController.h; sourceTree = "<group>"; };
 		9711B0991C7F670F006EE548 /* iterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iterCell.swift; sourceTree = "<group>"; };
 		971AB1DC1C683BC900E03643 /* calModalVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = calModalVC.swift; sourceTree = "<group>"; };
-		973A501B1C5D79E000EDDB20 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		973A50261C5DB5D600EDDB20 /* OpenCVBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenCVBridge.h; sourceTree = "<group>"; };
 		973A50271C5DB5D600EDDB20 /* OpenCVBridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenCVBridge.mm; sourceTree = "<group>"; };
 		9748FF6E1C6092B700143D54 /* calibrate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calibrate.png; sourceTree = "<group>"; };
@@ -130,6 +130,10 @@
 		97E94F7D1C5CB16800D652CB /* VideoAnalgesic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoAnalgesic.m; sourceTree = "<group>"; };
 		97E94F7F1C5CB1F800D652CB /* constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
 		97E965AB1C5CBA3F00D652CB /* PupilPrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PupilPrefixHeader.pch; path = ../PupilPrefixHeader.pch; sourceTree = "<group>"; };
+		AE77281F1D0653530096CCBD /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		AE7728211D08BDD40096CCBD /* NMSimplex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NMSimplex.cpp; sourceTree = "<group>"; };
+		AE7728221D08BDD40096CCBD /* NMSimplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMSimplex.h; sourceTree = "<group>"; };
+		AE98F3681D105E5D00F5FA0C /* PWPupilProcessor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PWPupilProcessor.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,7 +141,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				973A501F1C5D7A2A00EDDB20 /* opencv2.framework in Frameworks */,
+				AE7728201D0653530096CCBD /* opencv2.framework in Frameworks */,
 				97E94F661C5CAFFD00D652CB /* AssetsLibrary.framework in Frameworks */,
 				97E94F641C5CAFF700D652CB /* Accelerate.framework in Frameworks */,
 				97E94F621C5CAFEB00D652CB /* Foundation.framework in Frameworks */,
@@ -241,7 +245,7 @@
 		97E94F691C5CB02900D652CB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				973A501B1C5D79E000EDDB20 /* opencv2.framework */,
+				AE77281F1D0653530096CCBD /* opencv2.framework */,
 				97E94F651C5CAFFD00D652CB /* AssetsLibrary.framework */,
 				97E94F631C5CAFF700D652CB /* Accelerate.framework */,
 				97E94F611C5CAFEB00D652CB /* Foundation.framework */,
@@ -264,6 +268,7 @@
 				97E94F6D1C5CB10C00D652CB /* PWParameter.h */,
 				97E94F6E1C5CB10C00D652CB /* PWParameter.m */,
 				97E94F6F1C5CB10C00D652CB /* PWPupilProcessor.h */,
+				AE98F3681D105E5D00F5FA0C /* PWPupilProcessor.hpp */,
 				97E94F701C5CB10C00D652CB /* PWPupilProcessor.mm */,
 				97E94F721C5CB10C00D652CB /* PWUtilities.h */,
 				97E94F731C5CB10C00D652CB /* PWUtilities.mm */,
@@ -299,6 +304,8 @@
 				97E94F381C5CAD2900D652CB /* Ransac.h */,
 				97E94F3A1C5CAD4300D652CB /* Circle.cpp */,
 				97E94F7F1C5CB1F800D652CB /* constants.h */,
+				AE7728211D08BDD40096CCBD /* NMSimplex.cpp */,
+				AE7728221D08BDD40096CCBD /* NMSimplex.h */,
 			);
 			name = CPP;
 			sourceTree = "<group>";
@@ -335,7 +342,7 @@
 				TargetAttributes = {
 					97A321421C59CDB300B1EB98 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = S9WYRPR2Y6;
+						DevelopmentTeam = ME4966827L;
 					};
 				};
 			};
@@ -408,6 +415,7 @@
 				97D487271C93302500774958 /* TestCalibrateViewController.mm in Sources */,
 				97E94F781C5CB10C00D652CB /* PWPupilProcessor.mm in Sources */,
 				97D487291C933F0A00774958 /* settingsVC.swift in Sources */,
+				AE7728231D08BDD40096CCBD /* NMSimplex.cpp in Sources */,
 				97A3215A1C59CFF100B1EB98 /* DataModel.swift in Sources */,
 				973A50281C5DB5D600EDDB20 /* OpenCVBridge.mm in Sources */,
 			);
@@ -550,7 +558,7 @@
 					"$(PROJECT_DIR)/opencv2.framework",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = smu.Pupilware;
+				PRODUCT_BUNDLE_IDENTIFIER = smu.Pupilware.develop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Pupilware/Pupilware-Bridging-Header.h";
@@ -583,7 +591,7 @@
 					"$(PROJECT_DIR)/opencv2.framework",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = smu.Pupilware;
+				PRODUCT_BUNDLE_IDENTIFIER = smu.Pupilware.develop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Pupilware/Pupilware-Bridging-Header.h";

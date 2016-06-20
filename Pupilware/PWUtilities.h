@@ -10,7 +10,8 @@
 #define CogSense_PWUitlities_h
 #include <vector>
 
-NSArray* vector2NSArray( std::vector<float> v );
+
+//NSArray* vector2NSArray( std::vector<float> v );
 
 double calStd( const std::vector<float>& v);
 
