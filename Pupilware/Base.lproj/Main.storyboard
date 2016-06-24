@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G19a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="O8W-PF-cgo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G19a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ujk-lY-LaN">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -412,10 +412,10 @@
             </objects>
             <point key="canvasLocation" x="2631" y="713"/>
         </scene>
-        <!--View Controller-->
+        <!--View Controller2-->
         <scene sceneID="5al-vd-ag9">
             <objects>
-                <viewController id="Ujk-lY-LaN" sceneMemberID="viewController">
+                <viewController id="Ujk-lY-LaN" customClass="PWViewController2" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="whu-3Z-ndo"/>
                         <viewControllerLayoutGuide type="bottom" id="XOc-fd-cif"/>
@@ -423,6 +423,33 @@
                     <view key="view" contentMode="scaleToFill" id="MIp-ad-ey8">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vxq-eu-mg2">
+                                <rect key="frame" x="0.0" y="32" width="600" height="536"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Keep Face In View" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bh1-eD-Ayn">
+                                        <rect key="frame" x="8" y="244" width="584" height="48"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="48" id="ho6-lu-CuU"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Kw5-S5-hgu">
+                                        <rect key="frame" x="290" y="300" width="20" height="20"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="bh1-eD-Ayn" firstAttribute="leading" secondItem="Vxq-eu-mg2" secondAttribute="leadingMargin" id="3eF-a6-ixj"/>
+                                    <constraint firstItem="bh1-eD-Ayn" firstAttribute="trailing" secondItem="Vxq-eu-mg2" secondAttribute="trailingMargin" id="5U4-6q-fTq"/>
+                                    <constraint firstItem="bh1-eD-Ayn" firstAttribute="centerY" secondItem="Vxq-eu-mg2" secondAttribute="centerY" id="UhY-M8-Q8n"/>
+                                    <constraint firstItem="Kw5-S5-hgu" firstAttribute="top" secondItem="bh1-eD-Ayn" secondAttribute="bottom" constant="8" symbolic="YES" id="XWb-Nq-fgB"/>
+                                    <constraint firstItem="Kw5-S5-hgu" firstAttribute="centerX" secondItem="bh1-eD-Ayn" secondAttribute="centerX" id="qNK-0i-uh8"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                 </viewController>

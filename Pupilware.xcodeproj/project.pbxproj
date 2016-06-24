@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5C9EA49E1D1DD6A6003BE62C /* PWViewController2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C9EA49D1D1DD6A6003BE62C /* PWViewController2.mm */; };
 		5CF4D59B1D186FB30050CBBA /* ALOfflineFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D57C1D186FB30050CBBA /* ALOfflineFile.cpp */; };
 		5CF4D59C1D186FB30050CBBA /* DummyAlgo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D57E1D186FB30050CBBA /* DummyAlgo.cpp */; };
 		5CF4D59D1D186FB30050CBBA /* IPupilAlgorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D5801D186FB30050CBBA /* IPupilAlgorithm.cpp */; };
@@ -78,6 +79,8 @@
 
 /* Begin PBXFileReference section */
 		5C9EA4991D1DD26A003BE62C /* preHeader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = preHeader.hpp; sourceTree = "<group>"; };
+		5C9EA49C1D1DD6A6003BE62C /* PWViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWViewController2.h; sourceTree = "<group>"; };
+		5C9EA49D1D1DD6A6003BE62C /* PWViewController2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWViewController2.mm; sourceTree = "<group>"; };
 		5CED353E1D18489A002C714B /* PWViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWViewController.h; sourceTree = "<group>"; };
 		5CF4D57C1D186FB30050CBBA /* ALOfflineFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ALOfflineFile.cpp; sourceTree = "<group>"; };
 		5CF4D57D1D186FB30050CBBA /* ALOfflineFile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ALOfflineFile.hpp; sourceTree = "<group>"; };
@@ -355,6 +358,8 @@
 			isa = PBXGroup;
 			children = (
 				97A3214A1C59CDB300B1EB98 /* Main.storyboard */,
+				5C9EA49C1D1DD6A6003BE62C /* PWViewController2.h */,
+				5C9EA49D1D1DD6A6003BE62C /* PWViewController2.mm */,
 				97A321591C59CFF100B1EB98 /* DataModel.swift */,
 				97A89CAE1C5B5EA600D9E193 /* tabViewController.swift */,
 				975C29021CA074210001FF95 /* targetSetupVC.swift */,
@@ -540,6 +545,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C9EA49E1D1DD6A6003BE62C /* PWViewController2.mm in Sources */,
 				97E94F7A1C5CB10C00D652CB /* PWUtilities.mm in Sources */,
 				5CF4D5A41D186FB30050CBBA /* SimpleImageSegmenter.cpp in Sources */,
 				97DB32CB1C75AB930024A22F /* adminVC.swift in Sources */,
@@ -728,7 +734,7 @@
 					"$(PROJECT_DIR)/opencv2.framework",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = smu.Pupilware.develop;
+				PRODUCT_BUNDLE_IDENTIFIER = smu.PupilwareM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Pupilware/Pupilware-Bridging-Header.h";
@@ -761,7 +767,7 @@
 					"$(PROJECT_DIR)/opencv2.framework",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = smu.Pupilware.develop;
+				PRODUCT_BUNDLE_IDENTIFIER = smu.PupilwareM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Pupilware/Pupilware-Bridging-Header.h";

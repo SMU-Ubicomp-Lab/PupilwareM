@@ -296,3 +296,6 @@ void trimMeanFilt(std::vector<float>& input, std::vector<float>& output, int win
 {
     filterSignal(input, output, windowSize, trimMean);
 }
+
+
+
