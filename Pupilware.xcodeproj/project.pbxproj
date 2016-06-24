@@ -52,11 +52,6 @@
 		97D487291C933F0A00774958 /* settingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97D487281C933F0A00774958 /* settingsVC.swift */; };
 		97DB32CB1C75AB930024A22F /* adminVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DB32CA1C75AB930024A22F /* adminVC.swift */; };
 		97DB32CD1C75ABB30024A22F /* luxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DB32CC1C75ABB30024A22F /* luxVC.swift */; };
-		97E94F391C5CAD2900D652CB /* Ransac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F371C5CAD2900D652CB /* Ransac.cpp */; };
-		97E94F3C1C5CAD4300D652CB /* Circle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F3A1C5CAD4300D652CB /* Circle.cpp */; };
-		97E94F411C5CAD5200D652CB /* findEyeCenter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F3D1C5CAD5200D652CB /* findEyeCenter.cpp */; };
-		97E94F421C5CAD5200D652CB /* findEyeCorner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F3F1C5CAD5200D652CB /* findEyeCorner.cpp */; };
-		97E94F451C5CAD5E00D652CB /* helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F431C5CAD5E00D652CB /* helpers.cpp */; };
 		97E94F4F1C5CAD8500D652CB /* BEMCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F481C5CAD8500D652CB /* BEMCircle.m */; };
 		97E94F501C5CAD8500D652CB /* BEMLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F4A1C5CAD8500D652CB /* BEMLine.m */; };
 		97E94F511C5CAD8500D652CB /* BEMPermanentPopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F4C1C5CAD8500D652CB /* BEMPermanentPopupView.m */; };
@@ -158,16 +153,6 @@
 		97DB32CA1C75AB930024A22F /* adminVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = adminVC.swift; sourceTree = "<group>"; };
 		97DB32CC1C75ABB30024A22F /* luxVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = luxVC.swift; sourceTree = "<group>"; };
 		97E94F361C5CAD2800D652CB /* Pupilware-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Pupilware-Bridging-Header.h"; sourceTree = "<group>"; };
-		97E94F371C5CAD2900D652CB /* Ransac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ransac.cpp; sourceTree = "<group>"; };
-		97E94F381C5CAD2900D652CB /* Ransac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ransac.h; sourceTree = "<group>"; };
-		97E94F3A1C5CAD4300D652CB /* Circle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Circle.cpp; sourceTree = "<group>"; };
-		97E94F3B1C5CAD4300D652CB /* Circle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Circle.h; sourceTree = "<group>"; };
-		97E94F3D1C5CAD5200D652CB /* findEyeCenter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = findEyeCenter.cpp; sourceTree = "<group>"; };
-		97E94F3E1C5CAD5200D652CB /* findEyeCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = findEyeCenter.h; sourceTree = "<group>"; };
-		97E94F3F1C5CAD5200D652CB /* findEyeCorner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = findEyeCorner.cpp; sourceTree = "<group>"; };
-		97E94F401C5CAD5200D652CB /* findEyeCorner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = findEyeCorner.h; sourceTree = "<group>"; };
-		97E94F431C5CAD5E00D652CB /* helpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = helpers.cpp; sourceTree = "<group>"; };
-		97E94F441C5CAD5E00D652CB /* helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helpers.h; sourceTree = "<group>"; };
 		97E94F471C5CAD8500D652CB /* BEMCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BEMCircle.h; sourceTree = "<group>"; };
 		97E94F481C5CAD8500D652CB /* BEMCircle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEMCircle.m; sourceTree = "<group>"; };
 		97E94F491C5CAD8500D652CB /* BEMLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BEMLine.h; sourceTree = "<group>"; };
@@ -471,16 +456,6 @@
 		97E965AD1C5D6CCE00D652CB /* CPP */ = {
 			isa = PBXGroup;
 			children = (
-				97E94F431C5CAD5E00D652CB /* helpers.cpp */,
-				97E94F441C5CAD5E00D652CB /* helpers.h */,
-				97E94F3D1C5CAD5200D652CB /* findEyeCenter.cpp */,
-				97E94F3E1C5CAD5200D652CB /* findEyeCenter.h */,
-				97E94F3F1C5CAD5200D652CB /* findEyeCorner.cpp */,
-				97E94F401C5CAD5200D652CB /* findEyeCorner.h */,
-				97E94F3B1C5CAD4300D652CB /* Circle.h */,
-				97E94F371C5CAD2900D652CB /* Ransac.cpp */,
-				97E94F381C5CAD2900D652CB /* Ransac.h */,
-				97E94F3A1C5CAD4300D652CB /* Circle.cpp */,
 				97E94F7F1C5CB1F800D652CB /* constants.h */,
 				AE7728211D08BDD40096CCBD /* NMSimplex.cpp */,
 				AE7728221D08BDD40096CCBD /* NMSimplex.h */,
@@ -569,13 +544,11 @@
 				5CF4D5A41D186FB30050CBBA /* SimpleImageSegmenter.cpp in Sources */,
 				97DB32CB1C75AB930024A22F /* adminVC.swift in Sources */,
 				97A89CB31C5B72EE00D9E193 /* expModalVC.swift in Sources */,
-				97E94F3C1C5CAD4300D652CB /* Circle.cpp in Sources */,
 				97E94F771C5CB10C00D652CB /* PWParameter.m in Sources */,
 				97A89CB11C5B6D7900D9E193 /* popOverController.swift in Sources */,
 				5CF4D5C11D1870020050CBBA /* Circle.cpp in Sources */,
 				97E94F511C5CAD8500D652CB /* BEMPermanentPopupView.m in Sources */,
 				5CF4D5A51D186FB30050CBBA /* ISignalProcessor.cpp in Sources */,
-				97E94F421C5CAD5200D652CB /* findEyeCorner.cpp in Sources */,
 				5CF4D5A21D186FB30050CBBA /* PWDataModel.cpp in Sources */,
 				5CF4D59F1D186FB30050CBBA /* MDStarbustG.cpp in Sources */,
 				5CF4D5C21D1870020050CBBA /* Ransac.cpp in Sources */,
@@ -587,16 +560,13 @@
 				97E94F521C5CAD8500D652CB /* BEMSimpleLineGraphView.m in Sources */,
 				5CF4D5A71D186FB30050CBBA /* SimpleSignalProcessor.cpp in Sources */,
 				5CF4D5C41D1870020050CBBA /* PWGraph.cpp in Sources */,
-				97E94F411C5CAD5200D652CB /* findEyeCenter.cpp in Sources */,
 				97E94F4F1C5CAD8500D652CB /* BEMCircle.m in Sources */,
 				97E94F7B1C5CB10C00D652CB /* PWViewController.mm in Sources */,
 				5CF4D5A31D186FB30050CBBA /* IImageSegmenter.cpp in Sources */,
 				97E94F7E1C5CB16800D652CB /* VideoAnalgesic.m in Sources */,
 				97A89CAF1C5B5EA600D9E193 /* tabViewController.swift in Sources */,
-				97E94F391C5CAD2900D652CB /* Ransac.cpp in Sources */,
 				5CF4D5C81D1871800050CBBA /* PupilwareController.cpp in Sources */,
 				97E94F761C5CB10C00D652CB /* PWAppDelegate.m in Sources */,
-				97E94F451C5CAD5E00D652CB /* helpers.cpp in Sources */,
 				5CF4D59B1D186FB30050CBBA /* ALOfflineFile.cpp in Sources */,
 				971AB1DD1C683BC900E03643 /* calModalVC.swift in Sources */,
 				97A3215C1C59E1BB00B1EB98 /* subjectIDModalVC.swift in Sources */,

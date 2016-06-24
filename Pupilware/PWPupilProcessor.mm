@@ -9,9 +9,7 @@
 
 #include "opencv2/opencv.hpp"
 #include "constants.h"
-#include "findEyeCenter.h"
-#include "findEyeCorner.h"
-#include "Ransac.h"
+#include "PupilwareCore/Helpers/Math/Ransac.h"
 
 #include <iostream>
 #include <queue>
@@ -785,9 +783,9 @@ namespace pw
         if( ray_points.size() > 5)
         {
             float distance = 1;
-            std::vector<cv::Point> iniliner;
+            std::vector<cv::Point2f> iniliner;
             
-            pd::Ransac r;
+            pw::Ransac r;
             r.ransac_circle_fitting(ray_points,
                                     static_cast<int>(ray_points.size()),
                                     ray_points.size()*0.2f,
