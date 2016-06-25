@@ -150,8 +150,6 @@ namespace pw{
         REQUIRES(pwSegAlgo != nullptr, "PupilSegmentor must be not null.");
         REQUIRES(!srcFrame.empty(), "Source Frame must not be empty.");
         
-        debugImg = srcFrame.clone();
-//        cv::circle(debugImg, cv::Point(0,0), 400, cv::Scalar(255,0,0), -1);
         
         Mat grayFrame;
         cvtColor(srcFrame, grayFrame, CV_BGR2GRAY);    // Please change to Red channal
@@ -164,7 +162,6 @@ namespace pw{
             //Face is not in the frame, then return... :)
             return;
         }
-        
         
         
         // segment eye
@@ -185,7 +182,7 @@ namespace pw{
         
         
         
-        // find pupil size
+        // Find pupil size
         PupilMeta eyeMeta;
         eyeMeta.setEyeCenter(leftEyeCenter, rightEyeCenter);
         eyeMeta.setEyeImages(srcFrame(leftEyeRect),
@@ -201,9 +198,22 @@ namespace pw{
         
         eyeDistancePx.push_back( eyeDist );
         
-        cv::circle(debugImg(faceRect), Point(leftEyeCenter.x + leftEyeRect.x, leftEyeCenter.y + leftEyeRect.y), 20, cv::Scalar(255,0,0));
         
-        cv::circle(debugImg(faceRect), Point(rightEyeCenter.x + rightEyeRect.x, rightEyeCenter.y + rightEyeRect.y ), 20, cv::Scalar(255,0,0));
+        
+        // DEBUG -----------------------------------------------------------------------------
+        debugImg = srcFrame.clone();
+        
+        cv::rectangle(debugImg, faceRect, cv::Scalar(255,0,0));
+        
+        cv::circle(debugImg(faceRect),
+                   Point(leftEyeCenter.x + leftEyeRect.x, leftEyeCenter.y + leftEyeRect.y),
+                   20,
+                   cv::Scalar(255,0,0));
+        
+        cv::circle(debugImg(faceRect),
+                   Point(rightEyeCenter.x + rightEyeRect.x, rightEyeCenter.y + rightEyeRect.y ),
+                   20,
+                   cv::Scalar(255,0,0));
 
     }
     
@@ -224,9 +234,9 @@ namespace pw{
     
     const std::vector<float>& PupilwareControllerImpl::getRawPupilSignal() const{
         
-        throw_assert(false, "This function has not been impremented");
+        // warning: only return left eye???
         
-        return std::vector<float>(1);
+        return storage.getLeftPupilSizes();
     }
     
     
@@ -234,7 +244,7 @@ namespace pw{
         
         throw_assert(false, "This function has not been impremented");
         
-        return std::vector<float>(1);
+        return storage.getLeftPupilSizes();
         
     }
     

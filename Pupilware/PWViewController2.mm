@@ -140,9 +140,16 @@
         
         cv::Mat cvFrame = [PWViewController2 IGImage2Mat:cameraImage
                                              withContext:weakSelf.videoManager.ciContext];
+        
+        //Rotate image.
+        [PWViewController2 Rotate90:cvFrame withFlag:1];
+        
         pwCtrl->processFrame(cvFrame);
         
         cv::Mat debugImg = pwCtrl->getDebugImage();
+        
+        //Rotate it back.
+        [PWViewController2 Rotate90:debugImg withFlag:2];
         
         cameraImage = [PWViewController2 Mat2CGImage:debugImg
                                          withContext:weakSelf.videoManager.ciContext];
@@ -205,6 +212,22 @@ namespace PWViewCtrl{
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////    Helper FUNCTIONS      ///////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
+
++(void)Rotate90:(cv::Mat&)opencvMat withFlag:(int)rotflag{
+    
+    //1=CW, 2=CCW, 3=180
+    if (rotflag == 1){
+        transpose(opencvMat, opencvMat);
+        flip(opencvMat, opencvMat,1); //transpose+flip(1)=CW
+    } else if (rotflag == 2) {
+        transpose(opencvMat, opencvMat);
+        flip(opencvMat, opencvMat,0); //transpose+flip(0)=CCW
+    } else if (rotflag ==3){
+        flip(opencvMat, opencvMat,-1);    //flip(-1)=180
+    } else if (rotflag != 0){ //if not 0,1,2,3:
+        NSLog(@"Invalid flag");
+    }
+}
 
 + (cv::Mat)IGImage2Mat:(CIImage*)ciFrameImage withContext:(CIContext*)context{
     

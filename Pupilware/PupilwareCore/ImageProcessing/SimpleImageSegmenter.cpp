@@ -103,14 +103,15 @@ namespace pw{
         Mat blur;
         cv::GaussianBlur(grayEyeROI, blur,Size(3,3), 3);
 
-        int th = cw::calDynamicThreshold( blur, 0.005 );
+        int th = cw::calDynamicThreshold( blur, 0.006 );
 
         Mat binary;
         cv::threshold(grayEyeROI, binary, th, 255, CV_THRESH_BINARY_INV);
 
         cv::Point p = cw::calCenterOfMass(binary);
 
-        cv::Point cPoint = p;
+//        cv::Point cPoint = p;
+        cv::Point cPoint = Point(grayEyeROI.cols/2, grayEyeROI.rows/2);
 
         auto sn = Snakuscules::Create();
         sn->fit( blur, cPoint, 20, 2.0, 20 );
