@@ -183,10 +183,12 @@ namespace pw{
         
         
         // Find pupil size
+        Mat colorFace = srcFrame(faceRect);
+        
         PupilMeta eyeMeta;
         eyeMeta.setEyeCenter(leftEyeCenter, rightEyeCenter);
-        eyeMeta.setEyeImages(srcFrame(leftEyeRect),
-                             srcFrame(rightEyeRect));
+        eyeMeta.setEyeImages(colorFace(leftEyeRect),
+                             colorFace(rightEyeRect));
         eyeMeta.setFrameNumber(currentFrameNumber);
         eyeMeta.setEyeDistancePx(eyeDist);
         
@@ -214,6 +216,7 @@ namespace pw{
                    Point(rightEyeCenter.x + rightEyeRect.x, rightEyeCenter.y + rightEyeRect.y ),
                    20,
                    cv::Scalar(255,0,0));
+
 
     }
     

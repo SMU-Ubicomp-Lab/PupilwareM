@@ -41,6 +41,7 @@
 @implementation PWViewController2
 {
     std::shared_ptr<pw::PupilwareController> pwCtrl;
+    std::shared_ptr<pw::MDStarbustNeo> pwAlgo;
     
     std::vector<std::vector<float>> results;
     bool hasStarted;
@@ -117,7 +118,9 @@
     NSLog(@"%s", filePath);
     
     pwCtrl = pw::PupilwareController::Create();
-    pwCtrl->setPupilSegmentationAlgorihtm(std::make_shared<pw::MDStarbustNeo>("StarbustNeo"));
+    pwAlgo = std::make_shared<pw::MDStarbustNeo>("StarbustNeo");
+    
+    pwCtrl->setPupilSegmentationAlgorihtm( pwAlgo );
     pwCtrl->setFaceSegmentationAlgoirhtm(std::make_shared<pw::SimpleImageSegmenter>(filePath));
     
 }
@@ -147,13 +150,24 @@
         pwCtrl->processFrame(cvFrame);
         
         cv::Mat debugImg = pwCtrl->getDebugImage();
+        if(!debugImg.empty()){
+            
+            cv::Mat debugEyeImg = pwAlgo->getDebugImage();
+            
+            if(!debugEyeImg.empty()){
+                cv::resize(debugEyeImg, debugEyeImg, cv::Size(debugImg.cols, debugEyeImg.rows*2));
+                debugEyeImg.copyTo(debugImg(cv::Rect(0, 0, debugEyeImg.cols, debugEyeImg.rows)));
+            }
+            
+            
+            //Rotate it back.
+            [PWViewController2 Rotate90:debugImg withFlag:2];
+            
+            cameraImage = [PWViewController2 Mat2CGImage:debugImg
+                                             withContext:weakSelf.videoManager.ciContext];
+    
+        }
         
-        //Rotate it back.
-        [PWViewController2 Rotate90:debugImg withFlag:2];
-        
-        cameraImage = [PWViewController2 Mat2CGImage:debugImg
-                                         withContext:weakSelf.videoManager.ciContext];
-
         
         
 //        cameraImage = [self testDrawing:cameraImage context:self.videoManager.ciContext];
@@ -213,6 +227,10 @@ namespace PWViewCtrl{
 ///////////////////////////////    Helper FUNCTIONS      ///////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/* 
+ * Source from TimZaman:
+ * http://stackoverflow.com/questions/15043152/rotate-opencv-matrix-by-90-180-270-degrees
+ */
 +(void)Rotate90:(cv::Mat&)opencvMat withFlag:(int)rotflag{
     
     //1=CW, 2=CCW, 3=180
@@ -229,19 +247,19 @@ namespace PWViewCtrl{
     }
 }
 
+
+
 + (cv::Mat)IGImage2Mat:(CIImage*)ciFrameImage withContext:(CIContext*)context{
     
     CGRect roi = ciFrameImage.extent;
     CGImageRef imageCG = [context createCGImage:ciFrameImage fromRect:roi];
     
-    // Right Eye OpenCV mat
     
     CGColorSpaceRef colorSpace = CGImageGetColorSpace(imageCG);
     CGFloat cols = roi.size.width;
     CGFloat rows = roi.size.height;
     cv::Mat returnMat(rows, cols, CV_8UC4);
-    
-    // Image referecne for the right eye
+
     
     CGContextRef contextRef = CGBitmapContextCreate(returnMat.data,                 // Pointer to backing data
                                                     cols,                           // Width of bitmap
@@ -257,7 +275,7 @@ namespace PWViewCtrl{
                        CGRectMake(0, 0, cols, rows),
                        imageCG);
    
-    // release intermediary buffer objects
+
     CGContextRelease(contextRef);
     CGImageRelease(imageCG);
     

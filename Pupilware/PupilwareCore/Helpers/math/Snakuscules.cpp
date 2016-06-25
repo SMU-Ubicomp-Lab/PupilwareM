@@ -46,8 +46,12 @@ namespace pw{
 
             REQUIRES( !srcGray.empty(), "The source must not be empty." );
             REQUIRES( srcGray.channels() == 1, "The source Mat must be one channel." );
-            REQUIRES( radius > 0, "the radius must be more than zero. now radius is " << radius );
+            REQUIRES( radius >= 0, "the radius must be more than zero. now radius is " << radius );
 
+            if (radius == 0) {
+                return RegionEnergy(0, 0);
+            }
+            
             cv::Point start( center.x - radius, center.y - radius );
             cv::Point end  ( center.x + radius, center.y + radius );
 

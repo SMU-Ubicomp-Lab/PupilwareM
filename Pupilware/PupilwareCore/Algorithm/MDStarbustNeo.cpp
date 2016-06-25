@@ -50,11 +50,11 @@ namespace pw {
 
 
         Mat debugLeftEye = pupilMeta.getLeftEyeImage().clone();
-//        float leftPupilRadius = findPupilSize(  pupilMeta.getLeftEyeImage()
-//                , pupilMeta.getLeftEyeCenter()
-//                , debugLeftEye );
+        float leftPupilRadius = findPupilSize(  pupilMeta.getLeftEyeImage()
+                , pupilMeta.getLeftEyeCenter()
+                , debugLeftEye );
 
-        float leftPupilRadius = 0.0f;
+//        float leftPupilRadius = 0.0f;
 
 
         Mat debugRightEye = pupilMeta.getRightEyeImage().clone();
@@ -69,7 +69,9 @@ namespace pw {
         Mat debugImg;
         hconcat(debugLeftEye, debugRightEye, debugImg);
         window->update(debugImg);
-
+        
+        this->debugImg = debugImg;
+        
         return PWPupilSize(  leftPupilRadius / pupilMeta.getEyeDistancePx()
                              ,rightPupilRadius/ pupilMeta.getEyeDistancePx()  );
 
@@ -388,4 +390,9 @@ namespace pw {
     {
         // Clean up code here.
     }
+    
+    const cv::Mat& MDStarbustNeo::getDebugImage() const{
+        return debugImg;
+    }
+    
 }

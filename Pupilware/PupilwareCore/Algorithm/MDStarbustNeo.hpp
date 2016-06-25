@@ -24,10 +24,13 @@ namespace pw {
         virtual PWPupilSize process( const PupilMeta &pupilMeta ) override ;
 
         virtual void exit() override ;
+        
+        const cv::Mat& getDebugImage() const;
 
     protected:
 
-
+        cv::Mat debugImg;
+        
         // Maximum iteration of processing starbust algorithm
         const unsigned int STARBURST_ITERATION = 5;
 
@@ -67,6 +70,7 @@ namespace pw {
         float _oldLeftRadius;
         float _oldRightRadius;
 
+        cv::Mat debugMat;
 
         // Just a window name for debuging
         std::shared_ptr<CVWindow> window;
