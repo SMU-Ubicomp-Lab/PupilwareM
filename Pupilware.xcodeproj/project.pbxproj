@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5C9EA49E1D1DD6A6003BE62C /* PWViewController2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C9EA49D1D1DD6A6003BE62C /* PWViewController2.mm */; };
+		5C9EA4A61D1EE1E8003BE62C /* IOSFaceSegmentor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C9EA4A41D1EE1E8003BE62C /* IOSFaceSegmentor.cpp */; };
+		5C9EA4AC1D1EE45B003BE62C /* haarcascade_frontalface_default.xml in Resources */ = {isa = PBXBuildFile; fileRef = 5C9EA4AB1D1EE45B003BE62C /* haarcascade_frontalface_default.xml */; };
 		5CF4D59B1D186FB30050CBBA /* ALOfflineFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D57C1D186FB30050CBBA /* ALOfflineFile.cpp */; };
 		5CF4D59C1D186FB30050CBBA /* DummyAlgo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D57E1D186FB30050CBBA /* DummyAlgo.cpp */; };
 		5CF4D59D1D186FB30050CBBA /* IPupilAlgorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D5801D186FB30050CBBA /* IPupilAlgorithm.cpp */; };
@@ -81,6 +83,9 @@
 		5C9EA4991D1DD26A003BE62C /* preHeader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = preHeader.hpp; sourceTree = "<group>"; };
 		5C9EA49C1D1DD6A6003BE62C /* PWViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWViewController2.h; sourceTree = "<group>"; };
 		5C9EA49D1D1DD6A6003BE62C /* PWViewController2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWViewController2.mm; sourceTree = "<group>"; };
+		5C9EA4A41D1EE1E8003BE62C /* IOSFaceSegmentor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOSFaceSegmentor.cpp; sourceTree = "<group>"; };
+		5C9EA4A51D1EE1E8003BE62C /* IOSFaceSegmentor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IOSFaceSegmentor.hpp; sourceTree = "<group>"; };
+		5C9EA4AB1D1EE45B003BE62C /* haarcascade_frontalface_default.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = haarcascade_frontalface_default.xml; sourceTree = "<group>"; };
 		5CED353E1D18489A002C714B /* PWViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWViewController.h; sourceTree = "<group>"; };
 		5CF4D57C1D186FB30050CBBA /* ALOfflineFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ALOfflineFile.cpp; sourceTree = "<group>"; };
 		5CF4D57D1D186FB30050CBBA /* ALOfflineFile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ALOfflineFile.hpp; sourceTree = "<group>"; };
@@ -214,6 +219,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5C9EA4A31D1EE1E8003BE62C /* IOS */ = {
+			isa = PBXGroup;
+			children = (
+				5C9EA4A41D1EE1E8003BE62C /* IOSFaceSegmentor.cpp */,
+				5C9EA4A51D1EE1E8003BE62C /* IOSFaceSegmentor.hpp */,
+			);
+			path = IOS;
+			sourceTree = "<group>";
+		};
+		5C9EA4AA1D1EE45B003BE62C /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				5C9EA4AB1D1EE45B003BE62C /* haarcascade_frontalface_default.xml */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
 		5CF4D57A1D186FB30050CBBA /* PupilwareCore */ = {
 			isa = PBXGroup;
 			children = (
@@ -221,6 +243,7 @@
 				5CF4D5A81D1870020050CBBA /* Helpers */,
 				5CF4D57B1D186FB30050CBBA /* Algorithm */,
 				5CF4D58D1D186FB30050CBBA /* Core */,
+				5C9EA4A31D1EE1E8003BE62C /* IOS */,
 				5CF4D58F1D186FB30050CBBA /* ImageProcessing */,
 				5CF4D5941D186FB30050CBBA /* SignalProcessing */,
 				5CF4D5C61D1871800050CBBA /* PupilwareController.cpp */,
@@ -379,6 +402,7 @@
 				97E965AC1C5D6CB400D652CB /* Libraries */,
 				973A50291C5DBE6200EDDB20 /* Config */,
 				97A321581C59CE7100B1EB98 /* images */,
+				5C9EA4AA1D1EE45B003BE62C /* Resource */,
 			);
 			path = Pupilware;
 			sourceTree = "<group>";
@@ -528,6 +552,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				97A321511C59CDB300B1EB98 /* LaunchScreen.storyboard in Resources */,
+				5C9EA4AC1D1EE45B003BE62C /* haarcascade_frontalface_default.xml in Resources */,
 				976803C81C97429E003D63C8 /* hash.png in Resources */,
 				9748FF731C6092B700143D54 /* beaker.png in Resources */,
 				9748FF721C6092B700143D54 /* gear.png in Resources */,
@@ -594,6 +619,7 @@
 				97A3215A1C59CFF100B1EB98 /* DataModel.swift in Sources */,
 				5CF4D59E1D186FB30050CBBA /* MDStarbust.cpp in Sources */,
 				973A50281C5DB5D600EDDB20 /* OpenCVBridge.mm in Sources */,
+				5C9EA4A61D1EE1E8003BE62C /* IOSFaceSegmentor.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,8 +16,7 @@ namespace pw
     PWGraph::PWGraph(const PWGraph& other){}
 
     PWGraph::~PWGraph() {
-        if(canvas)
-            cvReleaseImage(&canvas);
+        // No implementation on IOS version
     }
 
     void PWGraph::drawGraph(const char *name,
@@ -28,28 +27,22 @@ namespace pw
                             int width,
                             int height) {
 
-        setCustomGraphColor(static_cast<int>(color[0]),
-                            static_cast<int>(color[2]),
-                            static_cast<int>(color[1]));
-
-        canvas = drawFloatGraph(dataSrc.data(), static_cast<int>(dataSrc.size()), canvas, minVal,maxVal,width, height, const_cast<char*>(name) );
+        // No implementation on IOS version
     }
 
     void PWGraph::move(int x, int y) const {
 
-        cvMoveWindow( name.c_str(), x, y );
+        // No implementation on IOS version
+        
     }
 
     void PWGraph::resize( int width, int height ) const{
-        cvResizeWindow( name.c_str(), width, height );
+        // No implementation on IOS version
     }
 
     void PWGraph::show() const{
-        cvNamedWindow( name.c_str() );
-
-        cvShowImage( name.c_str(), canvas );
-
-        cvWaitKey( 10 );		// Note that cvWaitKey() is required for the OpenCV window to show!
+        
+        // No implementation on IOS version
 
     }
 }

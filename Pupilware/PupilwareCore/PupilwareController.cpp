@@ -8,16 +8,13 @@
 
 #include "PupilwareController.hpp"
 
-#include "Core/ThrowAssert.hpp"
+#include "preHeader.hpp"
 
 #include "Algorithm/PWDataModel.hpp"
 #include "ImageProcessing/IImageSegmenter.hpp"
 #include "Algorithm/IPupilAlgorithm.hpp"
 
 #include "Helpers/CWCVHelper.hpp"
-
-#define REQUIRES throw_assert
-#define PROMISES throw_assert
 
 using namespace cv;
 
@@ -27,18 +24,19 @@ namespace pw{
         
     public:
         PupilwareControllerImpl():
-        hasStarted(false){}
+        hasStarted(false),
+        currentFrameNumber(0){}
         
+        virtual ~PupilwareControllerImpl(){}
         
-        virtual void setFrameDataSource( ImageFrameDataSource dataSource ) override;
-        virtual void setMaxFrameNumber( int maxFrameNumber ) override;
-        
+        virtual void setFaceSegmentationAlgoirhtm( std::shared_ptr<IImageSegmenter> imgSegAlgo ) override;
+        virtual void setPupilSegmentationAlgorihtm( std::shared_ptr<IPupilAlgorithm> pwSegAlgo ) override;
+    
         
         /*!
          * Start Pupilware processing.
          */
-        virtual void start(  std::shared_ptr<IImageSegmenter> imgSeg
-                           , std::shared_ptr<IPupilAlgorithm> pwSeg  ) override;
+        virtual void start() override;
         
         
         /*!
@@ -47,12 +45,18 @@ namespace pw{
         virtual void stop() override;
         
         
+        /*!
+         * Process frame
+         */
+        virtual void processFrame( const cv::Mat& srcFrame,
+                                   unsigned int frameNumber = 0 ) override;
+        
         
         /*!
          * Getter Functions
          */
         virtual int getCognitiveLoadLevel() const override;
-        virtual const cv::Mat& debugImage() const override;
+        virtual const cv::Mat& getDebugImage() const override;
         virtual const std::vector<float>& getRawPupilSignal() const override;
         virtual const std::vector<float>& getSmoothPupilSignal() const override;
         
@@ -61,33 +65,21 @@ namespace pw{
          * Member Variables
          */
         
-        bool hasStarted;        // Use for controlling stages
-        PWDataModel storage;    // Store Pupuil Signals
-        cv::Mat debugImg;       // Use for debuging
-        
-        ImageFrameDataSource dataSource;
-        int maxFrameNumber;
-        
+        bool hasStarted;                    // Use for controlling stages
         unsigned int currentFrameNumber;
+
         
-        std::vector<float> eyeDistancePx;
+        PWDataModel storage;                // Store left and right pupil size signals
+        std::vector<float> eyeDistancePx;   // Store eye distance signal
         
+        std::shared_ptr<IImageSegmenter> imgSegAlgo;
+        std::shared_ptr<IPupilAlgorithm> pwSegAlgo;
+
+        cv::Mat debugImg;                   // Use for debuging
         
     };
     
-    void PupilwareControllerImpl::setFrameDataSource( ImageFrameDataSource dataSource ){
     
-        
-        this->dataSource = dataSource;
-        
-    }
-    
-    void PupilwareControllerImpl::setMaxFrameNumber( int maxFrameNumber ){
-        
-        REQUIRES(maxFrameNumber >=0, "maxFrameNumber must be more than 0." );
-        
-        this->maxFrameNumber = maxFrameNumber;
-    }
     
     
     /*! --------------------------------------------------------------------------------
@@ -101,70 +93,38 @@ namespace pw{
     /*! --------------------------------------------------------------------------------
      * Implementation Functions
      */
-    void PupilwareControllerImpl::start(  std::shared_ptr<IImageSegmenter> imgSeg
-                                        , std::shared_ptr<IPupilAlgorithm> pwSeg  ) {
+    
+    void PupilwareControllerImpl::setFaceSegmentationAlgoirhtm( std::shared_ptr<IImageSegmenter> imgSegAlgo ){
+        REQUIRES(imgSegAlgo != nullptr, "FaceSegmenter algorithm must not be null.");
         
-        throw_assert(imgSeg != nullptr, "ImageSegmenter must be not null.");
-        throw_assert(pwSeg != nullptr, "PupilSegmentor must be not null.");
+        this->imgSegAlgo = imgSegAlgo;
+        
+        PROMISES(this->imgSegAlgo != nullptr, "FaceSegmenter algorithm must not be null.");
+    }
+    
+    
+    void PupilwareControllerImpl::setPupilSegmentationAlgorihtm( std::shared_ptr<IPupilAlgorithm> pwSegAlgo ){
+        REQUIRES(pwSegAlgo != nullptr, "Pupilware algorithm must not be null.");
+        
+        this->pwSegAlgo = pwSegAlgo;
+        
+        REQUIRES(this->pwSegAlgo != nullptr, "Pupilware algorithm must not be null.");
+    }
+    
+    
+    void PupilwareControllerImpl::start() {
+        
+        REQUIRES(imgSegAlgo != nullptr, "ImageSegmenter must be not null.");
+        REQUIRES(pwSegAlgo != nullptr, "PupilSegmentor must be not null.");
         
         if(hasStarted) return;
         hasStarted = true;
         
+        // Init and clearn up
         currentFrameNumber = 0;
         
-        while( true ){
-            
-            // get the frame
-            Mat srcFrame = dataSource(currentFrameNumber).clone();
-            if (srcFrame.empty()) {
-                // throw some erro~
-                break;
-            }
-            
-            Mat grayFrame;
-            cvtColor(srcFrame, grayFrame, CV_BGR2GRAY);    // Please change to Red channal
-            
-            // segment face
-            Rect faceRect;
-            imgSeg->findFace(srcFrame, faceRect);
-            
-            
-            // segment eye
-            Rect leftEyeRect;
-            Rect rightEyeRect;
-            imgSeg->extractEyes(faceRect, leftEyeRect, rightEyeRect);
-            
-            
-            // locate eye center
-            Point leftEyeCenter = imgSeg->fineEyeCenter(grayFrame(leftEyeRect));
-            Point rightEyeCenter = imgSeg->fineEyeCenter(grayFrame(rightEyeRect));
-            
-            
-            // !!! Remember that these eye center location is in the eye coordinate
-            // We have to convert to face coordinate first!
-            float eyeDist = cw::calDistance(  Point(leftEyeCenter.x + leftEyeRect.x, leftEyeCenter.y + leftEyeRect.y)
-                                            , Point(rightEyeCenter.x + rightEyeRect.x, rightEyeCenter.y + rightEyeRect.y ));
-            
-            
-            
-            // find pupil size
-            PupilMeta eyeMeta;
-            eyeMeta.setEyeCenter(leftEyeCenter, rightEyeCenter);
-            eyeMeta.setEyeImages(srcFrame(leftEyeRect),
-                                 srcFrame(rightEyeRect));
-            eyeMeta.setFrameNumber(currentFrameNumber);
-            eyeMeta.setEyeDistancePx(eyeDist);
-            
-            auto result = pwSeg->process( eyeMeta );
-            
-            //! Store data to lists
-            //
-            storage.setPupilSizeAt( currentFrameNumber, result );
-            
-            eyeDistancePx.push_back( eyeDist );
-
-        }
-
+        // Init algorithms
+        pwSegAlgo->init();
         
     }
     
@@ -174,6 +134,9 @@ namespace pw{
         if(!hasStarted) return;
         hasStarted = false;
         
+        // Clean up
+        pwSegAlgo->exit();
+        
         // stop the machine
         // process signal
         // classify cognitive load
@@ -181,8 +144,71 @@ namespace pw{
         
     }
     
+    void PupilwareControllerImpl::processFrame( const cv::Mat& srcFrame, unsigned int frameNumber ){
+        
+        REQUIRES(imgSegAlgo != nullptr, "ImageSegmenter must be not null.");
+        REQUIRES(pwSegAlgo != nullptr, "PupilSegmentor must be not null.");
+        REQUIRES(!srcFrame.empty(), "Source Frame must not be empty.");
+        
+        debugImg = srcFrame.clone();
+//        cv::circle(debugImg, cv::Point(0,0), 400, cv::Scalar(255,0,0), -1);
+        
+        Mat grayFrame;
+        cvtColor(srcFrame, grayFrame, CV_BGR2GRAY);    // Please change to Red channal
+        
+        
+        // segment face
+        Rect faceRect;
+        if(!imgSegAlgo->findFace(grayFrame, faceRect))
+        {
+            //Face is not in the frame, then return... :)
+            return;
+        }
+        
+        
+        
+        // segment eye
+        Rect leftEyeRect;
+        Rect rightEyeRect;
+        imgSegAlgo->extractEyes(faceRect, leftEyeRect, rightEyeRect);
+        
+        
+        // locate eye center
+        Point leftEyeCenter = imgSegAlgo->fineEyeCenter(grayFrame(leftEyeRect));
+        Point rightEyeCenter = imgSegAlgo->fineEyeCenter(grayFrame(rightEyeRect));
+        
+        
+        // !!! Remember that these eye center location is in the eye coordinate
+        // We have to convert to face coordinate first!
+        float eyeDist = cw::calDistance(  Point(leftEyeCenter.x + leftEyeRect.x, leftEyeCenter.y + leftEyeRect.y)
+                                        , Point(rightEyeCenter.x + rightEyeRect.x, rightEyeCenter.y + rightEyeRect.y ));
+        
+        
+        
+        // find pupil size
+        PupilMeta eyeMeta;
+        eyeMeta.setEyeCenter(leftEyeCenter, rightEyeCenter);
+        eyeMeta.setEyeImages(srcFrame(leftEyeRect),
+                             srcFrame(rightEyeRect));
+        eyeMeta.setFrameNumber(currentFrameNumber);
+        eyeMeta.setEyeDistancePx(eyeDist);
+        
+        auto result = pwSegAlgo->process( eyeMeta );
+        
+        //! Store data to lists
+        //
+        storage.setPupilSizeAt( currentFrameNumber, result );
+        
+        eyeDistancePx.push_back( eyeDist );
+        
+        cv::circle(debugImg(faceRect), Point(leftEyeCenter.x + leftEyeRect.x, leftEyeCenter.y + leftEyeRect.y), 20, cv::Scalar(255,0,0));
+        
+        cv::circle(debugImg(faceRect), Point(rightEyeCenter.x + rightEyeRect.x, rightEyeCenter.y + rightEyeRect.y ), 20, cv::Scalar(255,0,0));
 
-    int   PupilwareControllerImpl::getCognitiveLoadLevel() const{
+    }
+    
+
+    int PupilwareControllerImpl::getCognitiveLoadLevel() const{
         
         throw_assert(false, "This function has not been impremented");
         
@@ -190,9 +216,7 @@ namespace pw{
     }
     
     
-    const cv::Mat& PupilwareControllerImpl::debugImage() const{
-        
-        throw_assert(false, "This function has not been impremented");
+    const cv::Mat& PupilwareControllerImpl::getDebugImage() const{
         
         return debugImg;
     }
@@ -202,7 +226,7 @@ namespace pw{
         
         throw_assert(false, "This function has not been impremented");
         
-        return std::vector<float>();
+        return std::vector<float>(1);
     }
     
     
@@ -210,7 +234,7 @@ namespace pw{
         
         throw_assert(false, "This function has not been impremented");
         
-        return std::vector<float>();
+        return std::vector<float>(1);
         
     }
     

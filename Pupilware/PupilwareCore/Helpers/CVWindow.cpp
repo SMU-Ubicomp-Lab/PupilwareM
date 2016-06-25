@@ -23,18 +23,14 @@ namespace pw{
                 , unsigned precision = 100){
 
 
-            int_value = default_value * precision;
-            cv::createTrackbar(field_name, window_name, &int_value, max_value * precision, DoubleTrack::callback, this);
-            user_callback = function;
-            this->precision = precision;
+            // No implementation on IOS version
 
         }
 
 
         static void callback(int, void* object){
 
-            DoubleTrack* pObject = static_cast<DoubleTrack*>(object);
-            pObject->user_callback(pObject->int_value / pObject->precision);
+            // No implementation on IOS version
 
         }
 
@@ -43,7 +39,7 @@ namespace pw{
 
     CVWindow::CVWindow(const std::string& winName):
     winName(winName){
-        cv::namedWindow(winName, CV_WINDOW_NORMAL);
+        // No implementation on IOS version
     }
 
     CVWindow::CVWindow(const CVWindow &other) {
@@ -52,42 +48,41 @@ namespace pw{
 
     CVWindow::~CVWindow() {
 
-        if(!winName.empty())
-            cv::destroyWindow( this->winName );
+        // No implementation on IOS version
 
     }
 
     void CVWindow::addTrackbar(const std::string &label, int *value, int max) {
-        cv::createTrackbar(label, this->winName, value, max);
+        // No implementation on IOS version
     }
 
     void CVWindow::addTrackbarDouble(const std::string &label, void(*f)(double), double max) {
 
-        throw_assert(false, "This function has not been implemented. ");
-        DoubleTrack().setup(label, this->winName, f, max);
+        // No implementation on IOS version);
+
     }
 
     void CVWindow::moveWindow(int x, int y){
 
-        cv::moveWindow(winName, x, y);
+        // No implementation on IOS version
 
     }
 
     void CVWindow::resize( int width, int height){
 
-
-        cv::resizeWindow(winName, width, height);
+        // No implementation on IOS version
 
     }
 
     int CVWindow::update(cv::Mat mat) {
 
-        cv::imshow(winName, mat);
-        return cv::waitKey(1);
+        // No implementation on IOS version
+        
+        return 0;
     }
 
     void CVWindow::setTrackbarValue( const std::string& name, int value ) const{
-        cv::setTrackbarPos(name, winName, value);
+        // No implementation on IOS version
     }
 
 }

@@ -215,26 +215,25 @@ namespace pw {
         cv::threshold(grayEye, walkMat, th, 255, CV_THRESH_TRUNC);
 
         {
-            int ksize = grayEye.cols * 0.07;
-            float sigma = ksize * 0.20;
-            Mat kernelX = getGaussianKernel(ksize, sigma);
-            Mat kernelY = getGaussianKernel(ksize, sigma);
-            Mat kernelXY = kernelX * kernelY.t();
-
-            double min;
-            double max;
-            cv::minMaxIdx(kernelXY, &min, &max);
-            cv::Mat adjMap2d;
-            cv::convertScaleAbs(kernelXY, adjMap2d, 255 / max);
-
-            cv::Rect r;
-            r.width = kernelXY.cols;
-            r.height = kernelXY.rows;
-            r.x = startingPoint.x - r.width/2;
-            r.y = startingPoint.y - r.height/2;
-
-            walkMat(r) = walkMat(r) - ((adjMap2d/255.0f)*th);
-            cv::imshow("Gaussian Kernel 2d", walkMat);
+//            int ksize = grayEye.cols * 0.07;
+//            float sigma = ksize * 0.20;
+//            Mat kernelX = getGaussianKernel(ksize, sigma);
+//            Mat kernelY = getGaussianKernel(ksize, sigma);
+//            Mat kernelXY = kernelX * kernelY.t();
+//
+//            double min;
+//            double max;
+//            cv::minMaxIdx(kernelXY, &min, &max);
+//            cv::Mat adjMap2d;
+//            cv::convertScaleAbs(kernelXY, adjMap2d, 255 / max);
+//
+//            cv::Rect r;
+//            r.width = kernelXY.cols;
+//            r.height = kernelXY.rows;
+//            r.x = startingPoint.x - r.width/2;
+//            r.y = startingPoint.y - r.height/2;
+//
+//            walkMat(r) = walkMat(r) - ((adjMap2d/255.0f)*th);
 
 
         }

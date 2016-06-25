@@ -14,38 +14,41 @@ namespace pw{
     
     class IImageSegmenter;
     class IPupilAlgorithm;
-    
-    typedef std::function< const cv::Mat&(int frameNumber) > ImageFrameDataSource;
+
     
     class PupilwareController{
     
     public:
         
+   
+        virtual void setFaceSegmentationAlgoirhtm( std::shared_ptr<IImageSegmenter> imgSegAlgo )=0;
+        virtual void setPupilSegmentationAlgorihtm( std::shared_ptr<IPupilAlgorithm> pwSeg )=0;
         
-        virtual void setFrameDataSource( ImageFrameDataSource dataSource );
-        virtual void setMaxFrameNumber( int maxFrameNumber );
         
         /*!
          * Start Pupilware processing.
          */
-        virtual void start(  std::shared_ptr<IImageSegmenter> imgSeg
-                   , std::shared_ptr<IPupilAlgorithm> pwSeg  );
+        virtual void start()=0;
         
         
         /*!
          * Stop Pupilware processing
          */
-        virtual void stop();
+        virtual void stop()=0;
         
+        
+        
+        virtual void processFrame( const cv::Mat& srcFrame,
+                                   unsigned int frameNumber = 0 )=0;
         
         
         /*!
          * Getter Functions
          */
-        virtual int getCognitiveLoadLevel() const;
-        virtual const cv::Mat& debugImage() const;
-        virtual const std::vector<float>& getRawPupilSignal() const;
-        virtual const std::vector<float>& getSmoothPupilSignal() const;
+        virtual int getCognitiveLoadLevel()const=0;
+        virtual const cv::Mat& getDebugImage()const =0;
+        virtual const std::vector<float>& getRawPupilSignal()const =0;
+        virtual const std::vector<float>& getSmoothPupilSignal() const =0;
         
         
         /*!

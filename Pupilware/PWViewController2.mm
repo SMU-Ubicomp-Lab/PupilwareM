@@ -21,7 +21,9 @@
  ---------------------------------------------------------------*/
 
 #import "PupilwareCore/PupilwareController.hpp"
+#import "PupilwareCore/Algorithm/IPupilAlgorithm.hpp"
 #import "PupilwareCore/Algorithm/MDStarbustNeo.hpp"
+#import "PupilwareCore/ImageProcessing/SimpleImageSegmenter.hpp"
 
 
 
@@ -69,6 +71,7 @@
     
 }
 
+
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -107,7 +110,15 @@
 {
     
     hasStarted = false;
-    //        std::shared_ptr<pw::IPupilAlgorithm> pwAlgorithm;
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"haarcascade_frontalface_default" ofType:@"xml"];
+    const char *filePath = [path cStringUsingEncoding:NSUTF8StringEncoding];
+    
+    NSLog(@"%s", filePath);
+    
+    pwCtrl = pw::PupilwareController::Create();
+    pwCtrl->setPupilSegmentationAlgorihtm(std::make_shared<pw::MDStarbustNeo>("StarbustNeo"));
+    pwCtrl->setFaceSegmentationAlgoirhtm(std::make_shared<pw::SimpleImageSegmenter>(filePath));
     
 }
 
@@ -117,19 +128,34 @@
     // remove the view's background color
     self.view.backgroundColor = nil;
     
-    //  NSLog(@"Inside the Load Camera");
-    
     __weak typeof(self) weakSelf = self;
     
     __block NSDictionary *opts = @{CIDetectorAccuracy: CIDetectorAccuracyLow, CIDetectorEyeBlink:@YES};
-    CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeFace context:self.videoManager.ciContext options:opts];
     
+    CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeFace
+                                              context:self.videoManager.ciContext
+                                              options:opts];
     
     [self.videoManager setProcessBlock:^(CIImage *cameraImage){
         
-        opts = @{CIDetectorImageOrientation:@6};
+        cv::Mat cvFrame = [PWViewController2 IGImage2Mat:cameraImage
+                                             withContext:weakSelf.videoManager.ciContext];
+        pwCtrl->processFrame(cvFrame);
         
-        cameraImage = [self testDrawing:cameraImage context:self.videoManager.ciContext];
+        cv::Mat debugImg = pwCtrl->getDebugImage();
+        
+        cameraImage = [PWViewController2 Mat2CGImage:debugImg
+                                         withContext:weakSelf.videoManager.ciContext];
+
+        
+        
+//        cameraImage = [self testDrawing:cameraImage context:self.videoManager.ciContext];
+//        opts = @{CIDetectorImageOrientation:@6};
+//        NSArray *faceFeatures = [detector featuresInImage: cameraImage options:opts];
+//        
+//        for(CIFaceFeature *face in faceFeatures ){
+//            NSLog(@"%@", face);
+//        }
         
         return cameraImage;
         
@@ -155,11 +181,12 @@
     }
 }
 
+
 -(CIImage*)testDrawing:(CIImage*) img context:(CIContext*) context{
     
     cv::Mat f = [PWViewController2 IGImage2Mat:img withContext:context];
     
-    cv::circle(f, cv::Point(0,0), 100, cv::Scalar(255,0,0), 5);
+    cv::circle(f, cv::Point(0,0), 300, cv::Scalar(255,0,0), -1);
     
     return [PWViewController2 Mat2CGImage:f withContext:context];
     
@@ -169,7 +196,6 @@
 ///////////////////////////////    C++ FUNCTIONS      ///////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace PWViewCtrl{
-    
     
     
 }
@@ -258,8 +284,6 @@ namespace PWViewCtrl{
     return retImage;
     
 }
-
-
 
 
 

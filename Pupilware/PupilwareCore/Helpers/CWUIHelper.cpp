@@ -16,21 +16,16 @@ namespace cw {
                    cv::Scalar color) {
 
 
-        setCustomGraphColor(static_cast<int>(color[0]),
-                            static_cast<int>(color[1]),
-                            static_cast<int>(color[2]));
+        // No implementation on IOS version
         
-        showFloatGraph(name.c_str(),
-                       dataSrc.data(),
-                       static_cast<int>(dataSrc.size()),
-                       delayInMilliSec);
     }
 
     int showImage(const std::string& name, const cv::Mat img, int delayInMilliSec) {
         
-        cv::namedWindow(name, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO);
-        cv::imshow(name, img);
-        return cv::waitKey(delayInMilliSec);
+        
+        // No implementation on IOS version
+        
+        return 0;
         
     }
 
@@ -44,7 +39,7 @@ namespace cw {
 
     void namedWindow( const std::string& winName, int flag ){
 
-        cv::namedWindow(winName, flag);
+        // No implementation on IOS version
     }
 
 
@@ -54,18 +49,21 @@ namespace cw {
                          cv::TrackbarCallback callback ,
                          void* userData  ){
 
-        cv::createTrackbar( barName, windowName, &value, max, callback, userData);
+        // No implementation on IOS version
     }
 
 
     void imshow(const std::string& winName, cv::InputArray mat){
 
-        cv::imshow(winName, mat);
+        // No implementation on IOS version
     }
 
 
     int waitKey(int delay){
-        return cv::waitKey(delay);
+        
+        // No implementation on IOS version
+        
+        return 0;
     }
 
 }
