@@ -1,4 +1,4 @@
-# Pupilware M (Early Research and Development Stage)
+# Pupilware M
 
 **Important Note: This project is in early development stage. Most modules have not yet implemented. This repository is for SMU Ubicomp Lab researchers.**
 
