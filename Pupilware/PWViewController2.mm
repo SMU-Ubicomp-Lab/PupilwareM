@@ -10,11 +10,7 @@
 #import <opencv2/videoio/cap_ios.h>
 
 #import "MyCvVideoCamera.h"
-#import "Pupilware-Swift.h"
-
 #import "VideoAnalgesic.h"
-#import "OpenCVBridge.h"
-
 #import "Libraries/ObjCAdapter.h"
 
 /*---------------------------------------------------------------
@@ -25,7 +21,6 @@
 #import "PupilwareCore/Algorithm/IPupilAlgorithm.hpp"
 #import "PupilwareCore/Algorithm/MDStarbustNeo.hpp"
 #import "PupilwareCore/ImageProcessing/SimpleImageSegmenter.hpp"
-
 #import "PupilwareCore/IOS/IOSFaceRecognizer.h"
 
 /*---------------------------------------------------------------
@@ -109,6 +104,39 @@
 /////////////////////////    Objective C Implementation     /////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+-(void)startVideoManager
+{
+    if(![self.videoManager isRunning])
+    {
+        [self.videoManager start];
+    }
+}
+
+
+-(void)stopVideoManager
+{
+    if([self.videoManager isRunning])
+    {
+        [self.videoManager stop];
+    }
+}
+
+
+-(void) togglePupilware{
+    
+    if(pupilwareController->hasStarted())
+    {
+        pupilwareController->stop();
+    }
+    else
+    {
+        pupilwareController->start();
+    }
+}
+
+
 - (void) initSystem
 {
     [self initVideoManager];
@@ -121,15 +149,19 @@
     
     hasStarted = false;
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"haarcascade_frontalface_default" ofType:@"xml"];
-    const char *filePath = [path cStringUsingEncoding:NSUTF8StringEncoding];
-    
-    NSLog(@"%s", filePath);
-    
     pupilwareController = pw::PupilwareController::Create();
     pwAlgo = std::make_shared<pw::MDStarbustNeo>("StarbustNeo");
     
     pupilwareController->setPupilSegmentationAlgorihtm( pwAlgo );
+    
+    /*! 
+     * If there is no a face segmentation algorithm,
+     * we have to manually give Face Meta data to the system.
+     */
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"haarcascade_frontalface_default" ofType:@"xml"];
+//    const char *filePath = [path cStringUsingEncoding:NSUTF8StringEncoding];
+//    
+//    NSLog(@"%s", filePath);
 //    pupilwareController->setFaceSegmentationAlgoirhtm(std::make_shared<pw::SimpleImageSegmenter>(filePath));
     
 }
@@ -210,7 +242,7 @@
         
         cv::Mat debugEyeImg = pwAlgo->getDebugImage();
         
-        /* Combind 2 debug images into one*/
+        /* Combind 2 debug images into one */
         if(!debugEyeImg.empty()){
             cv::resize(debugEyeImg, debugEyeImg, cv::Size(debugImg.cols, debugEyeImg.rows*2));
             debugEyeImg.copyTo(debugImg(cv::Rect(0, 0, debugEyeImg.cols, debugEyeImg.rows)));
@@ -220,39 +252,6 @@
     
     return debugImg;
 }
-
-
-
--(void)startVideoManager
-{
-    if(![self.videoManager isRunning])
-    {
-        [self.videoManager start];
-    }
-}
-
-
--(void)stopVideoManager
-{
-    if([self.videoManager isRunning])
-    {
-        [self.videoManager stop];
-    }
-}
-
-
--(void) togglePupilware{
-    
-    if(pupilwareController->hasStarted())
-    {
-        pupilwareController->stop();
-    }
-    else
-    {
-        pupilwareController->start();
-    }
-}
-
 
 
 @end

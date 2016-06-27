@@ -13,13 +13,16 @@ namespace pw{
     
     struct PWFaceMeta
     {
+        
         cv::Rect faceRect;
         cv::Rect leftEyeRect;
         cv::Rect rightEyeRect;
         cv::Point leftEyeCenter;
         cv::Point rightEyeCenter;
-        bool leftEyeClosed;
-        bool rightEyeClosed;
+        bool leftEyeClosed  = false;
+        bool rightEyeClosed = false;
+        inline bool hasFaced() const { return (faceRect.width != 0 && faceRect.height != 0); }
+        
     };
 }
 

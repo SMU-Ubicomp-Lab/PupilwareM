@@ -77,20 +77,23 @@ namespace pw{
          * Member Variables
          */
         
-        bool isStarted;                    // Use for controlling stages
-        unsigned int currentFrameNumber;
+        
+        unsigned int currentFrameNumber;                // Store current frame number
 
         
-        PWDataModel storage;                // Store left and right pupil size signals
-        std::vector<float> eyeDistancePx;   // Store eye distance signal
+        PWDataModel         storage;                    // Store left and right pupil size signals
+        std::vector<float>  eyeDistancePx;              // Store eye distance signal
         
-        std::shared_ptr<IImageSegmenter> imgSegAlgo;
-        std::shared_ptr<IPupilAlgorithm> pwSegAlgo;
+        std::shared_ptr<IImageSegmenter> imgSegAlgo;    // This algorithm is not required if
+                                                        // providing manally providing a face meta
+        
+        std::shared_ptr<IPupilAlgorithm> pwSegAlgo;     // This pupil segmentation is required.
 
-        cv::Mat debugImg;                   // Use for debuging
+        cv::Mat             debugImg;                   // Use for debuging
         
+        PWFaceMeta          faceMeta;
         
-        PWFaceMeta faceMeta;
+        bool                isStarted;                  // Use for controlling stages
         
     };
     

@@ -58,6 +58,7 @@
     for(CIFaceFeature *face in faceFeatures ){
         const int kEyeBound = face.bounds.size.width *0.15;
         
+        
         returnFaceMeta.faceRect         = [ObjCAdapter CGRect2CVRectFlip:face.bounds];
         returnFaceMeta.leftEyeClosed    = face.leftEyeClosed;
         returnFaceMeta.rightEyeClosed   = face.rightEyeClosed;
