@@ -9,6 +9,8 @@
 #ifndef PupilwareController_hpp
 #define PupilwareController_hpp
 
+#include "PWFaceMeta.hpp"
+
 
 namespace pw{
     
@@ -24,6 +26,8 @@ namespace pw{
         virtual void setFaceSegmentationAlgoirhtm( std::shared_ptr<IImageSegmenter> imgSegAlgo )=0;
         virtual void setPupilSegmentationAlgorihtm( std::shared_ptr<IPupilAlgorithm> pwSeg )=0;
         
+        virtual void setFaceMeta( const PWFaceMeta& faceMeta )=0;
+        
         
         /*!
          * Start Pupilware processing.
@@ -38,11 +42,20 @@ namespace pw{
         
         
         
+        /*!
+         * Segmenting and Finding pupil size from the given color frame.
+         */
         virtual void processFrame( const cv::Mat& srcFrame,
                                    unsigned int frameNumber = 0 )=0;
         
         
         /*!
+         * Retrun true if the system has started.
+         */
+        virtual bool hasStarted() const =0;
+        
+        
+        /*!--------------------------------------------------------------------
          * Getter Functions
          */
         virtual int getCognitiveLoadLevel()const=0;
@@ -51,7 +64,7 @@ namespace pw{
         virtual const std::vector<float>& getSmoothPupilSignal() const =0;
         
         
-        /*!
+        /*!--------------------------------------------------------------------
          * Static Functions
          */
         static std::shared_ptr<PupilwareController> Create();

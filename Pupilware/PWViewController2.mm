@@ -15,6 +15,7 @@
 #import "VideoAnalgesic.h"
 #import "OpenCVBridge.h"
 
+#import "Libraries/ObjCAdapter.h"
 
 /*---------------------------------------------------------------
  Pupilware Core Header
@@ -25,7 +26,7 @@
 #import "PupilwareCore/Algorithm/MDStarbustNeo.hpp"
 #import "PupilwareCore/ImageProcessing/SimpleImageSegmenter.hpp"
 
-
+#import "PupilwareCore/IOS/IOSFaceRecognizer.h"
 
 /*---------------------------------------------------------------
  Objective C Header
@@ -33,14 +34,17 @@
 
 @interface PWViewController2 ()
 
-    @property (strong,nonatomic) VideoAnalgesic *videoManager;
+@property (strong, nonatomic) VideoAnalgesic *videoManager;
+@property (strong, nonatomic) IOSFaceRecognizer *faceRecognizer;
+
+- (IBAction)startBtnClicked:(id)sender;
 
 @end
 
 
 @implementation PWViewController2
 {
-    std::shared_ptr<pw::PupilwareController> pwCtrl;
+    std::shared_ptr<pw::PupilwareController> pupilwareController;
     std::shared_ptr<pw::MDStarbustNeo> pwAlgo;
     
     std::vector<std::vector<float>> results;
@@ -53,11 +57,11 @@
         _videoManager = [VideoAnalgesic captureManager];
         _videoManager.preset = AVCaptureSessionPresetMedium;
         [_videoManager setCameraPosition:AVCaptureDevicePositionFront];
+
     }
     return _videoManager;
     
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////    UI View Events     /////////////////////////////////////
@@ -92,7 +96,12 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+}
+
+
+- (IBAction)startBtnClicked:(id)sender {
+    
+    [self togglePupilware];
 }
 
 
@@ -117,11 +126,11 @@
     
     NSLog(@"%s", filePath);
     
-    pwCtrl = pw::PupilwareController::Create();
+    pupilwareController = pw::PupilwareController::Create();
     pwAlgo = std::make_shared<pw::MDStarbustNeo>("StarbustNeo");
     
-    pwCtrl->setPupilSegmentationAlgorihtm( pwAlgo );
-    pwCtrl->setFaceSegmentationAlgoirhtm(std::make_shared<pw::SimpleImageSegmenter>(filePath));
+    pupilwareController->setPupilSegmentationAlgorihtm( pwAlgo );
+//    pupilwareController->setFaceSegmentationAlgoirhtm(std::make_shared<pw::SimpleImageSegmenter>(filePath));
     
 }
 
@@ -131,58 +140,87 @@
     // remove the view's background color
     self.view.backgroundColor = nil;
     
+    
+    /* Use IOS Face Recoginizer */
+    self.faceRecognizer = [[IOSFaceRecognizer alloc] initWithContext:self.videoManager.ciContext];
+    
+    
     __weak typeof(self) weakSelf = self;
     
-    __block NSDictionary *opts = @{CIDetectorAccuracy: CIDetectorAccuracyLow, CIDetectorEyeBlink:@YES};
-    
-    CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeFace
-                                              context:self.videoManager.ciContext
-                                              options:opts];
     
     [self.videoManager setProcessBlock:^(CIImage *cameraImage){
         
-        cv::Mat cvFrame = [PWViewController2 IGImage2Mat:cameraImage
-                                             withContext:weakSelf.videoManager.ciContext];
-        
-        //Rotate image.
-        [PWViewController2 Rotate90:cvFrame withFlag:1];
-        
-        pwCtrl->processFrame(cvFrame);
-        
-        cv::Mat debugImg = pwCtrl->getDebugImage();
-        if(!debugImg.empty()){
-            
-            cv::Mat debugEyeImg = pwAlgo->getDebugImage();
-            
-            if(!debugEyeImg.empty()){
-                cv::resize(debugEyeImg, debugEyeImg, cv::Size(debugImg.cols, debugEyeImg.rows*2));
-                debugEyeImg.copyTo(debugImg(cv::Rect(0, 0, debugEyeImg.cols, debugEyeImg.rows)));
-            }
-            
-            
-            //Rotate it back.
-            [PWViewController2 Rotate90:debugImg withFlag:2];
-            
-            cameraImage = [PWViewController2 Mat2CGImage:debugImg
-                                             withContext:weakSelf.videoManager.ciContext];
-    
-        }
-        
-        
-        
-//        cameraImage = [self testDrawing:cameraImage context:self.videoManager.ciContext];
-//        opts = @{CIDetectorImageOrientation:@6};
-//        NSArray *faceFeatures = [detector featuresInImage: cameraImage options:opts];
-//        
-//        for(CIFaceFeature *face in faceFeatures ){
-//            NSLog(@"%@", face);
-//        }
-        
-        return cameraImage;
+        return [weakSelf _processCameraImage:cameraImage
+                                     context:weakSelf.videoManager.ciContext];
         
     }];
 
 }
+
+
+/* 
+ * This function will be called in sided Video Manager callback.
+ * It's used for process a camera image with Pupilware system.
+ */
+-(CIImage*)_processCameraImage:(CIImage*)cameraImage context:(CIContext*)context
+{
+    
+    cv::Mat cvFrame = [ObjCAdapter IGImage2Mat:cameraImage
+                                   withContext:context];
+    
+    /* The source image is upside down, so It need to be rotated up. */
+    [ObjCAdapter Rotate90:cvFrame withFlag:1];
+    
+    auto faceMeta = [self.faceRecognizer recognize:cameraImage];
+    
+    /* 
+     * Since we use iOS Face Recongizer, we need inject nessary data
+     * to thePupilware to work with.
+     */
+    pupilwareController->setFaceMeta(faceMeta);
+    
+    /* Process the rest of the work (e.g. pupil segmentation..) */
+    pupilwareController->processFrame(cvFrame);
+    
+    
+    cv::Mat debugImg = [self _getDebugImage];
+    
+    if(debugImg.empty()){
+        debugImg = cvFrame;
+    }
+    
+    //Rotate it back.
+    [ObjCAdapter Rotate90:debugImg withFlag:2];
+    
+    CIImage* returnImage = [ObjCAdapter Mat2CGImage:debugImg
+                                        withContext:context];
+    
+    return returnImage;
+}
+
+
+/*
+ * This function will be called in sided Video Manager callback.
+ */
+-(cv::Mat)_getDebugImage
+{
+    cv::Mat debugImg = pupilwareController->getDebugImage();
+    
+    if(!debugImg.empty()){
+        
+        cv::Mat debugEyeImg = pwAlgo->getDebugImage();
+        
+        /* Combind 2 debug images into one*/
+        if(!debugEyeImg.empty()){
+            cv::resize(debugEyeImg, debugEyeImg, cv::Size(debugImg.cols, debugEyeImg.rows*2));
+            debugEyeImg.copyTo(debugImg(cv::Rect(0, 0, debugEyeImg.cols, debugEyeImg.rows)));
+        }
+        
+    }
+    
+    return debugImg;
+}
+
 
 
 -(void)startVideoManager
@@ -203,127 +241,16 @@
 }
 
 
--(CIImage*)testDrawing:(CIImage*) img context:(CIContext*) context{
+-(void) togglePupilware{
     
-    cv::Mat f = [PWViewController2 IGImage2Mat:img withContext:context];
-    
-    cv::circle(f, cv::Point(0,0), 300, cv::Scalar(255,0,0), -1);
-    
-    return [PWViewController2 Mat2CGImage:f withContext:context];
-    
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////    C++ FUNCTIONS      ///////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace PWViewCtrl{
-    
-    
-}
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////    Helper FUNCTIONS      ///////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/* 
- * Source from TimZaman:
- * http://stackoverflow.com/questions/15043152/rotate-opencv-matrix-by-90-180-270-degrees
- */
-+(void)Rotate90:(cv::Mat&)opencvMat withFlag:(int)rotflag{
-    
-    //1=CW, 2=CCW, 3=180
-    if (rotflag == 1){
-        transpose(opencvMat, opencvMat);
-        flip(opencvMat, opencvMat,1); //transpose+flip(1)=CW
-    } else if (rotflag == 2) {
-        transpose(opencvMat, opencvMat);
-        flip(opencvMat, opencvMat,0); //transpose+flip(0)=CCW
-    } else if (rotflag ==3){
-        flip(opencvMat, opencvMat,-1);    //flip(-1)=180
-    } else if (rotflag != 0){ //if not 0,1,2,3:
-        NSLog(@"Invalid flag");
+    if(pupilwareController->hasStarted())
+    {
+        pupilwareController->stop();
     }
-}
-
-
-
-+ (cv::Mat)IGImage2Mat:(CIImage*)ciFrameImage withContext:(CIContext*)context{
-    
-    CGRect roi = ciFrameImage.extent;
-    CGImageRef imageCG = [context createCGImage:ciFrameImage fromRect:roi];
-    
-    
-    CGColorSpaceRef colorSpace = CGImageGetColorSpace(imageCG);
-    CGFloat cols = roi.size.width;
-    CGFloat rows = roi.size.height;
-    cv::Mat returnMat(rows, cols, CV_8UC4);
-
-    
-    CGContextRef contextRef = CGBitmapContextCreate(returnMat.data,                 // Pointer to backing data
-                                                    cols,                           // Width of bitmap
-                                                    rows,                           // Height of bitmap
-                                                    8,                              // Bits per component
-                                                    returnMat.step[0],              // Bytes per row
-                                                    colorSpace,                     // Colorspace
-                                                    kCGImageAlphaNoneSkipLast |
-                                                    kCGBitmapByteOrderDefault);     // Bitmap info flags
-
-    // Do the copy
-    CGContextDrawImage(contextRef,
-                       CGRectMake(0, 0, cols, rows),
-                       imageCG);
-   
-
-    CGContextRelease(contextRef);
-    CGImageRelease(imageCG);
-    
-    return returnMat;
-    
-}
-
-
-+ (CIImage*)Mat2CGImage:(cv::Mat)opencvMat withContext:(CIContext*)context{
-    
-    NSData *data = [NSData dataWithBytes:opencvMat.data length:opencvMat.elemSize() * opencvMat.total()];
-    
-    
-    CGColorSpaceRef colorSpace;
-    
-    if (opencvMat.elemSize() == 1) {
-        colorSpace = CGColorSpaceCreateDeviceGray();
-    } else {
-        colorSpace = CGColorSpaceCreateDeviceRGB();
+    else
+    {
+        pupilwareController->start();
     }
-    
-    // setup buffering object
-    CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef)data);
-    
-    // setup the copy to go from CPU to GPU
-    CGImageRef imageRef = CGImageCreate(opencvMat.cols,                                     // Width
-                                        opencvMat.rows,                                     // Height
-                                        8,                                              // Bits per component
-                                        8 * opencvMat.elemSize(),                           // Bits per pixel
-                                        opencvMat.step[0],                                  // Bytes per row
-                                        colorSpace,                                     // Colorspace
-                                        kCGImageAlphaNone | kCGBitmapByteOrderDefault,  // Bitmap info flags
-                                        provider,                                       // CGDataProviderRef
-                                        NULL,                                           // Decode
-                                        false,                                          // Should interpolate
-                                        kCGRenderingIntentDefault);                     // Intent
-    
-    // do the copy inside of the object instantiation for retImage
-    CIImage* retImage = [[CIImage alloc]initWithCGImage:imageRef];
-    
-    
-    // clean up
-    CGImageRelease(imageRef);
-    CGDataProviderRelease(provider);
-    CGColorSpaceRelease(colorSpace);
-    
-    return retImage;
-    
 }
 
 

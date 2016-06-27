@@ -24,13 +24,20 @@ namespace pw{
         
     public:
         PupilwareControllerImpl():
-        hasStarted(false),
+        isStarted(false),
         currentFrameNumber(0){}
         
         virtual ~PupilwareControllerImpl(){}
         
         virtual void setFaceSegmentationAlgoirhtm( std::shared_ptr<IImageSegmenter> imgSegAlgo ) override;
         virtual void setPupilSegmentationAlgorihtm( std::shared_ptr<IPupilAlgorithm> pwSegAlgo ) override;
+        
+        
+        /*
+         * Users need to call this function if they do not provide a face segmenter algorithm.
+         * If they've already had a segmenter algorithm, it will be replaced with data in this function.
+         */
+        virtual void setFaceMeta( const PWFaceMeta& faceMeta ) override;
     
         
         /*!
@@ -43,6 +50,11 @@ namespace pw{
          * Stop Pupilware processing
          */
         virtual void stop() override;
+        
+        /*!
+         * Stop Pupilware processing
+         */
+        virtual bool hasStarted() const override;
         
         
         /*!
@@ -65,7 +77,7 @@ namespace pw{
          * Member Variables
          */
         
-        bool hasStarted;                    // Use for controlling stages
+        bool isStarted;                    // Use for controlling stages
         unsigned int currentFrameNumber;
 
         
@@ -76,6 +88,9 @@ namespace pw{
         std::shared_ptr<IPupilAlgorithm> pwSegAlgo;
 
         cv::Mat debugImg;                   // Use for debuging
+        
+        
+        PWFaceMeta faceMeta;
         
     };
     
@@ -93,6 +108,11 @@ namespace pw{
     /*! --------------------------------------------------------------------------------
      * Implementation Functions
      */
+    
+    bool PupilwareControllerImpl::hasStarted() const{
+        return isStarted;
+    }
+    
     
     void PupilwareControllerImpl::setFaceSegmentationAlgoirhtm( std::shared_ptr<IImageSegmenter> imgSegAlgo ){
         REQUIRES(imgSegAlgo != nullptr, "FaceSegmenter algorithm must not be null.");
@@ -114,11 +134,10 @@ namespace pw{
     
     void PupilwareControllerImpl::start() {
         
-        REQUIRES(imgSegAlgo != nullptr, "ImageSegmenter must be not null.");
         REQUIRES(pwSegAlgo != nullptr, "PupilSegmentor must be not null.");
         
-        if(hasStarted) return;
-        hasStarted = true;
+        if(isStarted) return;
+        isStarted = true;
         
         // Init and clearn up
         currentFrameNumber = 0;
@@ -131,11 +150,16 @@ namespace pw{
 
     void PupilwareControllerImpl::stop(){
         
-        if(!hasStarted) return;
-        hasStarted = false;
+        if(!isStarted) return;
+        
         
         // Clean up
         pwSegAlgo->exit();
+        
+        currentFrameNumber = 0;
+        debugImg = cv::Mat();
+        
+        isStarted = false;
         
         // stop the machine
         // process signal
@@ -144,51 +168,70 @@ namespace pw{
         
     }
     
+    void PupilwareControllerImpl::setFaceMeta( const PWFaceMeta& faceMeta ){
+        this->faceMeta = faceMeta;
+    }
+    
     void PupilwareControllerImpl::processFrame( const cv::Mat& srcFrame, unsigned int frameNumber ){
         
-        REQUIRES(imgSegAlgo != nullptr, "ImageSegmenter must be not null.");
         REQUIRES(pwSegAlgo != nullptr, "PupilSegmentor must be not null.");
         REQUIRES(!srcFrame.empty(), "Source Frame must not be empty.");
         
-        
+        if(!isStarted) return;
+            
         Mat grayFrame;
         cvtColor(srcFrame, grayFrame, CV_BGR2GRAY);    // Please change to Red channal
         
+        float eyeDist = 0;
         
-        // segment face
-        Rect faceRect;
-        if(!imgSegAlgo->findFace(grayFrame, faceRect))
-        {
-            //Face is not in the frame, then return... :)
-            return;
+        if (imgSegAlgo == nullptr) {
+            
+            if(faceMeta.faceRect.width == 0){
+                // There is no face detected.
+                return;
+            }
+
+            
         }
-        
-        
-        // segment eye
-        Rect leftEyeRect;
-        Rect rightEyeRect;
-        imgSegAlgo->extractEyes(faceRect, leftEyeRect, rightEyeRect);
-        
-        
-        // locate eye center
-        Point leftEyeCenter = imgSegAlgo->fineEyeCenter(grayFrame(leftEyeRect));
-        Point rightEyeCenter = imgSegAlgo->fineEyeCenter(grayFrame(rightEyeRect));
-        
+        else{
+            
+            // segment face
+            if(!imgSegAlgo->findFace(grayFrame, faceMeta.faceRect))
+            {
+                //Face is not in the frame, then return... :)
+                return;
+            }
+            
+            
+            // segment eye
+            imgSegAlgo->extractEyes(faceMeta.faceRect,
+                                    faceMeta.leftEyeRect,
+                                    faceMeta.rightEyeRect);
+            
+            
+            // locate eye center
+            faceMeta.leftEyeCenter  = imgSegAlgo->fineEyeCenter(grayFrame(faceMeta.leftEyeRect));
+            faceMeta.rightEyeCenter = imgSegAlgo->fineEyeCenter(grayFrame(faceMeta.rightEyeRect));
+            
+
+            
+            
+        }
         
         // !!! Remember that these eye center location is in the eye coordinate
         // We have to convert to face coordinate first!
-        float eyeDist = cw::calDistance(  Point(leftEyeCenter.x + leftEyeRect.x, leftEyeCenter.y + leftEyeRect.y)
-                                        , Point(rightEyeCenter.x + rightEyeRect.x, rightEyeCenter.y + rightEyeRect.y ));
-        
-        
+        eyeDist = cw::calDistance(  Point(faceMeta.leftEyeCenter.x + faceMeta.leftEyeRect.x,
+                                          faceMeta.leftEyeCenter.y + faceMeta.leftEyeRect.y)
+                                  , Point(faceMeta.rightEyeCenter.x + faceMeta.rightEyeRect.x,
+                                          faceMeta.rightEyeCenter.y + faceMeta.rightEyeRect.y ));
         
         // Find pupil size
-        Mat colorFace = srcFrame(faceRect);
+        Mat colorFace = srcFrame(faceMeta.faceRect);
         
         PupilMeta eyeMeta;
-        eyeMeta.setEyeCenter(leftEyeCenter, rightEyeCenter);
-        eyeMeta.setEyeImages(colorFace(leftEyeRect),
-                             colorFace(rightEyeRect));
+        eyeMeta.setEyeCenter(faceMeta.leftEyeCenter, faceMeta.rightEyeCenter);
+        eyeMeta.setEyeImages(colorFace(faceMeta.leftEyeRect),
+                             colorFace(faceMeta.rightEyeRect));
         eyeMeta.setFrameNumber(currentFrameNumber);
         eyeMeta.setEyeDistancePx(eyeDist);
         
@@ -205,15 +248,18 @@ namespace pw{
         // DEBUG -----------------------------------------------------------------------------
         debugImg = srcFrame.clone();
         
-        cv::rectangle(debugImg, faceRect, cv::Scalar(255,0,0));
+        cv::rectangle(debugImg, faceMeta.faceRect, cv::Scalar(255,0,0));
         
-        cv::circle(debugImg(faceRect),
-                   Point(leftEyeCenter.x + leftEyeRect.x, leftEyeCenter.y + leftEyeRect.y),
+        cv::circle(debugImg(faceMeta.faceRect),
+                   Point(faceMeta.leftEyeCenter.x + faceMeta.leftEyeRect.x,
+                         faceMeta.leftEyeCenter.y + faceMeta.leftEyeRect.y),
                    20,
-                   cv::Scalar(255,0,0));
+                   cv::Scalar(255,255,0));
         
-        cv::circle(debugImg(faceRect),
-                   Point(rightEyeCenter.x + rightEyeRect.x, rightEyeCenter.y + rightEyeRect.y ),
+        
+        cv::circle(debugImg(faceMeta.faceRect),
+                   Point(faceMeta.rightEyeCenter.x + faceMeta.rightEyeRect.x,
+                         faceMeta.rightEyeCenter.y + faceMeta.rightEyeRect.y ),
                    20,
                    cv::Scalar(255,0,0));
 
