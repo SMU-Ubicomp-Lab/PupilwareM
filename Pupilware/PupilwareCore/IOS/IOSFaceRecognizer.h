@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#include "../PWFaceMeta.hpp"
+#include "../Algorithm/PWFaceMeta.hpp"
 
 @interface IOSFaceRecognizer : NSObject
 

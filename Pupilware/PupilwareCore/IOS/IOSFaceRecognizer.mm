@@ -45,12 +45,16 @@
 {
     assert(self.detector != nil);
     assert(cameraImage != nil);
+ 
+/*!
+ This method is currently incorrect, the cooridinate of face and eye are wrong.
+ */
     
     
     pw::PWFaceMeta returnFaceMeta;
     
     __block NSDictionary *opts;
-    opts = @{CIDetectorImageOrientation:@6};
+    opts = @{CIDetectorImageOrientation:@5};
     
     NSArray *faceFeatures = [self.detector featuresInImage: cameraImage options:opts];
     
@@ -59,26 +63,31 @@
         const int kEyeBound = face.bounds.size.width *0.15;
         
         
-        returnFaceMeta.faceRect         = [ObjCAdapter CGRect2CVRectFlip:face.bounds];
-        returnFaceMeta.leftEyeClosed    = face.leftEyeClosed;
-        returnFaceMeta.rightEyeClosed   = face.rightEyeClosed;
-    
+        auto faceRect = [ObjCAdapter CGRect2CVRectFlip:face.bounds];
         
-        // converted to face coordinate
-        returnFaceMeta.leftEyeRect      = cv::Rect(face.leftEyePosition.y - face.bounds.origin.y - kEyeBound,
-                                                   face.leftEyePosition.x - face.bounds.origin.x - kEyeBound,
+        auto leftEyeCenter = cv::Point(fmax(face.leftEyePosition.y, kEyeBound),
+                                       fmax(face.leftEyePosition.x, kEyeBound) );
+        
+        auto rightEyeCenter = cv::Point(fmax(face.rightEyePosition.y, kEyeBound),
+                                        fmax(face.rightEyePosition.x, kEyeBound) );
+        
+        
+        returnFaceMeta.setFaceRect (faceRect);
+        returnFaceMeta.setLeftEyeClosed(face.leftEyeClosed);
+        returnFaceMeta.setRightEyeClosed(face.rightEyeClosed);
+
+        returnFaceMeta.setLeftEyeRect(cv::Rect(leftEyeCenter.x - kEyeBound,
+                                                   leftEyeCenter.y - kEyeBound,
                                                    kEyeBound*2,
-                                                   kEyeBound*2);
+                                                   kEyeBound*2));
         
-        returnFaceMeta.rightEyeRect     = cv::Rect(face.rightEyePosition.y - face.bounds.origin.y - kEyeBound,
-                                                   face.rightEyePosition.x - face.bounds.origin.x - kEyeBound,
+        returnFaceMeta.setRightEyeRect(cv::Rect(rightEyeCenter.x - kEyeBound,
+                                                   rightEyeCenter.y - kEyeBound,
                                                    kEyeBound*2,
-                                                   kEyeBound*2);
+                                                   kEyeBound*2));
         
-        returnFaceMeta.leftEyeCenter    = cv::Point(face.leftEyePosition.y - face.bounds.origin.x - returnFaceMeta.leftEyeRect.x,
-                                                    face.leftEyePosition.x - face.bounds.origin.y - returnFaceMeta.leftEyeRect.y);
-        returnFaceMeta.rightEyeCenter   = cv::Point(face.rightEyePosition.y  - face.bounds.origin.y - returnFaceMeta.rightEyeRect.x,
-                                                    face.rightEyePosition.x - face.bounds.origin.x - returnFaceMeta.rightEyeRect.y );
+        returnFaceMeta.setLeftEyeCenter(leftEyeCenter);
+        returnFaceMeta.setRightEyeCenter(rightEyeCenter);
         
         break;
     }

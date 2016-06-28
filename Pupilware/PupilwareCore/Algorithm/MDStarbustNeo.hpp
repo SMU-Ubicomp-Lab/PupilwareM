@@ -21,7 +21,7 @@ namespace pw {
 
         virtual void init() override ;
 
-        virtual PWPupilSize process( const PupilMeta &pupilMeta ) override ;
+        virtual PWPupilSize process( const cv::Mat src, const PWFaceMeta &meta ) override;
 
         virtual void exit() override ;
         
@@ -29,8 +29,7 @@ namespace pw {
 
     protected:
 
-        cv::Mat debugImg;
-        
+
         // Maximum iteration of processing starbust algorithm
         const unsigned int STARBURST_ITERATION = 5;
 
@@ -66,18 +65,11 @@ namespace pw {
         int primer;
 
 
-        // Storing the previous frame result, in case of the algorithm failed this frame
-        float _oldLeftRadius;
-        float _oldRightRadius;
-
-        cv::Mat debugMat;
-
         // Just a window name for debuging
         std::shared_ptr<CVWindow> window;
-
-
-        // Increase contrast to the pupil image
-        void increaseContrast(const cv::Mat &grayEye, const cv::Point &eyeCenter) const;
+        
+        // Debug Image
+        cv::Mat debugImage;
 
 
         // Create rays that walk from center of the eyes

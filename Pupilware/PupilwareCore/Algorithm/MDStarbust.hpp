@@ -21,7 +21,7 @@ namespace pw {
 
         virtual void init() override ;
 
-        virtual PWPupilSize process( const PupilMeta &pupilMeta ) override ;
+        virtual PWPupilSize process( const cv::Mat src, const PWFaceMeta &meta ) override;
 
         virtual void exit() override ;
 

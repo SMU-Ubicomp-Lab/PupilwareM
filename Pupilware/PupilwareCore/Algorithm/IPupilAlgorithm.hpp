@@ -10,7 +10,7 @@
 #define AlgorithmBase_hpp
 
 #include <opencv2/opencv.hpp>
-#include "PupilMeta.hpp"
+#include "PWFaceMeta.hpp"
 
 #include "../Helpers/CWUIHelper.hpp"
 #include "../Helpers/CWCVHelper.hpp"
@@ -28,7 +28,7 @@ namespace pw{
 
         virtual void init() =0;
 
-        virtual PWPupilSize process( const PupilMeta &pupilMeta ) =0;
+        virtual PWPupilSize process( const cv::Mat src, const PWFaceMeta &meta ) =0;
         
         virtual void exit() =0;
 

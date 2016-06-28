@@ -39,20 +39,20 @@ namespace pw {
         window->addTrackbar("primer", &primer, precision*100);
     }
 
-    PWPupilSize MDStarbust::process(const PupilMeta &pupilMeta)
+    PWPupilSize MDStarbust::process( const cv::Mat src, const PWFaceMeta &meta )
     {
 //        float leftPupilRadius = max(findPupilSize(colorLeftEye, pupilMeta.getLeftEyeCenter(), "left eye"), _oldLeftRadius);
 //        float rightPupilRadius = max(findPupilSize(colorRightEye, pupilMeta.getRightEyeCenter(), "right eye"), _oldRightRadius);
 
-        Mat debugLeftEye = pupilMeta.getLeftEyeImage().clone();
-        float leftPupilRadius = findPupilSize(  pupilMeta.getLeftEyeImage()
-                                              , pupilMeta.getLeftEyeCenter()
+        Mat debugLeftEye = src.clone();
+        float leftPupilRadius = findPupilSize(  src
+                                              , meta.getLeftEyeCenter()
                                               , debugLeftEye );
 
 
-        Mat debugRightEye = pupilMeta.getRightEyeImage().clone();
-        float rightPupilRadius = findPupilSize(  pupilMeta.getRightEyeImage()
-                                               , pupilMeta.getRightEyeCenter()
+        Mat debugRightEye = src.clone();
+        float rightPupilRadius = findPupilSize(  src
+                                               , meta.getRightEyeCenter()
                                                , debugRightEye );
 
         //! Store data for next frame used.
@@ -60,31 +60,33 @@ namespace pw {
         _oldRightRadius = rightPupilRadius;
 
         Mat debugImg;
-        hconcat(debugLeftEye, debugRightEye, debugImg);
+        hconcat(debugLeftEye(meta.getLeftEyeRect()),
+                debugRightEye(meta.getRightEyeRect()),
+                debugImg);
         window->update(debugImg);
 
-        return PWPupilSize(  leftPupilRadius / pupilMeta.getEyeDistancePx()
-                           , rightPupilRadius / pupilMeta.getEyeDistancePx() );
+        return PWPupilSize(  leftPupilRadius
+                           , rightPupilRadius );
 
     }
 
-    float MDStarbust::findPupilSize(const Mat &colorEyeFrame,
+    float MDStarbust::findPupilSize(const Mat &src,
                                     cv::Point eyeCenter,
                                     Mat &debugImg) const {
 
         vector<Mat> rgbChannels(3);
-        split(colorEyeFrame, rgbChannels);
+        split(src, rgbChannels);
 
         // Only use a red channel.
-        Mat grayEye = rgbChannels[2];
+        Mat srcGray = rgbChannels[2];
 
-        increaseContrast(grayEye, eyeCenter);
+        increaseContrast(srcGray, eyeCenter);
 
         vector<Point2f>rays;
         createRays(rays);
 
         vector<Point2f>edgePoints;
-        findEdgePoints(grayEye, eyeCenter, rays, edgePoints, debugImg);
+        findEdgePoints(srcGray, eyeCenter, rays, edgePoints, debugImg);
 
         if(edgePoints.size() > MIN_NUM_RAYS)
         {
@@ -147,7 +149,7 @@ namespace pw {
     }
 
 
-    void MDStarbust::findEdgePoints(Mat grayEye,
+    void MDStarbust::findEdgePoints(Mat srcGray,
                                     const Point &startingPoint,
                                     const vector<Point2f> &rays,
                                     vector<Point2f> &outEdgePoints, Mat debugColorEye) const {
@@ -158,7 +160,7 @@ namespace pw {
         for( int iter = 0; iter < STARBURST_ITERATION; iter++ )
         {
 
-            uchar *seed_intensity = grayEye.ptr<uchar>(startingPoint.y, startingPoint.x);
+            uchar *seed_intensity = srcGray.ptr<uchar>(startingPoint.y, startingPoint.x);
 
             for(auto r = rays.begin(); r != rays.end(); r++)
             {
@@ -172,10 +174,10 @@ namespace pw {
                     nextPoint.x = seedPoint.x+(r->x * i);
 
                     // Make sure next point is out of bound.
-                    nextPoint.x = min(max(nextPoint.x,0),grayEye.cols - 1);
-                    nextPoint.y = min(max(nextPoint.y,0),grayEye.rows - 1);
+                    nextPoint.x = min(max(nextPoint.x,0),srcGray.cols - 1);
+                    nextPoint.y = min(max(nextPoint.y,0),srcGray.rows - 1);
 
-                    uchar nextPointIntensity = *grayEye.ptr<uchar>(nextPoint.y, nextPoint.x);
+                    uchar nextPointIntensity = *srcGray.ptr<uchar>(nextPoint.y, nextPoint.x);
 
                     walking_intensity = nextPointIntensity;
                     walking_point = nextPoint;

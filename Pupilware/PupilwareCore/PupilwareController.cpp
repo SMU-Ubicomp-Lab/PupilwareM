@@ -171,9 +171,11 @@ namespace pw{
         
     }
     
+    
     void PupilwareControllerImpl::setFaceMeta( const PWFaceMeta& faceMeta ){
         this->faceMeta = faceMeta;
     }
+    
     
     void PupilwareControllerImpl::processFrame( const cv::Mat& srcFrame, unsigned int frameNumber ){
         
@@ -189,7 +191,7 @@ namespace pw{
         
         if (imgSegAlgo == nullptr) {
             
-            if(faceMeta.faceRect.width == 0){
+            if(!faceMeta.hasFace()){
                 // There is no face detected.
                 return;
             }
@@ -199,46 +201,55 @@ namespace pw{
         else{
             
             // segment face
-            if(!imgSegAlgo->findFace(grayFrame, faceMeta.faceRect))
+            auto faceRect = faceMeta.getFaceRect();
+            if(!imgSegAlgo->findFace(grayFrame, faceRect))
             {
-                //Face is not in the frame, then return... :)
+                //Face is not in the frame, then return... :(
                 return;
             }
             
             
             // segment eye
-            imgSegAlgo->extractEyes(faceMeta.faceRect,
-                                    faceMeta.leftEyeRect,
-                                    faceMeta.rightEyeRect);
+            cv::Rect leftEyeRect;
+            cv::Rect rightEyeRect;
+            imgSegAlgo->extractEyes(faceRect,
+                                    leftEyeRect,
+                                    rightEyeRect );
             
+            cv::Mat faceGray = grayFrame(faceRect);
             
-            // locate eye center
-            faceMeta.leftEyeCenter  = imgSegAlgo->fineEyeCenter(grayFrame(faceMeta.leftEyeRect));
-            faceMeta.rightEyeCenter = imgSegAlgo->fineEyeCenter(grayFrame(faceMeta.rightEyeRect));
+            auto leftEyeCenter = imgSegAlgo->fineEyeCenter(faceGray(leftEyeRect));
+            auto rightEyeCenter =imgSegAlgo->fineEyeCenter(faceGray(rightEyeRect));
             
-
+            //Convert to Frame coordinate
+            auto leftEyeFrameCoorRect = cv::Rect(leftEyeRect.x + faceRect.x,
+                                                 leftEyeRect.y + faceRect.y,
+                                                 leftEyeRect.width, leftEyeRect.height);
+            auto rightEyeFrameCoorRect = cv::Rect(rightEyeRect.x + faceRect.x,
+                                                 rightEyeRect.y + faceRect.y,
+                                                  rightEyeRect.width, rightEyeRect.height);
+            
+            faceMeta.setFaceRect(faceRect);
+            faceMeta.setLeftEyeRect(leftEyeFrameCoorRect);
+            faceMeta.setRightEyeRect(rightEyeFrameCoorRect);
+            faceMeta.setLeftEyeCenter( cv::Point( leftEyeCenter.x + leftEyeFrameCoorRect.x,
+                                                  leftEyeCenter.y + leftEyeFrameCoorRect.y) );
+            faceMeta.setRightEyeCenter(cv::Point( rightEyeCenter.x + rightEyeFrameCoorRect.x,
+                                                  rightEyeCenter.y + rightEyeFrameCoorRect.y) );
+            
             
             
         }
         
-        // !!! Remember that these eye center location is in the eye coordinate
-        // We have to convert to face coordinate first!
-        eyeDist = cw::calDistance(  Point(faceMeta.leftEyeCenter.x + faceMeta.leftEyeRect.x,
-                                          faceMeta.leftEyeCenter.y + faceMeta.leftEyeRect.y)
-                                  , Point(faceMeta.rightEyeCenter.x + faceMeta.rightEyeRect.x,
-                                          faceMeta.rightEyeCenter.y + faceMeta.rightEyeRect.y ));
         
-        // Find pupil size
-        Mat colorFace = srcFrame(faceMeta.faceRect);
+        eyeDist = cw::calDistance( faceMeta.getLeftEyeCenter(),
+                                   faceMeta.getRightEyeCenter() );
         
-        PupilMeta eyeMeta;
-        eyeMeta.setEyeCenter(faceMeta.leftEyeCenter, faceMeta.rightEyeCenter);
-        eyeMeta.setEyeImages(colorFace(faceMeta.leftEyeRect),
-                             colorFace(faceMeta.rightEyeRect));
-        eyeMeta.setFrameNumber(currentFrameNumber);
-        eyeMeta.setEyeDistancePx(eyeDist);
+
+        faceMeta.setFrameNumber(currentFrameNumber);
+        faceMeta.setEyeDistancePx(eyeDist);
         
-        auto result = pwSegAlgo->process( eyeMeta );
+        auto result = pwSegAlgo->process( srcFrame, faceMeta );
         
         //! Store data to lists
         //
@@ -251,18 +262,16 @@ namespace pw{
         // DEBUG -----------------------------------------------------------------------------
         debugImg = srcFrame.clone();
         
-        cv::rectangle(debugImg, faceMeta.faceRect, cv::Scalar(255,0,0));
+        cv::rectangle(debugImg, faceMeta.getFaceRect(), cv::Scalar(255,0,0));
         
-        cv::circle(debugImg(faceMeta.faceRect),
-                   Point(faceMeta.leftEyeCenter.x + faceMeta.leftEyeRect.x,
-                         faceMeta.leftEyeCenter.y + faceMeta.leftEyeRect.y),
+        cv::circle(debugImg,
+                   faceMeta.getLeftEyeCenter(),
                    20,
                    cv::Scalar(255,255,0));
         
         
-        cv::circle(debugImg(faceMeta.faceRect),
-                   Point(faceMeta.rightEyeCenter.x + faceMeta.rightEyeRect.x,
-                         faceMeta.rightEyeCenter.y + faceMeta.rightEyeRect.y ),
+        cv::circle(debugImg,
+                   faceMeta.getRightEyeCenter(),
                    20,
                    cv::Scalar(255,0,0));
 
@@ -294,7 +303,7 @@ namespace pw{
     
     const std::vector<float>& PupilwareControllerImpl::getSmoothPupilSignal() const{
         
-        throw_assert(false, "This function has not been impremented");
+        throw_assert(false, "This function has not been implemented");
         
         return storage.getLeftPupilSizes();
         

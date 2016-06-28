@@ -21,9 +21,7 @@ namespace pw {
             threshold(25),
             rayNumber(15),
             degreeOffset(25),
-            primer(1 * precision),
-            _oldLeftRadius(0.0f),
-            _oldRightRadius(0.0f){
+            primer(1 * precision){
 
     }
 
@@ -43,43 +41,47 @@ namespace pw {
         window->addTrackbar("primer", &primer, precision*100);
     }
 
-    PWPupilSize MDStarbustNeo::process(const PupilMeta &pupilMeta)
+    
+    PWPupilSize MDStarbustNeo::process( const cv::Mat src, const PWFaceMeta &meta )
     {
-//        float leftPupilRadius = max(findPupilSize(colorLeftEye, pupilMeta.getLeftEyeCenter(), "left eye"), _oldLeftRadius);
-//        float rightPupilRadius = max(findPupilSize(colorRightEye, pupilMeta.getRightEyeCenter(), "right eye"), _oldRightRadius);
-
-
-        Mat debugLeftEye = pupilMeta.getLeftEyeImage().clone();
-        float leftPupilRadius = findPupilSize(  pupilMeta.getLeftEyeImage()
-                , pupilMeta.getLeftEyeCenter()
+        assert(!src.empty());
+        
+        cv::Point leftEyeCenterEyeCoord( meta.getLeftEyeCenter().x - meta.getLeftEyeRect().x ,
+                                         meta.getLeftEyeCenter().y - meta.getLeftEyeRect().y );
+        
+        Mat debugLeftEye = src(meta.getLeftEyeRect()).clone();
+        float leftPupilRadius = findPupilSize( src(meta.getLeftEyeRect())
+                , leftEyeCenterEyeCoord
                 , debugLeftEye );
 
-//        float leftPupilRadius = 0.0f;
 
-
-        Mat debugRightEye = pupilMeta.getRightEyeImage().clone();
-        float rightPupilRadius = findPupilSize(  pupilMeta.getRightEyeImage()
-                , pupilMeta.getRightEyeCenter()
+        cv::Point rightEyeCenterEyeCoord( meta.getRightEyeCenter().x - meta.getRightEyeRect().x ,
+                                          meta.getRightEyeCenter().y - meta.getRightEyeRect().y);
+        
+        Mat debugRightEye = src(meta.getRightEyeRect()).clone();
+        float rightPupilRadius = findPupilSize( src(meta.getRightEyeRect())
+                , rightEyeCenterEyeCoord
                 , debugRightEye );
 
-        //! Store data for next frame used.
-        _oldLeftRadius = leftPupilRadius;
-        _oldRightRadius = rightPupilRadius;
 
         Mat debugImg;
-        hconcat(debugLeftEye, debugRightEye, debugImg);
+        hconcat(debugLeftEye,
+                debugRightEye,
+                debugImg);
+        
         window->update(debugImg);
         
-        this->debugImg = debugImg;
-        
-        return PWPupilSize(  leftPupilRadius / pupilMeta.getEyeDistancePx()
-                             ,rightPupilRadius/ pupilMeta.getEyeDistancePx()  );
+        this->debugImage = debugImg;
+
+        return PWPupilSize(  leftPupilRadius
+                            ,rightPupilRadius );
 
     }
 
-    vector<float> elps;
-    vector<float> cirs;
-    vector<float> areas;
+//    vector<float> elps;
+//    vector<float> cirs;
+//    vector<float> areas;
+//    vector<float> votings;
 
     float MDStarbustNeo::findPupilSize(const Mat &colorEyeFrame,
                                     cv::Point eyeCenter,
@@ -90,7 +92,6 @@ namespace pw {
 
         // Only use a red channel.
         Mat grayEye = rgbChannels[2];
-
 
         vector<Point2f>rays;
         createRays(rays);
@@ -127,16 +128,29 @@ namespace pw {
                 float elp = 0.0f;
                 float cir = 0.0f;
                 float area = 0.0f;
+                float voting = 0.0f;
 
                 if(isValidEllipse(myEllipse))
                 {
                     //TODO: Use RANSAC Circle radius? How about Ellipse wight?
 
+                    std::vector<float> edgePointsFromCenter(edgePoints.size());
+                    for (int i = 0; i < edgePoints.size(); ++i) {
+                        edgePointsFromCenter[i] = cw::calDistanceSq(edgePoints[i], myEllipse.center);
+
+                    }
+
+                    std::nth_element (edgePointsFromCenter.begin()
+                            , edgePointsFromCenter.begin()+edgePointsFromCenter.size()/2
+                            , edgePointsFromCenter.end());
+
+                    voting = sqrt(edgePointsFromCenter[edgePointsFromCenter.size()/2]);
+
                     elp = (myEllipse.size.width + myEllipse.size.height) * 0.25f;
                     cir = r.bestModel.GetRadius();
                     area = (myEllipse.size.width * myEllipse.size.height) * 0.02f;
 
-                    eyeRadius = elp;
+                    eyeRadius = area;
 
                 }
                 else
@@ -148,36 +162,47 @@ namespace pw {
                 //---------------------------------------------------------------------------------
                 //! Draw debug image
                 //---------------------------------------------------------------------------------
-                ellipse( debugImg, myEllipse, Scalar(0,50,255) );
+                ellipse( debugImg, myEllipse, Scalar(255,50,0) );
+//
+//
+//                circle( debugImg,
+//                            *r.bestModel.GetCenter(),
+//                            r.bestModel.GetRadius(),
+//                            Scalar(50,255,255) );
 
 
                 circle( debugImg,
-                            *r.bestModel.GetCenter(),
-                            r.bestModel.GetRadius(),
-                            Scalar(50,255,255) );
+                        myEllipse.center,
+                        voting,
+                        Scalar(50,200,0) );
 
-                elps.push_back(elp);
-                cirs.push_back(cir);
-                areas.push_back(area);
-
-                vector<float> elpsSmooth;
-                vector<float> cirsSmooth;
-                vector<float> areasSmooth;
-
-                cw::fastMedfilt(elps, elpsSmooth, 61);
-                cw::fastMedfilt(cirs, cirsSmooth, 61);
-                cw::fastMedfilt(areas, areasSmooth, 61);
-
-                auto pg = std::make_shared<PWGraph>("Elps(red), Cir(blue)");
-//                pg->drawGraph("elps", elps, Scalar(255,0,0), 7, 18, 0, 600);
-//                pg->drawGraph("cirs", cirs, Scalar(0,0,255), 7, 18, 0, 600);
-//                pg->drawGraph("areas", areas, Scalar(255,0,255), 7, 18, 0, 600);
-
-                pg->drawGraph("elps", elpsSmooth, Scalar(255,0,0),0,0, 0, 600);
-                pg->drawGraph("cirs", cirsSmooth, Scalar(0,0,255),0,0, 0, 600);
-                pg->drawGraph("areas", areasSmooth, Scalar(255,0,255), 0,0, 0, 600);
-
-                pg->show();
+//                elps.push_back(elp);
+//                cirs.push_back(cir);
+//                areas.push_back(area);
+//                votings.push_back(voting);
+//
+//                vector<float> elpsSmooth;
+//                vector<float> cirsSmooth;
+//                vector<float> areasSmooth;
+//                vector<float> votingSmooth;
+//
+//                const int wsize = 101;
+//                cw::fastMedfilt(elps, elpsSmooth, wsize);
+//                cw::fastMedfilt(cirs, cirsSmooth, wsize);
+//                cw::fastMedfilt(areas, areasSmooth, wsize);
+//                cw::fastMedfilt(votings, votingSmooth, wsize);
+//
+//                auto pg = std::make_shared<PWGraph>("Elps(red), Cir(blue)");
+////                pg->drawGraph("elps", elps, Scalar(255,0,0), 7, 18, 0, 600);
+////                pg->drawGraph("cirs", cirs, Scalar(0,0,255), 7, 18, 0, 600);
+////                pg->drawGraph("areas", areas, Scalar(255,0,255), 7, 18, 0, 600);
+//
+//                pg->drawGraph("elps", elpsSmooth, Scalar(255,0,0),5, 10, 0, 600);
+//                pg->drawGraph("cirs", cirsSmooth, Scalar(0,0,255),5, 10, 0, 600);
+//                pg->drawGraph("areas", areasSmooth, Scalar(255,0,255), 5, 10, 0, 600);
+//                pg->drawGraph("v", votingSmooth, Scalar(0,200,0), 5, 10, 0, 600);
+//
+//                pg->show();
 
 
 
@@ -211,31 +236,32 @@ namespace pw {
         Mat blur;
         cv::GaussianBlur(grayEye, blur, Size(blurKernalSize*2+1,blurKernalSize*2+1), 3);
 
-        int th = cw::calDynamicThreshold(blur, 0.01);
+        int th = cw::calDynamicThreshold(blur, 0.014);
 
         Mat walkMat = grayEye;
         cv::threshold(grayEye, walkMat, th, 255, CV_THRESH_TRUNC);
 
         {
-//            int ksize = grayEye.cols * 0.07;
-//            float sigma = ksize * 0.20;
-//            Mat kernelX = getGaussianKernel(ksize, sigma);
-//            Mat kernelY = getGaussianKernel(ksize, sigma);
-//            Mat kernelXY = kernelX * kernelY.t();
-//
-//            double min;
-//            double max;
-//            cv::minMaxIdx(kernelXY, &min, &max);
-//            cv::Mat adjMap2d;
-//            cv::convertScaleAbs(kernelXY, adjMap2d, 255 / max);
-//
-//            cv::Rect r;
-//            r.width = kernelXY.cols;
-//            r.height = kernelXY.rows;
-//            r.x = startingPoint.x - r.width/2;
-//            r.y = startingPoint.y - r.height/2;
-//
-//            walkMat(r) = walkMat(r) - ((adjMap2d/255.0f)*th);
+            int ksize = grayEye.cols * 0.07;
+            float sigma = ksize * 0.20;
+            Mat kernelX = getGaussianKernel(ksize, sigma);
+            Mat kernelY = getGaussianKernel(ksize, sigma);
+            Mat kernelXY = kernelX * kernelY.t();
+
+            double min;
+            double max;
+            cv::minMaxIdx(kernelXY, &min, &max);
+            cv::Mat adjMap2d;
+            cv::convertScaleAbs(kernelXY, adjMap2d, 255 / max);
+
+            cv::Rect r;
+            r.width = kernelXY.cols;
+            r.height = kernelXY.rows;
+            r.x = std::max(0,startingPoint.x - r.width/2);
+            r.y = std::max(0,startingPoint.y - r.height/2);
+
+            walkMat(r) = walkMat(r) - ((adjMap2d/255.0f)*th);
+//            cv::imshow("Gaussian Kernel 2d", walkMat);
 
 
         }
@@ -373,26 +399,12 @@ namespace pw {
         }
     }
 
-
-
-    void MDStarbustNeo::increaseContrast(const Mat &grayEye, const Point &eyeCenter) const {
-        Rect pupil_area = Rect(max(eyeCenter.x - 20, 0),
-                               max(eyeCenter.y - 20,0),
-                               min( grayEye.cols - eyeCenter.x ,40),
-                               min( grayEye.rows - eyeCenter.y ,40));
-
-        medianBlur(grayEye, grayEye, 3);
-
+    const cv::Mat& MDStarbustNeo::getDebugImage() const{
+        return this->debugImage;
     }
-
 
     void MDStarbustNeo::exit()
     {
         // Clean up code here.
     }
-    
-    const cv::Mat& MDStarbustNeo::getDebugImage() const{
-        return debugImg;
-    }
-    
 }

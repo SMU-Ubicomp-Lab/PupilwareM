@@ -39,7 +39,7 @@ namespace pw {
     }
 
 
-    PWPupilSize DummyAlgo::process(const PupilMeta &pupilMeta)
+    PWPupilSize DummyAlgo::process( const cv::Mat src, const PWFaceMeta &meta )
     {
         // Processing code here
 
@@ -53,7 +53,7 @@ namespace pw {
         cw::showGraph("red graph", dummyGraphData, 100, cv::Scalar(255, 0, 0));
 
 
-        cw::showImage("frame4", pupilMeta.getLeftEyeImage(), 1);
+        cw::showImage("frame4", src(meta.getLeftEyeRect()), 1);
 
 
         cv::Mat thresholdImg;
@@ -66,7 +66,7 @@ namespace pw {
         // 13 return key
         while(cw::waitKey(33) != 13){
 
-            cv::threshold(pupilMeta.getLeftEyeImage(), thresholdImg, th, 255, CV_THRESH_BINARY);
+            cv::threshold(src(meta.getLeftEyeRect()), thresholdImg, th, 255, CV_THRESH_BINARY);
 
             thWin->update(thresholdImg);
         }

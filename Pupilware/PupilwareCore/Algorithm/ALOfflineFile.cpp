@@ -70,9 +70,11 @@ namespace pw{
     }
 
 
-    PWPupilSize ALOfflineFile::process(const PupilMeta &pupilMeta) {
 
-        const int frameNumber = pupilMeta.getFrameNumber();
+    PWPupilSize ALOfflineFile::process( const cv::Mat src, const PWFaceMeta &meta )
+    {
+
+        const int frameNumber = meta.getFrameNumber();
 
         return pw::PWPupilSize(    leftPupilSizeList[frameNumber] / eyeDistanceList[frameNumber]
                                  , rightPupilSizeList[frameNumber] / eyeDistanceList[frameNumber]);

@@ -196,20 +196,21 @@
  */
 -(CIImage*)_processCameraImage:(CIImage*)cameraImage context:(CIContext*)context
 {
-    
+
     cv::Mat cvFrame = [ObjCAdapter IGImage2Mat:cameraImage
                                    withContext:context];
     
-    /* The source image is upside down, so It need to be rotated up. */
+//    /* The source image is upside down, so It need to be rotated up. */
     [ObjCAdapter Rotate90:cvFrame withFlag:1];
     
-    auto faceMeta = [self.faceRecognizer recognize:cameraImage];
     
     /* 
      * Since we use iOS Face Recongizer, we need inject nessary data
      * to thePupilware to work with.
      */
+    auto faceMeta = [self.faceRecognizer recognize:cameraImage];
     pupilwareController->setFaceMeta(faceMeta);
+
     
     /* Process the rest of the work (e.g. pupil segmentation..) */
     pupilwareController->processFrame(cvFrame);
@@ -221,7 +222,7 @@
         debugImg = cvFrame;
     }
     
-    //Rotate it back.
+//    //Rotate it back.
     [ObjCAdapter Rotate90:debugImg withFlag:2];
     
     CIImage* returnImage = [ObjCAdapter Mat2CGImage:debugImg
