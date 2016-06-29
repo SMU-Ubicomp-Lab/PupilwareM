@@ -46,7 +46,7 @@ namespace pw{
          * Segmenting and Finding pupil size from the given color frame.
          */
         virtual void processFrame( const cv::Mat& srcFrame,
-                                   unsigned int frameNumber = 0 )=0;
+                                   unsigned int frameNumber)=0;
         
         
         /*!

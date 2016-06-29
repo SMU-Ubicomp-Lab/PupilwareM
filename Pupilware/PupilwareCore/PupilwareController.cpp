@@ -62,7 +62,7 @@ namespace pw{
          * Process frame
          */
         virtual void processFrame( const cv::Mat& srcFrame,
-                                   unsigned int frameNumber = 0 ) override;
+                                   unsigned int frameNumber ) override;
         
         virtual cv::Mat getGraphImage() const override;
         

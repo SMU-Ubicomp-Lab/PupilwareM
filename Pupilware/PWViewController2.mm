@@ -32,6 +32,8 @@
 @property (strong, nonatomic) VideoAnalgesic *videoManager;
 @property (strong, nonatomic) IOSFaceRecognizer *faceRecognizer;
 
+@property NSUInteger currentFrameNumber;
+
 - (IBAction)startBtnClicked:(id)sender;
 
 @end
@@ -43,7 +45,6 @@
     std::shared_ptr<pw::MDStarbustNeo> pwAlgo;
     
     std::vector<std::vector<float>> results;
-    bool hasStarted;
 }
 
 
@@ -142,6 +143,7 @@
     else
     {
         pupilwareController->start();
+        self.currentFrameNumber = 0;
     }
 
 }
@@ -157,7 +159,7 @@
 -(void)initPupilwareCtrl
 {
     
-    hasStarted = false;
+    self.currentFrameNumber = 0;
     
     pupilwareController = pw::PupilwareController::Create();
     pwAlgo = std::make_shared<pw::MDStarbustNeo>("StarbustNeo");
@@ -188,21 +190,32 @@
     
     
     __weak typeof(self) weakSelf = self;
+    pw::PupilwareController* pPWCtrl = pupilwareController.get();
     
     
     [self.videoManager setProcessBlock:^(CIImage *cameraImage){
         
         
-        return [weakSelf _processCameraImage:cameraImage
-                                     context:weakSelf.videoManager.ciContext];
+        auto returnImage = [weakSelf _processCameraImage:cameraImage
+                                             frameNumber:weakSelf.currentFrameNumber
+                                                 context:weakSelf.videoManager.ciContext];
+        
+        weakSelf.currentFrameNumber += 1;
+        
+        return returnImage;
         
         
         //TODO: Enable This block in release built.
         /********************************************
         try{
         
-            return [weakSelf _processCameraImage:cameraImage
-                                     context:weakSelf.videoManager.ciContext];
+         auto returnImage = [weakSelf _processCameraImage:cameraImage
+         frameNumber:weakSelf.currentFrameNumber
+         context:weakSelf.videoManager.ciContext];
+         
+         weakSelf.currentFrameNumber += 1;
+         
+         return returnImage;
         }
          catch(AssertionFailureException e){
          
@@ -231,9 +244,15 @@
  * This function will be called in sided Video Manager callback.
  * It's used for process a camera image with Pupilware system.
  */
--(CIImage*)_processCameraImage:(CIImage*)cameraImage context:(CIContext*)context
+-(CIImage*)_processCameraImage:(CIImage*)cameraImage
+                   frameNumber:(NSUInteger)frameNumber
+                       context:(CIContext*)context
 {
 
+    if (!pupilwareController->hasStarted()) {
+        return cameraImage;
+    }
+    
     cv::Mat cvFrame = [ObjCAdapter IGImage2Mat:cameraImage
                                    withContext:context];
     
@@ -250,7 +269,7 @@
 
     
     /* Process the rest of the work (e.g. pupil segmentation..) */
-    pupilwareController->processFrame(cvFrame);
+    pupilwareController->processFrame(cvFrame, (int)frameNumber );
     
     
     cv::Mat debugImg = [self _getDebugImage];
@@ -264,6 +283,7 @@
     
     CIImage* returnImage = [ObjCAdapter Mat2CGImage:debugImg
                                         withContext:context];
+    
     
     return returnImage;
 }
