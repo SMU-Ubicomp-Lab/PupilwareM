@@ -433,6 +433,7 @@
                                             <constraint firstAttribute="height" constant="43" id="RcI-dE-xka"/>
                                             <constraint firstAttribute="width" constant="125" id="WBf-aT-6xO"/>
                                         </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="15"/>
                                         <size key="titleShadowOffset" width="2.2250738585072014e-308" height="2.2250738585072014e-308"/>
                                         <state key="normal" title="START"/>
                                         <connections>

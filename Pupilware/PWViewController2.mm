@@ -97,6 +97,15 @@
 - (IBAction)startBtnClicked:(id)sender {
     
     [self togglePupilware];
+    
+    if(pupilwareController->hasStarted())
+    {
+        [sender setTitle:@"Stop" forState: UIControlStateNormal];
+    }
+    else
+    {
+        [sender setTitle:@"Start" forState:UIControlStateNormal];
+    }
 }
 
 
@@ -239,6 +248,10 @@
 {
     cv::Mat debugImg = pupilwareController->getDebugImage();
     
+    /* I have to put the debug of eye image in subclass,
+     * because the debug eye image become empty if I put it in the algorithm interface.
+     * If someone help me clean this thing up would be appreciated.
+     */
     if(!debugImg.empty()){
         
         cv::Mat debugEyeImg = pwAlgo->getDebugImage();
@@ -246,6 +259,7 @@
         /* Combind 2 debug images into one */
         if(!debugEyeImg.empty()){
             cv::resize(debugEyeImg, debugEyeImg, cv::Size(debugImg.cols, debugEyeImg.rows*2));
+            cv::cvtColor(debugEyeImg, debugEyeImg, CV_BGR2RGBA);
             debugEyeImg.copyTo(debugImg(cv::Rect(0, 0, debugEyeImg.cols, debugEyeImg.rows)));
         }
         

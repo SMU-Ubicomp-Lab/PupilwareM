@@ -15,6 +15,7 @@
 #include "Algorithm/IPupilAlgorithm.hpp"
 
 #include "Helpers/CWCVHelper.hpp"
+#include "Helpers/PWGraph.hpp"
 
 using namespace cv;
 
@@ -62,6 +63,8 @@ namespace pw{
          */
         virtual void processFrame( const cv::Mat& srcFrame,
                                    unsigned int frameNumber = 0 ) override;
+        
+        virtual cv::Mat getGraphImage() const override;
         
         
         /*!
@@ -181,12 +184,19 @@ namespace pw{
         
         REQUIRES(pwSegAlgo != nullptr, "PupilSegmentor must be not null.");
         REQUIRES(!srcFrame.empty(), "Source Frame must not be empty.");
+        REQUIRES(srcFrame.channels() >= 3, "The source frame must be more than 3 channels.")
         
         if(!isStarted) return;
-            
-        Mat grayFrame;
-        cvtColor(srcFrame, grayFrame, CV_BGR2GRAY);    // Please change to Red channal
         
+        Mat srcBGR;
+        
+        if (srcFrame.channels() == 4) {
+            cvtColor(srcFrame, srcBGR, CV_RGBA2BGR);
+        }else{
+             srcBGR = srcFrame.clone();
+        }
+        
+    
         float eyeDist = 0;
         
         if (imgSegAlgo == nullptr) {
@@ -199,6 +209,9 @@ namespace pw{
             
         }
         else{
+            
+            Mat grayFrame;
+            cvtColor(srcBGR, grayFrame, CV_BGR2GRAY);    // Please change to Red channal
             
             // segment face
             auto faceRect = faceMeta.getFaceRect();
@@ -249,7 +262,7 @@ namespace pw{
         faceMeta.setFrameNumber(currentFrameNumber);
         faceMeta.setEyeDistancePx(eyeDist);
         
-        auto result = pwSegAlgo->process( srcFrame, faceMeta );
+        auto result = pwSegAlgo->process( srcBGR, faceMeta );
         
         //! Store data to lists
         //
@@ -258,9 +271,11 @@ namespace pw{
         eyeDistancePx.push_back( eyeDist );
         
         
+        currentFrameNumber++;
+        
         
         // DEBUG -----------------------------------------------------------------------------
-        debugImg = srcFrame.clone();
+        debugImg = srcBGR.clone();
         
         cv::rectangle(debugImg, faceMeta.getFaceRect(), cv::Scalar(255,0,0));
         
@@ -274,11 +289,21 @@ namespace pw{
                    faceMeta.getRightEyeCenter(),
                    20,
                    cv::Scalar(255,0,0));
-
-
+        
+        
+        
+        cv::Mat graph = getGraphImage();
+        
+        cv::flip(graph, graph, 1);
+        
+        graph.copyTo(debugImg(cv::Rect(0, debugImg.rows - graph.rows -2, graph.cols, graph.rows)));
+        
+        cvtColor(debugImg, debugImg, CV_BGR2RGBA, 4);
     }
     
 
+    
+    
     int PupilwareControllerImpl::getCognitiveLoadLevel() const{
         
         throw_assert(false, "This function has not been impremented");
@@ -309,5 +334,24 @@ namespace pw{
         
     }
     
-    
+    cv::Mat PupilwareControllerImpl::getGraphImage() const{
+        PWGraph graph("PupilSignal");
+        graph.drawGraph("left eye red, right eye blue",
+                        storage.getLeftPupilSizes(),        // Data
+                        cv::Scalar(255,100,0),               // Line color
+                        0,                                  // Min value
+                        0,                                  // Max value
+                        debugImg.cols,                      // Width
+                        100);                               // Height
+        
+        graph.drawGraph("left eye",
+                        storage.getRightPupilSizes(),        // Data
+                        cv::Scalar(0,100,255),               // Line color
+                        0,                                  // Min value
+                        0,                                  // Max value
+                        debugImg.cols,                      // Width
+                        100);                               // Height
+        
+        return graph.getGraphImage();
+    }
 }

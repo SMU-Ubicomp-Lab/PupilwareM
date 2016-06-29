@@ -55,6 +55,9 @@ namespace pw{
         virtual bool hasStarted() const =0;
         
         
+        virtual cv::Mat getGraphImage() const=0;
+        
+        
         /*!--------------------------------------------------------------------
          * Getter Functions
          */

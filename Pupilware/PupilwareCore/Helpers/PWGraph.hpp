@@ -30,6 +30,7 @@ namespace pw{
         void move(int x, int y) const;
         void resize( int width, int height ) const;
         void show() const;
+        const cv::Mat getGraphImage() const;
     };
 
 }
