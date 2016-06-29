@@ -104,8 +104,8 @@ namespace pw {
         {
             const float MAX_ERROR_FROM_EDGE_OF_THE_CIRCLE = 2;
             vector<Point2f> inliers;
-//
-//            //TODO: Parameterized RANSAC class. Can be done after clean up RANSAC class.
+
+            //TODO: Parameterized RANSAC class. Can be done after clean up RANSAC class.
             Ransac r;
             r.ransac_circle_fitting(edgePoints,
                                     static_cast<int>(edgePoints.size()),
@@ -261,7 +261,6 @@ namespace pw {
             r.y = std::max(0,startingPoint.y - r.height/2);
 
             walkMat(r) = walkMat(r) - ((adjMap2d/255.0f)*th);
-//            cv::imshow("Gaussian Kernel 2d", walkMat);
 
 
         }
@@ -289,7 +288,7 @@ namespace pw {
                     nextPoint.y = seedPoint.y+(i* r->y);
                     nextPoint.x = seedPoint.x+(r->x * i);
 
-                    // Make sure next point is out of bound.
+                    /* Make sure next point is out of bound. */
                     nextPoint.x = min(max(nextPoint.x,0),walkMat.cols - 1);
                     nextPoint.y = min(max(nextPoint.y,0),walkMat.rows - 1);
 
@@ -297,8 +296,7 @@ namespace pw {
 
                     walking_intensity = nextPointIntensity;
                     walking_point = nextPoint;
-
-//                    const int cost = getCost(i, grayEye.cols, th);
+                    
 
                     if((walking_intensity ) >= th )
                     {
@@ -310,10 +308,10 @@ namespace pw {
 
             }
 
-            // Prepare for next iteration
+            /* Prepare for next iteration */
             if( edgePointThisRound.size() > 0)
             {
-                // Draw points to the debug image.
+                /* Draw points to the debug image. */
                 for( int i=0; i<edgePointThisRound.size(); i++ )
                 {
                     *debugColorEye.ptr<Vec3b>(edgePointThisRound[i].y, edgePointThisRound[i].x) = Vec3b(0,255,0);
@@ -345,7 +343,7 @@ namespace pw {
 
         }
 
-        // Draw points to the debug image.
+        /* Draw points to the debug image. */
 //        for( int i=0; i<edgePointThisRound.size(); i++ )
 //        {
 //            *debugColorEye.ptr<Vec3b>(edgePointThisRound[i].y, edgePointThisRound[i].x) = Vec3b(255,0,0);
@@ -372,7 +370,7 @@ namespace pw {
 
         const double scale = (thresholdValue * 0.5 ) / max;
 
-        // Start at the middle of the gaussian kernel, and walk outward.
+        /* Start at the middle of the gaussian kernel, and walk outward. */
         const int startingPoint = ksize/2;
 
         return *gaussianKernel.ptr<double>(startingPoint + step) * scale;
@@ -387,9 +385,10 @@ namespace pw {
 
         const float step = (2*M_PI - (radiansOffset*2))/float(rayNumber);
 
-        // The circle walk counter clock wise, because OpenCV is 'y' top->down.
-        // The beginning of rays are at the top of circle,
-        // and moves aways to the left and right with the number of offset
+        /* The circle walk counter clock wise, because OpenCV is 'y' top->down.
+         * The beginning of rays are at the top of circle,
+         * and moves aways to the left and right with the number of offset
+         */
         const float startLoc = -M_PI_2 + radiansOffset;
         const float endLoc = M_PI + M_PI_2 - radiansOffset;
 
@@ -398,10 +397,12 @@ namespace pw {
             rays.push_back( Point2f( cos(i), sin(i)) );
         }
     }
+    
 
     const cv::Mat& MDStarbustNeo::getDebugImage() const{
         return this->debugImage;
     }
+    
 
     void MDStarbustNeo::exit()
     {

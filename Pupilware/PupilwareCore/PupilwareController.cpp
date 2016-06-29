@@ -181,13 +181,15 @@ namespace pw{
     
     
     void PupilwareControllerImpl::processFrame( const cv::Mat& srcFrame, unsigned int frameNumber ){
+
+        if(!isStarted) return;
         
         REQUIRES(pwSegAlgo != nullptr, "PupilSegmentor must be not null.");
         REQUIRES(!srcFrame.empty(), "Source Frame must not be empty.");
         REQUIRES(srcFrame.channels() >= 3, "The source frame must be more than 3 channels.")
         
-        if(!isStarted) return;
-        
+        /*---------- init ----------*/
+
         Mat srcBGR;
         
         if (srcFrame.channels() == 4) {
@@ -196,13 +198,16 @@ namespace pw{
              srcBGR = srcFrame.clone();
         }
         
-    
+        currentFrameNumber = frameNumber;
         float eyeDist = 0;
+        
+        /*------ Start Process -----*/
         
         if (imgSegAlgo == nullptr) {
             
             if(!faceMeta.hasFace()){
                 // There is no face detected.
+                std::cout << "[Warning] There is no face detected." << std::endl;
                 return;
             }
 
@@ -211,9 +216,9 @@ namespace pw{
         else{
             
             Mat grayFrame;
-            cvtColor(srcBGR, grayFrame, CV_BGR2GRAY);    // Please change to Red channal
+            cvtColor(srcBGR, grayFrame, CV_BGR2GRAY);    // TODO: Please change to Red channal
             
-            // segment face
+            /* segment face */
             auto faceRect = faceMeta.getFaceRect();
             if(!imgSegAlgo->findFace(grayFrame, faceRect))
             {
@@ -222,26 +227,28 @@ namespace pw{
             }
             
             
-            // segment eye
+            /* segment eyes */
+            /* remember, it returns in face cooridnate */
             cv::Rect leftEyeRect;
             cv::Rect rightEyeRect;
             imgSegAlgo->extractEyes(faceRect,
                                     leftEyeRect,
                                     rightEyeRect );
             
-            cv::Mat faceGray = grayFrame(faceRect);
+            /* find center of those eyes */
+            cv::Mat faceGray    = grayFrame(faceRect);
+            auto leftEyeCenter  = imgSegAlgo->fineEyeCenter(faceGray(leftEyeRect));
+            auto rightEyeCenter = imgSegAlgo->fineEyeCenter(faceGray(rightEyeRect));
             
-            auto leftEyeCenter = imgSegAlgo->fineEyeCenter(faceGray(leftEyeRect));
-            auto rightEyeCenter =imgSegAlgo->fineEyeCenter(faceGray(rightEyeRect));
+            /* convert eyes to Frame coordinate */
+            auto leftEyeFrameCoorRect   = cv::Rect( leftEyeRect.x + faceRect.x,
+                                                    leftEyeRect.y + faceRect.y,
+                                                    leftEyeRect.width, leftEyeRect.height);
+            auto rightEyeFrameCoorRect  = cv::Rect( rightEyeRect.x + faceRect.x,
+                                                    rightEyeRect.y + faceRect.y,
+                                                    rightEyeRect.width, rightEyeRect.height);
             
-            //Convert to Frame coordinate
-            auto leftEyeFrameCoorRect = cv::Rect(leftEyeRect.x + faceRect.x,
-                                                 leftEyeRect.y + faceRect.y,
-                                                 leftEyeRect.width, leftEyeRect.height);
-            auto rightEyeFrameCoorRect = cv::Rect(rightEyeRect.x + faceRect.x,
-                                                 rightEyeRect.y + faceRect.y,
-                                                  rightEyeRect.width, rightEyeRect.height);
-            
+            /* setup data, ready to go!*/
             faceMeta.setFaceRect(faceRect);
             faceMeta.setLeftEyeRect(leftEyeFrameCoorRect);
             faceMeta.setRightEyeRect(rightEyeFrameCoorRect);
@@ -259,6 +266,9 @@ namespace pw{
                                    faceMeta.getRightEyeCenter() );
         
 
+        PROMISES(eyeDist >= 0, "Eye distance less than or equle zero. Please check ");
+        
+        
         faceMeta.setFrameNumber(currentFrameNumber);
         faceMeta.setEyeDistancePx(eyeDist);
         
@@ -270,8 +280,6 @@ namespace pw{
         
         eyeDistancePx.push_back( eyeDist );
         
-        
-        currentFrameNumber++;
         
         
         // DEBUG -----------------------------------------------------------------------------
@@ -300,8 +308,6 @@ namespace pw{
         
         cvtColor(debugImg, debugImg, CV_BGR2RGBA, 4);
     }
-    
-
     
     
     int PupilwareControllerImpl::getCognitiveLoadLevel() const{
@@ -344,7 +350,7 @@ namespace pw{
                         debugImg.cols,                      // Width
                         100);                               // Height
         
-        graph.drawGraph("left eye",
+        graph.drawGraph(" ",
                         storage.getRightPupilSizes(),        // Data
                         cv::Scalar(0,100,255),               // Line color
                         0,                                  // Min value

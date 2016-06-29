@@ -16,7 +16,7 @@
 /*---------------------------------------------------------------
  Pupilware Core Header
  ---------------------------------------------------------------*/
-
+#import "PupilwareCore/preHeader.hpp"
 #import "PupilwareCore/PupilwareController.hpp"
 #import "PupilwareCore/Algorithm/IPupilAlgorithm.hpp"
 #import "PupilwareCore/Algorithm/MDStarbustNeo.hpp"
@@ -143,6 +143,7 @@
     {
         pupilwareController->start();
     }
+
 }
 
 
@@ -191,9 +192,36 @@
     
     [self.videoManager setProcessBlock:^(CIImage *cameraImage){
         
+        
         return [weakSelf _processCameraImage:cameraImage
                                      context:weakSelf.videoManager.ciContext];
         
+        
+        //TODO: Enable This block in release built.
+        /********************************************
+        try{
+        
+            return [weakSelf _processCameraImage:cameraImage
+                                     context:weakSelf.videoManager.ciContext];
+        }
+         catch(AssertionFailureException e){
+         
+            //Catch if anything wrong during processing.
+         
+            std::cerr<<"[ERROR!!] Assertion does not meet. Serious error detected. " << std::endl;
+            e.LogError();
+             
+            //TODO: Manage execption, make sure data is safe and saved.
+            // - save files
+            // - destroy damage memory
+            // - Show UI Error message
+            // - write log files
+         
+             return cameraImage;
+             
+         }
+         */
+     
     }];
 
 }
@@ -209,7 +237,7 @@
     cv::Mat cvFrame = [ObjCAdapter IGImage2Mat:cameraImage
                                    withContext:context];
     
-//    /* The source image is upside down, so It need to be rotated up. */
+    /* The source image is upside down, so It need to be rotated up. */
     [ObjCAdapter Rotate90:cvFrame withFlag:1];
     
     
@@ -231,7 +259,7 @@
         debugImg = cvFrame;
     }
     
-//    //Rotate it back.
+    //Rotate it back.
     [ObjCAdapter Rotate90:debugImg withFlag:2];
     
     CIImage* returnImage = [ObjCAdapter Mat2CGImage:debugImg

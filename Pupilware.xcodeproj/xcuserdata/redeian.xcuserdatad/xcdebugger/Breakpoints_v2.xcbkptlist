@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pupilware/PWViewController2.mm"
-            timestampString = "488906965.313136"
+            timestampString = "488915630.180038"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "209"
-            endingLineNumber = "209"
+            startingLineNumber = "220"
+            endingLineNumber = "220"
             landmarkName = "-_processCameraImage:context:"
             landmarkType = "5">
          </BreakpointContent>
@@ -160,22 +160,6 @@
             startingLineNumber = "101"
             endingLineNumber = "101"
             landmarkName = "-startBtnClicked:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pupilware/PupilwareCore/PupilwareController.cpp"
-            timestampString = "488913752.577286"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "299"
-            endingLineNumber = "299"
-            landmarkName = "PupilwareControllerImpl::processFrame( const cv::Mat&amp; srcFrame, unsigned int frameNumber )"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
