@@ -29,6 +29,7 @@ namespace pw {
     {
 
     }
+    
 
     void MDStarbust::init()
     {
@@ -39,37 +40,44 @@ namespace pw {
         window->addTrackbar("primer", &primer, precision*100);
     }
 
-    PWPupilSize MDStarbust::process( const cv::Mat src, const PWFaceMeta &meta )
+    
+    PWPupilSize MDStarbust::process( const cv::Mat& src, const PWFaceMeta &meta )
     {
-//        float leftPupilRadius = max(findPupilSize(colorLeftEye, pupilMeta.getLeftEyeCenter(), "left eye"), _oldLeftRadius);
-//        float rightPupilRadius = max(findPupilSize(colorRightEye, pupilMeta.getRightEyeCenter(), "right eye"), _oldRightRadius);
-
-        Mat debugLeftEye = src.clone();
-        float leftPupilRadius = findPupilSize(  src
-                                              , meta.getLeftEyeCenter()
+        assert(!src.empty());
+        
+        cv::Point leftEyeCenterEyeCoord( meta.getLeftEyeCenter().x - meta.getLeftEyeRect().x ,
+                                        meta.getLeftEyeCenter().y - meta.getLeftEyeRect().y );
+        
+        Mat debugLeftEye = src(meta.getLeftEyeRect()).clone();
+        float leftPupilRadius = findPupilSize( src(meta.getLeftEyeRect())
+                                              , leftEyeCenterEyeCoord
                                               , debugLeftEye );
-
-
-        Mat debugRightEye = src.clone();
-        float rightPupilRadius = findPupilSize(  src
-                                               , meta.getRightEyeCenter()
+        
+        
+        cv::Point rightEyeCenterEyeCoord( meta.getRightEyeCenter().x - meta.getRightEyeRect().x ,
+                                         meta.getRightEyeCenter().y - meta.getRightEyeRect().y);
+        
+        Mat debugRightEye = src(meta.getRightEyeRect()).clone();
+        float rightPupilRadius = findPupilSize( src(meta.getRightEyeRect())
+                                               , rightEyeCenterEyeCoord
                                                , debugRightEye );
-
-        //! Store data for next frame used.
-        _oldLeftRadius = leftPupilRadius;
-        _oldRightRadius = rightPupilRadius;
-
+        
+        
         Mat debugImg;
-        hconcat(debugLeftEye(meta.getLeftEyeRect()),
-                debugRightEye(meta.getRightEyeRect()),
+        hconcat(debugLeftEye,
+                debugRightEye,
                 debugImg);
+        
         window->update(debugImg);
-
+        
+        this->debugImage = debugImg;
+        
         return PWPupilSize(  leftPupilRadius
-                           , rightPupilRadius );
+                           ,rightPupilRadius );
 
     }
 
+    
     float MDStarbust::findPupilSize(const Mat &src,
                                     cv::Point eyeCenter,
                                     Mat &debugImg) const {
@@ -265,7 +273,7 @@ namespace pw {
 
     void MDStarbust::increaseContrast(const Mat &grayEye, const Point &eyeCenter) const {
         Rect pupil_area = Rect(max(eyeCenter.x - 20, 0),
-                               max(eyeCenter.y-20,0),
+                               max(eyeCenter.y - 20,0),
                                min( grayEye.cols - eyeCenter.x ,40),
                                min( grayEye.rows - eyeCenter.y ,40));
 
@@ -275,6 +283,11 @@ namespace pw {
                      grayEye(pupil_area));
     }
 
+    
+    const cv::Mat& MDStarbust::getDebugImage() const{
+        return this->debugImage;
+    }
+    
 
     void MDStarbust::exit()
     {

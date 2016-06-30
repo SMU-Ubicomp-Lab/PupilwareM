@@ -42,7 +42,7 @@ namespace pw {
     }
 
     
-    PWPupilSize MDStarbustNeo::process( const cv::Mat src, const PWFaceMeta &meta )
+    PWPupilSize MDStarbustNeo::process( const cv::Mat& src, const PWFaceMeta &meta )
     {
         assert(!src.empty());
         

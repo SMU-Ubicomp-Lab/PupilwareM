@@ -21,12 +21,18 @@ namespace pw {
 
         virtual void init() override ;
 
-        virtual PWPupilSize process( const cv::Mat src, const PWFaceMeta &meta ) override;
+        virtual PWPupilSize process( const cv::Mat& src, const PWFaceMeta &meta ) override;
 
         virtual void exit() override ;
-
+        
+        const cv::Mat& getDebugImage() const;
+        
     protected:
-
+        
+        // Debug Image
+        cv::Mat debugImage;
+        
+        
         // Maximum member of pixel walk from the center of the pupil.
         const unsigned int MAX_WALKING_STEPS = 20;
 
@@ -104,6 +110,9 @@ namespace pw {
         float findPupilSize(const cv::Mat &colorEyeFrame,
                             cv::Point eyeCenter,
                             cv::Mat &debugImg) const;
+        
+        
+        
     };
 }
 

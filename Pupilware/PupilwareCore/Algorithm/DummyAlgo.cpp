@@ -39,7 +39,7 @@ namespace pw {
     }
 
 
-    PWPupilSize DummyAlgo::process( const cv::Mat src, const PWFaceMeta &meta )
+    PWPupilSize DummyAlgo::process( const cv::Mat& src, const PWFaceMeta &meta )
     {
         // Processing code here
 

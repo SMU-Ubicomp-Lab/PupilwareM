@@ -71,7 +71,7 @@ namespace pw{
 
 
 
-    PWPupilSize ALOfflineFile::process( const cv::Mat src, const PWFaceMeta &meta )
+    PWPupilSize ALOfflineFile::process( const cv::Mat& src, const PWFaceMeta &meta )
     {
 
         const int frameNumber = meta.getFrameNumber();

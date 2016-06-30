@@ -28,7 +28,7 @@ namespace pw{
 
         virtual void init() =0;
 
-        virtual PWPupilSize process( const cv::Mat src, const PWFaceMeta &meta ) =0;
+        virtual PWPupilSize process( const cv::Mat& src, const PWFaceMeta &meta ) =0;
         
         virtual void exit() =0;
 

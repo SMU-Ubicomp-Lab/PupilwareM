@@ -20,6 +20,7 @@
 #import "PupilwareCore/PupilwareController.hpp"
 #import "PupilwareCore/Algorithm/IPupilAlgorithm.hpp"
 #import "PupilwareCore/Algorithm/MDStarbustNeo.hpp"
+#import "PupilwareCore/Algorithm/MDStarbust.hpp"
 #import "PupilwareCore/ImageProcessing/SimpleImageSegmenter.hpp"
 #import "PupilwareCore/IOS/IOSFaceRecognizer.h"
 
@@ -46,6 +47,7 @@
 {
     std::shared_ptr<pw::PupilwareController> pupilwareController;
     std::shared_ptr<pw::MDStarbustNeo> pwAlgo;
+
     
     pw::PWVideoWriter videoWriter;
     pw::PWCSVExporter csvExporter;

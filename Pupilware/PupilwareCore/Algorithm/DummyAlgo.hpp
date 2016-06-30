@@ -20,7 +20,7 @@ namespace pw {
         virtual ~DummyAlgo();
         
         virtual void init() override final;
-        virtual PWPupilSize process( const cv::Mat src, const PWFaceMeta &meta ) override final;
+        virtual PWPupilSize process( const cv::Mat& src, const PWFaceMeta &meta ) override final;
         virtual void exit() override final;
         
     private:
