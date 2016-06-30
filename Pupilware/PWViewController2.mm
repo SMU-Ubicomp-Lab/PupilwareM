@@ -23,6 +23,9 @@
 #import "PupilwareCore/ImageProcessing/SimpleImageSegmenter.hpp"
 #import "PupilwareCore/IOS/IOSFaceRecognizer.h"
 
+#import "PupilwareCore/PWVideoWriter.hpp"
+#import "PupilwareCore/PWCSVExporter.hpp"
+
 /*---------------------------------------------------------------
  Objective C Header
  ---------------------------------------------------------------*/
@@ -43,6 +46,9 @@
 {
     std::shared_ptr<pw::PupilwareController> pupilwareController;
     std::shared_ptr<pw::MDStarbustNeo> pwAlgo;
+    
+    pw::PWVideoWriter videoWriter;
+    pw::PWCSVExporter csvExporter;
     
     std::vector<std::vector<float>> results;
 }
@@ -139,11 +145,16 @@
     if(pupilwareController->hasStarted())
     {
         pupilwareController->stop();
+        videoWriter.close();
+        csvExporter.close();
     }
     else
     {
         pupilwareController->start();
         self.currentFrameNumber = 0;
+        
+        [self initVideoWriter];
+        [self initCSVExporter];
     }
 
 }
@@ -153,8 +164,37 @@
 {
     [self initVideoManager];
     [self initPupilwareCtrl];
+
 }
 
+
+
+
+-(void)initVideoWriter
+{
+    
+    // TODO: use the real user id as a file name.
+    auto fileName = [NSString stringWithFormat:@"face%ld.mp4", (long)[[NSDate date] timeIntervalSince1970]];
+    
+    NSString* videoPath = [ObjCAdapter getOutputFilePath: fileName];
+    
+    // TODO: change it to iPhone6s Frame Size.
+    cv::Size frameSize (480,360);
+    if(!videoWriter.open([videoPath UTF8String], 30, frameSize))
+    {
+        NSLog(@"Video Writer is not opened correctedly.");
+    }
+}
+
+-(void)initCSVExporter
+{
+    // TODO: use the real user id as a file name.
+    auto fileName = [NSString stringWithFormat:@"face%ld.csv", (long)[[NSDate date] timeIntervalSince1970]];
+    
+    NSString* filePath = [ObjCAdapter getOutputFilePath: fileName];
+    
+    csvExporter.open([filePath UTF8String]);
+}
 
 -(void)initPupilwareCtrl
 {
@@ -190,7 +230,6 @@
     
     
     __weak typeof(self) weakSelf = self;
-    pw::PupilwareController* pPWCtrl = pupilwareController.get();
     
     
     [self.videoManager setProcessBlock:^(CIImage *cameraImage){
@@ -248,13 +287,15 @@
                    frameNumber:(NSUInteger)frameNumber
                        context:(CIContext*)context
 {
-
+  
     if (!pupilwareController->hasStarted()) {
         return cameraImage;
     }
     
     cv::Mat cvFrame = [ObjCAdapter IGImage2Mat:cameraImage
                                    withContext:context];
+    
+    videoWriter << cvFrame;
     
     /* The source image is upside down, so It need to be rotated up. */
     [ObjCAdapter Rotate90:cvFrame withFlag:1];
@@ -267,6 +308,7 @@
     auto faceMeta = [self.faceRecognizer recognize:cameraImage];
     pupilwareController->setFaceMeta(faceMeta);
 
+    csvExporter << faceMeta;
     
     /* Process the rest of the work (e.g. pupil segmentation..) */
     pupilwareController->processFrame(cvFrame, (int)frameNumber );

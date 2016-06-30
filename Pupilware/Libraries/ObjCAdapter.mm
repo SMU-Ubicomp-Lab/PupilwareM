@@ -144,4 +144,26 @@
 +(cv::Point) CGPoint2CVPointFlip:(CGPoint) cgPoint{
     return cv::Point(cgPoint.y, cgPoint.x);
 }
+
+
+
++(NSString*)getOutputFilePath:(NSString*) outputFileName
+{
+    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                            NSUserDomainMask,
+                                                            YES)
+                        objectAtIndex:0];
+    
+    NSString *outputFilePath = [docDir stringByAppendingPathComponent: outputFileName];
+    
+    NSFileManager *fm = [NSFileManager defaultManager];
+    
+    // OpenCV.open does not work with file that is already existed.
+    // So, if there is, it needs to be deleted.
+    NSError *error;
+    [fm removeItemAtPath:outputFilePath error:&error];
+    
+    // NSLog(@"Output file path %@", outputFilePath);
+    return outputFilePath;
+}
 @end

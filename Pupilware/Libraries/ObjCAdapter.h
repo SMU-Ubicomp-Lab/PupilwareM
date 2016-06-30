@@ -19,4 +19,9 @@
 
 +(cv::Rect) CGRect2CVRectFlip:(CGRect) cgRect;
 +(cv::Point) CGPoint2CVPointFlip:(CGPoint) cgPoint;
+
+
++(NSString*)getOutputFilePath:(NSString*) outputFileName;
+
+
 @end
