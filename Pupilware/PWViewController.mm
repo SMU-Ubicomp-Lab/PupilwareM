@@ -2,168 +2,76 @@
 //  PWViewController.m
 //  Pupilware
 //
-//  Created by Mark Wang on 4/1/14.
-//  Copyright (c) 2014 SMU. All rights reserved.
+//  Created by Chatchai Wangwiwattana on 6/24/16.
+//  Copyright © 2016 SMU Ubicomp Lab. All rights reserved.
 //
 
 #import "PWViewController.h"
-#import "APLGraphView.h"
 #import <opencv2/videoio/cap_ios.h>
-#import "PWPupilProcessor.hpp"
-#import "DisplayDataViewController.h"
-#import "PWUtilities.h"
+
 #import "MyCvVideoCamera.h"
-#import "Pupilware-Swift.h"
-
-#import "constants.h"
 #import "VideoAnalgesic.h"
-#import "OpenCVBridge.h"
+#import "Libraries/ObjCAdapter.h"
 
-@class commandControl;
+#import "Pupilware-Swift.h"
+//#import "constants.h"
+
 @class DataModel;
-// @class VideoDisplayViewController;
 
-using namespace cv;
-using namespace pw;
+/*---------------------------------------------------------------
+ Pupilware Core Header
+ ---------------------------------------------------------------*/
+#import "PupilwareCore/preHeader.hpp"
+#import "PupilwareCore/PupilwareController.hpp"
+#import "PupilwareCore/Algorithm/IPupilAlgorithm.hpp"
+#import "PupilwareCore/Algorithm/MDStarbustNeo.hpp"
+#import "PupilwareCore/Algorithm/MDStarbust.hpp"
+#import "PupilwareCore/ImageProcessing/SimpleImageSegmenter.hpp"
+#import "PupilwareCore/IOS/IOSFaceRecognizer.h"
 
-static const int kFramesPerSec = 15;
+#import "PupilwareCore/PWVideoWriter.hpp"
+#import "PupilwareCore/PWCSVExporter.hpp"
+
+/*---------------------------------------------------------------
+ Objective C Header
+ ---------------------------------------------------------------*/
+
+@interface PWViewController ()
+
+@property (strong, nonatomic) VideoAnalgesic *videoManager;         /* Manage iOS Video input      */
+@property (strong, nonatomic) IOSFaceRecognizer *faceRecognizer;    /* recognize face from ICImage */
+@property (strong,nonatomic) DataModel *model;                      /* Connect with Swift UI       */
+
+@property NSUInteger currentFrameNumber;
 
 
-@interface PWViewController () <CvVideoCameraDelegate>
-
-@property (strong,nonatomic) VideoAnalgesic *videoManager;
-@property (strong,nonatomic) CIVector *center;
-@property (strong,nonatomic) DataModel *model;
-
-    @property (weak, nonatomic) IBOutlet UILabel *meanPupilSize;
-    @property (weak, nonatomic) IBOutlet UIButton *myStartButton;
-    @property (weak, nonatomic) IBOutlet UILabel *experimentTitle;
- //   @property (weak, nonatomic) IBOutlet UIView *imageView;
-
-    @property (weak, nonatomic) IBOutlet APLGraphView *graphView;
-    @property (weak, nonatomic) IBOutlet UIWebView *gameView;
-
-    @property(strong, nonatomic) MyCvVideoCamera *videoCamera;
-
-
-    - (IBAction)startExperiment:(UIButton *)sender;
-
+- (IBAction)startBtnClicked:(id)sender;
 
 @end
 
+
 @implementation PWViewController
 {
-    PWPupilProcessor *processor;
-    AVAudioPlayer *audioPlayer;
-    bool isFinished;
-    //UIView *imageView;
-    NSString *participantID;
-    NSString * timeStampValue;
-    NSString * csvFileName;
+    std::shared_ptr<pw::PupilwareController> pupilwareController;
+    std::shared_ptr<pw::MDStarbustNeo> pwAlgo;
 
-
+    
+    pw::PWVideoWriter videoWriter;
+    pw::PWCSVExporter csvExporter;
+    
+    std::vector<std::vector<float>> results;
 }
 
-float radius;
 
 -(VideoAnalgesic*)videoManager{
     if(!_videoManager){
-        // NSLog(@"Settign video manager");
         _videoManager = [VideoAnalgesic captureManager];
         _videoManager.preset = AVCaptureSessionPresetMedium;
         [_videoManager setCameraPosition:AVCaptureDevicePositionFront];
+
     }
     return _videoManager;
     
-}
-
-
-- (void)loadCamera
-{
-    
-    // remove the view's background color
-    self.view.backgroundColor = nil;
-    
-    __weak typeof(self) weakSelf = self;
-    
-    __block NSDictionary *opts = @{CIDetectorAccuracy: CIDetectorAccuracyLow, CIDetectorEyeBlink:@YES};
-    CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeFace context:self.videoManager.ciContext options:opts];
-    
-    // Following block of code gets the image from the camera and calls OpenCVBridge. If either of the eyes
-    // are closed, then skip the frame.
-    
-    [self.videoManager setProcessBlock:^(CIImage *cameraImage){
-        
-
-        opts = @{CIDetectorImageOrientation:@6};
-        
-        NSArray *faceFeatures = [detector featuresInImage: cameraImage options:opts];
-        if ([faceFeatures count] > 0){
-            for(CIFaceFeature *face in faceFeatures ){
-
-                if(!face.leftEyeClosed && ! face.rightEyeClosed){
-            
-                    cameraImage = [OpenCVBridge OpenCVTransferAndReturnFaces:face usingImage:cameraImage andContext:weakSelf.videoManager.ciContext andProcessor:(processor) andLeftEye:face.leftEyePosition andRightEye:face.rightEyePosition andIsFinished:isFinished];
-                }
-            }
-            
-            self.model.faceInView = true;
-            dispatch_async(dispatch_get_main_queue(),
-                           ^{
-                               [self.model.bridgeDelegate faceInView];
-                           });
-            //[self.model.bridgeDelegate faceInView];
-            
-        }else{
-            self.model.faceInView = false;
-            dispatch_async(dispatch_get_main_queue(),
-                           ^{
-                               [self.model.bridgeDelegate faceNotInView];
-                           });
-        }
-        
-        // Displays the pupil size on the screen
-        
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           self.meanPupilSize.text = [NSString stringWithFormat:@"Pupil Size: %f",
-                                                      processor->getPupilSize()];
-                       });
-        
-        // Draws the graph on the screen
-
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [self.graphView addX: processor->getPupilSize()
-                                              y: processor->getPupilSize()
-                                              z: processor->getPupilSize() ];
-                       });
-
-        
-        return cameraImage;
-    }];
-}
-
--(CvVideoCamera *)videoCamera
-{
-//    if(!_videoCamera)
-//    {
-//        _videoCamera= [[MyCvVideoCamera alloc ] initWithParentView:imageView];
-//        _videoCamera.delegate = self;
-//        _videoCamera.defaultAVCaptureDevicePosition=AVCaptureDevicePositionFront;
-//        _videoCamera.defaultAVCaptureSessionPreset=AVCaptureSessionPresetHigh;
-//        _videoCamera.defaultAVCaptureVideoOrientation=AVCaptureVideoOrientationPortrait;
-//        _videoCamera.defaultFPS = kFramesPerSec;
-//        _videoCamera.grayscaleMode = NO;
-//        
-//    }
-    
-    return  _videoCamera;
-}
-
-
--(void)changeColorMatching{
-    [self.videoManager shouldColorMatch:YES];
 }
 
 -(DataModel*)model{
@@ -173,294 +81,372 @@ float radius;
     return _model;
 }
 
-#pragma mark - View Controller Delegate
 
-- (void)viewDidLoad
-{
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////    UI View Events Handler    /////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+- (void)viewDidLoad {
     [super viewDidLoad];
     
-    isFinished = false;
     
-   //  NSLog(@"Inside PWViewController");
+    [self initSystem];
     
-    _experimentTitle.text = [NSString stringWithFormat:@"%@%@%@", self.experiment, @"  ", self.iteration];
-    
-    participantID = self.participant;
-    
-    [self loadCamera];
-
-    [self preparePupilProcessor];
-}
-
-
-- (void)dealloc
-{
-    if( processor )
-    {
-        delete processor;
-        processor = nullptr;
-    }
-}
-
-
--(void)didReceiveMemoryWarning
-{
-    if( processor )
-    {
-        delete processor;
-        processor = nullptr;
-    }
 }
 
 
 -(void)viewDidAppear:(BOOL)animated
 {
-	[super viewDidAppear:animated];
+    [super viewDidAppear:animated];
     
-    if(![self.videoManager isRunning])
-        [self.videoManager start];
+    [self startVideoManager];
+    
+    [self startPupilware];
 }
 
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-    if([self.videoManager isRunning])
-        [self.videoManager stop];
-    
-    // Added following two lines to close the capture files and process data
-    //
-    processor->closeCapture();
-    
-    [self processData];
+    [self stopVideoManager];
     
     [super viewWillDisappear:animated];
+    
 }
 
-#pragma mark - Pupilware Processor
 
--(void)preparePupilProcessor
-{
-    // Define the file name for both left and right eyes. Instead of using the participant number
-    // and ID, we will use timestamp and designate left and right eye
-    
-    timeStampValue = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
 
-    // Do not want to run the process until pressing start.
-    // isFinished = true; // NOT SURE IF THIS IS WHAT I WANT TO DO.
+
+- (IBAction)startBtnClicked:(id)sender {
     
-    if( !processor )
+    [self togglePupilware];
+    
+    if(pupilwareController->hasStarted())
     {
-        // Tag on the complete path to the file name. Pass this to the new PWPupilProcessor
-        NSString* leftOutputFilePath = [self getOutputFilePath:self.model.getLeftEyeName];
-        NSString* rightOutputFilePath = [self getOutputFilePath:self.model.getRighEyeName];
-        csvFileName = self.model.getCSVFileName;
-        
-        NSLog(@"CSV File name %@", csvFileName);
-        
-        NSLog(@"Eye Distance %d", self.model.getDist);
-        
-        processor = new PWPupilProcessor([leftOutputFilePath UTF8String], [rightOutputFilePath UTF8String]);
-        
-        processor->isShouldWriteVideo = true;
-        
-        [self loadSettingToProcessor];
-        
+        [sender setTitle:@"Stop" forState: UIControlStateNormal];
     }
-}
-
-
--(NSString*)getInputVideoPath:(NSString*) inputVideoFileName
-{
-    
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
-                                                            NSUserDomainMask,
-                                                            YES)
-                        objectAtIndex:0];
-    
-    NSString *inputFilePath = [docDir stringByAppendingPathComponent: inputVideoFileName];
-    
-    return inputFilePath;
-}
-
-
--(NSString*)getOutputFilePath:(NSString*) outputFileName
-{
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
-                                                            NSUserDomainMask,
-                                                            YES)
-                        objectAtIndex:0];
-    
-    NSString *outputFilePath = [docDir stringByAppendingPathComponent: outputFileName];
-    
-    NSFileManager *fm = [NSFileManager defaultManager];
-    
-    // OpenCV.open does not work with file that is already existed.
-    // So, if there is, it needs to be deleted.
-    NSError *error;
-    [fm removeItemAtPath:outputFilePath error:&error];
-    
-    // NSLog(@"Output file path %@", outputFilePath);
-    return outputFilePath;
-}
-
-
--(void)loadSettingToProcessor
-{
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    processor->eyeDistance_ud       = self.model.getDist;
-    processor->baselineStart_ud     = self.model.getBaseStart;
-    processor->baselineEnd_ud       = self.model.getBaseEnd;
-    processor->baseline             = self.model.getBaseline;
-    processor->cogHigh              = self.model.getCogHigh;
-    
-    // Following four parameters are optimal parameters resulting from the calibration process
-    
-    processor->windowSize_ud        = (int)[defaults integerForKey:kWindowSize];
-    processor->mbWindowSize_ud      = (int)[defaults integerForKey:kMbWindowSize];
-    processor->threshold_ud         = (int)[defaults integerForKey:kThreshold];
-    processor->markCost             = (int)[defaults integerForKey:kMarkCost];
-
-    
-    NSLog(@"Default values in PWViewCOntroller");
-    NSLog(@"Eye Distance %f, window size %d, mbWindowsize %d, baseline start %d, basline end %d, threshold %d, mark cost %d, Baseline %f, coghigh %f", processor->eyeDistance_ud, processor->windowSize_ud, processor->mbWindowSize_ud, processor->baselineStart_ud, processor->baselineEnd_ud, processor->threshold_ud, processor->markCost, processor->baseline, processor->cogHigh);
-}
-
-
-- (void) writeSignalToFile
-{
-    NSString *featureFile;
-    NSFileHandle *fileHandle;
-    
-    
-    NSString *docDir = NSSearchPathForDirectoriesInDomains(
-                                                           NSDocumentDirectory,
-                                                           NSUserDomainMask, YES
-                                                           )[0];
-    
-    featureFile = [docDir stringByAppendingPathComponent: csvFileName];
-
-
-    if  (![[NSFileManager defaultManager] fileExistsAtPath:featureFile]) {
-        [[NSFileManager defaultManager]
-         createFileAtPath:featureFile contents:nil attributes:nil];
-    }
-
-    fileHandle = [NSFileHandle
-                                fileHandleForUpdatingAtPath:featureFile];
-
-
-    std::vector<float> result = processor->getResultGraph();
-    std::vector<float> pupilInPixel = processor->getPupilPixel();
-    std::vector<float> pupilInMM = processor->getPupilMM();
-    std::vector<float> eyeDistanceInPixel = processor->getEyeDist();
-    std::vector<cv::Point> eyeCenterRight = processor->getRightEyeCenter();
-    std::vector<cv::Point> eyeCenterLeft = processor->getLeftEyeCenter();
-    
-    NSLog(@"result size %d and pupilPixel size %d", (int)result.size(), (int)pupilInPixel.size());
-    NSLog(@"pupil in mm  %d and eye distance %d", (int)pupilInMM.size(), (int)eyeDistanceInPixel.size());
-    NSLog(@"Right eye center %d, %d",  (int)eyeCenterRight.size(), eyeCenterRight[1].x);
-    NSLog(@"Left eye center %d, %d",  (int)eyeCenterLeft.size(), eyeCenterLeft[1].x);
-
-
-    NSString *text=[NSString stringWithFormat:@"Dilation , Pixel , MM, EyeDistance, LeftEye.x, LeftEye.y, RightEye.x, RightEye.y \n"];
-    [fileHandle writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
-
-
-    for( size_t i=0; i< (size_t)result.size(); i++ )
+    else
     {
-
-        text=[NSString stringWithFormat:@"%f , %f , %f , %f, %d, %d, %d, %d\n",result[i], pupilInPixel[i], pupilInMM[i], eyeDistanceInPixel[i], eyeCenterLeft[i].x, eyeCenterLeft[i].y, eyeCenterRight[i].x, eyeCenterRight[i].y];
-        
-        NSLog(@"Writing data to the file %@", text );
-
-        [fileHandle writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+        [sender setTitle:@"Start" forState:UIControlStateNormal];
     }
 }
 
 
--(void)processData
+/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    Objective C Implementation     /////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+-(void)startVideoManager
+{
+    if(![self.videoManager isRunning])
+    {
+        [self.videoManager start];
+    }
+}
+
+
+-(void)stopVideoManager
+{
+    if([self.videoManager isRunning])
+    {
+        [self.videoManager stop];
+    }
+}
+
+
+-(void) togglePupilware{
+    
+    if(pupilwareController->hasStarted())
+    {
+        [self stopPupilware];
+    }
+    else
+    {
+        [self startPupilware];
+    }
+
+}
+
+
+-(void) startPupilware
+{
+    if(!pupilwareController->hasStarted())
+    {
+        pupilwareController->start();
+        self.currentFrameNumber = 0;
+        
+        [self initVideoWriter];
+        [self initCSVExporter];
+    }
+}
+
+
+-(void) stopPupilware
+{
+    if(pupilwareController->hasStarted())
+    {
+        pupilwareController->stop();
+        videoWriter.close();
+        csvExporter.close();
+    }
+}
+
+
+- (void) initSystem
+{
+    [self initVideoManager];
+    [self initPupilwareCtrl];
+
+}
+
+
+
+
+-(void)initVideoWriter
+{
+    
+//    NSString* leftOutputFilePath = [self getOutputFilePath:self.model.getLeftEyeName];
+//    NSString* rightOutputFilePath = [self getOutputFilePath:self.model.getRighEyeName];
+//    
+    // TODO: use the real user id as a file name.
+    auto fileName = [NSString stringWithFormat:@"face%ld.mp4", (long)[[NSDate date] timeIntervalSince1970]];
+    
+    NSString* videoPath = [ObjCAdapter getOutputFilePath: fileName];
+    
+    // TODO: change it to iPhone6s Frame Size.
+    cv::Size frameSize (480,360);
+    if(!videoWriter.open([videoPath UTF8String], 30, frameSize))
+    {
+        NSLog(@"Video Writer is not opened correctedly.");
+    }
+}
+
+
+-(void)initCSVExporter
+{
+    // TODO: use the real user id as a file name.
+    auto fileName = [NSString stringWithFormat:@"face%ld.csv", (long)[[NSDate date] timeIntervalSince1970]];
+    
+    NSString* filePath = [ObjCAdapter getOutputFilePath: fileName];
+    
+    csvExporter.open([filePath UTF8String]);
+}
+
+
+-(void)initPupilwareCtrl
+{
+    
+    self.currentFrameNumber = 0;
+    
+    pupilwareController = pw::PupilwareController::Create();
+    pwAlgo = std::make_shared<pw::MDStarbustNeo>("StarbustNeo");
+    
+    pupilwareController->setPupilSegmentationAlgorihtm( pwAlgo );
+    
+    /*! 
+     * If there is no a face segmentation algorithm,
+     * we have to manually give Face Meta data to the system.
+     */
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"haarcascade_frontalface_default" ofType:@"xml"];
+//    const char *filePath = [path cStringUsingEncoding:NSUTF8StringEncoding];
+//    
+//    NSLog(@"%s", filePath);
+//    pupilwareController->setFaceSegmentationAlgoirhtm(std::make_shared<pw::SimpleImageSegmenter>(filePath));
+    
+
+    // TODO: Load default setting
+    
+    /* Load Initial Setting to the Pupilware Controller*/
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    
+//    processor->eyeDistance_ud       = self.model.getDist;
+//    processor->baselineStart_ud     = self.model.getBaseStart;
+//    processor->baselineEnd_ud       = self.model.getBaseEnd;
+//    processor->baseline             = self.model.getBaseline;
+//    processor->cogHigh              = self.model.getCogHigh;
+//    
+//    // Following four parameters are optimal parameters resulting from the calibration process
+//    
+//    processor->windowSize_ud        = (int)[defaults integerForKey:kWindowSize];
+//    processor->mbWindowSize_ud      = (int)[defaults integerForKey:kMbWindowSize];
+//    processor->threshold_ud         = (int)[defaults integerForKey:kThreshold];
+//    processor->markCost             = (int)[defaults integerForKey:kMarkCost];
+//    
+//    
+//    NSLog(@"Default values in PWViewCOntroller");
+//    NSLog(@"Eye Distance %f, window size %d, mbWindowsize %d, baseline start %d, basline end %d, threshold %d, mark cost %d, Baseline %f, coghigh %f", processor->eyeDistance_ud, processor->windowSize_ud, processor->mbWindowSize_ud, processor->baselineStart_ud, processor->baselineEnd_ud, processor->threshold_ud, processor->markCost, processor->baseline, processor->cogHigh);
+    
+}
+
+
+
+- (void)initVideoManager
+{
+    // remove the view's background color
+    self.view.backgroundColor = nil;
+    
+    
+    /* Use IOS Face Recoginizer */
+    self.faceRecognizer = [[IOSFaceRecognizer alloc] initWithContext:self.videoManager.ciContext];
+    
+    
+    __weak typeof(self) weakSelf = self;
+    
+    
+    [self.videoManager setProcessBlock:^(CIImage *cameraImage){
+        
+        
+        auto returnImage = [weakSelf _processCameraImage:cameraImage
+                                             frameNumber:weakSelf.currentFrameNumber
+                                                 context:weakSelf.videoManager.ciContext];
+        
+        [weakSelf advanceFrame];
+        
+        return returnImage;
+        
+        
+        //TODO: Enable This block in release built.
+        /********************************************
+        try{
+        
+         auto returnImage = [weakSelf _processCameraImage:cameraImage
+         frameNumber:weakSelf.currentFrameNumber
+         context:weakSelf.videoManager.ciContext];
+         
+         [self advanceFrame];
+         
+         return returnImage;
+        }
+         catch(AssertionFailureException e){
+         
+            //Catch if anything wrong during processing.
+         
+            std::cerr<<"[ERROR!!] Assertion does not meet. Serious error detected. " << std::endl;
+            e.LogError();
+             
+            //TODO: Manage execption, make sure data is safe and saved.
+            // - save files
+            // - destroy damage memory
+            // - Show UI Error message
+            // - write log files
+         
+             return cameraImage;
+             
+         }
+         */
+     
+    }];
+
+}
+
+
+/* 
+ * This function will be called in sided Video Manager callback.
+ * It's used for process a camera image with Pupilware system.
+ */
+-(CIImage*)_processCameraImage:(CIImage*)cameraImage
+                   frameNumber:(NSUInteger)frameNumber
+                       context:(CIContext*)context
 {
   
-    processor->process_signal();
-    
-    NSLog(@"Inside process Data");
-    
-    // std::vector<float> result = processor->getResultGraph();
-    
-    [self writeSignalToFile];
-//    
-//    DisplayDataViewController *distVC = [self.storyboard
-//                                         instantiateViewControllerWithIdentifier:@"summaryVC"];
-//    
-//    if(distVC != nil)
-//    {
-//        distVC.dataPoints = vector2NSArray(result);
-//        distVC.cogLevel = @(processor->getCognitiveLevel());
-//        
-//        [self presentViewController:distVC animated:YES completion:nil];
-//    }
-//    NSLog(@"Finished process Data");
-//    
-}
-
-#pragma mark - OpenCV Delegate
-
-#ifdef __cplusplus
-
--(void)processImage:(Mat&)image
-{
-    NSLog(@"Inside processImage of calib");
-
-}
-
-#endif
-
-#pragma mark - UI Event Handlers
-
-- (IBAction)ShowData:(UIButton *)sender
-{
-    isFinished = true;
-    
-    // (@"INSIDE THE SHOWDATA");
-    processor->closeCapture();
-    
-    [self processData];
-}
-
-
-- (IBAction)startExperiment:(UIButton *)sender {
-    
-    // NSLog(@"Inside start experiment ");
-    if ((!self.baseline) and (!self.game))
-    {
-        // NSLog(@"Not a baseline and game ");
-
-        NSString *audioFile;
-        audioFile = [NSString stringWithFormat:@"%@%@%@", self.experiment, @"_", self.iteration];
-
-        NSString *soundFile=[[NSBundle mainBundle] pathForResource:audioFile ofType:@"mp3"];
-
-        NSError *error = nil;
-
-        audioPlayer = [[ AVAudioPlayer alloc] initWithContentsOfURL:[ NSURL fileURLWithPath: soundFile] error:&error];
-        
-        if (error)
-        {
-            NSLog(@"Error in audioPlayer: %@",[error localizedDescription]);
-        }
-        else
-        {
-            [audioPlayer play];
-
-        }
+    if (!pupilwareController->hasStarted()) {
+        return cameraImage;
     }
     
+    cv::Mat cvFrame = [ObjCAdapter IGImage2Mat:cameraImage
+                                   withContext:context];
+    
+    videoWriter << cvFrame;
+    
+    /* The source image is upside down, so It need to be rotated up. */
+    [ObjCAdapter Rotate90:cvFrame withFlag:1];
     
     
-    isFinished = false;
+    /* 
+     * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
+     */
+    auto faceMeta = [self.faceRecognizer recognize:cameraImage];
+    faceMeta.setFrameNumber( (int) self.currentFrameNumber);
+    
+    pupilwareController->setFaceMeta(faceMeta);
 
+    if(faceMeta.hasFace())
+    {
+        self.model.faceInView = true;
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           [self.model.bridgeDelegate faceInView];
+                       });
+    }
+    else{
+        self.model.faceInView = false;
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           [self.model.bridgeDelegate faceNotInView];
+                       });
+    }
+    
+    csvExporter << faceMeta;
+    
+    /* Process the rest of the work (e.g. pupil segmentation..) */
+    pupilwareController->processFrame(cvFrame, (int)frameNumber );
+    
+    
+    cv::Mat debugImg = [self _getDebugImage];
+    
+    if(debugImg.empty()){
+        debugImg = cvFrame;
+    }
+    
+    //Rotate it back.
+    [ObjCAdapter Rotate90:debugImg withFlag:2];
+    
+    CIImage* returnImage = [ObjCAdapter Mat2CGImage:debugImg
+                                        withContext:context];
+    
+    
+    return returnImage;
+}
+
+
+/*
+ * This function will be called in sided Video Manager callback.
+ */
+-(cv::Mat)_getDebugImage
+{
+    cv::Mat debugImg = pupilwareController->getDebugImage();
+    
+    /* I have to put the debug of eye image in subclass,
+     * because the debug eye image become empty if I put it in the algorithm interface.
+     * If someone help me clean this thing up would be appreciated.
+     */
+    if(!debugImg.empty()){
+        
+        cv::Mat debugEyeImg = pwAlgo->getDebugImage();
+        
+        /* Combind 2 debug images into one */
+        if(!debugEyeImg.empty()){
+            cv::resize(debugEyeImg, debugEyeImg, cv::Size(debugImg.cols, debugEyeImg.rows*2));
+            cv::cvtColor(debugEyeImg, debugEyeImg, CV_BGR2RGBA);
+            debugEyeImg.copyTo(debugImg(cv::Rect(0, 0, debugEyeImg.cols, debugEyeImg.rows)));
+        }
+        
+    }
+    
+    return debugImg;
+}
+
+-(void) advanceFrame{
+    self.currentFrameNumber += 1;
+    
+    if ([self.model.bridgeDelegate isTestingFinished]) {
+        [self stopPupilware];
+    }
 }
 
 @end

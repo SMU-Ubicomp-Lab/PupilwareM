@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G19a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ujk-lY-LaN">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G19a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="O8W-PF-cgo">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -821,6 +821,37 @@
                     <view key="view" contentMode="scaleToFill" id="4w1-mP-Brd">
                         <rect key="frame" x="0.0" y="0.0" width="560" height="520"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lI2-zS-USD">
+                                <rect key="frame" x="42" y="0.0" width="477" height="289"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kZt-iR-bXp">
+                                        <rect key="frame" x="176" y="123" width="125" height="43"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="43" id="66H-YY-4qg"/>
+                                            <constraint firstAttribute="width" constant="125" id="N1i-s0-aZy"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="15"/>
+                                        <size key="titleShadowOffset" width="2.2250738585072014e-308" height="2.2250738585072014e-308"/>
+                                        <state key="normal" title="START"/>
+                                        <connections>
+                                            <action selector="startBtnClicked:" destination="Ujk-lY-LaN" eventType="touchUpInside" id="o68-ud-VGV"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="kZt-iR-bXp" firstAttribute="centerX" secondItem="lI2-zS-USD" secondAttribute="centerX" id="8QV-A7-cB3"/>
+                                    <constraint firstItem="kZt-iR-bXp" firstAttribute="centerY" secondItem="lI2-zS-USD" secondAttribute="centerY" id="mn0-L7-kdt"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="jiB-8w-x6Y" firstAttribute="top" secondItem="lI2-zS-USD" secondAttribute="bottom" constant="231" id="255-Up-YGO"/>
+                            <constraint firstItem="lI2-zS-USD" firstAttribute="leading" secondItem="4w1-mP-Brd" secondAttribute="leadingMargin" constant="22" id="BWo-d6-rCg"/>
+                            <constraint firstItem="lI2-zS-USD" firstAttribute="top" secondItem="Xsh-aA-ple" secondAttribute="bottom" id="f2T-3U-JHp"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="lI2-zS-USD" secondAttribute="trailing" constant="21" id="tak-sy-E87"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xgv-Qd-LX6" userLabel="First Responder" sceneMemberID="firstResponder"/>

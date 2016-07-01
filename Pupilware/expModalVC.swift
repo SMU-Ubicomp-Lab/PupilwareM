@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+
 class expModalVC: UIViewController, BridgeDelegate{
     let model = DataModel.sharedInstance
     @IBOutlet weak var topBar: UINavigationItem!
@@ -21,7 +22,7 @@ class expModalVC: UIViewController, BridgeDelegate{
     var testName:String = "Experiment N"
     var index:Int = 0
     var testStarted:Bool = false
-    
+    var testFinished = false;
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +30,9 @@ class expModalVC: UIViewController, BridgeDelegate{
         self.topBar.title = testName
         self.progressBar.setProgress(0, animated: true)
         self.completeButton.enabled = false
+        
+        testFinished = false;
+        
     }
     
     //DELEGATE FUNCTIONS
@@ -39,8 +43,14 @@ class expModalVC: UIViewController, BridgeDelegate{
         
     }
     func finishCalibration(){
+    
         
     }
+    
+    func isTestingFinished() -> Bool {
+        return testFinished;
+    }
+    
     func faceInView(){
         if self.testStarted{return}
         
@@ -63,11 +73,6 @@ class expModalVC: UIViewController, BridgeDelegate{
     }
     
     
-    @IBAction func tapDone(sender: AnyObject) {
-        delegate?.digitSpanTestComplete()
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
     func startDigitSpanTest()
     {
         var numbers:[Int] = (model.currentTest?.getDigits())!
@@ -85,7 +90,7 @@ class expModalVC: UIViewController, BridgeDelegate{
                     },
                     completion:
                     {(finished: Bool) -> Void in
-                        self.index++
+                        self.index += 1
                         if self.index < numbers.count{
                             self.startDigitSpanTest()
                         }else if (self.index == numbers.count){
@@ -96,7 +101,7 @@ class expModalVC: UIViewController, BridgeDelegate{
                                     self.mainLabel!.alpha = 1.0
                             },
                             completion:{(finished: Bool) -> Void in
-                                NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: "testCompleted", userInfo: nil, repeats: false)
+                                NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(expModalVC.testCompleted), userInfo: nil, repeats: false)
                             })
                         }
                 })
@@ -105,11 +110,16 @@ class expModalVC: UIViewController, BridgeDelegate{
     
     func testCompleted(){
         self.completeButton.enabled = true
+        testFinished = true;
     }
     
     @IBAction func completePressed(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
-        delegate?.digitSpanTestComplete()
+        
+        if testFinished {
+            self.dismissViewControllerAnimated(true, completion: nil)
+            delegate?.digitSpanTestComplete()
+        }
+        
     }
     
     override func viewDidDisappear(animated: Bool) {

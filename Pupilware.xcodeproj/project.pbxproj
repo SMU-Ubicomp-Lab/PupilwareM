@@ -11,7 +11,7 @@
 		5C4B461C1D21AB9200455A77 /* MDStarbustNeo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B461A1D21AB9200455A77 /* MDStarbustNeo.cpp */; };
 		5C82A9AD1D2470E3001F5345 /* PWVideoReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C82A9AB1D2470E3001F5345 /* PWVideoReader.cpp */; };
 		5C82A9B01D2479C6001F5345 /* PWVideoWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C82A9AE1D2479C6001F5345 /* PWVideoWriter.cpp */; };
-		5C9EA49E1D1DD6A6003BE62C /* PWViewController2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C9EA49D1D1DD6A6003BE62C /* PWViewController2.mm */; };
+		5C9EA49E1D1DD6A6003BE62C /* PWViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C9EA49D1D1DD6A6003BE62C /* PWViewController.mm */; };
 		5C9EA4AC1D1EE45B003BE62C /* haarcascade_frontalface_default.xml in Resources */ = {isa = PBXBuildFile; fileRef = 5C9EA4AB1D1EE45B003BE62C /* haarcascade_frontalface_default.xml */; };
 		5CC9A1231D25A25700ADB4BD /* PWCSVExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */; };
 		5CCDBBA81D2046B3006C0B63 /* ObjCAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5CCDBBA71D2046B3006C0B63 /* ObjCAdapter.mm */; };
@@ -77,7 +77,6 @@
 		97E94F771C5CB10C00D652CB /* PWParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F6E1C5CB10C00D652CB /* PWParameter.m */; };
 		97E94F781C5CB10C00D652CB /* PWPupilProcessor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F701C5CB10C00D652CB /* PWPupilProcessor.mm */; };
 		97E94F7A1C5CB10C00D652CB /* PWUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F731C5CB10C00D652CB /* PWUtilities.mm */; };
-		97E94F7B1C5CB10C00D652CB /* PWViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F751C5CB10C00D652CB /* PWViewController.mm */; };
 		97E94F7E1C5CB16800D652CB /* VideoAnalgesic.m in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F7D1C5CB16800D652CB /* VideoAnalgesic.m */; };
 		AE7728201D0653530096CCBD /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE77281F1D0653530096CCBD /* opencv2.framework */; };
 		AE7728231D08BDD40096CCBD /* NMSimplex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE7728211D08BDD40096CCBD /* NMSimplex.cpp */; };
@@ -93,8 +92,8 @@
 		5C82A9AE1D2479C6001F5345 /* PWVideoWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWVideoWriter.cpp; sourceTree = "<group>"; };
 		5C82A9AF1D2479C6001F5345 /* PWVideoWriter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWVideoWriter.hpp; sourceTree = "<group>"; };
 		5C9EA4991D1DD26A003BE62C /* preHeader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = preHeader.hpp; sourceTree = "<group>"; };
-		5C9EA49C1D1DD6A6003BE62C /* PWViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWViewController2.h; sourceTree = "<group>"; };
-		5C9EA49D1D1DD6A6003BE62C /* PWViewController2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWViewController2.mm; sourceTree = "<group>"; };
+		5C9EA49C1D1DD6A6003BE62C /* PWViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWViewController.h; sourceTree = "<group>"; };
+		5C9EA49D1D1DD6A6003BE62C /* PWViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWViewController.mm; sourceTree = "<group>"; };
 		5C9EA4AB1D1EE45B003BE62C /* haarcascade_frontalface_default.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = haarcascade_frontalface_default.xml; sourceTree = "<group>"; };
 		5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWCSVExporter.cpp; sourceTree = "<group>"; };
 		5CC9A1221D25A25700ADB4BD /* PWCSVExporter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWCSVExporter.hpp; sourceTree = "<group>"; };
@@ -102,7 +101,6 @@
 		5CCDBBA71D2046B3006C0B63 /* ObjCAdapter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ObjCAdapter.mm; path = Libraries/ObjCAdapter.mm; sourceTree = "<group>"; };
 		5CCDBBA91D205D2B006C0B63 /* IOSFaceRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOSFaceRecognizer.h; path = IOS/IOSFaceRecognizer.h; sourceTree = "<group>"; };
 		5CCDBBAA1D205D2B006C0B63 /* IOSFaceRecognizer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = IOSFaceRecognizer.mm; path = IOS/IOSFaceRecognizer.mm; sourceTree = "<group>"; };
-		5CED353E1D18489A002C714B /* PWViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWViewController.h; sourceTree = "<group>"; };
 		5CF4D57C1D186FB30050CBBA /* ALOfflineFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ALOfflineFile.cpp; sourceTree = "<group>"; };
 		5CF4D57D1D186FB30050CBBA /* ALOfflineFile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ALOfflineFile.hpp; sourceTree = "<group>"; };
 		5CF4D57E1D186FB30050CBBA /* DummyAlgo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DummyAlgo.cpp; sourceTree = "<group>"; };
@@ -198,7 +196,6 @@
 		97E94F701C5CB10C00D652CB /* PWPupilProcessor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWPupilProcessor.mm; sourceTree = "<group>"; };
 		97E94F721C5CB10C00D652CB /* PWUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWUtilities.h; sourceTree = "<group>"; };
 		97E94F731C5CB10C00D652CB /* PWUtilities.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWUtilities.mm; sourceTree = "<group>"; };
-		97E94F751C5CB10C00D652CB /* PWViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWViewController.mm; sourceTree = "<group>"; };
 		97E94F7C1C5CB16800D652CB /* VideoAnalgesic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoAnalgesic.h; sourceTree = "<group>"; };
 		97E94F7D1C5CB16800D652CB /* VideoAnalgesic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoAnalgesic.m; sourceTree = "<group>"; };
 		97E94F7F1C5CB1F800D652CB /* constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
@@ -391,8 +388,8 @@
 			isa = PBXGroup;
 			children = (
 				97A3214A1C59CDB300B1EB98 /* Main.storyboard */,
-				5C9EA49C1D1DD6A6003BE62C /* PWViewController2.h */,
-				5C9EA49D1D1DD6A6003BE62C /* PWViewController2.mm */,
+				5C9EA49C1D1DD6A6003BE62C /* PWViewController.h */,
+				5C9EA49D1D1DD6A6003BE62C /* PWViewController.mm */,
 				97A321591C59CFF100B1EB98 /* DataModel.swift */,
 				97A89CAE1C5B5EA600D9E193 /* tabViewController.swift */,
 				975C29021CA074210001FF95 /* targetSetupVC.swift */,
@@ -407,8 +404,6 @@
 				97A89CB01C5B6D7900D9E193 /* popOverController.swift */,
 				97D487251C93302500774958 /* TestCalibrateViewController.h */,
 				97D487261C93302500774958 /* TestCalibrateViewController.mm */,
-				5CED353E1D18489A002C714B /* PWViewController.h */,
-				97E94F751C5CB10C00D652CB /* PWViewController.mm */,
 				97E965AC1C5D6CB400D652CB /* Libraries */,
 				973A50291C5DBE6200EDDB20 /* Config */,
 				97A321581C59CE7100B1EB98 /* images */,
@@ -583,7 +578,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5C82A9AD1D2470E3001F5345 /* PWVideoReader.cpp in Sources */,
-				5C9EA49E1D1DD6A6003BE62C /* PWViewController2.mm in Sources */,
+				5C9EA49E1D1DD6A6003BE62C /* PWViewController.mm in Sources */,
 				97E94F7A1C5CB10C00D652CB /* PWUtilities.mm in Sources */,
 				5CF4D5A41D186FB30050CBBA /* SimpleImageSegmenter.cpp in Sources */,
 				97DB32CB1C75AB930024A22F /* adminVC.swift in Sources */,
@@ -606,7 +601,6 @@
 				5CF4D5C41D1870020050CBBA /* PWGraph.cpp in Sources */,
 				5C4B46161D21A77400455A77 /* PWFaceMeta.cpp in Sources */,
 				97E94F4F1C5CAD8500D652CB /* BEMCircle.m in Sources */,
-				97E94F7B1C5CB10C00D652CB /* PWViewController.mm in Sources */,
 				5CF4D5A31D186FB30050CBBA /* IImageSegmenter.cpp in Sources */,
 				97E94F7E1C5CB16800D652CB /* VideoAnalgesic.m in Sources */,
 				97A89CAF1C5B5EA600D9E193 /* tabViewController.swift in Sources */,

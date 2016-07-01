@@ -207,7 +207,6 @@ namespace pw{
             
             if(!faceMeta.hasFace()){
                 // There is no face detected.
-                std::cout << "[Warning] There is no face detected." << std::endl;
                 return;
             }
 
