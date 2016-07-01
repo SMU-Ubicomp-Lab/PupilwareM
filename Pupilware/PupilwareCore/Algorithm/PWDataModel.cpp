@@ -64,5 +64,12 @@ namespace pw{
         leftPupilSizes.resize(newSize);
         rightPupilSizes.resize(newSize);
     }
+    
+    
+    void PWDataModel::clear(){
+        leftPupilSizes.clear();
+        rightPupilSizes.clear();
+        
+    }
 
 }

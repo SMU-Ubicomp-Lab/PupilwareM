@@ -151,6 +151,9 @@ namespace pw{
         // Init algorithms
         pwSegAlgo->init();
         
+        // Reserve memory for the storage
+        storage.resize(1024);
+        
     }
     
 
@@ -166,6 +169,9 @@ namespace pw{
         debugImg = cv::Mat();
         
         isStarted = false;
+        
+        storage.clear();
+        eyeDistancePx.clear();
         
         // stop the machine
         // process signal
@@ -325,7 +331,7 @@ namespace pw{
     
     const std::vector<float>& PupilwareControllerImpl::getRawPupilSignal() const{
         
-        // warning: only return left eye???
+        // TODO warning: return only left eye???
         
         return storage.getLeftPupilSizes();
     }

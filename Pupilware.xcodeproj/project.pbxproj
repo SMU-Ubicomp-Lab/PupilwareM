@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5C4B46161D21A77400455A77 /* PWFaceMeta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B46141D21A77400455A77 /* PWFaceMeta.cpp */; };
 		5C4B461C1D21AB9200455A77 /* MDStarbustNeo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B461A1D21AB9200455A77 /* MDStarbustNeo.cpp */; };
+		5C6ACBF01D271D8500691F7A /* PWCalibratingViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C6ACBEF1D271D8400691F7A /* PWCalibratingViewController.mm */; };
 		5C82A9AD1D2470E3001F5345 /* PWVideoReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C82A9AB1D2470E3001F5345 /* PWVideoReader.cpp */; };
 		5C82A9B01D2479C6001F5345 /* PWVideoWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C82A9AE1D2479C6001F5345 /* PWVideoWriter.cpp */; };
 		5C9EA49E1D1DD6A6003BE62C /* PWViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C9EA49D1D1DD6A6003BE62C /* PWViewController.mm */; };
@@ -87,6 +88,8 @@
 		5C4B46151D21A77400455A77 /* PWFaceMeta.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWFaceMeta.hpp; sourceTree = "<group>"; };
 		5C4B461A1D21AB9200455A77 /* MDStarbustNeo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MDStarbustNeo.cpp; sourceTree = "<group>"; };
 		5C4B461B1D21AB9200455A77 /* MDStarbustNeo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MDStarbustNeo.hpp; sourceTree = "<group>"; };
+		5C6ACBEE1D271D8400691F7A /* PWCalibratingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWCalibratingViewController.h; sourceTree = "<group>"; };
+		5C6ACBEF1D271D8400691F7A /* PWCalibratingViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWCalibratingViewController.mm; sourceTree = "<group>"; };
 		5C82A9AB1D2470E3001F5345 /* PWVideoReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWVideoReader.cpp; sourceTree = "<group>"; };
 		5C82A9AC1D2470E3001F5345 /* PWVideoReader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWVideoReader.hpp; sourceTree = "<group>"; };
 		5C82A9AE1D2479C6001F5345 /* PWVideoWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWVideoWriter.cpp; sourceTree = "<group>"; };
@@ -390,6 +393,8 @@
 				97A3214A1C59CDB300B1EB98 /* Main.storyboard */,
 				5C9EA49C1D1DD6A6003BE62C /* PWViewController.h */,
 				5C9EA49D1D1DD6A6003BE62C /* PWViewController.mm */,
+				5C6ACBEE1D271D8400691F7A /* PWCalibratingViewController.h */,
+				5C6ACBEF1D271D8400691F7A /* PWCalibratingViewController.mm */,
 				97A321591C59CFF100B1EB98 /* DataModel.swift */,
 				97A89CAE1C5B5EA600D9E193 /* tabViewController.swift */,
 				975C29021CA074210001FF95 /* targetSetupVC.swift */,
@@ -605,6 +610,7 @@
 				97E94F7E1C5CB16800D652CB /* VideoAnalgesic.m in Sources */,
 				97A89CAF1C5B5EA600D9E193 /* tabViewController.swift in Sources */,
 				5C4B461C1D21AB9200455A77 /* MDStarbustNeo.cpp in Sources */,
+				5C6ACBF01D271D8500691F7A /* PWCalibratingViewController.mm in Sources */,
 				5CF4D5C81D1871800050CBBA /* PupilwareController.cpp in Sources */,
 				97E94F761C5CB10C00D652CB /* PWAppDelegate.m in Sources */,
 				5CCDBBAB1D205D2B006C0B63 /* IOSFaceRecognizer.mm in Sources */,

@@ -14,6 +14,8 @@
 +(cv::Mat)IGImage2Mat:(CIImage*)ciFrameImage withContext:(CIContext*)context;
 +(CIImage*)Mat2CGImage:(cv::Mat)opencvMat withContext:(CIContext*)context;
 
++(NSArray*) vector2NSArray:(std::vector<float> )v;
+
 +(cv::Rect) CGRect2CVRect:(CGRect) cgRect;
 +(cv::Point) CGPoint2CVPoint:(CGPoint) cgPoint;
 

@@ -1,12 +1,12 @@
 //
-//  PWViewController.m
+//  PWCalibratingViewController
 //  Pupilware
 //
 //  Created by Chatchai Wangwiwattana on 6/24/16.
 //  Copyright © 2016 SMU Ubicomp Lab. All rights reserved.
 //
 
-#import "PWViewController.h"
+#import "PWCalibratingViewController.h"
 #import <opencv2/videoio/cap_ios.h>
 
 #import "MyCvVideoCamera.h"
@@ -36,27 +36,30 @@
  Objective C Header
  ---------------------------------------------------------------*/
 
-@interface PWViewController ()
+@interface PWCalibratingViewController ()
 
 @property (strong, nonatomic) VideoAnalgesic *videoManager;         /* Manage iOS Video input      */
 @property (strong, nonatomic) IOSFaceRecognizer *faceRecognizer;    /* recognize face from ICImage */
 @property (strong,nonatomic) DataModel *model;                      /* Connect with Swift UI       */
 
 @property NSUInteger currentFrameNumber;
-
+@property Boolean    buffering;
 
 - (IBAction)startBtnClicked:(id)sender;
 
 @end
 
 
-@implementation PWViewController
+@implementation PWCalibratingViewController
 {
     std::shared_ptr<pw::PupilwareController> pupilwareController;
     std::shared_ptr<pw::MDStarbustNeo> pwAlgo;
 
     pw::PWVideoWriter videoWriter;
     pw::PWCSVExporter csvExporter;
+    
+    std::vector<cv::Mat> videoFrameBuffer;
+    std::vector<pw::PWFaceMeta> faceMetaBuffer;
     
 }
 
@@ -102,8 +105,7 @@
     [super viewDidAppear:animated];
     
     [self startVideoManager];
-    
-    [self startPupilware];
+
 }
 
 
@@ -123,9 +125,9 @@
 
 - (IBAction)startBtnClicked:(id)sender {
     
-    [self togglePupilware];
+    [self toggleBuffering];
     
-    if(pupilwareController->hasStarted())
+    if(self.buffering)
     {
         [sender setTitle:@"Stop" forState: UIControlStateNormal];
     }
@@ -160,40 +162,44 @@
 }
 
 
--(void) togglePupilware{
+-(void) toggleBuffering{
     
-    if(pupilwareController->hasStarted())
+    if(self.buffering)
     {
-        [self stopPupilware];
+        [self stopBuffering];
     }
     else
     {
-        [self startPupilware];
+        [self startBuffering];
     }
 
 }
 
 
--(void) startPupilware
+-(void) startBuffering
 {
-    if(!pupilwareController->hasStarted())
+    if(!self.buffering)
     {
-        pupilwareController->start();
         self.currentFrameNumber = 0;
+        self.buffering = true;
         
-        [self initVideoWriter];
-        [self initCSVExporter];
+        [self clearBuffer];
+        
     }
 }
 
 
--(void) stopPupilware
+-(void) stopBuffering
 {
-    if(pupilwareController->hasStarted())
+    if(self.buffering)
     {
-        pupilwareController->stop();
-        videoWriter.close();
-        csvExporter.close();
+        self.buffering = false;
+        
+        [self calibrate];
+        NSLog(@"Number of buffering frame %lu", videoFrameBuffer.size());
+        
+        [self clearBuffer];
+        
     }
 }
 
@@ -203,39 +209,6 @@
     [self initVideoManager];
     [self initPupilwareCtrl];
 
-}
-
-
-
-
--(void)initVideoWriter
-{
-    
-//    NSString* leftOutputFilePath = [self getOutputFilePath:self.model.getLeftEyeName];
-//    NSString* rightOutputFilePath = [self getOutputFilePath:self.model.getRighEyeName];
-//    
-    // TODO: use the real user id as a file name.
-    auto fileName = [NSString stringWithFormat:@"face%ld.mp4", (long)[[NSDate date] timeIntervalSince1970]];
-    
-    NSString* videoPath = [ObjCAdapter getOutputFilePath: fileName];
-    
-    // TODO: change it to iPhone6s Frame Size.
-    cv::Size frameSize (360,480);
-    if(!videoWriter.open([videoPath UTF8String], 30, frameSize))
-    {
-        NSLog(@"Video Writer is not opened correctedly.");
-    }
-}
-
-
--(void)initCSVExporter
-{
-    // TODO: use the real user id as a file name.
-    auto fileName = [NSString stringWithFormat:@"face%ld.csv", (long)[[NSDate date] timeIntervalSince1970]];
-    
-    NSString* filePath = [ObjCAdapter getOutputFilePath: fileName];
-    
-    csvExporter.open([filePath UTF8String]);
 }
 
 
@@ -302,44 +275,13 @@
     [self.videoManager setProcessBlock:^(CIImage *cameraImage){
         
         
-        auto returnImage = [weakSelf _processCameraImage:cameraImage
-                                             frameNumber:weakSelf.currentFrameNumber
-                                                 context:weakSelf.videoManager.ciContext];
+        auto returnImage = [weakSelf _segmentFaceAndBuffering:cameraImage
+                                                  frameNumber:weakSelf.currentFrameNumber
+                                                      context:weakSelf.videoManager.ciContext];
         
-        [weakSelf advanceFrame];
+        weakSelf.currentFrameNumber += 1;
         
         return returnImage;
-        
-        
-        //TODO: Enable This block in release built.
-        /********************************************
-        try{
-        
-         auto returnImage = [weakSelf _processCameraImage:cameraImage
-         frameNumber:weakSelf.currentFrameNumber
-         context:weakSelf.videoManager.ciContext];
-         
-         [self advanceFrame];
-         
-         return returnImage;
-        }
-         catch(AssertionFailureException e){
-         
-            //Catch if anything wrong during processing.
-         
-            std::cerr<<"[ERROR!!] Assertion does not meet. Serious error detected. " << std::endl;
-            e.LogError();
-             
-            //TODO: Manage execption, make sure data is safe and saved.
-            // - save files
-            // - destroy damage memory
-            // - Show UI Error message
-            // - write log files
-         
-             return cameraImage;
-             
-         }
-         */
      
     }];
 
@@ -350,23 +292,22 @@
  * This function will be called in sided Video Manager callback.
  * It's used for process a camera image with Pupilware system.
  */
--(CIImage*)_processCameraImage:(CIImage*)cameraImage
+-(CIImage*)_segmentFaceAndBuffering:(CIImage*)cameraImage
                    frameNumber:(NSUInteger)frameNumber
                        context:(CIContext*)context
 {
   
-    if (!pupilwareController->hasStarted()) {
+    if (!self.buffering) {
         return cameraImage;
     }
     
     cv::Mat cvFrame = [ObjCAdapter IGImage2Mat:cameraImage
                                    withContext:context];
-
+    
     
     /* The source image is upside down, so It need to be rotated up. */
     [ObjCAdapter Rotate90:cvFrame withFlag:1];
     
-    videoWriter << cvFrame;
     
     /* 
      * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
@@ -374,80 +315,63 @@
     auto faceMeta = [self.faceRecognizer recognize:cameraImage];
     faceMeta.setFrameNumber( (int) self.currentFrameNumber);
     
-    pupilwareController->setFaceMeta(faceMeta);
 
-    if(faceMeta.hasFace())
-    {
-        self.model.faceInView = true;
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [self.model.bridgeDelegate faceInView];
-                       });
-    }
-    else{
-        self.model.faceInView = false;
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [self.model.bridgeDelegate faceNotInView];
-                       });
-    }
-    
-    csvExporter << faceMeta;
-    
-    /* Process the rest of the work (e.g. pupil segmentation..) */
-    pupilwareController->processFrame(cvFrame, (int)frameNumber );
+    videoFrameBuffer.push_back(cvFrame);
+    faceMetaBuffer.push_back( faceMeta );
     
     
-    cv::Mat debugImg = [self _getDebugImage];
-    
-    if(debugImg.empty()){
-        debugImg = cvFrame;
-    }
-    
-    //Rotate it back.
-    [ObjCAdapter Rotate90:debugImg withFlag:2];
-    
-    CIImage* returnImage = [ObjCAdapter Mat2CGImage:debugImg
-                                        withContext:context];
-    
-    
-    return returnImage;
+    return cameraImage;
 }
 
 
-/*
- * This function will be called in sided Video Manager callback.
- */
--(cv::Mat)_getDebugImage
+
+
+
+-(void) calibrate
 {
-    cv::Mat debugImg = pupilwareController->getDebugImage();
+    // - Start calibration loop
+    // TODO, Buffering the entire frame consume a lot of memory
+    for (int l=0; l<10; ++l) {
     
-    /* I have to put the debug of eye image in subclass,
-     * because the debug eye image become empty if I put it in the algorithm interface.
-     * If someone help me clean this thing up would be appreciated.
-     */
-    if(!debugImg.empty()){
+        if(!pupilwareController->hasStarted())
+        {
+            /* init pupilware stage */
+            pupilwareController->start();
+            
+            // TODO set init parameter here.
+            
+            /* process actual frame */
+            /* !!! Make sure video and face meta are in the same direction */
+            for (int i=0; i<videoFrameBuffer.size(); ++i) {
+                pupilwareController->setFaceMeta(faceMetaBuffer[i]);
+                pupilwareController->processFrame(videoFrameBuffer[i], i);
+            }
+            
+            
+            // - Get Pupil Signal
+            
+            /* TODO Warning Storage contain a lot of zeros,
+               I will distort statistics calculation */
+            auto rawPupilSize = pupilwareController->getRawPupilSignal();
+            NSLog(@"[%d] Pupil Signal Size %lu", l, rawPupilSize.size());
+            
+            /* clear stage and do processing */
+            pupilwareController->stop();
+            
+            // - Evaluate signal
+            // - store result
         
-        cv::Mat debugEyeImg = pwAlgo->getDebugImage();
-        
-        /* Combind 2 debug images into one */
-        if(!debugEyeImg.empty()){
-            cv::resize(debugEyeImg, debugEyeImg, cv::Size(debugImg.cols, debugEyeImg.rows*2));
-            cv::cvtColor(debugEyeImg, debugEyeImg, CV_BGR2RGBA);
-            debugEyeImg.copyTo(debugImg(cv::Rect(0, 0, debugEyeImg.cols, debugEyeImg.rows)));
         }
-        
+    
     }
     
-    return debugImg;
+    // - return best parameter set.
+
 }
 
--(void) advanceFrame{
-    self.currentFrameNumber += 1;
-    
-    if ([self.model.bridgeDelegate isTestingFinished]) {
-        [self stopPupilware];
-    }
+-(void)clearBuffer{
+    videoFrameBuffer.clear();
+    faceMetaBuffer.clear();
 }
 
 @end

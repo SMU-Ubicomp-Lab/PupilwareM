@@ -166,4 +166,22 @@
     // NSLog(@"Output file path %@", outputFilePath);
     return outputFilePath;
 }
+
++(NSArray*) vector2NSArray:(std::vector<float> )v
+{
+    if(v.size() <= 0 )
+        return nil;
+    
+    float percentTrim = 0.05;
+    int trimSize = v.size()*percentTrim;
+    
+    NSMutableArray *buffer = [[NSMutableArray alloc] init];
+    for( int i=trimSize; i<v.size()-trimSize; i++)
+    {
+        [buffer addObject:@(v[i])];
+    }
+    
+    return [NSArray arrayWithArray:buffer];
+    
+}
 @end

@@ -26,6 +26,8 @@ namespace pw{
         const std::vector <float>&  getRightPupilSizes() const;
 
         void                        resize( size_t newSize );
+        
+        void                        clear();
 
 
     private:
