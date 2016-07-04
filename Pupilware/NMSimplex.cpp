@@ -3,7 +3,7 @@
 //  Pupilware
 //
 //  Created by Xinyi Ding on 6/8/16.
-//  Copyright © 2016 Raymond Martin. All rights reserved.
+//  Copyright © 2016 SMUUbicomp Lab. All rights reserved.
 //
 
 #include "NMSimplex.h"

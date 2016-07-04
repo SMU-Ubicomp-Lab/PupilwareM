@@ -14,7 +14,7 @@
 #import "Libraries/ObjCAdapter.h"
 
 #import "Pupilware-Swift.h"
-//#import "constants.h"
+#import "constants.h"
 
 @class DataModel;
 
@@ -27,6 +27,7 @@
 #import "PupilwareCore/Algorithm/MDStarbustNeo.hpp"
 #import "PupilwareCore/Algorithm/MDStarbust.hpp"
 #import "PupilwareCore/ImageProcessing/SimpleImageSegmenter.hpp"
+#import "pupilwareCore/SignalProcessing/SignalProcessingHelper.hpp"
 #import "PupilwareCore/IOS/IOSFaceRecognizer.h"
 
 #import "PupilwareCore/PWVideoWriter.hpp"
@@ -38,12 +39,13 @@
 
 @interface PWCalibratingViewController ()
 
+
 @property (strong, nonatomic) VideoAnalgesic *videoManager;         /* Manage iOS Video input      */
 @property (strong, nonatomic) IOSFaceRecognizer *faceRecognizer;    /* recognize face from ICImage */
 @property (strong,nonatomic) DataModel *model;                      /* Connect with Swift UI       */
 
 @property NSUInteger currentFrameNumber;
-@property Boolean    buffering;
+@property Boolean    calibrating;
 
 - (IBAction)startBtnClicked:(id)sender;
 
@@ -105,6 +107,7 @@
     [super viewDidAppear:animated];
     
     [self startVideoManager];
+    [self startCalibrating];
 
 }
 
@@ -112,6 +115,7 @@
 -(void)viewWillDisappear:(BOOL)animated
 {
     [self stopVideoManager];
+    [self stopCalibrating];
     
     [super viewWillDisappear:animated];
     
@@ -127,7 +131,7 @@
     
     [self toggleBuffering];
     
-    if(self.buffering)
+    if(self.calibrating)
     {
         [sender setTitle:@"Stop" forState: UIControlStateNormal];
     }
@@ -164,39 +168,49 @@
 
 -(void) toggleBuffering{
     
-    if(self.buffering)
+    if(self.calibrating)
     {
-        [self stopBuffering];
+        [self stopCalibrating];
     }
     else
     {
-        [self startBuffering];
+        [self startCalibrating];
     }
 
 }
 
 
--(void) startBuffering
+-(void) startCalibrating
 {
-    if(!self.buffering)
+    if(!self.calibrating)
     {
         self.currentFrameNumber = 0;
-        self.buffering = true;
+        self.calibrating = true;
         
         [self clearBuffer];
         
+
+        // Only capture for kCaptureBaselineTime seconds
+        [NSTimer scheduledTimerWithTimeInterval:kCalibrationDuration
+                                         target:self
+                                       selector:@selector(stopCalibrating)
+                                       userInfo:nil
+                                        repeats:NO];
+        
+        
     }
 }
 
 
--(void) stopBuffering
+-(void) stopCalibrating
 {
-    if(self.buffering)
+    if(self.calibrating)
     {
-        self.buffering = false;
+        self.calibrating = false;
         
         [self calibrate];
-        NSLog(@"Number of buffering frame %lu", videoFrameBuffer.size());
+        
+        [self.model.bridgeDelegate finishCalibration];
         
         [self clearBuffer];
         
@@ -207,7 +221,12 @@
 - (void) initSystem
 {
     [self initVideoManager];
+    
+    [self.model setNewCalibrationFiles];
+    
     [self initPupilwareCtrl];
+    
+    
 
 }
 
@@ -238,6 +257,15 @@
     /* Load Initial Setting to the Pupilware Controller*/
 //    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 //    
+//    pwAlgo->setThreshold((float)[defaults floatForKey:kSBThreshold]);
+//    pwAlgo->setPrior((float)[defaults floatForKey:kSBPrior]);
+//    pwAlgo->setSigma((float)[defaults floatForKey:kSBSigma]);
+//    pwAlgo->setRayNumber((int)[defaults integerForKey:kSBNumberOfRays]);
+//    pwAlgo->setDegreeOffset((int)[defaults integerForKey:kSBDegreeOffset]);
+    
+    
+//    processor->windowSize_ud        = (int)[defaults integerForKey:kWindowSize];
+//    processor->mbWindowSize_ud      = (int)[defaults integerForKey:kMbWindowSize];
 //    processor->eyeDistance_ud       = self.model.getDist;
 //    processor->baselineStart_ud     = self.model.getBaseStart;
 //    processor->baselineEnd_ud       = self.model.getBaseEnd;
@@ -245,12 +273,7 @@
 //    processor->cogHigh              = self.model.getCogHigh;
 //    
 //    // Following four parameters are optimal parameters resulting from the calibration process
-//    
-//    processor->windowSize_ud        = (int)[defaults integerForKey:kWindowSize];
-//    processor->mbWindowSize_ud      = (int)[defaults integerForKey:kMbWindowSize];
-//    processor->threshold_ud         = (int)[defaults integerForKey:kThreshold];
-//    processor->markCost             = (int)[defaults integerForKey:kMarkCost];
-//    
+//    //
 //    
 //    NSLog(@"Default values in PWViewCOntroller");
 //    NSLog(@"Eye Distance %f, window size %d, mbWindowsize %d, baseline start %d, basline end %d, threshold %d, mark cost %d, Baseline %f, coghigh %f", processor->eyeDistance_ud, processor->windowSize_ud, processor->mbWindowSize_ud, processor->baselineStart_ud, processor->baselineEnd_ud, processor->threshold_ud, processor->markCost, processor->baseline, processor->cogHigh);
@@ -297,16 +320,19 @@
                        context:(CIContext*)context
 {
   
-    if (!self.buffering) {
+    if (!self.calibrating) {
         return cameraImage;
     }
     
+    /* The source image is in sideway (<-), so It need to be rotated back up. */
+    CGAffineTransform transform = CGAffineTransformMakeRotation(-M_PI_2);
+    transform = CGAffineTransformTranslate(transform,-480,0);
+    cameraImage = [cameraImage imageByApplyingTransform:transform];
+    
+    
     cv::Mat cvFrame = [ObjCAdapter IGImage2Mat:cameraImage
                                    withContext:context];
-    
-    
-    /* The source image is upside down, so It need to be rotated up. */
-    [ObjCAdapter Rotate90:cvFrame withFlag:1];
+
     
     
     /* 
@@ -319,8 +345,13 @@
     videoFrameBuffer.push_back(cvFrame);
     faceMetaBuffer.push_back( faceMeta );
     
+    cv::rectangle(cvFrame, faceMeta.getFaceRect(), cv::Scalar(255,0,100));
+    [ObjCAdapter Rotate90:cvFrame withFlag:2];
     
-    return cameraImage;
+    CIImage* returnImage = [ObjCAdapter Mat2CGImage:cvFrame
+                                        withContext:context];
+    
+    return returnImage;
 }
 
 
@@ -329,45 +360,54 @@
 
 -(void) calibrate
 {
-    // - Start calibration loop
-    // TODO, Buffering the entire frame consume a lot of memory
-    for (int l=0; l<10; ++l) {
+    // !!! Buffering the entire frame consume a lot of memory
+    // Well, for 10 secs, it uses about 180Mb. Not too bad actually.
+    
+    /* It is just a platholder of running calibration for 3 iterations.
+     * It will be replaced with Optimizat algorithm
+     */
+    NSArray *ths = @[@0.005, @0.1, @0.24];
+    NSArray *priors = @[@1, @1.2, @1.5];
+    NSArray *sigmas = @[@5, @6, @8];
+    
+    for (int j=0; j<3; ++j) {
     
         if(!pupilwareController->hasStarted())
         {
             /* init pupilware stage */
             pupilwareController->start();
             
-            // TODO set init parameter here.
+            // TODO set init parameter for each iteration here.
+            pwAlgo->setThreshold([ths[j] floatValue]);
+            pwAlgo->setPrior([priors[j] floatValue]);
+            pwAlgo->setSigma([sigmas[j] floatValue]);
             
-            /* process actual frame */
-            /* !!! Make sure video and face meta are in the same direction */
             for (int i=0; i<videoFrameBuffer.size(); ++i) {
                 pupilwareController->setFaceMeta(faceMetaBuffer[i]);
                 pupilwareController->processFrame(videoFrameBuffer[i], i);
             }
             
             
-            // - Get Pupil Signal
+            auto rawPupilSizes = pupilwareController->getRawPupilSignal();
+            NSLog(@"[%d] Pupil Signal Size %lu", j, rawPupilSizes.size());
             
-            /* TODO Warning Storage contain a lot of zeros,
-               I will distort statistics calculation */
-            auto rawPupilSize = pupilwareController->getRawPupilSignal();
-            NSLog(@"[%d] Pupil Signal Size %lu", l, rawPupilSize.size());
+            auto std = cw::calStd(rawPupilSizes);
+            NSLog(@"STD is %f", std);
+            
+            // TODO Store list of std for testing ?
             
             /* clear stage and do processing */
             pupilwareController->stop();
-            
-            // - Evaluate signal
-            // - store result
         
         }
     
     }
     
     // - return best parameter set.
+    // - write the setting to files.
 
 }
+
 
 -(void)clearBuffer{
     videoFrameBuffer.clear();

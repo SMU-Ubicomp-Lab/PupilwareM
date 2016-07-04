@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G19a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ujk-lY-LaN">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G19a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="O8W-PF-cgo">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -948,10 +948,10 @@
             </objects>
             <point key="canvasLocation" x="3295" y="15"/>
         </scene>
-        <!--Test Calibrate View Controller-->
+        <!--Calibrating View Controller-->
         <scene sceneID="aQL-q8-jrc">
             <objects>
-                <viewController id="bq5-gb-7lX" customClass="TestCalibrateViewController" sceneMemberID="viewController">
+                <viewController id="bq5-gb-7lX" customClass="PWCalibratingViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9Qm-sj-btd"/>
                         <viewControllerLayoutGuide type="bottom" id="iDl-6j-iTV"/>

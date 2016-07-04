@@ -151,8 +151,6 @@ namespace pw{
         // Init algorithms
         pwSegAlgo->init();
         
-        // Reserve memory for the storage
-        storage.resize(1024);
         
     }
     
@@ -281,7 +279,8 @@ namespace pw{
         
         //! Store data to lists
         //
-        storage.setPupilSizeAt( currentFrameNumber, result );
+//        storage.setPupilSizeAt( currentFrameNumber, result );
+        storage.addPupilSize(result);
         
         eyeDistancePx.push_back( eyeDist );
         

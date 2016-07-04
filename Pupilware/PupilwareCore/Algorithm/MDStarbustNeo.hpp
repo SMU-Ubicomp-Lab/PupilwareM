@@ -27,6 +27,14 @@ namespace pw {
         
         const cv::Mat& getDebugImage() const;
 
+        
+        /* Setter and Getter */
+        void setThreshold( float value );
+        void setRayNumber( int value );
+        void setDegreeOffset( int value );
+        void setPrior( float value );
+        void setSigma( float sigma );
+        
     protected:
 
 
@@ -40,18 +48,13 @@ namespace pw {
 
         // Minimum number of points before doing Ellipse fit algorithm
         const unsigned int MIM_NUM_INLIER_POINTS = 5;
+        
+
+        // It is used in dynamic thresholding
+        float threshold;
 
 
-        // It used to convert a trackbar's INT to Float
-        const float precision = 1000;
-
-
-        // The different seed intensity to the edge threshold.
-        // It's used to stop Starbust algorithm to walk forward.
-        int threshold;
-
-
-        // Number of rays
+        // Number of rays casting around a center point.
         int rayNumber;
 
 
@@ -60,10 +63,10 @@ namespace pw {
         int degreeOffset;
 
 
-        // Simple linear primer.
+        // Gassian Mask
         // It's used to improve a reflection problem in pupils.
-        int primer;
-
+        float prior;
+        float sigma;
 
         // Just a window name for debuging
         std::shared_ptr<CVWindow> window;

@@ -9,7 +9,19 @@
 
 namespace cw {
 
-
+    
+    double calStd( const std::vector<float>& v)
+    {
+        double sum = std::accumulate(v.begin(), v.end(), 0.0);
+        double mean = sum / static_cast<double>(v.size());
+        
+        double sq_sum = std::inner_product(v.begin(), v.end(), v.begin(), 0.0);
+        double stdev = std::sqrt(sq_sum / v.size() - mean * mean);
+        
+        return stdev;
+    }
+    
+    
     float median( std::vector<float> &v )
     {
         if (v.size() <= 0)

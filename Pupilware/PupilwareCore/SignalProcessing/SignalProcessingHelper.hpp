@@ -11,6 +11,10 @@
 
 namespace cw{
 
+    
+    double calStd( const std::vector<float>& v);
+    
+    
     typedef float (*filterFunc) ( std::vector<float>&v);
 
 

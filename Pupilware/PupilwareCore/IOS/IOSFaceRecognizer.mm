@@ -54,25 +54,28 @@
     pw::PWFaceMeta returnFaceMeta;
     
     __block NSDictionary *opts;
-    opts = @{CIDetectorImageOrientation:@5};
+    opts = @{CIDetectorImageOrientation:@1};
     
     NSArray *faceFeatures = [self.detector featuresInImage: cameraImage options:opts];
     
+    auto frameHeight = cameraImage.extent.size.height;
+    
     // Only return the first face they found. for now.
     for(CIFaceFeature *face in faceFeatures ){
-        const int kEyeBound = face.bounds.size.width *0.15;
+        const int kEyeBound = face.bounds.size.width * 0.15;
         
         
-        auto faceRect = [ObjCAdapter CGRect2CVRectFlip:face.bounds];
+        auto faceRect = [ObjCAdapter CGRect2CVRect:face.bounds];
+        faceRect.y = frameHeight - faceRect.height - faceRect.y;
+    
+        auto leftEyeCenter = cv::Point(fmax(face.leftEyePosition.x, kEyeBound),
+                                       fmax(frameHeight-face.leftEyePosition.y, kEyeBound) );
         
-        auto leftEyeCenter = cv::Point(fmax(face.leftEyePosition.y, kEyeBound),
-                                       fmax(face.leftEyePosition.x, kEyeBound) );
-        
-        auto rightEyeCenter = cv::Point(fmax(face.rightEyePosition.y, kEyeBound),
-                                        fmax(face.rightEyePosition.x, kEyeBound) );
+        auto rightEyeCenter = cv::Point(fmax(face.rightEyePosition.x, kEyeBound),
+                                        fmax(frameHeight-face.rightEyePosition.y, kEyeBound) );
         
         
-        returnFaceMeta.setFaceRect (faceRect);
+        returnFaceMeta.setFaceRect(faceRect);
         returnFaceMeta.setLeftEyeClosed(face.leftEyeClosed);
         returnFaceMeta.setRightEyeClosed(face.rightEyeClosed);
 

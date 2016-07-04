@@ -7,6 +7,7 @@
 
 #include <cassert>
 #include "Core/ThrowAssert.hpp"
+#include "Core/Property.hpp"
 
 #define REQUIRES throw_assert
 #define PROMISES throw_assert

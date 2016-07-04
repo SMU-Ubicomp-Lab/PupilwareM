@@ -275,8 +275,8 @@
 //    
 //    processor->windowSize_ud        = (int)[defaults integerForKey:kWindowSize];
 //    processor->mbWindowSize_ud      = (int)[defaults integerForKey:kMbWindowSize];
-//    processor->threshold_ud         = (int)[defaults integerForKey:kThreshold];
-//    processor->markCost             = (int)[defaults integerForKey:kMarkCost];
+//    processor->threshold_ud         = (int)[defaults floatForKey:kThreshold];
+//    processor->markCost             = (int)[defaults floatForKey:kPrior];
 //    
 //    
 //    NSLog(@"Default values in PWViewCOntroller");
@@ -359,12 +359,15 @@
         return cameraImage;
     }
     
+
+    /* The source image is in sideway (<-), so It need to be rotated back up. */
+    CGAffineTransform transform = CGAffineTransformMakeRotation(-M_PI_2);
+    transform = CGAffineTransformTranslate(transform,-480,0);
+    cameraImage = [cameraImage imageByApplyingTransform:transform];
+    
+    
     cv::Mat cvFrame = [ObjCAdapter IGImage2Mat:cameraImage
                                    withContext:context];
-
-    
-    /* The source image is upside down, so It need to be rotated up. */
-    [ObjCAdapter Rotate90:cvFrame withFlag:1];
     
     videoWriter << cvFrame;
     

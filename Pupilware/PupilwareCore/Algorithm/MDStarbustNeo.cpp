@@ -18,10 +18,11 @@ namespace pw {
 
     MDStarbustNeo::MDStarbustNeo( const string& name ):
             IPupilAlgorithm(name),
-            threshold(25),
+            threshold(0.014),
             rayNumber(15),
             degreeOffset(25),
-            primer(1 * precision){
+            prior(1.0f),
+            sigma(1.0f){
 
     }
 
@@ -37,8 +38,8 @@ namespace pw {
         window->moveWindow(200,300);
         window->addTrackbar("degree offset", &degreeOffset, 180);
         window->addTrackbar("ray number",&rayNumber, 200);
-        window->addTrackbar("threshold", &threshold, 255 );
-        window->addTrackbar("primer", &primer, precision*100);
+//        window->addTrackbar("threshold", &threshold, 255 );
+//        window->addTrackbar("primer", &prior, precision*100);
     }
 
     
@@ -236,7 +237,7 @@ namespace pw {
         Mat blur;
         cv::GaussianBlur(grayEye, blur, Size(blurKernalSize*2+1,blurKernalSize*2+1), 3);
 
-        int th = cw::calDynamicThreshold(blur, 0.014);
+        int th = cw::calDynamicThreshold(blur, threshold);
 
         Mat walkMat = grayEye;
         cv::threshold(grayEye, walkMat, th, 255, CV_THRESH_TRUNC);
@@ -275,7 +276,7 @@ namespace pw {
         for( int iter = 0; iter < STARBURST_ITERATION; iter++ )
         {
             edgePointThisRound.clear();
-            uchar *seed_intensity = walkMat.ptr<uchar>(seedPoint.y, seedPoint.x);
+//            uchar *seed_intensity = walkMat.ptr<uchar>(seedPoint.y, seedPoint.x);
 
             for(auto r = rays.begin(); r != rays.end(); r++)
             {
@@ -408,4 +409,28 @@ namespace pw {
     {
         // Clean up code here.
     }
+    
+    
+    
+    
+    void MDStarbustNeo::setThreshold( float value ){
+        threshold = fmax(value, 0);
+    }
+    
+    void MDStarbustNeo::setRayNumber( int value ){
+        rayNumber = max(value, 0);
+    }
+    
+    void MDStarbustNeo::setDegreeOffset( int value ){
+        degreeOffset = min(max(value, 0), 355);
+    }
+    
+    void MDStarbustNeo::setPrior( float value ){
+        prior = fmax(value, 0);
+    }
+    
+    void MDStarbustNeo::setSigma( float value ){
+        sigma = fmax(value, 0);
+    }
+    
 }

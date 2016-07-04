@@ -90,6 +90,7 @@
 		5C4B461B1D21AB9200455A77 /* MDStarbustNeo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MDStarbustNeo.hpp; sourceTree = "<group>"; };
 		5C6ACBEE1D271D8400691F7A /* PWCalibratingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWCalibratingViewController.h; sourceTree = "<group>"; };
 		5C6ACBEF1D271D8400691F7A /* PWCalibratingViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWCalibratingViewController.mm; sourceTree = "<group>"; };
+		5C801D071D282C0B0008A378 /* Property.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Property.hpp; sourceTree = "<group>"; };
 		5C82A9AB1D2470E3001F5345 /* PWVideoReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWVideoReader.cpp; sourceTree = "<group>"; };
 		5C82A9AC1D2470E3001F5345 /* PWVideoReader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWVideoReader.hpp; sourceTree = "<group>"; };
 		5C82A9AE1D2479C6001F5345 /* PWVideoWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWVideoWriter.cpp; sourceTree = "<group>"; };
@@ -290,6 +291,7 @@
 			isa = PBXGroup;
 			children = (
 				5CF4D58E1D186FB30050CBBA /* ThrowAssert.hpp */,
+				5C801D071D282C0B0008A378 /* Property.hpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
