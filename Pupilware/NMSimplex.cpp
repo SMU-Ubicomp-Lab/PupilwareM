@@ -9,10 +9,15 @@
 #include "NMSimplex.h"
 
 
-void NMSimplex::setUp(pw::PWPupilProcessor * ptr) {
+void NMSimplex::setUp(std::shared_ptr<pw::PupilwareController> ptr, std::shared_ptr<pw::MDStarbustNeo> pwAlgo) {
     processor = ptr;
+    algo = pwAlgo;
 }
 
+void NMSimplex::setBuffer(std::vector<cv::Mat> & videoFrameBuffer, std::vector<pw::PWFaceMeta> & faceMetaBuffer) {
+    videoBuffer = videoFrameBuffer;
+    faceBuffer = faceMetaBuffer;
+}
 int NMSimplex::getDims() const {
     return 3;
 }
@@ -20,22 +25,32 @@ int NMSimplex::getDims() const {
 double NMSimplex::calc(const double* x) const {
     cv::Mat leftEyeVideoImage, rightEyeVideoImage;
     std::vector<float> results;
-    processor->threshold_ud         =           x[0];
-    processor->markCost              =          x[1];
-    processor->intensityThreshold_ud  =         x[2];
-    for (int j=0; j < processor->leftOutputMatVideoVector.size(); j++)
+    algo->setThreshold(x[0]);
+    algo->setPrior(x[1]);
+    algo->setSigma(x[2]);
+    
+    float stdV;
+    if(!processor->hasStarted())
     {
-        // NSLog(@"Inside J Loop %d", j);
-        leftEyeVideoImage = processor->leftOutputMatVideoVector[j];
-        rightEyeVideoImage = processor->rightOutputMatVideoVector[j];
+        /* init pupilware stage */
+        processor->start();
         
-        processor->eyeFeatureExtraction(leftEyeVideoImage, rightEyeVideoImage, j);
+        for (int i=0; i<videoBuffer.size(); ++i) {
+            if (faceBuffer[i].getFaceRect().x == 0 || faceBuffer[i].getFaceRect().y == 0) {
+                continue;
+            }
+            processor->setFaceMeta(faceBuffer[i]);
+            processor->processFrame(videoBuffer[i], i);
+        }
+        
+        auto rawPupilSizes = processor->getRawPupilSignal();
+        stdV = calStd(rawPupilSizes);
+//        NSLog(@"[%d] Pupil Signal Size %lu", j, rawPupilSizes.size());
+        
+        /* clear stage and do processing */
+        processor->stop();
+        
     }
-    processor->firstIteration = 0;
-    processor->process_signal();
-    results = processor->getPupilPixel();
-    float stdV = calStd(results);
-    processor->clearData();
     return stdV;
 }
 

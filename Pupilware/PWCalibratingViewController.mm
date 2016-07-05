@@ -15,6 +15,7 @@
 
 #import "Pupilware-Swift.h"
 #import "constants.h"
+#import "NMSimplex.h"
 
 @class DataModel;
 
@@ -366,45 +367,33 @@
     /* It is just a platholder of running calibration for 3 iterations.
      * It will be replaced with Optimizat algorithm
      */
-    NSArray *ths = @[@0.005, @0.1, @0.24];
-    NSArray *priors = @[@1, @1.2, @1.5];
-    NSArray *sigmas = @[@5, @6, @8];
     
-    for (int j=0; j<3; ++j) {
+    cv::TermCriteria  	termcrit = cv::TermCriteria(cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS, 50, 0.000001);
+    //Apply Nelder Mead Search to find the best parameters
+    cv::Ptr<cv::DownhillSolver> solver=cv::DownhillSolver::create();
+    cv::Ptr<NMSimplex> ptr_F = cv::makePtr<NMSimplex>();
     
-        if(!pupilwareController->hasStarted())
-        {
-            /* init pupilware stage */
-            pupilwareController->start();
-            
-            // TODO set init parameter for each iteration here.
-            pwAlgo->setThreshold([ths[j] floatValue]);
-            pwAlgo->setPrior([priors[j] floatValue]);
-            pwAlgo->setSigma([sigmas[j] floatValue]);
-            
-            for (int i=0; i<videoFrameBuffer.size(); ++i) {
-                pupilwareController->setFaceMeta(faceMetaBuffer[i]);
-                pupilwareController->processFrame(videoFrameBuffer[i], i);
-            }
-            
-            
-            auto rawPupilSizes = pupilwareController->getRawPupilSignal();
-            NSLog(@"[%d] Pupil Signal Size %lu", j, rawPupilSizes.size());
-            
-            auto std = cw::calStd(rawPupilSizes);
-            NSLog(@"STD is %f", std);
-            
-            // TODO Store list of std for testing ?
-            
-            /* clear stage and do processing */
-            pupilwareController->stop();
-        
-        }
+    ptr_F->setUp(pupilwareController, pwAlgo);
+    ptr_F->setBuffer(videoFrameBuffer, faceMetaBuffer);
     
-    }
+    cv::Mat x=(cv::Mat_<double>(1,3)<<10.0,15.0, 20.0),
+    step=(cv::Mat_<double>(3,1)<<5.0, 5.0, 5.0);
+    //etalon_x=(cv::Mat_<double>(1,2)<<-0.0,0.0);
+    //double etalon_res=0.0;
+    solver->setFunction(ptr_F);
+    solver->setInitStep(step);
+    solver->setTermCriteria(termcrit);
+    double res=solver->minimize(x);
     
-    // - return best parameter set.
-    // - write the setting to files.
+    NSLog(@"Dump x %f", x.at<double>(0, 0));
+    NSLog(@"Dump x %f", x.at<double>(0, 1));
+    NSLog(@"Dump x %f", x.at<double>(0, 2));
+    
+    
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    [defaults setInteger: x.at<double>(0,0) forKey:@"s_threshold"];
+//    [defaults setInteger: x.at<double>(0,1) forKey:@"s_markCost"];
+//    [defaults setInteger: x.at<double>(0,2) forKey:@"s_intensityThreshold"];
 
 }
 

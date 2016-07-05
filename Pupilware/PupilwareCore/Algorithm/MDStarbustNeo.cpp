@@ -415,6 +415,9 @@ namespace pw {
     
     void MDStarbustNeo::setThreshold( float value ){
         threshold = fmax(value, 0);
+        if (threshold > 1) {
+            threshold = 1;
+        }
     }
     
     void MDStarbustNeo::setRayNumber( int value ){

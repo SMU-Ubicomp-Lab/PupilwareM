@@ -410,7 +410,7 @@ const int kgWindow = 1;
     cv::Ptr<cv::DownhillSolver> solver=cv::DownhillSolver::create();
     cv::Ptr<NMSimplex> ptr_F = cv::makePtr<NMSimplex>();
     
-    ptr_F->setUp(processor);
+    //ptr_F->setUp(processor);
     
     cv::Mat x=(cv::Mat_<double>(1,3)<<10.0,15.0, 20.0),
     step=(cv::Mat_<double>(3,1)<<5.0, 5.0, 5.0);
