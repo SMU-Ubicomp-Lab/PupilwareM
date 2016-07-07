@@ -22,12 +22,6 @@ namespace pw{
     
     public:
         
-   
-        virtual void setFaceSegmentationAlgoirhtm( std::shared_ptr<IImageSegmenter> imgSegAlgo )=0;
-        virtual void setPupilSegmentationAlgorihtm( std::shared_ptr<IPupilAlgorithm> pwSeg )=0;
-        
-        virtual void setFaceMeta( const PWFaceMeta& faceMeta )=0;
-        
         
         /*!
          * Start Pupilware processing.
@@ -49,18 +43,34 @@ namespace pw{
                                    unsigned int frameNumber)=0;
         
         
+        /*
+         *
+         */
+        virtual void processSignal()=0;
+        
         /*!
          * Retrun true if the system has started.
          */
         virtual bool hasStarted() const =0;
         
-        
         virtual cv::Mat getGraphImage() const=0;
         
+        virtual void clearBuffer()=0;
+        
+        
+        /*!--------------------------------------------------------------------
+         * Setter Functions
+         */
+        virtual void setFaceSegmentationAlgoirhtm( std::shared_ptr<IImageSegmenter> imgSegAlgo )=0;
+        virtual void setPupilSegmentationAlgorihtm( std::shared_ptr<IPupilAlgorithm> pwSeg )=0;
+        
+        virtual void setFaceMeta( const PWFaceMeta& faceMeta )=0;
+        virtual void setSmoothWindowSize( int windowSize )=0;
         
         /*!--------------------------------------------------------------------
          * Getter Functions
          */
+        
         virtual int getCognitiveLoadLevel()const=0;
         virtual const cv::Mat& getDebugImage()const =0;
         virtual const std::vector<float>& getRawPupilSignal()const =0;

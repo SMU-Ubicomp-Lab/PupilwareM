@@ -87,10 +87,10 @@
 //////////////////////////////    UI View Events Handler    /////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    dlog(logDEBUG1) << "view loaded";
     
     [self initSystem];
     
@@ -192,6 +192,8 @@
     if(pupilwareController->hasStarted())
     {
         pupilwareController->stop();
+        pupilwareController->processSignal();
+        pupilwareController->clearBuffer();
         videoWriter.close();
         csvExporter.close();
     }

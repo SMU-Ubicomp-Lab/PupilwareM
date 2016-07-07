@@ -3,6 +3,7 @@
 //
 
 #include "SignalProcessingHelper.hpp"
+#include "../preHeader.hpp"
 
 #include <cassert>
 #include <numeric>
@@ -71,7 +72,7 @@ namespace cw {
     }
 
     void medfilt( std::vector<float>& input,
-                 std::vector<float>& output, int windowSize)
+                  std::vector<float>& output, int windowSize)
     {
         filterSignal(input, output, windowSize, median);
     }
@@ -146,7 +147,29 @@ namespace cw {
 
         assert(output.size() > 0);
     }
+    
+    
+    //////////////////////////////
 
+    
+    float calQuantilef( const std::vector<float>& data, int percent ){
+        
+        REQUIRES(data.size() >0, "Data array must not be zero");
+        REQUIRES(percent >= 0 && percent <= 100, "Percent must be between 0-100");
+        
+        std::vector<float> quantile;
+        quantile.assign(data.begin(), data.end());
+        
+        auto const Q1 = quantile.size() * (percent/100.0f);
+        
+        
+        std::nth_element(quantile.begin(), quantile.begin() + Q1, quantile.end());
+        
+        
+        return quantile[Q1];
+        
+    }
+    
     ////////////////////////////////
 
 

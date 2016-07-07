@@ -93,10 +93,31 @@
 //////////////////////////////    UI View Events Handler    /////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
+-(void)initLogging{
+    try
+    {
+        
+        NSString* logPath = [ObjCAdapter getOutputFilePath: @"calibration.log"];
+        
+        FILE* pFile = fopen([logPath UTF8String], "a");
+        if(pFile)
+        {
+            Output2FILE::Stream() = pFile;
+            FILELog::ReportingLevel() = logDEBUG4;
+        }
+    }
+    catch(const std::exception& e)
+    {
+        dlog(logERROR) << e.what();
+    }
+}
+
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
     
+    [super viewDidLoad];
+
+    [self initLogging];
     
     [self initSystem];
     
@@ -207,6 +228,7 @@
 {
     if(self.calibrating)
     {
+        
         self.calibrating = false;
         
         [self calibrate];
@@ -221,6 +243,8 @@
 
 - (void) initSystem
 {
+    dlog(logINFO) << "Init Calibration System";
+            
     [self initVideoManager];
     
     [self.model setNewCalibrationFiles];
@@ -234,6 +258,7 @@
 
 -(void)initPupilwareCtrl
 {
+    dlog(logINFO) << "Init Pupilware Controller";
     
     self.currentFrameNumber = 0;
     
@@ -364,11 +389,11 @@
     // !!! Buffering the entire frame consume a lot of memory
     // Well, for 10 secs, it uses about 180Mb. Not too bad actually.
     
-    /* It is just a platholder of running calibration for 3 iterations.
-     * It will be replaced with Optimizat algorithm
-     */
     
-    cv::TermCriteria  	termcrit = cv::TermCriteria(cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS, 50, 0.000001);
+    cv::TermCriteria termcrit = cv::TermCriteria( cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS,
+                                                  50,
+                                                  0.000001 );
+    
     //Apply Nelder Mead Search to find the best parameters
     cv::Ptr<cv::DownhillSolver> solver=cv::DownhillSolver::create();
     cv::Ptr<NMSimplex> ptr_F = cv::makePtr<NMSimplex>();
@@ -383,7 +408,7 @@
     solver->setFunction(ptr_F);
     solver->setInitStep(step);
     solver->setTermCriteria(termcrit);
-    double res=solver->minimize(x);
+    solver->minimize(x);
     
     NSLog(@"Dump x %f", x.at<double>(0, 0));
     NSLog(@"Dump x %f", x.at<double>(0, 1));

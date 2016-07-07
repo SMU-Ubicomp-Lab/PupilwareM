@@ -45,11 +45,12 @@ double NMSimplex::calc(const double* x) const {
         
         auto rawPupilSizes = processor->getRawPupilSignal();
         stdV = calStd(rawPupilSizes);
+        
 //        NSLog(@"[%d] Pupil Signal Size %lu", j, rawPupilSizes.size());
         
         /* clear stage and do processing */
         processor->stop();
-        
+        processor->clearBuffer();
     }
     return stdV;
 }

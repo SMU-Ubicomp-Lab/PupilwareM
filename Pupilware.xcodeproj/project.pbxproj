@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5C2E00F91D2D9C3E0099A306 /* mainex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C2E00F81D2D9C3E0099A306 /* mainex.cpp */; };
 		5C4B46161D21A77400455A77 /* PWFaceMeta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B46141D21A77400455A77 /* PWFaceMeta.cpp */; };
 		5C4B461C1D21AB9200455A77 /* MDStarbustNeo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B461A1D21AB9200455A77 /* MDStarbustNeo.cpp */; };
 		5C6ACBF01D271D8500691F7A /* PWCalibratingViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C6ACBEF1D271D8400691F7A /* PWCalibratingViewController.mm */; };
@@ -27,7 +28,7 @@
 		5CF4D5A41D186FB30050CBBA /* SimpleImageSegmenter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D5921D186FB30050CBBA /* SimpleImageSegmenter.cpp */; };
 		5CF4D5A51D186FB30050CBBA /* ISignalProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D5951D186FB30050CBBA /* ISignalProcessor.cpp */; };
 		5CF4D5A61D186FB30050CBBA /* SignalProcessingHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D5971D186FB30050CBBA /* SignalProcessingHelper.cpp */; };
-		5CF4D5A71D186FB30050CBBA /* SimpleSignalProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D5991D186FB30050CBBA /* SimpleSignalProcessor.cpp */; };
+		5CF4D5A71D186FB30050CBBA /* BasicSignalProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D5991D186FB30050CBBA /* BasicSignalProcessor.cpp */; };
 		5CF4D5BD1D1870020050CBBA /* CVWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D5A91D1870020050CBBA /* CVWindow.cpp */; };
 		5CF4D5BE1D1870020050CBBA /* CWCVHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D5AB1D1870020050CBBA /* CWCVHelper.cpp */; };
 		5CF4D5BF1D1870020050CBBA /* CWUIHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D5AD1D1870020050CBBA /* CWUIHelper.cpp */; };
@@ -84,6 +85,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5C2E00F61D2D9C3E0099A306 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
+		5C2E00F81D2D9C3E0099A306 /* mainex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mainex.cpp; sourceTree = "<group>"; };
 		5C4B46141D21A77400455A77 /* PWFaceMeta.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWFaceMeta.cpp; sourceTree = "<group>"; };
 		5C4B46151D21A77400455A77 /* PWFaceMeta.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWFaceMeta.hpp; sourceTree = "<group>"; };
 		5C4B461A1D21AB9200455A77 /* MDStarbustNeo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MDStarbustNeo.cpp; sourceTree = "<group>"; };
@@ -127,8 +130,8 @@
 		5CF4D5961D186FB30050CBBA /* ISignalProcessor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ISignalProcessor.hpp; sourceTree = "<group>"; };
 		5CF4D5971D186FB30050CBBA /* SignalProcessingHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SignalProcessingHelper.cpp; sourceTree = "<group>"; };
 		5CF4D5981D186FB30050CBBA /* SignalProcessingHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SignalProcessingHelper.hpp; sourceTree = "<group>"; };
-		5CF4D5991D186FB30050CBBA /* SimpleSignalProcessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleSignalProcessor.cpp; sourceTree = "<group>"; };
-		5CF4D59A1D186FB30050CBBA /* SimpleSignalProcessor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SimpleSignalProcessor.hpp; sourceTree = "<group>"; };
+		5CF4D5991D186FB30050CBBA /* BasicSignalProcessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BasicSignalProcessor.cpp; sourceTree = "<group>"; };
+		5CF4D59A1D186FB30050CBBA /* BasicSignalProcessor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BasicSignalProcessor.hpp; sourceTree = "<group>"; };
 		5CF4D5A91D1870020050CBBA /* CVWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CVWindow.cpp; sourceTree = "<group>"; };
 		5CF4D5AA1D1870020050CBBA /* CVWindow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CVWindow.hpp; sourceTree = "<group>"; };
 		5CF4D5AB1D1870020050CBBA /* CWCVHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CWCVHelper.cpp; sourceTree = "<group>"; };
@@ -232,6 +235,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5C2E00F51D2D9C3E0099A306 /* logcpp */ = {
+			isa = PBXGroup;
+			children = (
+				5C2E00F61D2D9C3E0099A306 /* log.h */,
+				5C2E00F81D2D9C3E0099A306 /* mainex.cpp */,
+			);
+			path = logcpp;
+			sourceTree = "<group>";
+		};
 		5C9EA4AA1D1EE45B003BE62C /* Resource */ = {
 			isa = PBXGroup;
 			children = (
@@ -290,6 +302,7 @@
 		5CF4D58D1D186FB30050CBBA /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				5C2E00F51D2D9C3E0099A306 /* logcpp */,
 				5CF4D58E1D186FB30050CBBA /* ThrowAssert.hpp */,
 				5C801D071D282C0B0008A378 /* Property.hpp */,
 			);
@@ -314,8 +327,8 @@
 				5CF4D5961D186FB30050CBBA /* ISignalProcessor.hpp */,
 				5CF4D5971D186FB30050CBBA /* SignalProcessingHelper.cpp */,
 				5CF4D5981D186FB30050CBBA /* SignalProcessingHelper.hpp */,
-				5CF4D5991D186FB30050CBBA /* SimpleSignalProcessor.cpp */,
-				5CF4D59A1D186FB30050CBBA /* SimpleSignalProcessor.hpp */,
+				5CF4D5991D186FB30050CBBA /* BasicSignalProcessor.cpp */,
+				5CF4D59A1D186FB30050CBBA /* BasicSignalProcessor.hpp */,
 			);
 			path = SignalProcessing;
 			sourceTree = "<group>";
@@ -538,7 +551,7 @@
 				TargetAttributes = {
 					97A321421C59CDB300B1EB98 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = ME4966827L;
+						DevelopmentTeam = 8N25HJ2H24;
 					};
 				};
 			};
@@ -604,7 +617,7 @@
 				5CF4D59D1D186FB30050CBBA /* IPupilAlgorithm.cpp in Sources */,
 				97E94F501C5CAD8500D652CB /* BEMLine.m in Sources */,
 				97E94F521C5CAD8500D652CB /* BEMSimpleLineGraphView.m in Sources */,
-				5CF4D5A71D186FB30050CBBA /* SimpleSignalProcessor.cpp in Sources */,
+				5CF4D5A71D186FB30050CBBA /* BasicSignalProcessor.cpp in Sources */,
 				5CF4D5C41D1870020050CBBA /* PWGraph.cpp in Sources */,
 				5C4B46161D21A77400455A77 /* PWFaceMeta.cpp in Sources */,
 				97E94F4F1C5CAD8500D652CB /* BEMCircle.m in Sources */,
@@ -632,6 +645,7 @@
 				97D487291C933F0A00774958 /* settingsVC.swift in Sources */,
 				5CF4D5BF1D1870020050CBBA /* CWUIHelper.cpp in Sources */,
 				5CF4D5BE1D1870020050CBBA /* CWCVHelper.cpp in Sources */,
+				5C2E00F91D2D9C3E0099A306 /* mainex.cpp in Sources */,
 				5CF4D5C31D1870020050CBBA /* Snakuscules.cpp in Sources */,
 				AE7728231D08BDD40096CCBD /* NMSimplex.cpp in Sources */,
 				5CF4D5BD1D1870020050CBBA /* CVWindow.cpp in Sources */,

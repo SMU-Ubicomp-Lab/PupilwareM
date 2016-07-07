@@ -17,10 +17,10 @@ namespace pw{
 
     public:
 
-        void process(std::vector<float> &leftEyeRadius,
-                     std::vector<float> &rightEyeRadius,
-                     std::vector<float> &eyeDistance,
-                     std::vector<float> &result);
+        void process(const std::vector<float> &leftEyeRadius,
+                     const std::vector<float> &rightEyeRadius,
+                     const std::vector<float> &eyeDistance,
+                     std::vector<float> &result) override;
 
 
     private:

@@ -13,6 +13,7 @@
 #include "Algorithm/PWDataModel.hpp"
 #include "ImageProcessing/IImageSegmenter.hpp"
 #include "Algorithm/IPupilAlgorithm.hpp"
+#include "SignalProcessing/BasicSignalProcessor.hpp"
 
 #include "Helpers/CWCVHelper.hpp"
 #include "Helpers/PWGraph.hpp"
@@ -25,21 +26,13 @@ namespace pw{
         
     public:
         PupilwareControllerImpl():
+        currentFrameNumber(0),
         isStarted(false),
-        currentFrameNumber(0){}
+        smoothWindowSize(31)
+        {}
         
         virtual ~PupilwareControllerImpl(){}
         
-        virtual void setFaceSegmentationAlgoirhtm( std::shared_ptr<IImageSegmenter> imgSegAlgo ) override;
-        virtual void setPupilSegmentationAlgorihtm( std::shared_ptr<IPupilAlgorithm> pwSegAlgo ) override;
-        
-        
-        /*
-         * Users need to call this function if they do not provide a face segmenter algorithm.
-         * If they've already had a segmenter algorithm, it will be replaced with data in this function.
-         */
-        virtual void setFaceMeta( const PWFaceMeta& faceMeta ) override;
-    
         
         /*!
          * Start Pupilware processing.
@@ -64,7 +57,38 @@ namespace pw{
         virtual void processFrame( const cv::Mat& srcFrame,
                                    unsigned int frameNumber ) override;
         
-        virtual cv::Mat getGraphImage() const override;
+    
+        /*!
+         * Clear all buffers including current frame number.
+         */
+        virtual void clearBuffer() override;
+        
+        
+        /*!
+         * Smooth and Normalize raw signal
+         */
+        virtual void processSignal() override;
+        
+        
+        /*!
+         * Setter Functions
+         */
+        
+        virtual void setFaceSegmentationAlgoirhtm( std::shared_ptr<IImageSegmenter> imgSegAlgo ) override;
+        virtual void setPupilSegmentationAlgorihtm( std::shared_ptr<IPupilAlgorithm> pwSegAlgo ) override;
+        
+        
+        /*!
+         * Users need to call this function if they do not provide a face segmenter algorithm.
+         * If they've already had a segmenter algorithm, it will be replaced with data in this function.
+         */
+        virtual void setFaceMeta( const PWFaceMeta& faceMeta ) override;
+        
+        
+        /*!
+         * Window size must be > 0 and odd number.
+         */
+        virtual void setSmoothWindowSize( int windowSize ) override;
         
         
         /*!
@@ -74,29 +98,33 @@ namespace pw{
         virtual const cv::Mat& getDebugImage() const override;
         virtual const std::vector<float>& getRawPupilSignal() const override;
         virtual const std::vector<float>& getSmoothPupilSignal() const override;
+        virtual cv::Mat getGraphImage() const override;
+        
         
         
         /*! --------------------------------------------------------------------------------
          * Member Variables
          */
         
-        
         unsigned int currentFrameNumber;                // Store current frame number
 
         
         PWDataModel         storage;                    // Store left and right pupil size signals
+        std::vector<float>  smoothPupilSize;
         std::vector<float>  eyeDistancePx;              // Store eye distance signal
         
         std::shared_ptr<IImageSegmenter> imgSegAlgo;    // This algorithm is not required if
                                                         // providing manally providing a face meta
         
         std::shared_ptr<IPupilAlgorithm> pwSegAlgo;     // This pupil segmentation is required.
-
+        
         cv::Mat             debugImg;                   // Use for debuging
         
         PWFaceMeta          faceMeta;
         
         bool                isStarted;                  // Use for controlling stages
+        
+        int                 smoothWindowSize;           // Use for smooth the pupil signal.
         
     };
     
@@ -138,15 +166,22 @@ namespace pw{
     }
     
     
+    void PupilwareControllerImpl::setSmoothWindowSize(int windowSize){
+        
+        REQUIRES(windowSize > 0, "WindowSize must be more than zero");
+        REQUIRES(windowSize%2 == 0 , "WindowSize must be odd number");
+        
+        smoothWindowSize = windowSize;
+        
+    }
+    
     void PupilwareControllerImpl::start() {
         
         REQUIRES(pwSegAlgo != nullptr, "PupilSegmentor must be not null.");
         
         if(isStarted) return;
         isStarted = true;
-        
-        // Init and clearn up
-        currentFrameNumber = 0;
+    
         
         // Init algorithms
         pwSegAlgo->init();
@@ -159,23 +194,37 @@ namespace pw{
         
         if(!isStarted) return;
         
-        
         // Clean up
         pwSegAlgo->exit();
         
-        currentFrameNumber = 0;
-        debugImg = cv::Mat();
-        
         isStarted = false;
         
+        // Not process signel in here, becasue calibration does not need it.
+        // I don't want to add overhade to calibaration process.
+        
+    }
+    
+    void PupilwareControllerImpl::processSignal(){
+        BasicSignalProcessor sp;
+        
+        
+        sp.process(storage.getLeftPupilSizes(),
+                   storage.getRightPupilSizes(),
+                   eyeDistancePx,
+                   smoothPupilSize);
+        
+        
+    }
+    
+    void PupilwareControllerImpl::clearBuffer(){
+        
+        currentFrameNumber = 0;
+        
+        debugImg = cv::Mat();
+    
         storage.clear();
         eyeDistancePx.clear();
-        
-        // stop the machine
-        // process signal
-        // classify cognitive load
-        // store cognitive load result
-        
+        smoothPupilSize.clear();
     }
     
     
@@ -285,6 +334,10 @@ namespace pw{
         eyeDistancePx.push_back( eyeDist );
         
         
+        //TODO JUST FOR TESTING, REMOVE IT!.
+        processSignal();
+        
+        
         
         // DEBUG -----------------------------------------------------------------------------
         debugImg = srcBGR.clone();
@@ -345,6 +398,9 @@ namespace pw{
     }
     
     cv::Mat PupilwareControllerImpl::getGraphImage() const{
+        
+        //TODO Dont forget to specify max value.
+        
         PWGraph graph("PupilSignal");
         graph.drawGraph("left eye red, right eye blue",
                         storage.getLeftPupilSizes(),        // Data
@@ -357,6 +413,14 @@ namespace pw{
         graph.drawGraph(" ",
                         storage.getRightPupilSizes(),        // Data
                         cv::Scalar(0,100,255),               // Line color
+                        0,                                  // Min value
+                        0,                                  // Max value
+                        debugImg.cols,                      // Width
+                        100);                               // Height
+        
+        graph.drawGraph(" ",
+                        smoothPupilSize,        // Data
+                        cv::Scalar(0,255,100),               // Line color
                         0,                                  // Min value
                         0,                                  // Max value
                         debugImg.cols,                      // Width

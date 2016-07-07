@@ -8,6 +8,8 @@
 #include <cassert>
 #include "Core/ThrowAssert.hpp"
 #include "Core/Property.hpp"
+#include "Core/logcpp/log.h"
+
 
 #define REQUIRES throw_assert
 #define PROMISES throw_assert

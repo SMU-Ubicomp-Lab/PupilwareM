@@ -35,7 +35,12 @@ namespace cw{
                             int windowSize,
                             filterFunc filtFunc);
 
+    //-----------------------------------------------------------
+    
+    float calQuantilef( const std::vector<float>& data, int percent );
 
+    
+    //-----------------------------------------------------------
     // This class is modified from Weegreenblobie benchmark test
     // https://github.com/weegreenblobbie/median_filter_benchmark
     class FastMedianFilter
@@ -57,7 +62,6 @@ namespace cw{
                             std::vector<float> &output,
                             int windowSize);
 }
-
 
 
 #endif //PUPILWARE_SIGNALPROCESSINGHELPER_HPP
