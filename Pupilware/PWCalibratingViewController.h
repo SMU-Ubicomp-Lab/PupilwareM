@@ -1,5 +1,5 @@
 //
-//  PWViewController2.h
+//  PWCalibratingViewController.h
 //  Pupilware
 //
 //  Created by Chatchai Wangwiwattana on 6/24/16.
@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "MyCvVideoCamera.h"
-#import "PWParameter.h"
 
 @interface PWCalibratingViewController : UIViewController
 

@@ -75,7 +75,7 @@ namespace pw
 				continue; // reject degenerate case;
 			}
 
-			int inliers=0;
+			
 			for(int k=0; k<N; ++k) 
 			{
 				float dist = distance_sq(&P[k], temp_circle.GetCenter());
@@ -103,7 +103,7 @@ namespace pw
 			{
 				out_inliner.clear();
 				out_inliner.assign(Q.begin(), Q.end());
-				max_inliner = Q.size();
+				max_inliner = static_cast<int>(Q.size());
 				bestModel = temp_circle;
 			}
 

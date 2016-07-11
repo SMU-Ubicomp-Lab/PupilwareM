@@ -335,7 +335,7 @@ namespace pw{
         
         
         //TODO JUST FOR TESTING, REMOVE IT!.
-        processSignal();
+//        processSignal();
         
         
         

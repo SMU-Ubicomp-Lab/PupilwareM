@@ -1,5 +1,5 @@
 //
-//  PWViewController2.h
+//  PWViewController.h
 //  Pupilware
 //
 //  Created by Chatchai Wangwiwattana on 6/24/16.
@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PWParameter.h"
+
 
 @interface PWViewController : UIViewController
 

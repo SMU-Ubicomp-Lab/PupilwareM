@@ -220,7 +220,7 @@ float calStableness(std::vector<float> &v)
     sub = calSubstract(z, trend);
     
     float mad = calMad(sub);
-    float med = median(sub);
+//    float med = median(sub);
     
     return mad;
 }

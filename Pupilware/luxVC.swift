@@ -19,7 +19,7 @@ class luxVC: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.luxLabel.text = String(format: "%.2f", UIScreen.mainScreen().brightness)
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: "updateLux", userInfo: nil, repeats: true)
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(luxVC.updateLux), userInfo: nil, repeats: true)
     }
     
     func updateLux(){

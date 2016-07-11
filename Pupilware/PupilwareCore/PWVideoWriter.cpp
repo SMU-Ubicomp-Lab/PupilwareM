@@ -3,7 +3,7 @@
 //  Pupilware
 //
 //  Created by Chatchai Wangwiwattana on 6/29/16.
-//  Copyright © 2016 SMUUbicomp Lab All rights reserved.
+//  Copyright © 2016 SMU Ubicomp Lab All rights reserved.
 //
 
 #include "PWVideoWriter.hpp"

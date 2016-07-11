@@ -141,7 +141,7 @@ namespace pw{
                 e[4]=_calSnakeEnergy(srcGray, cPoint, radius - 1, _calInnerRadius(radius-1, alpha));
                 e[5]=_calSnakeEnergy(srcGray, cPoint, radius + 1, _calInnerRadius(radius+1, alpha));
 
-                int maxIndex = std::max_element(e.begin(), e.end()) - e.begin();
+                int maxIndex = static_cast<int>(std::max_element(e.begin(), e.end()) - e.begin());
                 switch(maxIndex){
                     case 0:
                         cPoint.x -= 1; //cout << i << " : <== " << std::endl;

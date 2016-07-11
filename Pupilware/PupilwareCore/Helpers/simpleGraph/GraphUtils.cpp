@@ -138,7 +138,7 @@ IplImage* drawFloatGraph(const float *arraySrc, int nArrayLength, IplImage *imag
 		cvPutText(imageGraph, text, cvPoint(1, b+4), &font, clr);
 		// Write the scale of the x axis
 		sprintf(text, "%d", (nArrayLength - 1));
-		cvPutText(imageGraph, text, cvPoint(w-b+4-5*strlen(text), (h/2)+10), &font, clr);
+		cvPutText(imageGraph, text, cvPoint(w-b+4-5* static_cast<int>(strlen(text)), (h/2)+10), &font, clr);
 	}
 
 	// Draw the values
@@ -227,7 +227,7 @@ IplImage* drawIntGraph(const int *arraySrc, int nArrayLength, IplImage *imageDst
 		cvPutText(imageGraph, text, cvPoint(1, b+4), &font, clr);
 		// Write the scale of the x axis
 //		sprintf_s(text, sizeof(text)-1, "%d", (nArrayLength-1) );
-		cvPutText(imageGraph, text, cvPoint(w-b+4-5*strlen(text), (h/2)+10), &font, clr);
+		cvPutText(imageGraph, text, cvPoint(w-b+4-5*static_cast<int>(strlen(text)), (h/2)+10), &font, clr);
 	}
 
 	// Draw the values
@@ -317,7 +317,7 @@ IplImage* drawUCharGraph(const uchar *arraySrc, int nArrayLength, IplImage *imag
 		cvPutText(imageGraph, text, cvPoint(1, b+4), &font, clr);
 		// Write the scale of the x axis
 		sprintf(text, "%d", (nArrayLength - 1));
-		cvPutText(imageGraph, text, cvPoint(w-b+4-5*strlen(text), (h/2)+10), &font, clr);
+		cvPutText(imageGraph, text, cvPoint(w-b+4-5*static_cast<int>(strlen(text)), (h/2)+10), &font, clr);
 	}
 
 	// Draw the values

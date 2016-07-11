@@ -320,7 +320,7 @@
         
         /*
          * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
-         */;
+         */
         auto cameraImage = [ObjCAdapter Mat2CGImage:cvFrame withContext:weakSelf.videoManager.ciContext];
         auto faceMeta = [self.faceRecognizer recognize:cameraImage];
         faceMeta.setFrameNumber( (int) self.currentFrameNumber);
@@ -386,63 +386,6 @@
      
     }];
 
-}
-
-
-/* 
- * This function will be called in sided Video Manager callback.
- * It's used for process a camera image with Pupilware system.
- */
--(cv::Mat)_processCameraImage:(cv::Mat)cvFrame
-                   frameNumber:(NSUInteger)frameNumber
-                       context:(CIContext*)context
-{
-  
-    if (!pupilwareController->hasStarted()) {
-        return cvFrame;
-    }
-    
-    
-    videoWriter << cvFrame;
-    
-    /* 
-     * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
-     */;
-    auto cameraImage = [ObjCAdapter Mat2CGImage:cvFrame withContext:context];
-    auto faceMeta = [self.faceRecognizer recognize:cameraImage];
-    faceMeta.setFrameNumber( (int) self.currentFrameNumber);
-    
-    pupilwareController->setFaceMeta(faceMeta);
-
-    if(faceMeta.hasFace())
-    {
-        self.model.faceInView = true;
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [self.model.bridgeDelegate faceInView];
-                       });
-    }
-    else{
-        self.model.faceInView = false;
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [self.model.bridgeDelegate faceNotInView];
-                       });
-    }
-    
-    csvExporter << faceMeta;
-    
-    /* Process the rest of the work (e.g. pupil segmentation..) */
-    pupilwareController->processFrame(cvFrame, (int)frameNumber );
-    
-    
-    cv::Mat debugImg = [self _getDebugImage];
-    
-    if(debugImg.empty()){
-        debugImg = cvFrame;
-    }
-    
-    return debugImg;
 }
 
 

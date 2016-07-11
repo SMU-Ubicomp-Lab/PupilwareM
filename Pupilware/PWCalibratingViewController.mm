@@ -1,5 +1,5 @@
 //
-//  PWCalibratingViewController
+//  PWCalibratingViewController.mm
 //  Pupilware
 //
 //  Created by Chatchai Wangwiwattana on 6/24/16.
@@ -10,7 +10,7 @@
 #import <opencv2/videoio/cap_ios.h>
 
 #import "MyCvVideoCamera.h"
-#import "VideoAnalgesic.h"
+#import "PWIOSVideoReader.h"
 #import "Libraries/ObjCAdapter.h"
 
 #import "Pupilware-Swift.h"
@@ -41,7 +41,7 @@
 @interface PWCalibratingViewController ()
 
 
-@property (strong, nonatomic) VideoAnalgesic *videoManager;         /* Manage iOS Video input      */
+@property (strong, nonatomic) PWIOSVideoReader *videoManager;         /* Manage iOS Video input      */
 @property (strong, nonatomic) IOSFaceRecognizer *faceRecognizer;    /* recognize face from ICImage */
 @property (strong,nonatomic) DataModel *model;                      /* Connect with Swift UI       */
 
@@ -70,11 +70,9 @@
 /////////////////////////////////////    Instantiation    //////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
--(VideoAnalgesic*)videoManager{
+-(PWIOSVideoReader*)videoManager{
     if(!_videoManager){
-        _videoManager = [VideoAnalgesic captureManager];
-        _videoManager.preset = AVCaptureSessionPresetMedium;
-        [_videoManager setCameraPosition:AVCaptureDevicePositionFront];
+        _videoManager = [[PWIOSVideoReader alloc] init];
 
     }
     return _videoManager;
@@ -321,66 +319,30 @@
     __weak typeof(self) weakSelf = self;
     
     
-    [self.videoManager setProcessBlock:^(CIImage *cameraImage){
+    [self.videoManager setProcessBlock:^(cv::Mat cvFrame){
+
+        if (!weakSelf.calibrating) {
+            return cvFrame;
+        }
         
+        /*
+         * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
+         */
+        auto cameraImage = [ObjCAdapter Mat2CGImage:cvFrame withContext:weakSelf.videoManager.ciContext];
+        auto faceMeta = [weakSelf.faceRecognizer recognize:cameraImage];
+        faceMeta.setFrameNumber( (int) weakSelf.currentFrameNumber);
         
-        auto returnImage = [weakSelf _segmentFaceAndBuffering:cameraImage
-                                                  frameNumber:weakSelf.currentFrameNumber
-                                                      context:weakSelf.videoManager.ciContext];
+        videoFrameBuffer.push_back(cvFrame);
+        faceMetaBuffer.push_back( faceMeta );
         
         weakSelf.currentFrameNumber += 1;
         
-        return returnImage;
-     
+        return cvFrame;
+        
     }];
+    
 
 }
-
-
-/* 
- * This function will be called in sided Video Manager callback.
- * It's used for process a camera image with Pupilware system.
- */
--(CIImage*)_segmentFaceAndBuffering:(CIImage*)cameraImage
-                   frameNumber:(NSUInteger)frameNumber
-                       context:(CIContext*)context
-{
-  
-    if (!self.calibrating) {
-        return cameraImage;
-    }
-    
-    /* The source image is in sideway (<-), so It need to be rotated back up. */
-    CGAffineTransform transform = CGAffineTransformMakeRotation(-M_PI_2);
-    transform = CGAffineTransformTranslate(transform,-480,0);
-    cameraImage = [cameraImage imageByApplyingTransform:transform];
-    
-    
-    cv::Mat cvFrame = [ObjCAdapter IGImage2Mat:cameraImage
-                                   withContext:context];
-
-    
-    
-    /* 
-     * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
-     */
-    auto faceMeta = [self.faceRecognizer recognize:cameraImage];
-    faceMeta.setFrameNumber( (int) self.currentFrameNumber);
-    
-
-    videoFrameBuffer.push_back(cvFrame);
-    faceMetaBuffer.push_back( faceMeta );
-    
-    cv::rectangle(cvFrame, faceMeta.getFaceRect(), cv::Scalar(255,0,100));
-    [ObjCAdapter Rotate90:cvFrame withFlag:2];
-    
-    CIImage* returnImage = [ObjCAdapter Mat2CGImage:cvFrame
-                                        withContext:context];
-    
-    return returnImage;
-}
-
-
 
 
 

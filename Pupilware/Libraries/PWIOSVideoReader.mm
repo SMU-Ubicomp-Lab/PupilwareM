@@ -13,9 +13,9 @@
 
 @interface PWIOSVideoReader()
 
-@property (strong, nonatomic) VideoAnalgesic *videoManager;         /* Manage iOS Video input      */
-@property BOOL b_opened;
-@property BOOL b_readFromFile;
+@property (strong, nonatomic) VideoAnalgesic *videoManager;         /* Manage iOS Video input */
+@property BOOL b_opened;                                            /* Is the file successful loaded*/
+@property BOOL b_readFromFile;                                      /* Is it in offline mode */
 
 @end
 
@@ -47,13 +47,11 @@
     return self;
 }
 
+
 -(BOOL)open:(NSString*)filename{
     
-    // You read video from file.
     if(filename == nil){
-        
         self.b_opened = YES;
-        
     }
     else{
         
@@ -66,9 +64,11 @@
     return self.b_opened;
 }
 
+
 -(BOOL)isOpened{
     return self.b_opened;
 }
+
 
 -(void)setProcessBlock:(CVProcessBlock) pBlock{
     
@@ -137,20 +137,24 @@
     
 }
 
+
 -(BOOL)isRunning{
     
     return [self.videoManager isRunning];
 }
+
 
 -(void)start{
 
     [self.videoManager start];
 }
 
+
 -(void)stop{
     
     [self.videoManager stop];
 }
+
 
 -(void)dealloc{
     

@@ -99,18 +99,21 @@ namespace pw{
         if (grayEyeROI.channels() > 1)
             return Point2f();
 
-
         Mat blur;
         cv::GaussianBlur(grayEyeROI, blur,Size(3,3), 3);
 
-        int th = cw::calDynamicThreshold( blur, 0.006 );
+        
+/*-------- Center of Mass technique -------------*/
+//        int th = cw::calDynamicThreshold( blur, 0.006 );
+//
+//        Mat binary;
+//        cv::threshold(grayEyeROI, binary, th, 255, CV_THRESH_BINARY_INV);
+//
+//        cv::Point p = cw::calCenterOfMass(binary);
+//        return p;
+/*----------------------------------------------*/
 
-        Mat binary;
-        cv::threshold(grayEyeROI, binary, th, 255, CV_THRESH_BINARY_INV);
-
-        cv::Point p = cw::calCenterOfMass(binary);
-
-//        cv::Point cPoint = p;
+/*---------- Snakuscules technique -------------*/
         cv::Point cPoint = Point(grayEyeROI.cols/2, grayEyeROI.rows/2);
 
         auto sn = Snakuscules::Create();
@@ -119,7 +122,9 @@ namespace pw{
         cPoint = sn->getFitCenter();
 
         return cPoint;
-//        return p;
+/*----------------------------------------------*/
+        
+
     }
 
 

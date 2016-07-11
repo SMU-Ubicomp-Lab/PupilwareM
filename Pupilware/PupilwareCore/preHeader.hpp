@@ -1,5 +1,6 @@
 //
 // Created by Chatchai Wangwiwattana on 6/15/16.
+//  Copyright © 2016 SMU Ubicomp Lab All rights reserved.
 //
 
 #ifndef PUPILWARE_PREHEADER_HPP
