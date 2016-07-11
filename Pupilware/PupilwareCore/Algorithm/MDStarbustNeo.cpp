@@ -86,8 +86,8 @@ namespace pw {
 //    vector<float> votings;
 
     float MDStarbustNeo::findPupilSize(const Mat &colorEyeFrame,
-                                    cv::Point eyeCenter,
-                                    Mat &debugImg) const {
+                                       cv::Point eyeCenter,
+                                       Mat &debugImg) const {
 
         vector<Mat> rgbChannels(3);
         split(colorEyeFrame, rgbChannels);
@@ -99,31 +99,32 @@ namespace pw {
         Mat blur;
         cv::GaussianBlur(grayEye, blur,Size(3,3), 3);
         
+/*------- Center of Mass Method -------*/
 //        int th = cw::calDynamicThreshold( blur, 0.014 );
-        
 //        Mat binary;
 //        cv::threshold(grayEye, binary, th, 255, CV_THRESH_BINARY_INV);
-        
 //        cv::Point p = cw::calCenterOfMass(binary);
-        
-
-        cv::Point cPoint = Point(grayEye.cols/2, grayEye.rows/2);
-        
-        auto sn = Snakuscules::Create();
-    
-        sn->fit(blur,      // src image
-                cPoint,    // initial seed point
-                50,        // radius
-                2.0,       // alpha
-                20         // max iteration
-                );
-        
-        cPoint = sn->getFitCenter();
-        
-        
 //        eyeCenter = p;
-        eyeCenter = cPoint;
+/*-------------------------------------*/
+
         
+/*-------- Snakucules Method ----------*/
+        cv::Point cPoint = eyeCenter;
+        auto sn = Snakuscules::Create();
+        sn->fit(blur,               // src image
+                cPoint,             // initial seed point
+                grayEye.cols*0.2,   // radius
+                2.0,                // alpha
+                20                  // max iteration
+                );
+        cPoint = sn->getFitCenter();
+        eyeCenter = cPoint;
+        int innterRadius = sn->getInnerRadius();
+        circle( debugImg,
+                eyeCenter,
+                innterRadius,
+                Scalar(200,200,0) );
+/*-------------------------------------*/
 
         vector<Point2f>rays;
         createRays(rays);

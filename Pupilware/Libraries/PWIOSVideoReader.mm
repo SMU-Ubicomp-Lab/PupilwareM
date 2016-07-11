@@ -28,7 +28,7 @@
 -(VideoAnalgesic*)videoManager{
     if(!_videoManager){
         _videoManager = [VideoAnalgesic captureManager];
-        _videoManager.preset = AVCaptureSessionPresetHigh;
+        _videoManager.preset = AVCaptureSessionPreset1280x720;
         [_videoManager setCameraPosition:AVCaptureDevicePositionFront];
         
     }

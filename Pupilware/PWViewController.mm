@@ -219,8 +219,8 @@
     NSString* videoPath = [ObjCAdapter getOutputFilePath: fileName];
     
     // TODO: change it to iPhone6s Frame Size.
-    cv::Size frameSize (360,480);
-//    cv::Size frameSize (1280,720);
+//    cv::Size frameSize (360,480);
+    cv::Size frameSize (720,1280);
     if(!videoWriter.open([videoPath UTF8String], 30, frameSize))
     {
         NSLog(@"Video Writer is not opened correctedly.");
