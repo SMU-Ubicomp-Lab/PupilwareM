@@ -53,4 +53,5 @@ float calStableness(std::vector<float> &v);
 std::vector<float> calSubstract(std::vector<float> &v1, std::vector<float> &v2);
 std::vector<float> threadholdVector(std::vector<float>& v, float threadhold);
 
+
 #endif

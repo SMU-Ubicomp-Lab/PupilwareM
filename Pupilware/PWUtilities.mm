@@ -220,7 +220,7 @@ float calStableness(std::vector<float> &v)
     sub = calSubstract(z, trend);
     
     float mad = calMad(sub);
-    float med = median(sub);
+//    float med = median(sub);
     
     return mad;
 }
@@ -296,3 +296,6 @@ void trimMeanFilt(std::vector<float>& input, std::vector<float>& output, int win
 {
     filterSignal(input, output, windowSize, trimMean);
 }
+
+
+

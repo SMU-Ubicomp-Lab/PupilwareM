@@ -85,22 +85,22 @@ static CGColorSpaceRef sDeviceRgbColorSpace = NULL;
     
     return ciOrientation;
 
-    // OVERRIDEING THE DEVICE ORIENTATION
-    if(interfaceOrientation == UIInterfaceOrientationPortrait){
-        ciOrientation = @5;
-    }
-    else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown){
-        ciOrientation = @7;
-    }
-    else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft){
-        ciOrientation = @1;
-    }
-    else if(interfaceOrientation == UIInterfaceOrientationLandscapeRight){
-        ciOrientation = @3;
-    }
-    else{
-        //unknown orientation!
-    }
+//    // OVERRIDEING THE DEVICE ORIENTATION
+//    if(interfaceOrientation == UIInterfaceOrientationPortrait){
+//        ciOrientation = @5;
+//    }
+//    else if(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown){
+//        ciOrientation = @7;
+//    }
+//    else if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft){
+//        ciOrientation = @1;
+//    }
+//    else if(interfaceOrientation == UIInterfaceOrientationLandscapeRight){
+//        ciOrientation = @3;
+//    }
+//    else{
+//        //unknown orientation!
+//    }
     
     return ciOrientation;
 }
@@ -302,9 +302,9 @@ static CGColorSpaceRef sDeviceRgbColorSpace = NULL;
     
     CGRect sourceExtent = filteredImage.extent;
     
-    CGFloat sourceAspect = sourceExtent.size.width / sourceExtent.size.height;
+//    CGFloat sourceAspect = sourceExtent.size.width / sourceExtent.size.height;
     //sourceAspect = sourceExtent.size.height / sourceExtent.size.width;
-    CGFloat previewAspect = _videoPreviewViewBounds.size.width  / _videoPreviewViewBounds.size.height;
+//    CGFloat previewAspect = _videoPreviewViewBounds.size.width  / _videoPreviewViewBounds.size.height;
     
     // we want to maintain the aspect ratio of the screen size, so we clip the video image
     CGRect drawRect = sourceExtent;

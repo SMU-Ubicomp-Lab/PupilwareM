@@ -503,4 +503,7 @@ class DigitTest: Test{
     func finishCalibration()
     func faceInView()
     func faceNotInView()
+    
+    
+    optional func isTestingFinished() -> Bool
 }
