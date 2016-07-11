@@ -458,15 +458,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		97E94F6A1C5CB0DC00D652CB /* Pupilibs */ = {
-			isa = PBXGroup;
-			children = (
-				97E94F721C5CB10C00D652CB /* PWUtilities.h */,
-				97E94F731C5CB10C00D652CB /* PWUtilities.mm */,
-			);
-			name = Pupilibs;
-			sourceTree = "<group>";
-		};
 		97E965AC1C5D6CB400D652CB /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -477,21 +468,14 @@
 				5CCDBBA71D2046B3006C0B63 /* ObjCAdapter.mm */,
 				5C90AB1A1D34057D00FF7C5F /* PWIOSVideoReader.h */,
 				5C90AB1B1D34057D00FF7C5F /* PWIOSVideoReader.mm */,
-				97E965AD1C5D6CCE00D652CB /* CPP */,
-				97E94F461C5CAD6600D652CB /* BEMLine */,
-				97E94F6A1C5CB0DC00D652CB /* Pupilibs */,
-			);
-			name = Libraries;
-			sourceTree = "<group>";
-		};
-		97E965AD1C5D6CCE00D652CB /* CPP */ = {
-			isa = PBXGroup;
-			children = (
 				97E94F7F1C5CB1F800D652CB /* constants.h */,
 				AE7728211D08BDD40096CCBD /* NMSimplex.cpp */,
 				AE7728221D08BDD40096CCBD /* NMSimplex.h */,
+				97E94F721C5CB10C00D652CB /* PWUtilities.h */,
+				97E94F731C5CB10C00D652CB /* PWUtilities.mm */,
+				97E94F461C5CAD6600D652CB /* BEMLine */,
 			);
-			name = CPP;
+			name = Libraries;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
