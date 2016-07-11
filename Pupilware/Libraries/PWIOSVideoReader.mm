@@ -91,7 +91,7 @@
                     debugFrame = weakSelf.processBlock(frame);
                     /* Rotate it back. */
                     [ObjCAdapter Rotate90:debugFrame withFlag:2];
-                    returnImage = [ObjCAdapter Mat2CGImage:debugFrame
+                    returnImage = [ObjCAdapter Mat2CIImage:debugFrame
                                                 withContext:weakSelf.videoManager.ciContext];
                 }
                 
@@ -117,7 +117,7 @@
             cameraImage = [cameraImage imageByApplyingTransform:transform];
             
             
-            cv::Mat cvFrame = [ObjCAdapter IGImage2Mat:cameraImage
+            cv::Mat cvFrame = [ObjCAdapter CIImage2Mat:cameraImage
                                            withContext:weakSelf.videoManager.ciContext];
             
             /* process the frame somewhere else.*/
@@ -126,7 +126,7 @@
             /* Rotate it back. */
             [ObjCAdapter Rotate90:returnFrame withFlag:2];
             
-            CIImage* returnImage = [ObjCAdapter Mat2CGImage:returnFrame
+            CIImage* returnImage = [ObjCAdapter Mat2CIImage:returnFrame
                                                 withContext:weakSelf.videoManager.ciContext];
             
             return returnImage;

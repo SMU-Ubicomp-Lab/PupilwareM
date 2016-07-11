@@ -321,9 +321,10 @@
         /*
          * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
          */
-        auto cameraImage = [ObjCAdapter Mat2CGImage:cvFrame withContext:weakSelf.videoManager.ciContext];
+        auto cameraImage = [ObjCAdapter Mat2CIImage:cvFrame
+                                        withContext:weakSelf.videoManager.ciContext];
         auto faceMeta = [self.faceRecognizer recognize:cameraImage];
-        faceMeta.setFrameNumber( (int) self.currentFrameNumber);
+        faceMeta.setFrameNumber( (int)self.currentFrameNumber );
         
         pupilwareController->setFaceMeta(faceMeta);
         

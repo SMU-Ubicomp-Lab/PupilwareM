@@ -28,12 +28,6 @@ namespace pw{
         close();
     }
     
-    PWCSVExporter::PWCSVExporter( const PWCSVExporter& other){}
-    
-    PWCSVExporter& PWCSVExporter::operator=( const PWCSVExporter& other){
-        return *this;
-    }
-    
     
     bool PWCSVExporter::open( const std::string& filePath ){
     

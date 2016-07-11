@@ -14,7 +14,9 @@ namespace pw{
 
         virtual bool findFace(const cv::Mat grayFrame, cv::Rect &outFaceRect) =0;
 
-        virtual void extractEyes(cv::Rect faceROI, cv::Rect &outLeftEyeRegion, cv::Rect &outRightEyeRegion) =0;
+        virtual void extractEyes(cv::Rect faceROI,
+                                 cv::Rect &outLeftEyeRegion,
+                                 cv::Rect &outRightEyeRegion) =0;
 
         virtual cv::Point2f fineEyeCenter(const cv::Mat grayEyeROI)=0;
 

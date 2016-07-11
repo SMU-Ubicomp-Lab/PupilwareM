@@ -17,6 +17,10 @@ namespace pw {
     
     public:
         DummyAlgo( const std::string& name);
+        DummyAlgo( const DummyAlgo& other)=default;
+        DummyAlgo( DummyAlgo&& other)=default;
+        DummyAlgo& operator=( const DummyAlgo& other)=default;
+        DummyAlgo& operator=( DummyAlgo&& other)=default;
         virtual ~DummyAlgo();
         
         virtual void init() override final;

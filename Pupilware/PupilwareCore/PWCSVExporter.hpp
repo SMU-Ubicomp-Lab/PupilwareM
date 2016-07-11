@@ -30,8 +30,10 @@ namespace pw {
         PWCSVExporter& operator<<( const PWDataModel& meta );
         
     private:
-        PWCSVExporter( const PWCSVExporter& other);
-        PWCSVExporter& operator=( const PWCSVExporter& other);
+        PWCSVExporter( const PWCSVExporter& other)=default;
+        PWCSVExporter( PWCSVExporter&& other)=default;
+        PWCSVExporter& operator=( const PWCSVExporter& other)=default;
+        PWCSVExporter& operator=( PWCSVExporter&& other )=default;
         
         std::ofstream file;
         std::string targetPath;

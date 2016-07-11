@@ -328,7 +328,8 @@
         /*
          * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
          */
-        auto cameraImage = [ObjCAdapter Mat2CGImage:cvFrame withContext:weakSelf.videoManager.ciContext];
+        auto cameraImage = [ObjCAdapter Mat2CIImage:cvFrame
+                                        withContext:weakSelf.videoManager.ciContext];
         auto faceMeta = [weakSelf.faceRecognizer recognize:cameraImage];
         faceMeta.setFrameNumber( (int) weakSelf.currentFrameNumber);
         

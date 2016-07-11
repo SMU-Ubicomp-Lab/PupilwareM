@@ -18,8 +18,11 @@ namespace pw{
 
     public:
         SimpleImageSegmenter( const std::string &fileFaceCascadePath );
-        SimpleImageSegmenter( const SimpleImageSegmenter &other );
-        ~SimpleImageSegmenter();
+        SimpleImageSegmenter( const SimpleImageSegmenter& other )=default;
+        SimpleImageSegmenter( SimpleImageSegmenter&& other)=default;
+        SimpleImageSegmenter& operator=( const SimpleImageSegmenter& other )=default;
+        SimpleImageSegmenter& operator=( SimpleImageSegmenter&& other )=default;
+        virtual ~SimpleImageSegmenter();
 
         bool            findFace(const cv::Mat grayFrame,
                                  cv::Rect &outFaceRect);

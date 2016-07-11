@@ -20,8 +20,6 @@ namespace pw{
         loadFaceDetectionCascade(fileFaceCascadePath);
     }
 
-    SimpleImageSegmenter::SimpleImageSegmenter( const SimpleImageSegmenter &other ){ }
-
     SimpleImageSegmenter::~SimpleImageSegmenter(){
 
     }

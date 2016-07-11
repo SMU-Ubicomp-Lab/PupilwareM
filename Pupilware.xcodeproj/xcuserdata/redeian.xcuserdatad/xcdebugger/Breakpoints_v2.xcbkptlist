@@ -9,22 +9,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Pupilware/PupilwareCore/ImageProcessing/SimpleImageSegmenter.cpp"
-            timestampString = "488565488.605902"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "45"
-            endingLineNumber = "45"
-            landmarkName = "SimpleImageSegmenter::findFace(const cv::Mat grayFrame, cv::Rect &amp;outFaceRect)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Pupilware/PupilwareCore/IOS/IOSFaceSegmentor.cpp"
             timestampString = "488660833.899493"
             startingColumnNumber = "9223372036854775807"
@@ -58,27 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pupilware/PupilwareCore/PWCSVExporter.cpp"
-            timestampString = "489008438.629833"
+            timestampString = "489967293.714946"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
-            landmarkName = "PWCSVExporter::open( const std::string&amp; filePath )"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pupilware/PupilwareCore/PWCSVExporter.cpp"
-            timestampString = "489009412.312571"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
             landmarkName = "PWCSVExporter::operator&lt;&lt;( const PWFaceMeta&amp; meta )"
             landmarkType = "5">
          </BreakpointContent>
@@ -112,22 +80,6 @@
             startingLineNumber = "16"
             endingLineNumber = "16"
             landmarkName = "-application:didFinishLaunchingWithOptions:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pupilware/PupilwareCore/SignalProcessing/BasicSignalProcessor.cpp"
-            timestampString = "489960503.396662"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
-            landmarkName = "BasicSignalProcessor::process(const std::vector&lt;float&gt; &amp;leftEyeRadius, const std::vector&lt;float&gt; &amp;rightEyeRadius, const std::vector&lt;float&gt; &amp;eyeDistance, std::vector&lt;float&gt; &amp;result)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

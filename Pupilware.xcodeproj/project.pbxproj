@@ -101,8 +101,8 @@
 		5CC9A1221D25A25700ADB4BD /* PWCSVExporter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWCSVExporter.hpp; sourceTree = "<group>"; };
 		5CCDBBA61D2046B3006C0B63 /* ObjCAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ObjCAdapter.h; path = Libraries/ObjCAdapter.h; sourceTree = "<group>"; };
 		5CCDBBA71D2046B3006C0B63 /* ObjCAdapter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ObjCAdapter.mm; path = Libraries/ObjCAdapter.mm; sourceTree = "<group>"; };
-		5CCDBBA91D205D2B006C0B63 /* IOSFaceRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOSFaceRecognizer.h; path = IOS/IOSFaceRecognizer.h; sourceTree = "<group>"; };
-		5CCDBBAA1D205D2B006C0B63 /* IOSFaceRecognizer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = IOSFaceRecognizer.mm; path = IOS/IOSFaceRecognizer.mm; sourceTree = "<group>"; };
+		5CCDBBA91D205D2B006C0B63 /* IOSFaceRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOSFaceRecognizer.h; path = PupilwareCore/IOS/IOSFaceRecognizer.h; sourceTree = "<group>"; };
+		5CCDBBAA1D205D2B006C0B63 /* IOSFaceRecognizer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = IOSFaceRecognizer.mm; path = PupilwareCore/IOS/IOSFaceRecognizer.mm; sourceTree = "<group>"; };
 		5CF4D57C1D186FB30050CBBA /* ALOfflineFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ALOfflineFile.cpp; sourceTree = "<group>"; };
 		5CF4D57D1D186FB30050CBBA /* ALOfflineFile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ALOfflineFile.hpp; sourceTree = "<group>"; };
 		5CF4D57E1D186FB30050CBBA /* DummyAlgo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DummyAlgo.cpp; sourceTree = "<group>"; };
@@ -248,8 +248,6 @@
 				5CF4D5941D186FB30050CBBA /* SignalProcessing */,
 				5CF4D5C61D1871800050CBBA /* PupilwareController.cpp */,
 				5CF4D5C71D1871800050CBBA /* PupilwareController.hpp */,
-				5CCDBBA91D205D2B006C0B63 /* IOSFaceRecognizer.h */,
-				5CCDBBAA1D205D2B006C0B63 /* IOSFaceRecognizer.mm */,
 				5C82A9AE1D2479C6001F5345 /* PWVideoWriter.cpp */,
 				5C82A9AF1D2479C6001F5345 /* PWVideoWriter.hpp */,
 				5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */,
@@ -464,6 +462,8 @@
 				5CF4D57A1D186FB30050CBBA /* PupilwareCore */,
 				97E94F7C1C5CB16800D652CB /* VideoAnalgesic.h */,
 				97E94F7D1C5CB16800D652CB /* VideoAnalgesic.m */,
+				5CCDBBA91D205D2B006C0B63 /* IOSFaceRecognizer.h */,
+				5CCDBBAA1D205D2B006C0B63 /* IOSFaceRecognizer.mm */,
 				5CCDBBA61D2046B3006C0B63 /* ObjCAdapter.h */,
 				5CCDBBA71D2046B3006C0B63 /* ObjCAdapter.mm */,
 				5C90AB1A1D34057D00FF7C5F /* PWIOSVideoReader.h */,

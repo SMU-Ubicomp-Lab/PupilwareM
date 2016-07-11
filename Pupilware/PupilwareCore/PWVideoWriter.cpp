@@ -21,14 +21,6 @@ namespace pw{
         open( filename );
         
     }
-
-    
-    PWVideoWriter::PWVideoWriter( const PWVideoWriter& other){}
-    
-    
-    PWVideoWriter& PWVideoWriter::operator=( const PWVideoWriter& other){
-        return *this;
-    }
     
     
     PWVideoWriter::~PWVideoWriter(){

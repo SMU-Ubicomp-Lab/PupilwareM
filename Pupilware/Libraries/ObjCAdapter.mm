@@ -11,7 +11,6 @@
 @implementation ObjCAdapter
 
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////    Helper FUNCTIONS      ///////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +40,7 @@
  * Get IGImage, and convert to Opencv Mat.
  * The returning Mat is the copy of IGImage.
  */
-+(cv::Mat)IGImage2Mat:(CIImage*)ciFrameImage withContext:(CIContext*)context{
++(cv::Mat)CIImage2Mat:(CIImage*)ciFrameImage withContext:(CIContext*)context{
     
     CGRect roi = ciFrameImage.extent;
     CGImageRef imageCG = [context createCGImage:ciFrameImage fromRect:roi];
@@ -79,7 +78,7 @@
 /*
  * The returning IGImage is the copy of Mat.
  */
-+ (CIImage*)Mat2CGImage:(cv::Mat)opencvMat withContext:(CIContext*)context{
++ (CIImage*)Mat2CIImage:(cv::Mat)opencvMat withContext:(CIContext*)context{
     
     NSData *data = [NSData dataWithBytes:opencvMat.data length:opencvMat.elemSize() * opencvMat.total()];
     
@@ -96,11 +95,11 @@
     CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef)data);
     
     // setup the copy to go from CPU to GPU
-    CGImageRef imageRef = CGImageCreate(opencvMat.cols,                                     // Width
-                                        opencvMat.rows,                                     // Height
+    CGImageRef imageRef = CGImageCreate(opencvMat.cols,                                 // Width
+                                        opencvMat.rows,                                 // Height
                                         8,                                              // Bits per component
-                                        8 * opencvMat.elemSize(),                           // Bits per pixel
-                                        opencvMat.step[0],                                  // Bytes per row
+                                        8 * opencvMat.elemSize(),                       // Bits per pixel
+                                        opencvMat.step[0],                              // Bytes per row
                                         colorSpace,                                     // Colorspace
                                         kCGImageAlphaNone | kCGBitmapByteOrderDefault,  // Bitmap info flags
                                         provider,                                       // CGDataProviderRef
@@ -134,18 +133,6 @@
 }
 
 
-+(cv::Rect) CGRect2CVRectFlip:(CGRect) cgRect{
-    return cv::Rect(cgRect.origin.y,
-                    cgRect.origin.x,
-                    cgRect.size.height,
-                    cgRect.size.width);
-}
-
-+(cv::Point) CGPoint2CVPointFlip:(CGPoint) cgPoint{
-    return cv::Point(cgPoint.y, cgPoint.x);
-}
-
-
 
 +(NSString*)getOutputFilePath:(NSString*) outputFileName
 {
@@ -167,7 +154,9 @@
     return outputFilePath;
 }
 
-+(NSArray*) vector2NSArray:(std::vector<float> )v
+
+
++(NSArray*) vector2NSArray:( const std::vector<float>& )v
 {
     if(v.size() <= 0 )
         return nil;

@@ -17,6 +17,10 @@ namespace pw {
 
     public:
         MDStarbustNeo( const std::string& name );
+        MDStarbustNeo( const MDStarbustNeo& other)=default;
+        MDStarbustNeo( MDStarbustNeo&& other)=default;
+        MDStarbustNeo& operator=( const MDStarbustNeo& other)=default;
+        MDStarbustNeo& operator=( MDStarbustNeo&& other)=default;
         virtual ~MDStarbustNeo();
 
         virtual void init() override ;

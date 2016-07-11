@@ -13,7 +13,10 @@ class MDStarbustG: public MDStarbust {
 
 public:
     MDStarbustG( const std::string& name );
-    MDStarbustG( const MDStarbustG& other);
+    MDStarbustG( const MDStarbustG& other)=default;
+    MDStarbustG( MDStarbustG&& other)=default;
+    MDStarbustG& operator=( const MDStarbustG& other)=default;
+    MDStarbustG& operator=( MDStarbustG&& other)=default;
     virtual ~MDStarbustG();
 
     virtual void init() override ;

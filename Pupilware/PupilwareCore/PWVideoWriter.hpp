@@ -28,16 +28,17 @@ namespace pw{
     
     
     private:
-        PWVideoWriter( const PWVideoWriter& other);
-        PWVideoWriter& operator=( const PWVideoWriter& other);
+        PWVideoWriter( const PWVideoWriter& other)              = default;
+        PWVideoWriter( PWVideoWriter&& other)                   = default;
+        PWVideoWriter& operator=( const PWVideoWriter& other)   = default;
+        PWVideoWriter& operator=( PWVideoWriter&& other )       = default;
+        
         
         const int MAX_BUFFER_SIZE = 2048;
         
         std::vector<cv::Mat> frameBuffer;
         
         cv::VideoWriter    capture;
-        
-        
         
     };
 }
