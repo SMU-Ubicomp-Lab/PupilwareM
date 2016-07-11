@@ -10,6 +10,7 @@
 #include "../Helpers/math/Ransac.h"
 #include "../Helpers/PWGraph.hpp"
 #include "../SignalProcessing/SignalProcessingHelper.hpp"
+#include "../Helpers/math/Snakuscules.hpp"
 
 using namespace cv;
 using namespace std;
@@ -93,6 +94,36 @@ namespace pw {
 
         // Only use a red channel.
         Mat grayEye = rgbChannels[2];
+        
+        
+        Mat blur;
+        cv::GaussianBlur(grayEye, blur,Size(3,3), 3);
+        
+//        int th = cw::calDynamicThreshold( blur, 0.014 );
+        
+//        Mat binary;
+//        cv::threshold(grayEye, binary, th, 255, CV_THRESH_BINARY_INV);
+        
+//        cv::Point p = cw::calCenterOfMass(binary);
+        
+
+        cv::Point cPoint = Point(grayEye.cols/2, grayEye.rows/2);
+        
+        auto sn = Snakuscules::Create();
+    
+        sn->fit(blur,      // src image
+                cPoint,    // initial seed point
+                50,        // radius
+                2.0,       // alpha
+                20         // max iteration
+                );
+        
+        cPoint = sn->getFitCenter();
+        
+        
+//        eyeCenter = p;
+        eyeCenter = cPoint;
+        
 
         vector<Point2f>rays;
         createRays(rays);

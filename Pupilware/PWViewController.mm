@@ -9,8 +9,7 @@
 #import "PWViewController.h"
 #import <opencv2/videoio/cap_ios.h>
 
-#import "MyCvVideoCamera.h"
-#import "VideoAnalgesic.h"
+#import "PWIOSVideoReader.h"
 #import "Libraries/ObjCAdapter.h"
 
 #import "Pupilware-Swift.h"
@@ -38,7 +37,7 @@
 
 @interface PWViewController ()
 
-@property (strong, nonatomic) VideoAnalgesic *videoManager;         /* Manage iOS Video input      */
+@property (strong, nonatomic) PWIOSVideoReader *videoManager;       /* Manage iOS Video input      */
 @property (strong, nonatomic) IOSFaceRecognizer *faceRecognizer;    /* recognize face from ICImage */
 @property (strong,nonatomic) DataModel *model;                      /* Connect with Swift UI       */
 
@@ -64,11 +63,9 @@
 /////////////////////////////////////    Instantiation    //////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
--(VideoAnalgesic*)videoManager{
+-(PWIOSVideoReader*)videoManager{
     if(!_videoManager){
-        _videoManager = [VideoAnalgesic captureManager];
-        _videoManager.preset = AVCaptureSessionPresetMedium;
-        [_videoManager setCameraPosition:AVCaptureDevicePositionFront];
+        _videoManager = [[PWIOSVideoReader alloc] init];
 
     }
     return _videoManager;
@@ -223,6 +220,7 @@
     
     // TODO: change it to iPhone6s Frame Size.
     cv::Size frameSize (360,480);
+//    cv::Size frameSize (1280,720);
     if(!videoWriter.open([videoPath UTF8String], 30, frameSize))
     {
         NSLog(@"Video Writer is not opened correctedly.");
@@ -290,6 +288,15 @@
 
 - (void)initVideoManager
 {
+    
+//    /* Process from a video file, uncomment this block*/
+//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    NSString *documentsDirectory = [paths objectAtIndex:0];
+//    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"v513.mp4"];
+//    [self.videoManager open:filePath];
+//    /*----------------------------------------------------------------------------------------*/
+    
+    
     // remove the view's background color
     self.view.backgroundColor = nil;
     
@@ -301,29 +308,63 @@
     __weak typeof(self) weakSelf = self;
     
     
-    [self.videoManager setProcessBlock:^(CIImage *cameraImage){
+    [self.videoManager setProcessBlock:^(cv::Mat cvFrame){
         
         
-        auto returnImage = [weakSelf _processCameraImage:cameraImage
-                                             frameNumber:weakSelf.currentFrameNumber
-                                                 context:weakSelf.videoManager.ciContext];
+        if (!pupilwareController->hasStarted()) {
+            return cvFrame;
+        }
+        
+        
+        videoWriter << cvFrame;
+        
+        /*
+         * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
+         */;
+        auto cameraImage = [ObjCAdapter Mat2CGImage:cvFrame withContext:weakSelf.videoManager.ciContext];
+        auto faceMeta = [self.faceRecognizer recognize:cameraImage];
+        faceMeta.setFrameNumber( (int) self.currentFrameNumber);
+        
+        pupilwareController->setFaceMeta(faceMeta);
+        
+        if(faceMeta.hasFace())
+        {
+            self.model.faceInView = true;
+            dispatch_async(dispatch_get_main_queue(),
+                           ^{
+                               [self.model.bridgeDelegate faceInView];
+                           });
+        }
+        else{
+            self.model.faceInView = false;
+            dispatch_async(dispatch_get_main_queue(),
+                           ^{
+                               [self.model.bridgeDelegate faceNotInView];
+                           });
+        }
+        
+        csvExporter << faceMeta;
+        
+        /* Process the rest of the work (e.g. pupil segmentation..) */
+        pupilwareController->processFrame(cvFrame, (int)weakSelf.currentFrameNumber );
+        
+        
+        cv::Mat debugImg = [self _getDebugImage];
+        
+        if(debugImg.empty()){
+            debugImg = cvFrame;
+        }
+        
         
         [weakSelf advanceFrame];
         
-        return returnImage;
+        return debugImg;
         
         
         //TODO: Enable This block in release built.
         /********************************************
         try{
-        
-         auto returnImage = [weakSelf _processCameraImage:cameraImage
-         frameNumber:weakSelf.currentFrameNumber
-         context:weakSelf.videoManager.ciContext];
-         
-         [self advanceFrame];
-         
-         return returnImage;
+         // Whatever code in the block is, put it in here.!
         }
          catch(AssertionFailureException e){
          
@@ -352,30 +393,22 @@
  * This function will be called in sided Video Manager callback.
  * It's used for process a camera image with Pupilware system.
  */
--(CIImage*)_processCameraImage:(CIImage*)cameraImage
+-(cv::Mat)_processCameraImage:(cv::Mat)cvFrame
                    frameNumber:(NSUInteger)frameNumber
                        context:(CIContext*)context
 {
   
     if (!pupilwareController->hasStarted()) {
-        return cameraImage;
+        return cvFrame;
     }
     
-
-    /* The source image is in sideway (<-), so It need to be rotated back up. */
-    CGAffineTransform transform = CGAffineTransformMakeRotation(-M_PI_2);
-    transform = CGAffineTransformTranslate(transform,-480,0);
-    cameraImage = [cameraImage imageByApplyingTransform:transform];
-    
-    
-    cv::Mat cvFrame = [ObjCAdapter IGImage2Mat:cameraImage
-                                   withContext:context];
     
     videoWriter << cvFrame;
     
     /* 
      * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
-     */
+     */;
+    auto cameraImage = [ObjCAdapter Mat2CGImage:cvFrame withContext:context];
     auto faceMeta = [self.faceRecognizer recognize:cameraImage];
     faceMeta.setFrameNumber( (int) self.currentFrameNumber);
     
@@ -409,14 +442,7 @@
         debugImg = cvFrame;
     }
     
-    //Rotate it back.
-    [ObjCAdapter Rotate90:debugImg withFlag:2];
-    
-    CIImage* returnImage = [ObjCAdapter Mat2CGImage:debugImg
-                                        withContext:context];
-    
-    
-    return returnImage;
+    return debugImg;
 }
 
 

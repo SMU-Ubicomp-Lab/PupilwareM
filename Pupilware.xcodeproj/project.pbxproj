@@ -13,6 +13,7 @@
 		5C6ACBF01D271D8500691F7A /* PWCalibratingViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C6ACBEF1D271D8400691F7A /* PWCalibratingViewController.mm */; };
 		5C82A9AD1D2470E3001F5345 /* PWVideoReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C82A9AB1D2470E3001F5345 /* PWVideoReader.cpp */; };
 		5C82A9B01D2479C6001F5345 /* PWVideoWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C82A9AE1D2479C6001F5345 /* PWVideoWriter.cpp */; };
+		5C90AB1C1D34057D00FF7C5F /* PWIOSVideoReader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C90AB1B1D34057D00FF7C5F /* PWIOSVideoReader.mm */; };
 		5C9EA49E1D1DD6A6003BE62C /* PWViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C9EA49D1D1DD6A6003BE62C /* PWViewController.mm */; };
 		5C9EA4AC1D1EE45B003BE62C /* haarcascade_frontalface_default.xml in Resources */ = {isa = PBXBuildFile; fileRef = 5C9EA4AB1D1EE45B003BE62C /* haarcascade_frontalface_default.xml */; };
 		5CC9A1231D25A25700ADB4BD /* PWCSVExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */; };
@@ -98,6 +99,8 @@
 		5C82A9AC1D2470E3001F5345 /* PWVideoReader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWVideoReader.hpp; sourceTree = "<group>"; };
 		5C82A9AE1D2479C6001F5345 /* PWVideoWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWVideoWriter.cpp; sourceTree = "<group>"; };
 		5C82A9AF1D2479C6001F5345 /* PWVideoWriter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWVideoWriter.hpp; sourceTree = "<group>"; };
+		5C90AB1A1D34057D00FF7C5F /* PWIOSVideoReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PWIOSVideoReader.h; path = Libraries/PWIOSVideoReader.h; sourceTree = "<group>"; };
+		5C90AB1B1D34057D00FF7C5F /* PWIOSVideoReader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PWIOSVideoReader.mm; path = Libraries/PWIOSVideoReader.mm; sourceTree = "<group>"; };
 		5C9EA4991D1DD26A003BE62C /* preHeader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = preHeader.hpp; sourceTree = "<group>"; };
 		5C9EA49C1D1DD6A6003BE62C /* PWViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWViewController.h; sourceTree = "<group>"; };
 		5C9EA49D1D1DD6A6003BE62C /* PWViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWViewController.mm; sourceTree = "<group>"; };
@@ -500,11 +503,13 @@
 				97E94F7D1C5CB16800D652CB /* VideoAnalgesic.m */,
 				973A50261C5DB5D600EDDB20 /* OpenCVBridge.h */,
 				973A50271C5DB5D600EDDB20 /* OpenCVBridge.mm */,
+				5CCDBBA61D2046B3006C0B63 /* ObjCAdapter.h */,
+				5CCDBBA71D2046B3006C0B63 /* ObjCAdapter.mm */,
 				97E965AD1C5D6CCE00D652CB /* CPP */,
 				97E94F461C5CAD6600D652CB /* BEMLine */,
 				97E94F6A1C5CB0DC00D652CB /* Pupilibs */,
-				5CCDBBA61D2046B3006C0B63 /* ObjCAdapter.h */,
-				5CCDBBA71D2046B3006C0B63 /* ObjCAdapter.mm */,
+				5C90AB1A1D34057D00FF7C5F /* PWIOSVideoReader.h */,
+				5C90AB1B1D34057D00FF7C5F /* PWIOSVideoReader.mm */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -634,6 +639,7 @@
 				97A3215C1C59E1BB00B1EB98 /* subjectIDModalVC.swift in Sources */,
 				97DB32CD1C75ABB30024A22F /* luxVC.swift in Sources */,
 				97A321491C59CDB300B1EB98 /* homeVC.swift in Sources */,
+				5C90AB1C1D34057D00FF7C5F /* PWIOSVideoReader.mm in Sources */,
 				5CCDBBA81D2046B3006C0B63 /* ObjCAdapter.mm in Sources */,
 				975C29031CA074210001FF95 /* targetSetupVC.swift in Sources */,
 				5CF4D59C1D186FB30050CBBA /* DummyAlgo.cpp in Sources */,

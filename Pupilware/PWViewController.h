@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MyCvVideoCamera.h"
 #import "PWParameter.h"
 
 @interface PWViewController : UIViewController
