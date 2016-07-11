@@ -100,7 +100,7 @@ namespace pw {
         cv::GaussianBlur(grayEye, blur,Size(3,3), 3);
         
 /*------- Center of Mass Method -------*/
-//        int th = cw::calDynamicThreshold( blur, 0.014 );
+//        int th = cw::calDynamicThreshold( blur, 0.006 );
 //        Mat binary;
 //        cv::threshold(grayEye, binary, th, 255, CV_THRESH_BINARY_INV);
 //        cv::Point p = cw::calCenterOfMass(binary);
@@ -115,7 +115,7 @@ namespace pw {
                 cPoint,             // initial seed point
                 grayEye.cols*0.2,   // radius
                 2.0,                // alpha
-                20                  // max iteration
+                50                  // max iteration
                 );
         cPoint = sn->getFitCenter();
         eyeCenter = cPoint;
@@ -163,8 +163,7 @@ namespace pw {
                 float area = 0.0f;
                 float voting = 0.0f;
 
-                if(isValidEllipse(myEllipse))
-                {
+
                     //TODO: Use RANSAC Circle radius? How about Ellipse wight?
 
                     std::vector<float> edgePointsFromCenter(edgePoints.size());
@@ -185,12 +184,7 @@ namespace pw {
 
                     eyeRadius = area;
 
-                }
-                else
-                {
-                    //TODO: Make it not ZERO. Use the old frame maybe?
-                    eyeRadius = 0.0f;
-                }
+   
 
                 //---------------------------------------------------------------------------------
                 //! Draw debug image
