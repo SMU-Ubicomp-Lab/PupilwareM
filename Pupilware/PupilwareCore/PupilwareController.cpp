@@ -175,6 +175,9 @@ namespace pw{
         
     }
     
+    KalmanFilter KF(2, 1, 0);
+    Mat measurement = Mat::zeros(1, 1, CV_32F);
+    
     void PupilwareControllerImpl::start() {
         
         REQUIRES(pwSegAlgo != nullptr, "PupilSegmentor must be not null.");
@@ -185,6 +188,15 @@ namespace pw{
         
         // Init algorithms
         pwSegAlgo->init();
+        
+        
+        // intialization of KF...
+        KF.transitionMatrix = (Mat_<float>(2, 2) << 1, 1, 0, 1);
+        
+        setIdentity(KF.measurementMatrix);
+        setIdentity(KF.processNoiseCov, Scalar::all(1e-5));
+        setIdentity(KF.measurementNoiseCov, Scalar::all(2));
+        setIdentity(KF.errorCovPost, Scalar::all(1));
         
         
     }
@@ -232,6 +244,7 @@ namespace pw{
         this->faceMeta = faceMeta;
     }
     
+    double ticks = 0.0f;
     
     void PupilwareControllerImpl::processFrame( const cv::Mat& srcFrame, unsigned int frameNumber ){
 
@@ -326,16 +339,45 @@ namespace pw{
         
         auto result = pwSegAlgo->process( srcBGR, faceMeta );
         
+        //-------------------------
+        double precTick = ticks;
+        ticks = (double) cv::getTickCount();
+        double dT = (ticks - precTick) / cv::getTickFrequency(); //seconds
+        KF.transitionMatrix.at<float>(1) = dT;
+        
+        Mat prediction = KF.predict();
+        
+        double predictPupilSize = 0.0;
+        predictPupilSize = prediction.at<float>(0);
+        
+        float errorLeft = fabs(predictPupilSize - result.leftRadius);
+        float errorRight = fabs(predictPupilSize - result.rightRadius);
+        float alpha = errorLeft/( errorLeft + errorRight );
+        
+        
+        float mesPupilRadius = (((1.0-alpha) * result.leftRadius) + (alpha * result.rightRadius));
+        
+        const int maxPupuilSize = 20;
+        const int minPupilSize = 5;
+        if ( mesPupilRadius < maxPupuilSize && mesPupilRadius > minPupilSize ) {
+            measurement.at<float>(0) = mesPupilRadius;
+            predictPupilSize = KF.correct(measurement).at<float>(0);
+            
+        }
+        else{
+            predictPupilSize = prediction.at<float>(0);
+        }
+        
+        smoothPupilSize.push_back(predictPupilSize);
+        
+        //-------------------------
+        
+        
         //! Store data to lists
         //
 //        storage.setPupilSizeAt( currentFrameNumber, result );
         storage.addPupilSize(result);
-        
         eyeDistancePx.push_back( eyeDist );
-        
-        
-        //TODO JUST FOR TESTING, REMOVE IT!.
-//        processSignal();
         
         
         
@@ -401,30 +443,35 @@ namespace pw{
         
         //TODO Dont forget to specify max value.
         
+        const int graphHeight = 600;
+        const float maxValue = 11;
+        const float minValue = 4;
+        
         PWGraph graph("PupilSignal");
         graph.drawGraph("left eye red, right eye blue",
                         storage.getLeftPupilSizes(),        // Data
-                        cv::Scalar(255,100,0),               // Line color
-                        0,                                  // Min value
-                        0,                                  // Max value
+                        cv::Scalar(100,255,100),               // Line color
+                        minValue,                                  // Min value
+                        maxValue,                                  // Max value
                         debugImg.cols,                      // Width
-                        100);                               // Height
+                        graphHeight);                               // Height
         
         graph.drawGraph(" ",
-                        storage.getRightPupilSizes(),        // Data
-                        cv::Scalar(0,100,255),               // Line color
-                        0,                                  // Min value
-                        0,                                  // Max value
+                        storage.getRightPupilSizes(),       // Data
+                        cv::Scalar(100,150,200),              // Line color
+                        minValue,                                  // Min value
+                        maxValue,                           // Max value
                         debugImg.cols,                      // Width
-                        100);                               // Height
+                        graphHeight);                       // Height
         
         graph.drawGraph(" ",
                         smoothPupilSize,        // Data
-                        cv::Scalar(0,255,100),               // Line color
-                        0,                                  // Min value
-                        0,                                  // Max value
+                        cv::Scalar(200,100,0),               // Line color
+                        minValue,                                  // Min value
+                        maxValue,                                  // Max value
                         debugImg.cols,                      // Width
-                        100);                               // Height
+                        graphHeight);                               // Height
+
         
         return graph.getGraphImage();
     }

@@ -45,15 +45,10 @@
 {
     assert(self.detector != nil);
     assert(cameraImage != nil);
- 
-/*!
- This method is currently incorrect, the cooridinate of face and eye are wrong.
- */
-    
     
     pw::PWFaceMeta returnFaceMeta;
     
-    __block NSDictionary *opts;
+    NSDictionary *opts;
     opts = @{CIDetectorImageOrientation:@1};
     
     NSArray *faceFeatures = [self.detector featuresInImage: cameraImage options:opts];
@@ -62,9 +57,10 @@
     
     // Only return the first face they found. for now.
     for(CIFaceFeature *face in faceFeatures ){
+        
         const int kEyeBound = face.bounds.size.width * 0.15;
         
-        
+        // Get face and convert it to OpenCV coordinate (y down)
         auto faceRect = [ObjCAdapter CGRect2CVRect:face.bounds];
         faceRect.y = frameHeight - faceRect.height - faceRect.y;
     
@@ -75,6 +71,7 @@
                                         fmax(frameHeight-face.rightEyePosition.y, kEyeBound) );
         
         
+        // prepare a data object, and return.
         returnFaceMeta.setFaceRect(faceRect);
         returnFaceMeta.setLeftEyeClosed(face.leftEyeClosed);
         returnFaceMeta.setRightEyeClosed(face.rightEyeClosed);

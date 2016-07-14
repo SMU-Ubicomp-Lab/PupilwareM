@@ -8,8 +8,6 @@
 
 #include "SignalProcessingHelper.hpp"
 
-
-
 using namespace cv;
 
 namespace pw{

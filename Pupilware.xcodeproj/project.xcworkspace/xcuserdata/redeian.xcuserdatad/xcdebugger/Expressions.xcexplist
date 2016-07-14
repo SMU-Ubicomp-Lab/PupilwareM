@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "pw::PupilwareControllerImpl::start():PupilwareController.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "pw::PupilwareControllerImpl::processFrame(cv::Mat const&amp;, unsigned int):PupilwareController.cpp">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

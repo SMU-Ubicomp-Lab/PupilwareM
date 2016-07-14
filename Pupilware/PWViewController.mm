@@ -289,12 +289,12 @@
 - (void)initVideoManager
 {
     
-//    /* Process from a video file, uncomment this block*/
-//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//    NSString *documentsDirectory = [paths objectAtIndex:0];
-//    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"v513.mp4"];
-//    [self.videoManager open:filePath];
-//    /*----------------------------------------------------------------------------------------*/
+    /* Process from a video file, uncomment this block*/
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"v513.mp4"];
+    [self.videoManager open:filePath];
+    /*----------------------------------------------------------------------------------------*/
     
     
     // remove the view's background color
@@ -305,59 +305,47 @@
     self.faceRecognizer = [[IOSFaceRecognizer alloc] initWithContext:self.videoManager.ciContext];
     
     
-    __weak typeof(self) weakSelf = self;
+    __block typeof(self) blockSelf = self;
     
-    
-    [self.videoManager setProcessBlock:^(cv::Mat cvFrame){
+    [self.videoManager setProcessBlock:^(const cv::Mat& cvFrame){
         
-        
-        if (!pupilwareController->hasStarted()) {
+        if (!blockSelf->pupilwareController->hasStarted()) {
             return cvFrame;
         }
         
-        
-        videoWriter << cvFrame;
         
         /*
          * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
          */
         auto cameraImage = [ObjCAdapter Mat2CIImage:cvFrame
-                                        withContext:weakSelf.videoManager.ciContext];
-        auto faceMeta = [self.faceRecognizer recognize:cameraImage];
-        faceMeta.setFrameNumber( (int)self.currentFrameNumber );
+                                        withContext:blockSelf.videoManager.ciContext];
+        auto faceMeta = [blockSelf.faceRecognizer recognize:cameraImage];
+        faceMeta.setFrameNumber( (int)blockSelf.currentFrameNumber );
+        blockSelf->pupilwareController->setFaceMeta(faceMeta);
         
-        pupilwareController->setFaceMeta(faceMeta);
+        /* Write data to files*/
+        blockSelf->videoWriter << cvFrame;
+        blockSelf->csvExporter << faceMeta;
         
-        if(faceMeta.hasFace())
-        {
-            self.model.faceInView = true;
-            dispatch_async(dispatch_get_main_queue(),
-                           ^{
-                               [self.model.bridgeDelegate faceInView];
-                           });
-        }
-        else{
-            self.model.faceInView = false;
-            dispatch_async(dispatch_get_main_queue(),
-                           ^{
-                               [self.model.bridgeDelegate faceNotInView];
-                           });
-        }
         
-        csvExporter << faceMeta;
+        /* Update UI */
+        [blockSelf updateUI:faceMeta.hasFace()];
+        
         
         /* Process the rest of the work (e.g. pupil segmentation..) */
-        pupilwareController->processFrame(cvFrame, (int)weakSelf.currentFrameNumber );
+        blockSelf->pupilwareController->processFrame(cvFrame, (int)blockSelf.currentFrameNumber );
         
         
-        cv::Mat debugImg = [self _getDebugImage];
+        /* create debug image */
+        cv::Mat debugImg = [blockSelf _getDebugImage];
         
         if(debugImg.empty()){
             debugImg = cvFrame;
         }
         
         
-        [weakSelf advanceFrame];
+        /* Move to next frame */
+        [blockSelf advanceFrame];
         
         return debugImg;
         
@@ -389,6 +377,24 @@
 
 }
 
+-(void) updateUI:(bool) hasFace
+{
+    if(hasFace)
+    {
+        self.model.faceInView = true;
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           [self.model.bridgeDelegate faceInView];
+                       });
+    }
+    else{
+        self.model.faceInView = false;
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           [self.model.bridgeDelegate faceNotInView];
+                       });
+    }
+}
 
 /*
  * This function will be called in sided Video Manager callback.

@@ -316,12 +316,12 @@
     self.faceRecognizer = [[IOSFaceRecognizer alloc] initWithContext:self.videoManager.ciContext];
     
     
-    __weak typeof(self) weakSelf = self;
+    __block typeof(self) blockSelf = self;
     
     
-    [self.videoManager setProcessBlock:^(cv::Mat cvFrame){
+    [self.videoManager setProcessBlock:^(const cv::Mat& cvFrame){
 
-        if (!weakSelf.calibrating) {
+        if (!blockSelf.calibrating) {
             return cvFrame;
         }
         
@@ -329,14 +329,14 @@
          * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
          */
         auto cameraImage = [ObjCAdapter Mat2CIImage:cvFrame
-                                        withContext:weakSelf.videoManager.ciContext];
-        auto faceMeta = [weakSelf.faceRecognizer recognize:cameraImage];
-        faceMeta.setFrameNumber( (int) weakSelf.currentFrameNumber);
+                                        withContext:blockSelf.videoManager.ciContext];
+        auto faceMeta = [blockSelf.faceRecognizer recognize:cameraImage];
+        faceMeta.setFrameNumber( (int) blockSelf.currentFrameNumber);
         
-        videoFrameBuffer.push_back(cvFrame);
-        faceMetaBuffer.push_back( faceMeta );
+        blockSelf->videoFrameBuffer.push_back(cvFrame);
+        blockSelf->faceMetaBuffer.push_back( faceMeta );
         
-        weakSelf.currentFrameNumber += 1;
+        blockSelf.currentFrameNumber += 1;
         
         return cvFrame;
         

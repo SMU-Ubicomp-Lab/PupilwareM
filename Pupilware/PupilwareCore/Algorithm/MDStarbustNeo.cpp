@@ -31,6 +31,7 @@ namespace pw {
     {
 
     }
+    
 
     void MDStarbustNeo::init()
     {
@@ -41,8 +42,10 @@ namespace pw {
         window->addTrackbar("ray number",&rayNumber, 200);
 //        window->addTrackbar("threshold", &threshold, 255 );
 //        window->addTrackbar("primer", &prior, precision*100);
+    
     }
 
+    
     
     PWPupilSize MDStarbustNeo::process( const cv::Mat& src, const PWFaceMeta &meta )
     {
@@ -182,7 +185,7 @@ namespace pw {
                     cir = r.bestModel.GetRadius();
                     area = (myEllipse.size.width * myEllipse.size.height) * 0.02f;
 
-                    eyeRadius = area;
+                    eyeRadius = voting;
 
    
 

@@ -11,7 +11,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef cv::Mat(^CVProcessBlock)(cv::Mat);
+typedef cv::Mat(^CVProcessBlock)(const cv::Mat&);
 
 @interface PWIOSVideoReader : NSObject
 

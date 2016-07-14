@@ -75,24 +75,24 @@
     if(self.b_readFromFile){
         _processBlock = [pBlock copy];
 
-        __weak typeof(self) weakSelf = self;
+        __block typeof(self) blockSelf = self;
         
         [self.videoManager setProcessBlock:^(CIImage *cameraImage){
 
-            if (weakSelf.isOpened) {
+            if (blockSelf.isOpened) {
                 cv::Mat frame;
                 
-                capture >> frame;
+                blockSelf->capture >> frame;
                 
                 CIImage* returnImage = cameraImage;
                 
                 if(!frame.empty()){
                     cv::Mat debugFrame;
-                    debugFrame = weakSelf.processBlock(frame);
+                    debugFrame = blockSelf.processBlock(frame);
                     /* Rotate it back. */
                     [ObjCAdapter Rotate90:debugFrame withFlag:2];
                     returnImage = [ObjCAdapter Mat2CIImage:debugFrame
-                                                withContext:weakSelf.videoManager.ciContext];
+                                                withContext:blockSelf.videoManager.ciContext];
                 }
                 
                 
@@ -106,7 +106,7 @@
     }
     else{
         
-         __weak typeof(self) weakSelf = self;
+         __block typeof(self) blockSelf = self;
         _processBlock = [pBlock copy];
         
         [self.videoManager setProcessBlock:^(CIImage *cameraImage){
@@ -118,16 +118,16 @@
             
             
             cv::Mat cvFrame = [ObjCAdapter CIImage2Mat:cameraImage
-                                           withContext:weakSelf.videoManager.ciContext];
+                                           withContext:blockSelf.videoManager.ciContext];
             
             /* process the frame somewhere else.*/
-            cv::Mat returnFrame = weakSelf.processBlock(cvFrame);
+            cv::Mat returnFrame = blockSelf.processBlock(cvFrame);
             
             /* Rotate it back. */
             [ObjCAdapter Rotate90:returnFrame withFlag:2];
             
             CIImage* returnImage = [ObjCAdapter Mat2CIImage:returnFrame
-                                                withContext:weakSelf.videoManager.ciContext];
+                                                withContext:blockSelf.videoManager.ciContext];
             
             return returnImage;
             
