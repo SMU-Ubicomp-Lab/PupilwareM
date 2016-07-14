@@ -113,16 +113,16 @@ namespace pw {
         
 /*-------- Snakucules Method ----------*/
         cv::Point cPoint = eyeCenter;
-        auto sn = Snakuscules::Create();
-        sn->fit(blur,               // src image
+        Snakuscules sn;
+        sn.fit(blur,               // src image
                 cPoint,             // initial seed point
                 grayEye.cols*0.2,   // radius
                 2.0,                // alpha
                 50                  // max iteration
                 );
-        cPoint = sn->getFitCenter();
+        cPoint = sn.getFitCenter();
         eyeCenter = cPoint;
-        int innterRadius = sn->getInnerRadius();
+        int innterRadius = sn.getInnerRadius();
         circle( debugImg,
                 eyeCenter,
                 innterRadius,

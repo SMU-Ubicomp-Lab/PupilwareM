@@ -114,10 +114,10 @@ namespace pw{
 /*---------- Snakuscules technique -------------*/
         cv::Point cPoint = Point(grayEyeROI.cols/2, grayEyeROI.rows/2);
 
-        auto sn = Snakuscules::Create();
-        sn->fit( blur, cPoint, 20, 2.0, 20 );
+        Snakuscules sn;
+        sn.fit( blur, cPoint, 20, 2.0, 20 );
 
-        cPoint = sn->getFitCenter();
+        cPoint = sn.getFitCenter();
 
         return cPoint;
 /*----------------------------------------------*/

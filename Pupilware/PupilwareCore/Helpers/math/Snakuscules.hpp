@@ -22,26 +22,38 @@ namespace pw {
     class Snakuscules {
 
     public:
-
-        virtual void fit( const cv::Mat& srcGray
+        Snakuscules();
+        
+        void fit( const cv::Mat& srcGray
                 , cv::Point seedPoint
                 , int radius
                 , const float alpha = 2.0
-                , const unsigned int maxIteration = 20 ) = 0;
+                , const unsigned int maxIteration = 20 );
 
-        virtual cv::Point getFitCenter() const = 0;
-        virtual float getOuterRadius() const = 0;
-        virtual float getInnerRadius() const = 0;
+        cv::Point getFitCenter() const;
+        float getOuterRadius() const;
+        float getInnerRadius() const;
 
-        virtual void calEnergyMat(const cv::Mat& srcGray
+        void calEnergyMat(const cv::Mat& srcGray
                                 , cv::Mat& dst
                                 , int radius
-                                , const float alpha = 2.0) = 0;
-
-        /*!
-         * Static Methods
-         */
-        static std::shared_ptr<Snakuscules> Create();
+                                , const float alpha = 2.0);
+        
+        
+    private:
+        cv::Point m_center;
+        float m_outerRadius;
+        float m_innerRadius;
+        
+        float _calInnerRadius( int radius, float alpha );
+        RegionEnergy _calRegionEnergy(  const cv::Mat srcGray
+                         , cv::Point center
+                         , int radius              );
+        
+        double _calSnakeEnergy(   const cv::Mat srcGray
+                        , const cv::Point center
+                        , const int outerRadius
+                               , const int innerRadius     );
 
     };
 
