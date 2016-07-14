@@ -78,8 +78,8 @@ namespace pw {
         
         this->debugImage = debugImg;
 
-        return PWPupilSize(  leftPupilRadius
-                            ,rightPupilRadius );
+        return PWPupilSize(  leftPupilRadius / meta.getEyeDistancePx()
+                            ,rightPupilRadius / meta.getEyeDistancePx() );
 
     }
 

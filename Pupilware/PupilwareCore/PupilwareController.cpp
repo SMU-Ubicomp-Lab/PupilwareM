@@ -126,6 +126,9 @@ namespace pw{
         
         int                 smoothWindowSize;           // Use for smooth the pupil signal.
         
+        KalmanFilter KF;
+        Mat measurement = Mat::zeros(1, 1, CV_32F);
+        
     };
     
     
@@ -174,9 +177,7 @@ namespace pw{
         smoothWindowSize = windowSize;
         
     }
-    
-    KalmanFilter KF(2, 1, 0);
-    Mat measurement = Mat::zeros(1, 1, CV_32F);
+
     
     void PupilwareControllerImpl::start() {
         
@@ -191,11 +192,12 @@ namespace pw{
         
         
         // intialization of KF...
+        KF.init(2, 1, 0);
         KF.transitionMatrix = (Mat_<float>(2, 2) << 1, 1, 0, 1);
         
         setIdentity(KF.measurementMatrix);
         setIdentity(KF.processNoiseCov, Scalar::all(1e-5));
-        setIdentity(KF.measurementNoiseCov, Scalar::all(2));
+        setIdentity(KF.measurementNoiseCov, Scalar::all(0.04));
         setIdentity(KF.errorCovPost, Scalar::all(1));
         
         
@@ -357,8 +359,10 @@ namespace pw{
         
         float mesPupilRadius = (((1.0-alpha) * result.leftRadius) + (alpha * result.rightRadius));
         
-        const int maxPupuilSize = 20;
-        const int minPupilSize = 5;
+        Mat measurement = Mat::zeros(1, 1, CV_32F);
+        
+        const float maxPupuilSize = 0.08;
+        const float minPupilSize = 0.03;
         if ( mesPupilRadius < maxPupuilSize && mesPupilRadius > minPupilSize ) {
             measurement.at<float>(0) = mesPupilRadius;
             predictPupilSize = KF.correct(measurement).at<float>(0);
@@ -444,8 +448,8 @@ namespace pw{
         //TODO Dont forget to specify max value.
         
         const int graphHeight = 600;
-        const float maxValue = 11;
-        const float minValue = 4;
+        const float maxValue = 0.1;
+        const float minValue = 0;
         
         PWGraph graph("PupilSignal");
         graph.drawGraph("left eye red, right eye blue",
