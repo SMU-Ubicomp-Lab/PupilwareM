@@ -44,7 +44,6 @@ namespace pw{
         
         if(radiusBuffer[radius]<=0.0f){
             radiusBuffer[radius] = radius * (1.0/sqrt(alpha));
-            std::cout << " Cal " << radiusBuffer[radius] << std::endl;
         }
         return radiusBuffer[radius];
     }

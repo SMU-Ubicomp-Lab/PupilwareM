@@ -10,7 +10,7 @@
 #include "Core/ThrowAssert.hpp"
 #include "Core/Property.hpp"
 #include "Core/logcpp/log.h"
-
+#include "Core/profiler/CWClock.hpp"
 
 #define REQUIRES throw_assert
 #define PROMISES throw_assert

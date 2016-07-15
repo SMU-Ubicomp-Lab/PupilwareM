@@ -319,7 +319,9 @@
          */
         auto cameraImage = [ObjCAdapter Mat2CIImage:cvFrame
                                         withContext:blockSelf.videoManager.ciContext];
+
         auto faceMeta = [blockSelf.faceRecognizer recognize:cameraImage];
+        
         faceMeta.setFrameNumber( (int)blockSelf.currentFrameNumber );
         blockSelf->pupilwareController->setFaceMeta(faceMeta);
         
@@ -331,10 +333,8 @@
         /* Update UI */
         [blockSelf updateUI:faceMeta.hasFace()];
         
-        
         /* Process the rest of the work (e.g. pupil segmentation..) */
         blockSelf->pupilwareController->processFrame(cvFrame, (int)blockSelf.currentFrameNumber );
-        
         
         /* create debug image */
         cv::Mat debugImg = [blockSelf _getDebugImage];
@@ -346,6 +346,7 @@
         
         /* Move to next frame */
         [blockSelf advanceFrame];
+        
         
         return debugImg;
         
