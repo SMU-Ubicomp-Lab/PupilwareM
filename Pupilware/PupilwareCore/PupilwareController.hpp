@@ -10,7 +10,7 @@
 #define PupilwareController_hpp
 
 #include "PWFaceMeta.hpp"
-
+#include "PWDataModel.hpp"
 
 namespace pw{
     
@@ -73,7 +73,7 @@ namespace pw{
         
         virtual int getCognitiveLoadLevel()const=0;
         virtual const cv::Mat& getDebugImage()const =0;
-        virtual const std::vector<float>& getRawPupilSignal()const =0;
+        virtual const PWDataModel& getRawPupilSignal()const =0;
         virtual const std::vector<float>& getSmoothPupilSignal() const =0;
         
         

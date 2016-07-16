@@ -96,7 +96,7 @@ namespace pw{
          */
         virtual int getCognitiveLoadLevel() const override;
         virtual const cv::Mat& getDebugImage() const override;
-        virtual const std::vector<float>& getRawPupilSignal() const override;
+        virtual const PWDataModel& getRawPupilSignal() const override;
         virtual const std::vector<float>& getSmoothPupilSignal() const override;
         virtual cv::Mat getGraphImage() const override;
         
@@ -197,7 +197,7 @@ namespace pw{
         
         setIdentity(KF.measurementMatrix);
         setIdentity(KF.processNoiseCov, Scalar::all(1e-5));
-        setIdentity(KF.measurementNoiseCov, Scalar::all(0.04));
+        setIdentity(KF.measurementNoiseCov, Scalar::all(1));
         setIdentity(KF.errorCovPost, Scalar::all(1));
         
         
@@ -427,13 +427,10 @@ namespace pw{
     }
     
     
-    const std::vector<float>& PupilwareControllerImpl::getRawPupilSignal() const{
+    const PWDataModel& PupilwareControllerImpl::getRawPupilSignal() const{
         
-        // TODO warning: return only left eye???
-        
-        return storage.getLeftPupilSizes();
+        return storage;
     }
-    
     
     const std::vector<float>& PupilwareControllerImpl::getSmoothPupilSignal() const{
         

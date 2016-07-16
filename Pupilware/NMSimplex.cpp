@@ -43,7 +43,7 @@ double NMSimplex::calc(const double* x) const {
             processor->processFrame(videoBuffer[i], i);
         }
         
-        auto rawPupilSizes = processor->getRawPupilSignal();
+        auto rawPupilSizes = processor->getRawPupilSignal().getLeftPupilSizes();
         stdV = calStd(rawPupilSizes);
         
 //        NSLog(@"[%d] Pupil Signal Size %lu", j, rawPupilSizes.size());

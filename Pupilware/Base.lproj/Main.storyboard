@@ -440,9 +440,24 @@
                                             <action selector="startBtnClicked:" destination="Ujk-lY-LaN" eventType="touchUpInside" id="yLX-Vb-tt1"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lgT-lc-G7x">
+                                        <rect key="frame" x="238" y="297" width="125" height="43"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="43" id="ArU-8B-BSJ"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="15"/>
+                                        <size key="titleShadowOffset" width="2.2250738585072014e-308" height="2.2250738585072014e-308"/>
+                                        <state key="normal" title="SAVE Pupil Size"/>
+                                        <connections>
+                                            <action selector="onSaveClicked:" destination="Ujk-lY-LaN" eventType="touchUpInside" id="8dT-F3-zhe"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="lgT-lc-G7x" firstAttribute="trailing" secondItem="xMF-7d-IyU" secondAttribute="trailing" id="14n-AD-nKS"/>
+                                    <constraint firstItem="lgT-lc-G7x" firstAttribute="top" secondItem="xMF-7d-IyU" secondAttribute="bottom" constant="8" symbolic="YES" id="3hq-Wu-nQy"/>
+                                    <constraint firstItem="lgT-lc-G7x" firstAttribute="leading" secondItem="xMF-7d-IyU" secondAttribute="leading" id="Ulc-rP-IOA"/>
                                     <constraint firstItem="xMF-7d-IyU" firstAttribute="centerX" secondItem="Vxq-eu-mg2" secondAttribute="centerX" id="W0l-5u-Tzk"/>
                                     <constraint firstItem="xMF-7d-IyU" firstAttribute="centerY" secondItem="Vxq-eu-mg2" secondAttribute="centerY" id="jkp-OP-kJs"/>
                                 </constraints>

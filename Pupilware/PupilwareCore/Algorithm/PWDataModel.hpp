@@ -29,7 +29,7 @@ namespace pw{
         
         void                        clear();
 
-
+        
     private:
 
         const unsigned int          MAXIMUM_BUFFER_SIZE = 16384; // 2^14
@@ -37,6 +37,7 @@ namespace pw{
         std::vector<float>          leftPupilSizes;
         std::vector<float>          rightPupilSizes;
     };
+    
 
 }
 

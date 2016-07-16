@@ -132,6 +132,13 @@
     }
 }
 
+- (IBAction)onSaveClicked:(id)sender {
+    NSString* filePath = [ObjCAdapter getOutputFilePath:@"pupil.csv"];
+    
+    auto pupilStorage = pupilwareController->getRawPupilSignal();
+    pw::PWCSVExporter::toCSV(pupilStorage, [filePath UTF8String]);
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    Objective C Implementation     /////////////////////////////////////
@@ -203,7 +210,6 @@
     [self initPupilwareCtrl];
 
 }
-
 
 
 
@@ -312,7 +318,6 @@
         if (!blockSelf->pupilwareController->hasStarted()) {
             return cvFrame;
         }
-        
         
         /*
          * Since we use iOS Face Recongizer, we need to inject faceMeta manually.

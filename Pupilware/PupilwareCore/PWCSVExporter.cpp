@@ -90,5 +90,27 @@ namespace pw{
     }
     
     
+    void PWCSVExporter::toCSV( const PWDataModel& data, const std::string& fileName ){
+        
+        std::ofstream f(fileName);
+        
+        const double fps = 1.0/30.0;
+        
+        if (f.is_open()) {
+            auto lpupil = data.getLeftPupilSizes();
+            auto rpupil = data.getRightPupilSizes();
+            
+            f << "time, left, right" << std::endl;
+            for (size_t i=0; i<lpupil.size(); ++i) {
+                f << i * fps << ",";
+                f << lpupil[i] << ",";
+                f << rpupil[i] << "\n";
+            }
+            
+        }
+        
+        f.close();
+
+    }
     
 }

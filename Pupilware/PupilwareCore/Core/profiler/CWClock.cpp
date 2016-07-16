@@ -37,7 +37,7 @@ namespace cw
     }
     
     double CWClock::stop(){
-        CWProfiler::accumulateTime(*this);
+//        CWProfiler::accumulateTime(*this);
         auto dt = getDeltaTime();
         reset();
         return dt;

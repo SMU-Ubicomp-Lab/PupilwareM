@@ -10,6 +10,7 @@
 
 #import "VideoAnalgesic.h"
 #import "ObjCAdapter.h"
+#import "../PupilwareCore/Core/profiler/CWClock.hpp"
 
 @interface PWIOSVideoReader()
 
@@ -87,12 +88,23 @@
                 CIImage* returnImage = cameraImage;
                 
                 if(!frame.empty()){
+                    cw::CWClock clock;
+                    
                     cv::Mat debugFrame;
                     debugFrame = blockSelf.processBlock(frame);
+
+                    
+                    /* Draw Time*/
+                    auto dtMS = clock.stop();
+                    NSString *fps = [NSString stringWithFormat:@"SPF %f", dtMS];
+                    
+                    cv::putText(debugFrame,[fps UTF8String], cv::Point(10,80), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255,255,255) );
+                    
+                    
                     /* Rotate it back. */
                     [ObjCAdapter Rotate90:debugFrame withFlag:2];
                     returnImage = [ObjCAdapter Mat2CIImage:debugFrame
-                                                withContext:blockSelf.videoManager.ciContext];
+                                               withContext:blockSelf.videoManager.ciContext];
                 }
                 
                 
