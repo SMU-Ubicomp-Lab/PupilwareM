@@ -87,8 +87,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    dlog(logDEBUG1) << "view loaded";
-    
     [self initSystem];
     
 }
@@ -331,8 +329,8 @@
         blockSelf->pupilwareController->setFaceMeta(faceMeta);
         
         /* Write data to files*/
-        blockSelf->videoWriter << cvFrame;
-        blockSelf->csvExporter << faceMeta;
+//        blockSelf->videoWriter << cvFrame;
+//        blockSelf->csvExporter << faceMeta;
         
         
         /* Update UI */

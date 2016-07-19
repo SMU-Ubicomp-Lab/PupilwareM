@@ -112,6 +112,8 @@ namespace pw{
         PWDataModel         storage;                    // Store left and right pupil size signals
         std::vector<float>  smoothPupilSize;
         std::vector<float>  eyeDistancePx;              // Store eye distance signal
+        std::vector<float>  leftEyeCloses;
+        std::vector<float>  rightEyeCloses;
         
         std::shared_ptr<IImageSegmenter> imgSegAlgo;    // This algorithm is not required if
                                                         // providing manally providing a face meta
@@ -197,7 +199,7 @@ namespace pw{
         
         setIdentity(KF.measurementMatrix);
         setIdentity(KF.processNoiseCov, Scalar::all(1e-5));
-        setIdentity(KF.measurementNoiseCov, Scalar::all(1));
+        setIdentity(KF.measurementNoiseCov, Scalar::all(0.02));
         setIdentity(KF.errorCovPost, Scalar::all(1));
         
         
@@ -363,13 +365,15 @@ namespace pw{
         
         const float maxPupuilSize = 0.08;
         const float minPupilSize = 0.03;
-        if ( mesPupilRadius < maxPupuilSize && mesPupilRadius > minPupilSize ) {
+        if ( (mesPupilRadius <= maxPupuilSize && mesPupilRadius >= minPupilSize)
+            && (!faceMeta.isLeftEyeClosed() || !faceMeta.isRightEyeClosed()) ) {
             measurement.at<float>(0) = mesPupilRadius;
             predictPupilSize = KF.correct(measurement).at<float>(0);
             
         }
         else{
             predictPupilSize = prediction.at<float>(0);
+            std::cout << "predict " << predictPupilSize << std::endl;
         }
         
         smoothPupilSize.push_back(predictPupilSize);
@@ -382,6 +386,8 @@ namespace pw{
 //        storage.setPupilSizeAt( currentFrameNumber, result );
         storage.addPupilSize(result);
         eyeDistancePx.push_back( eyeDist );
+        leftEyeCloses.push_back( faceMeta.isLeftEyeClosed()?0.06:0 );
+        rightEyeCloses.push_back( faceMeta.isRightEyeClosed()?0.06:0 );
         
         
         
@@ -445,10 +451,20 @@ namespace pw{
         //TODO Dont forget to specify max value.
         
         const int graphHeight = 600;
-        const float maxValue = 0.1;
-        const float minValue = 0;
+        const float maxValue = 0.07;
+        const float minValue = 0.03;
         
         PWGraph graph("PupilSignal");
+        
+        graph.drawGraph(" ",
+                        leftEyeCloses,        // Data
+                        cv::Scalar(200,200,100),               // Line color
+                        minValue,                                  // Min value
+                        maxValue,                                  // Max value
+                        debugImg.cols,                      // Width
+                        graphHeight);                               // Height
+
+        
         graph.drawGraph("left eye red, right eye blue",
                         storage.getLeftPupilSizes(),        // Data
                         cv::Scalar(100,255,100),               // Line color

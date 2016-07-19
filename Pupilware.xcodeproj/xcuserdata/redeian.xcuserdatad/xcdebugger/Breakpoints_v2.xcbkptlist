@@ -90,12 +90,44 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pupilware/PupilwareCore/PupilwareController.cpp"
-            timestampString = "490382622.089701"
+            timestampString = "490644863.296459"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "430"
-            endingLineNumber = "430"
+            startingLineNumber = "436"
+            endingLineNumber = "436"
             landmarkName = "PupilwareControllerImpl::getRawPupilSignal()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pupilware/PupilwareCore/PupilwareController.cpp"
+            timestampString = "490644863.296459"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "468"
+            endingLineNumber = "468"
+            landmarkName = "PupilwareControllerImpl::getGraphImage()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pupilware/PupilwareCore/PupilwareController.cpp"
+            timestampString = "490645484.542926"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "376"
+            endingLineNumber = "376"
+            landmarkName = "PupilwareControllerImpl::processFrame( const cv::Mat&amp; srcFrame, unsigned int frameNumber )"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

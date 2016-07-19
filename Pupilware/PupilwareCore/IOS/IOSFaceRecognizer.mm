@@ -13,6 +13,7 @@
 @interface IOSFaceRecognizer()
 
 @property(strong, nonatomic) CIDetector *detector;
+@property(strong, nonatomic) CIContext *context;
 
 @end
 
@@ -26,11 +27,13 @@
     
     if ( self = [super init] )
     {
-        __block NSDictionary *opts = @{CIDetectorAccuracy: CIDetectorAccuracyLow, CIDetectorEyeBlink:@YES};
+        NSDictionary *opts = @{CIDetectorAccuracy: CIDetectorAccuracyLow};
         
         self.detector = [CIDetector detectorOfType:CIDetectorTypeFace
                                            context:context
                                            options:opts];
+        
+        self.context = context;
     
         return self;
     }
@@ -49,7 +52,9 @@
     pw::PWFaceMeta returnFaceMeta;
     
     NSDictionary *opts;
-    opts = @{CIDetectorImageOrientation:@1};
+    opts = @{CIDetectorImageOrientation:@1,
+             CIDetectorEyeBlink:@YES,
+             CIDetectorNumberOfAngles:@YES};
     
     NSArray *faceFeatures = [self.detector featuresInImage: cameraImage options:opts];
     
@@ -75,7 +80,8 @@
         returnFaceMeta.setFaceRect(faceRect);
         returnFaceMeta.setLeftEyeClosed(face.leftEyeClosed);
         returnFaceMeta.setRightEyeClosed(face.rightEyeClosed);
-
+        
+        
         returnFaceMeta.setLeftEyeRect(cv::Rect(leftEyeCenter.x - kEyeBound,
                                                    leftEyeCenter.y - kEyeBound,
                                                    kEyeBound*2,
