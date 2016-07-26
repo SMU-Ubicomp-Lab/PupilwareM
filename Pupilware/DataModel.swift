@@ -3,6 +3,7 @@
 //  Pupilware
 //
 //  Created by Raymond Martin on 1/27/16.
+//  Edited by Chatchai Mark Wangwiwattana on 7/26/2016.
 //  Copyright © 2016 Raymond Martin. All rights reserved.
 //
 
@@ -15,7 +16,7 @@ import Foundation
     var faceInView:Bool = false
     var currentTest:Test?
     var digitIteration = 0
-    var calibration_files = (right_eye:"", left_eye:"", params:"", data:"")
+    var calibration_files = (face:"", params:"", data:"")
     var settings = (dist:60, movAvg:11, medBlur:11, baseStart:20, baseEnd:40, thresh:15, markCost:1, baseline: 0, cogHigh:0)
     var lumMode = true
     var bridgeDelegate:BridgeDelegate?
@@ -63,12 +64,8 @@ import Foundation
         NSUserDefaults.standardUserDefaults().setObject(data, forKey: "allSubjectIDs")
     }
     
-    func getRighEyeName()->NSString{
-        return self.currentTest!.getRighEyeFileName()
-    }
-    
-    func getLeftEyeName()->NSString{
-        return self.currentTest!.getLeftEyeFileName()
+    func getFaceFileName()->NSString{
+        return self.currentTest!.getFaceFileName()
     }
     
     func getCSVFileName()->NSString{
@@ -85,26 +82,21 @@ import Foundation
     
     func setNewCalibrationFiles(){
         let id:String = String(Int64(NSDate().timeIntervalSince1970*1000.0))
-        calibration_files.right_eye = "calibration_right_eye_\(id).mp4"
-        calibration_files.left_eye = "calibration_left_eye_\(id).mp4"
-        calibration_files.params = "calibration_params_\(id).csv"
-        calibration_files.data = "calibration_data_\(id)"
+        calibration_files.face = "\(currentSubjectID)_calib_face_\(id).mp4"
+        calibration_files.params = "\(currentSubjectID)_calib_params_\(id).csv"
+        calibration_files.data = "\(currentSubjectID)_calib_data_\(id)"
 
     }
-    
-    func getCalibrationRightEye()->NSString{
-        return calibration_files.right_eye
+
+    func getCalibrationFaceVideoFileName()->NSString{
+        return calibration_files.face
     }
     
-    func getCalibrationLeftEye()->NSString{
-        return calibration_files.left_eye
-    }
-    
-    func getCalibrationParams()->NSString{
+    func getCalibrationParamsFileName()->NSString{
         return calibration_files.params
     }
 
-    func getCalibrationData()->NSString{
+    func getCalibrationDataFileName()->NSString{
         return calibration_files.data
     }
 
@@ -157,8 +149,7 @@ protocol Test{
     func completeTest()
     func getDigits()->[Int]
     func writeData()
-    func getRighEyeFileName()->String
-    func getLeftEyeFileName()->String
+    func getFaceFileName()->String
     func getCSVFileName()->String
     func getCALFileName()->String
 }
@@ -167,7 +158,7 @@ class TargetTest: Test{
     let model = DataModel.sharedInstance
     let ID:String = String(Int64(NSDate().timeIntervalSince1970*1000.0))
     var missing_digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
-    var labels = (rightEye:"", leftEye:"", csvFile:"", calFile:"")
+    var labels = (face:"", csvFile:"", calFile:"")
     
     
     init(subjectID:String, missing_digits:Int, iter:Int, exact_lux:Double){
@@ -177,18 +168,13 @@ class TargetTest: Test{
         self.exact_lux = exact_lux
         self.subjectID = subjectID
         self.angle = -1
-        self.labels.rightEye = "righteye_\(self.ID).mp4"
-        self.labels.leftEye = "lefteye_\(self.ID).mp4"
-        self.labels.csvFile = "test_data_\(self.ID).csv"
-        self.labels.calFile = "calibration_data_\(self.ID).csv"
+        self.labels.face = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_face.mp4"
+        self.labels.csvFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_result.csv"
+        self.labels.calFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_calib.csv"
     }
     
-    func getRighEyeFileName() -> String {
-        return labels.rightEye
-    }
-    
-    func getLeftEyeFileName() -> String {
-        return labels.leftEye
+    func getFaceFileName() -> String {
+        return labels.face
     }
     
     func getCALFileName() -> String {
@@ -231,7 +217,8 @@ class TargetTest: Test{
     func writeData(){
         var attempt = 1
         while (attempt <= 999){
-            let fileName = "\(self.ID)_\(String(format: "%03d", attempt)).json"
+            let fileName = "\(self.subjectID)_target_meta_\(self.ID)_\(String(format: "%03d", attempt)).json"
+            
             if(self.writeJSONFile(fileName)){
                 break
             }
@@ -249,13 +236,11 @@ class TargetTest: Test{
             "lux_level" : self.lux,
             "exact_lux_level" : self.exact_lux,
             "angle" : self.angle,
-            "right_eye_file_name" : self.labels.rightEye,
-            "left_eye_file_name" : self.labels.leftEye,
+            "face_file_name" : self.labels.face,
             "csv_data_file_name" : self.labels.csvFile,
-            "calibration_right_eye" : model.getCalibrationRightEye(),
-            "calibration_left_eye" : model.getCalibrationLeftEye(),
-            "parameter_file" : model.getCalibrationParams(),
-            "calibration_data_file" : model.getCalibrationData(),
+            "calibration_face" : model.getCalibrationFaceVideoFileName(),
+            "parameter_file" : model.getCalibrationParamsFileName(),
+            "calibration_data_file" : model.getCalibrationDataFileName(),
             "write_time" : self.getTimeStamp(),
             "ID" : self.ID
         ]
@@ -304,7 +289,7 @@ class DigitTest: Test{
     let model = DataModel.sharedInstance
     let ID:String = String(Int64(NSDate().timeIntervalSince1970*1000.0))
     var digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
-    var labels = (rightEye:"", leftEye:"", csvFile:"", calFile:"")
+    var labels = (face:"", csvFile:"", calFile:"")
     
     
     init(subjectID:String, digits:Int, iter:Int, lux:Int, exact_lux:Double){
@@ -314,10 +299,9 @@ class DigitTest: Test{
         self.exact_lux = exact_lux
         self.subjectID = subjectID
         self.angle = -1
-        self.labels.rightEye = "righteye_\(self.ID).mp4"
-        self.labels.leftEye = "lefteye_\(self.ID).mp4"
-        self.labels.csvFile = "test_data_\(self.ID).csv"
-        self.labels.calFile = "calibration_data_\(self.ID).csv"
+        self.labels.face = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_face.mp4"
+        self.labels.csvFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_result.csv"
+        self.labels.calFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_calib.csv"
     }
     
     init(subjectID:String, digits:Int, iter:Int, angle:Int, exact_lux:Double){
@@ -327,18 +311,14 @@ class DigitTest: Test{
         self.exact_lux = exact_lux
         self.subjectID = subjectID
         self.angle = angle
-        self.labels.rightEye = "righteye_\(self.ID).mp4"
-        self.labels.leftEye = "lefteye_\(self.ID).mp4"
-        self.labels.csvFile = "test_data_\(self.ID).csv"
-        self.labels.calFile = "calibration_data_\(self.ID).csv"
+        self.labels.face = "\(self.subjectID)_digit_ang\(self.angle)_dgt\(self.digits)_itr\(self.iter)_face.mp4"
+        self.labels.csvFile = "\(self.subjectID)_digit_ang\(self.angle)_dgt\(self.digits)_itr\(self.iter)_result.csv"
+        self.labels.calFile = "\(self.subjectID)_digit_ang\(self.angle)_dgt\(self.digits)_itr\(self.iter)_calib.csv"
     }
+
     
-    func getRighEyeFileName() -> String {
-        return labels.rightEye
-    }
-    
-    func getLeftEyeFileName() -> String {
-        return labels.leftEye
+    func getFaceFileName() -> String {
+        return labels.face
     }
     
     func getCALFileName() -> String {
@@ -429,7 +409,7 @@ class DigitTest: Test{
     func writeData(){
         var attempt = 1
         while (attempt <= 999){
-            let fileName = "\(self.ID)_\(String(format: "%03d", attempt)).json"
+            let fileName = "\(self.subjectID)_digit_meta_\(self.ID)_\(String(format: "%03d", attempt)).json"
             if(self.writeJSONFile(fileName)){
                 break
             }
@@ -447,13 +427,11 @@ class DigitTest: Test{
             "lux_level" : self.lux,
             "exact_lux_level" : self.exact_lux,
             "angle" : self.angle,
-            "right_eye_file_name" : self.labels.rightEye,
-            "left_eye_file_name" : self.labels.leftEye,
-            "csv_data_file_name" : self.labels.csvFile,
-            "calibration_right_eye" : model.getCalibrationRightEye(),
-            "calibration_left_eye" : model.getCalibrationLeftEye(),
-            "parameter_file" : model.getCalibrationParams(),
-            "calibration_data_file" : model.getCalibrationData(),
+            "face_filename" : self.labels.face,
+            "csv_data_filename" : self.labels.csvFile,
+            "calibration_face" : model.getCalibrationFaceVideoFileName(),
+            "parameter_file" : model.getCalibrationParamsFileName(),
+            "calibration_data_file" : model.getCalibrationDataFileName(),
             "write_time" : self.getTimeStamp(),
             "ID" : self.ID
         ]

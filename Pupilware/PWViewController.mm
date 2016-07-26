@@ -214,16 +214,10 @@
 -(void)initVideoWriter
 {
     
-//    NSString* leftOutputFilePath = [self getOutputFilePath:self.model.getLeftEyeName];
-//    NSString* rightOutputFilePath = [self getOutputFilePath:self.model.getRighEyeName];
-//    
-    // TODO: use the real user id as a file name.
-    auto fileName = [NSString stringWithFormat:@"face%ld.mp4", (long)[[NSDate date] timeIntervalSince1970]];
+    NSString* fileName = self.model.getFaceFileName;
     
     NSString* videoPath = [ObjCAdapter getOutputFilePath: fileName];
     
-    // TODO: change it to iPhone6s Frame Size.
-//    cv::Size frameSize (360,480);
     cv::Size frameSize (720,1280);
     if(!videoWriter.open([videoPath UTF8String], 30, frameSize))
     {
@@ -234,10 +228,8 @@
 
 -(void)initCSVExporter
 {
-    // TODO: use the real user id as a file name.
-    auto fileName = [NSString stringWithFormat:@"face%ld.csv", (long)[[NSDate date] timeIntervalSince1970]];
     
-    NSString* filePath = [ObjCAdapter getOutputFilePath: fileName];
+    NSString* filePath = [ObjCAdapter getOutputFilePath: self.model.getCSVFileName];
     
     csvExporter.open([filePath UTF8String]);
 }
@@ -294,10 +286,10 @@
 {
     
     /* Process from a video file, uncomment this block*/
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"v513.mp4"];
-    [self.videoManager open:filePath];
+//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    NSString *documentsDirectory = [paths objectAtIndex:0];
+//    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"v513.mp4"];
+//    [self.videoManager open:filePath];
     /*----------------------------------------------------------------------------------------*/
     
     
@@ -329,8 +321,8 @@
         blockSelf->pupilwareController->setFaceMeta(faceMeta);
         
         /* Write data to files*/
-//        blockSelf->videoWriter << cvFrame;
-//        blockSelf->csvExporter << faceMeta;
+        blockSelf->videoWriter << cvFrame;
+        blockSelf->csvExporter << faceMeta;
         
         
         /* Update UI */

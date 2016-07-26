@@ -41,12 +41,14 @@
 @interface PWCalibratingViewController ()
 
 
-@property (strong, nonatomic) PWIOSVideoReader *videoManager;         /* Manage iOS Video input      */
-@property (strong, nonatomic) IOSFaceRecognizer *faceRecognizer;    /* recognize face from ICImage */
+@property (strong, nonatomic) PWIOSVideoReader *videoManager;       /* Manage iOS Video input      */
+@property (strong, nonatomic) IOSFaceRecognizer *faceRecognizer;    /* Recognize face from ICImage */
 @property (strong,nonatomic) DataModel *model;                      /* Connect with Swift UI       */
+@property (strong, nonatomic)NSTimer*   timer;                      /* Buffering timer*/
 
 @property NSUInteger currentFrameNumber;
-@property Boolean    calibrating;
+@property Boolean    buffering;
+
 
 - (IBAction)startBtnClicked:(id)sender;
 
@@ -127,7 +129,7 @@
     [super viewDidAppear:animated];
     
     [self startVideoManager];
-    [self startCalibrating];
+    [self startBuffering];
 
 }
 
@@ -135,7 +137,13 @@
 -(void)viewWillDisappear:(BOOL)animated
 {
     [self stopVideoManager];
-    [self stopCalibrating];
+    [self clearBuffer];
+    
+    // Clear timer
+    if(self.timer){
+        [self.timer invalidate];
+        self.timer = nil;
+    }
     
     [super viewWillDisappear:animated];
     
@@ -151,7 +159,7 @@
     
     [self toggleBuffering];
     
-    if(self.calibrating)
+    if(self.buffering)
     {
         [sender setTitle:@"Stop" forState: UIControlStateNormal];
     }
@@ -188,52 +196,50 @@
 
 -(void) toggleBuffering{
     
-    if(self.calibrating)
+    if(self.buffering)
     {
-        [self stopCalibrating];
+        [self stopBufferingAndCalibrate];
     }
     else
     {
-        [self startCalibrating];
+        [self startBuffering];
     }
 
 }
 
 
--(void) startCalibrating
+-(void) startBuffering
 {
-    if(!self.calibrating)
+    if(!self.buffering)
     {
         self.currentFrameNumber = 0;
-        self.calibrating = true;
+        self.buffering = true;
         
         [self clearBuffer];
         
 
         // Only capture for kCaptureBaselineTime seconds
-        [NSTimer scheduledTimerWithTimeInterval:kCalibrationDuration
-                                         target:self
-                                       selector:@selector(stopCalibrating)
-                                       userInfo:nil
-                                        repeats:NO];
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:kCalibrationDuration
+                                                     target:self
+                                                   selector:@selector(stopBufferingAndCalibrate)
+                                                   userInfo:nil
+                                                    repeats:NO];
         
         
     }
 }
 
-
--(void) stopCalibrating
-{
-    if(self.calibrating)
+-(void) stopBufferingAndCalibrate{
+    if(self.buffering)
     {
         
-        self.calibrating = false;
+        self.buffering = false;
         
         [self calibrate];
         
-        [self.model.bridgeDelegate finishCalibration];
-        
         [self clearBuffer];
+        
+        [self.model.bridgeDelegate finishCalibration];
         
     }
 }
@@ -321,7 +327,7 @@
     
     [self.videoManager setProcessBlock:^(const cv::Mat& cvFrame){
 
-        if (!blockSelf.calibrating) {
+        if (!blockSelf.buffering) {
             return cvFrame;
         }
         

@@ -373,7 +373,7 @@ namespace pw{
         }
         else{
             predictPupilSize = prediction.at<float>(0);
-            std::cout << "predict " << predictPupilSize << std::endl;
+//            std::cout << "predict " << predictPupilSize << std::endl;
         }
         
         smoothPupilSize.push_back(predictPupilSize);
