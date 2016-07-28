@@ -145,6 +145,9 @@
         self.timer = nil;
     }
     
+    // close files
+    [self closeFiles];
+    
     [super viewWillDisappear:animated];
     
 }
@@ -251,12 +254,39 @@
             
     [self initVideoManager];
     
+    // tell swift to create new set of file name
     [self.model setNewCalibrationFiles];
     
+    // init writing files modules.
+    // They get file names from Swift DataModel
+    [self initVideoWriter];
+    [self initCSVExporter];
+    
+    // init Pupilware
     [self initPupilwareCtrl];
     
-    
 
+}
+
+-(void)initVideoWriter
+{
+    
+    NSString* videoPath = [ObjCAdapter getOutputFilePath: self.model.getCalibrationFaceVideoFileName];
+    
+    cv::Size frameSize (720,1280);
+    if(!videoWriter.open([videoPath UTF8String], 30, frameSize))
+    {
+        NSLog(@"Video Writer is not opened correctedly.");
+    }
+}
+
+
+-(void)initCSVExporter
+{
+    
+    NSString* filePath = [ObjCAdapter getOutputFilePath: self.model.getCalibrationDataFileName];
+    
+    csvExporter.open([filePath UTF8String]);
 }
 
 
@@ -339,8 +369,14 @@
         auto faceMeta = [blockSelf.faceRecognizer recognize:cameraImage];
         faceMeta.setFrameNumber( (int) blockSelf.currentFrameNumber);
         
+        // store the frame in memory
         blockSelf->videoFrameBuffer.push_back(cvFrame);
         blockSelf->faceMetaBuffer.push_back( faceMeta );
+        
+        // store the frame in files
+        blockSelf->videoWriter << cvFrame;
+        blockSelf->csvExporter << faceMeta;
+        
         
         blockSelf.currentFrameNumber += 1;
         
@@ -395,6 +431,13 @@
 -(void)clearBuffer{
     videoFrameBuffer.clear();
     faceMetaBuffer.clear();
+}
+
+-(void)closeFiles{
+    
+    videoWriter.close();
+    csvExporter.close();
+    
 }
 
 @end
