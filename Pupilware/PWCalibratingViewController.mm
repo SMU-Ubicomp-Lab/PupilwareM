@@ -43,8 +43,8 @@
 
 @property (strong, nonatomic) PWIOSVideoReader *videoManager;       /* Manage iOS Video input      */
 @property (strong, nonatomic) IOSFaceRecognizer *faceRecognizer;    /* Recognize face from ICImage */
-@property (strong,nonatomic) DataModel *model;                      /* Connect with Swift UI       */
-@property (strong, nonatomic)NSTimer*   timer;                      /* Buffering timer*/
+@property (strong, nonatomic) DataModel *model;                      /* Connect with Swift UI       */
+@property (strong, nonatomic) NSTimer*   timer;                      /* Buffering timer*/
 
 @property NSUInteger currentFrameNumber;
 @property Boolean    buffering;
