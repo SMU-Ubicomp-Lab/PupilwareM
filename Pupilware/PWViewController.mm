@@ -42,8 +42,6 @@
 @property (strong,nonatomic) DataModel *model;                      /* Connect with Swift UI       */
 
 @property NSUInteger currentFrameNumber;
-@property (strong, atomic) CIImage* ciCurrentFrame;
-
 
 - (IBAction)startBtnClicked:(id)sender;
 
@@ -58,8 +56,11 @@
     pw::PWVideoWriter videoWriter;
     pw::PWCSVExporter csvExporter;
     
+    //this block is sharing memory
     cv::Mat currentFrame;
     cv::Mat debugFrame;
+    pw::PWFaceMeta faceMeta;
+    //----------------------
     
     int count;
     
@@ -253,53 +254,23 @@
     
     pupilwareController->setPupilSegmentationAlgorihtm( pwAlgo );
     
-    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        
         while(true){
             
-            int currentFrameN = 0;
-            cv::Mat frame;
-            CIImage* cameraImage;
-            
-            @synchronized (self) {
-                if( count == self.currentFrameNumber ) continue;
-                if( currentFrame.empty() ) continue;
-                
-                currentFrameN = (int)self.currentFrameNumber;
-                frame = currentFrame.clone();
-                cameraImage = self.ciCurrentFrame;
-                
-            }
-            
-            if (frame.empty()) {
-                continue;
-            }
-            
-            auto faceMeta = [self.faceRecognizer recognize:cameraImage];
-            
-                                NSLog(@"process %d, currentFrameNuber %d", count, currentFrameN);
-                                count = currentFrameN;
-        }
-    }];
-    // schedule task on background queue:
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    [queue addOperation:operation];
-    
-//    dispatch_queue_t queue1 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-//    dispatch_async(queue1, ^{
-//        
-//        while(true){
-//            
 //            int currentFrameN = 0;
 //            cv::Mat frame;
-//            CIImage* cameraImage;
+//            pw::PWFaceMeta _faceMeta;
 //            
+//            /* Copy data from shared memory */
 //            @synchronized (self) {
 //                if( count == self.currentFrameNumber ) continue;
 //                if( currentFrame.empty() ) continue;
 //                
 //                currentFrameN = (int)self.currentFrameNumber;
 //                frame = currentFrame.clone();
-//                cameraImage = self.ciCurrentFrame;
+//                _faceMeta = self->faceMeta;
 //                
 //            }
 //            
@@ -308,50 +279,34 @@
 //            }
 //            
 //    
-//            
-//                    /*
-//                     * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
-//                     */
-////                    auto cameraImage = [ObjCAdapter Mat2CIImage:frame
-////                                                    withContext:self.videoManager.ciContext];
-////
-////            
-////
-//                    auto faceMeta = [self.faceRecognizer recognize:cameraImage];
-////
-////                    faceMeta.setFrameNumber( (int)self.currentFrameNumber );
-////                    self->pupilwareController->setFaceMeta(faceMeta);
-////                    
-////                    /* Write data to files*/
-////                    self->csvExporter << faceMeta;
-////                    
-////                    
-////                    /* Update UI */
-////                    [self updateUI:faceMeta.hasFace()];
-////                    
-////                    /* Process the rest of the work (e.g. pupil segmentation..) */
-////                    self->pupilwareController->processFrame(currentFrame, (int)self.currentFrameNumber );
-////                    
-////                    /* create debug image */
-////                    cv::Mat debugImg = [self _getDebugImage];
-////                    
-////                    if(debugImg.empty()){
-////                        debugImg = currentFrame;
-////                    }
-////                    
-////                    self->debugFrame = debugImg.clone();
+//                    self->pupilwareController->setFaceMeta(_faceMeta);
+//                    /* Process the rest of the work (e.g. pupil segmentation..) */
+//                    self->pupilwareController->processFrame(currentFrame, (int)self.currentFrameNumber );
 //                    
+//                    /* create debug image */
+//                    cv::Mat debugImg = [self _getDebugImage];
+//                    
+//                    if(debugImg.empty()){
+//                        debugImg = currentFrame;
+//                    }
+//                    
+//                    self->debugFrame = debugImg.clone();
+//            
+//            
 //                    /* Move to next frame */
 ////                    [blockSelf advanceFrame];
 //
 //                    
 //                    NSLog(@"process %d, currentFrameNuber %d", count, currentFrameN);
 //                    count = currentFrameN;
-//                
-//            
-//        }
-//
-//    });
+            
+            NSLog(@"----");
+            sleep(1);
+            
+            
+        }
+
+    });
     
     /*!
      * If there is no a face segmentation algorithm,
@@ -419,18 +374,35 @@
         }
         
         cv::Mat returnFrame = cvFrame;
+
+        auto cameraImage = [ObjCAdapter Mat2CIImage:cvFrame
+                                        withContext:blockSelf.videoManager.ciContext];
         
+        
+        
+        auto _faceMeta = [blockSelf.faceRecognizer recognize:cameraImage];
+        _faceMeta.setFrameNumber( (int)blockSelf.currentFrameNumber );
+        
+        /* Write data to files*/
+        blockSelf->csvExporter << _faceMeta;
         blockSelf->videoWriter << cvFrame;
         
+        
+        /* Update UI */
+        [blockSelf updateUI:_faceMeta.hasFace()];
+        
+
+        /* Put data to shared memory */
         @synchronized (blockSelf) {
             blockSelf->currentFrame = cvFrame.clone();
-            blockSelf.ciCurrentFrame = [ObjCAdapter Mat2CIImage:cvFrame
-                                         withContext:blockSelf.videoManager.ciContext];
+            blockSelf->faceMeta = _faceMeta;
             
             NSLog(@">> add %lu", (unsigned long)blockSelf.currentFrameNumber);
+            
 //            returnFrame = blockSelf->debugFrame;
         }
         
+        /* Update state */
         blockSelf.currentFrameNumber ++;
         
         return returnFrame;
