@@ -10,9 +10,12 @@ import UIKit
 
 class homeVC: UITabBarController {
     let model = DataModel.sharedInstance
+
+    let sT = SyncTobbiGlass()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        sT.sendPacket("blabla")
     }
 }
 
