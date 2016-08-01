@@ -43,7 +43,6 @@
 
 @property NSUInteger currentFrameNumber;
 
-
 - (IBAction)startBtnClicked:(id)sender;
 
 @end
@@ -57,7 +56,15 @@
     pw::PWVideoWriter videoWriter;
     pw::PWCSVExporter csvExporter;
     
+
     cw::CWClock mainClock;
+    //this block is sharing memory
+    cv::Mat currentFrame;
+    cv::Mat debugFrame;
+    pw::PWFaceMeta faceMeta;
+    //----------------------
+    
+    int count;
     
 }
 
@@ -217,7 +224,6 @@
 {
     
 //    NSString* fileName = self.model.getFaceFileName;
-
     NSString* fileName = @"face.mp4";
     
     NSString* videoPath = [ObjCAdapter getOutputFilePath: fileName];
@@ -252,7 +258,69 @@
     
     pupilwareController->setPupilSegmentationAlgorihtm( pwAlgo );
     
-    /*! 
+    /*!
+     * If there is no a face segmentation algorithm,
+     * we have to manually give Face Meta data to the system.
+     */
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"haarcascade_frontalface_default" ofType:@"xml"];
+        const char *filePath = [path cStringUsingEncoding:NSUTF8StringEncoding];
+    
+        NSLog(@"%s", filePath);
+        pupilwareController->setFaceSegmentationAlgoirhtm(std::make_shared<pw::SimpleImageSegmenter>(filePath));
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        
+        while(true){
+            
+            int currentFrameN = 0;
+            cv::Mat frame;
+        
+            
+            /* Copy data from shared memory */
+            @synchronized (self) {
+                if( count == self.currentFrameNumber ) continue;
+                if( currentFrame.empty() ) continue;
+                
+                currentFrameN = (int)self.currentFrameNumber;
+                frame = currentFrame.clone();
+                
+                /* create debug image */
+                cv::Mat debugImg = [self _getDebugImage];
+                
+                if(debugImg.empty()){
+                    debugImg = frame;
+                }
+                self->debugFrame = debugImg.clone();
+                
+                
+            }
+            
+            if (frame.empty()) {
+                continue;
+            }
+            
+    
+
+                    /* Process the rest of the work (e.g. pupil segmentation..) */
+                    self->pupilwareController->processFrame(frame, currentFrameN );
+                    
+
+                    /* Move to next frame */
+//                    [blockSelf advanceFrame];
+
+                    
+                    NSLog(@"previousFrameNumber %d, currentFrameNumber %d", count, currentFrameN);
+                    count = currentFrameN;
+            
+//            sleep(0.1);
+            
+            
+        }
+
+    });
+    
+    /*!
      * If there is no a face segmentation algorithm,
      * we have to manually give Face Meta data to the system.
      */
@@ -312,60 +380,71 @@
     
     [self.videoManager setProcessBlock:^(const cv::Mat& cvFrame){
         
+        
         if (!blockSelf->pupilwareController->hasStarted()) {
             return cvFrame;
         }
         
+//        cv::Mat scaledFace;
+//        cv::pyrDown(cvFrame, scaledFace);
+//        cv::pyrDown(scaledFace, scaledFace);
+//        
+//        /*
+//         * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
+//         */
+//        auto cameraImage = [ObjCAdapter Mat2CIImage:scaledFace
+//                                        withContext:blockSelf.videoManager.ciContext];
+//
+//        auto faceMeta = [blockSelf.faceRecognizer recognize:cameraImage];
+//
+//        faceMeta = faceMeta * 4;
 
-        cv::Mat scaledFace;
-        cv::pyrDown(cvFrame, scaledFace);
-        cv::pyrDown(scaledFace, scaledFace);
-        
-        /*
-         * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
-         */
-        auto cameraImage = [ObjCAdapter Mat2CIImage:scaledFace
-                                        withContext:blockSelf.videoManager.ciContext];
-
-        auto faceMeta = [blockSelf.faceRecognizer recognize:cameraImage];
-
-        faceMeta = faceMeta * 4;
-        
-        faceMeta.setFrameNumber( (int)blockSelf.currentFrameNumber );
-        blockSelf->pupilwareController->setFaceMeta(faceMeta);
-        
+        cv::Mat returnFrame = cvFrame;
         
         
         /* Write data to files*/
+//        blockSelf->csvExporter << _faceMeta;
         blockSelf->videoWriter << cvFrame;
-        blockSelf->csvExporter << faceMeta;
         
 
         /* Update UI */
-        [blockSelf updateUI:faceMeta.hasFace()];
+//        [blockSelf updateUI:_faceMeta.hasFace()];
         
         
-        /* Process the rest of the work (e.g. pupil segmentation..) */
-        blockSelf->pupilwareController->processFrame(cvFrame, (int)blockSelf.currentFrameNumber );
+//        /* Process the rest of the work (e.g. pupil segmentation..) */
+//        blockSelf->pupilwareController->processFrame(cvFrame, (int)blockSelf.currentFrameNumber );
+//
+//        
+//        /* create debug image */
+//        cv::Mat debugImg;
+//        debugImg = [blockSelf _getDebugImage];
+//        
+//        if(debugImg.empty()){
+//            debugImg = cvFrame;
 
-        
-        /* create debug image */
-        cv::Mat debugImg;
-        debugImg = [blockSelf _getDebugImage];
-        
-        if(debugImg.empty()){
-            debugImg = cvFrame;
+
+        /* Put data to shared memory */
+        @synchronized (blockSelf) {
+            blockSelf->currentFrame = cvFrame.clone();
+            
+            NSLog(@">> add %lu", (unsigned long)blockSelf.currentFrameNumber);
+            
+            returnFrame = blockSelf->debugFrame;
+
         }
         
+        /* Update state */
+        blockSelf.currentFrameNumber ++;
         
+
         /* Move to next frame */
-        [blockSelf advanceFrame];
+//        [blockSelf advanceFrame];
         
         
         NSLog(@"spf %f", blockSelf->mainClock.getTime());
         blockSelf->mainClock.reset();
         
-        return cvFrame;
+        return returnFrame;
         
         
         //TODO: Enable This block in release built.
