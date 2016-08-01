@@ -100,6 +100,7 @@ namespace pw{
         virtual const std::vector<float>& getSmoothPupilSignal() const override;
         virtual cv::Mat getGraphImage() const override;
         
+        virtual const pw::PWFaceMeta& getFaceMeta() const override;
         
         
         /*! --------------------------------------------------------------------------------
@@ -243,6 +244,9 @@ namespace pw{
         smoothPupilSize.clear();
     }
     
+    const pw::PWFaceMeta& PupilwareControllerImpl::getFaceMeta(  ) const{
+        return this->faceMeta;
+    }
     
     void PupilwareControllerImpl::setFaceMeta( const PWFaceMeta& faceMeta ){
         this->faceMeta = faceMeta;
@@ -393,22 +397,22 @@ namespace pw{
         
         // DEBUG -----------------------------------------------------------------------------
         debugImg = srcBGR.clone();
-//
-//        cv::rectangle(debugImg, faceMeta.getFaceRect(), cv::Scalar(255,0,0));
-//        
-//        cv::circle(debugImg,
-//                   faceMeta.getLeftEyeCenter(),
-//                   20,
-//                   cv::Scalar(255,255,0));
-//        
-//        cv::circle(debugImg,
-//                   faceMeta.getRightEyeCenter(),
-//                   20,
-//                   cv::Scalar(255,0,0));
+
+        cv::rectangle(debugImg, faceMeta.getFaceRect(), cv::Scalar(255,0,0));
         
-//        cv::Mat graph = getGraphImage();
-//        cv::flip(graph, graph, 1);
-//        graph.copyTo(debugImg(cv::Rect(0, debugImg.rows - graph.rows -2, graph.cols, graph.rows)));
+        cv::circle(debugImg,
+                   faceMeta.getLeftEyeCenter(),
+                   20,
+                   cv::Scalar(255,255,0));
+        
+        cv::circle(debugImg,
+                   faceMeta.getRightEyeCenter(),
+                   20,
+                   cv::Scalar(255,0,0));
+        
+        cv::Mat graph = getGraphImage();
+        cv::flip(graph, graph, 1);
+        graph.copyTo(debugImg(cv::Rect(0, debugImg.rows - graph.rows -2, graph.cols, graph.rows)));
         
         cvtColor(debugImg, debugImg, CV_BGR2RGBA, 4);
     }

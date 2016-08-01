@@ -262,12 +262,11 @@
      * If there is no a face segmentation algorithm,
      * we have to manually give Face Meta data to the system.
      */
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"haarcascade_frontalface_default" ofType:@"xml"];
-        const char *filePath = [path cStringUsingEncoding:NSUTF8StringEncoding];
+     NSString *path = [[NSBundle mainBundle] pathForResource:@"haarcascade_frontalface_default" ofType:@"xml"];
+     const char *filePath = [path cStringUsingEncoding:NSUTF8StringEncoding];
+     pupilwareController->setFaceSegmentationAlgoirhtm(std::make_shared<pw::SimpleImageSegmenter>(filePath));
     
-        NSLog(@"%s", filePath);
-        pupilwareController->setFaceSegmentationAlgoirhtm(std::make_shared<pw::SimpleImageSegmenter>(filePath));
-    
+    /* ----------------  */
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         
@@ -275,10 +274,11 @@
             
             int currentFrameN = 0;
             cv::Mat frame;
-        
             
             /* Copy data from shared memory */
             @synchronized (self) {
+                
+                /* Check if there is new data. */
                 if( count == self.currentFrameNumber ) continue;
                 if( currentFrame.empty() ) continue;
                 
@@ -293,28 +293,23 @@
                 }
                 self->debugFrame = debugImg.clone();
                 
-                
             }
             
+            /* Check again if data is successfully copied */
             if (frame.empty()) {
                 continue;
             }
             
     
+            /* Process the rest of the work (e.g. pupil segmentation..) */
+            self->pupilwareController->processFrame(frame, currentFrameN );
+            self->csvExporter << self->pupilwareController->getFaceMeta();
 
-                    /* Process the rest of the work (e.g. pupil segmentation..) */
-                    self->pupilwareController->processFrame(frame, currentFrameN );
-                    
-
-                    /* Move to next frame */
-//                    [blockSelf advanceFrame];
-
-                    
-                    NSLog(@"previousFrameNumber %d, currentFrameNumber %d", count, currentFrameN);
-                    count = currentFrameN;
+            
+            NSLog(@"previousFrameNumber %d, currentFrameNumber %d", count, currentFrameN);
+            count = currentFrameN;
             
 //            sleep(0.1);
-            
             
         }
 
@@ -361,10 +356,10 @@
 {
     
     /* Process from a video file, uncomment this block*/
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"v513.mp4"];
-    [self.videoManager open:filePath];
+//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    NSString *documentsDirectory = [paths objectAtIndex:0];
+//    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"v513.mp4"];
+//    [self.videoManager open:filePath];
     /*----------------------------------------------------------------------------------------*/
     
     
@@ -403,24 +398,12 @@
         
         
         /* Write data to files*/
-//        blockSelf->csvExporter << _faceMeta;
         blockSelf->videoWriter << cvFrame;
         
 
         /* Update UI */
 //        [blockSelf updateUI:_faceMeta.hasFace()];
         
-        
-//        /* Process the rest of the work (e.g. pupil segmentation..) */
-//        blockSelf->pupilwareController->processFrame(cvFrame, (int)blockSelf.currentFrameNumber );
-//
-//        
-//        /* create debug image */
-//        cv::Mat debugImg;
-//        debugImg = [blockSelf _getDebugImage];
-//        
-//        if(debugImg.empty()){
-//            debugImg = cvFrame;
 
 
         /* Put data to shared memory */
@@ -432,13 +415,9 @@
             returnFrame = blockSelf->debugFrame;
 
         }
-        
-        /* Update state */
-        blockSelf.currentFrameNumber ++;
-        
 
         /* Move to next frame */
-//        [blockSelf advanceFrame];
+        [blockSelf advanceFrame];
         
         
         NSLog(@"spf %f", blockSelf->mainClock.getTime());
