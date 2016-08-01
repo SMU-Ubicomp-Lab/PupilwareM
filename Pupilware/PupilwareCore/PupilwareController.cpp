@@ -386,34 +386,29 @@ namespace pw{
 //        storage.setPupilSizeAt( currentFrameNumber, result );
         storage.addPupilSize(result);
         eyeDistancePx.push_back( eyeDist );
-        leftEyeCloses.push_back( faceMeta.isLeftEyeClosed()?0.06:0 );
-        rightEyeCloses.push_back( faceMeta.isRightEyeClosed()?0.06:0 );
+//        leftEyeCloses.push_back( faceMeta.isLeftEyeClosed()?0.06:0 );
+//        rightEyeCloses.push_back( faceMeta.isRightEyeClosed()?0.06:0 );
         
         
         
         // DEBUG -----------------------------------------------------------------------------
         debugImg = srcBGR.clone();
+//
+//        cv::rectangle(debugImg, faceMeta.getFaceRect(), cv::Scalar(255,0,0));
+//        
+//        cv::circle(debugImg,
+//                   faceMeta.getLeftEyeCenter(),
+//                   20,
+//                   cv::Scalar(255,255,0));
+//        
+//        cv::circle(debugImg,
+//                   faceMeta.getRightEyeCenter(),
+//                   20,
+//                   cv::Scalar(255,0,0));
         
-        cv::rectangle(debugImg, faceMeta.getFaceRect(), cv::Scalar(255,0,0));
-        
-        cv::circle(debugImg,
-                   faceMeta.getLeftEyeCenter(),
-                   20,
-                   cv::Scalar(255,255,0));
-        
-        
-        cv::circle(debugImg,
-                   faceMeta.getRightEyeCenter(),
-                   20,
-                   cv::Scalar(255,0,0));
-        
-        
-        
-        cv::Mat graph = getGraphImage();
-        
-        cv::flip(graph, graph, 1);
-        
-        graph.copyTo(debugImg(cv::Rect(0, debugImg.rows - graph.rows -2, graph.cols, graph.rows)));
+//        cv::Mat graph = getGraphImage();
+//        cv::flip(graph, graph, 1);
+//        graph.copyTo(debugImg(cv::Rect(0, debugImg.rows - graph.rows -2, graph.cols, graph.rows)));
         
         cvtColor(debugImg, debugImg, CV_BGR2RGBA, 4);
     }

@@ -98,6 +98,8 @@
                     auto dtMS = clock.stop();
                     NSString *fps = [NSString stringWithFormat:@"SPF %f", dtMS];
                     
+//                    NSLog(fps);
+                    
                     cv::putText(debugFrame,[fps UTF8String], cv::Point(10,80), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255,255,255) );
                     
                     

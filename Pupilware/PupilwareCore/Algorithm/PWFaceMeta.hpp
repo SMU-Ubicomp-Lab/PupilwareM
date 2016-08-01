@@ -30,7 +30,6 @@ namespace pw {
         
     public:
         PWFaceMeta();
-        virtual ~PWFaceMeta();
         
         unsigned int        getFrameNumber() const;
         void                setFrameNumber( unsigned int frameNumber );
@@ -60,6 +59,8 @@ namespace pw {
         void                setEyeDistancePx( float eyeDist );
         
         inline bool hasFace() const { return (faceRect.width != 0 && faceRect.height != 0); }
+        
+        PWFaceMeta& operator*( double );
         
     };
 }

@@ -53,8 +53,8 @@
     
     NSDictionary *opts;
     opts = @{CIDetectorImageOrientation:@1,
-             CIDetectorEyeBlink:@YES,
-             CIDetectorNumberOfAngles:@YES};
+             CIDetectorEyeBlink:@NO,
+             CIDetectorNumberOfAngles:@NO};
     
     NSArray *faceFeatures = [self.detector featuresInImage: cameraImage options:opts];
     

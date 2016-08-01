@@ -42,6 +42,9 @@ namespace pw {
         window->addTrackbar("ray number",&rayNumber, 200);
 //        window->addTrackbar("threshold", &threshold, 255 );
 //        window->addTrackbar("primer", &prior, precision*100);
+        
+        
+        createRays(rays);
     
     }
 
@@ -118,7 +121,7 @@ namespace pw {
                 cPoint,             // initial seed point
                 grayEye.cols*0.2,   // radius
                 2.0,                // alpha
-                50                  // max iteration
+                20                  // max iteration
                 );
         cPoint = sn.getFitCenter();
         eyeCenter = cPoint;
@@ -129,41 +132,38 @@ namespace pw {
                 Scalar(200,200,0) );
 /*-------------------------------------*/
 
-        vector<Point2f>rays;
-        createRays(rays);
-
         vector<Point2f>edgePoints;
         findEdgePoints(grayEye, eyeCenter, rays, edgePoints, debugImg);
 
 
         if(edgePoints.size() > MIN_NUM_RAYS)
         {
-            const float MAX_ERROR_FROM_EDGE_OF_THE_CIRCLE = 2;
-            vector<Point2f> inliers;
+//            const float MAX_ERROR_FROM_EDGE_OF_THE_CIRCLE = 2;
+//            vector<Point2f> inliers;
 
             //TODO: Parameterized RANSAC class. Can be done after clean up RANSAC class.
             Ransac r;
-            r.ransac_circle_fitting(edgePoints,
-                                    static_cast<int>(edgePoints.size()),
-                                    edgePoints.size()*0.9f, // not use it
-                                    0.2f ,// not use it
-                                    MAX_ERROR_FROM_EDGE_OF_THE_CIRCLE,
-                                    edgePoints.size()*0.8f,
-                                    inliers);
+//            r.ransac_circle_fitting(edgePoints,
+//                                    static_cast<int>(edgePoints.size()),
+//                                    edgePoints.size()*0.9f, // not use it
+//                                    0.2f ,// not use it
+//                                    MAX_ERROR_FROM_EDGE_OF_THE_CIRCLE,
+//                                    edgePoints.size()*0.8f,
+//                                    inliers);
 
 
             //---------------------------------------------------------------------------------
             //! Just assigned the best model to PupilMeta object.
             //---------------------------------------------------------------------------------
-            if (inliers.size() > MIM_NUM_INLIER_POINTS)
+            if (edgePoints.size() > MIM_NUM_INLIER_POINTS)
             {
-                RotatedRect myEllipse = fitEllipse( edgePoints );
+//                RotatedRect myEllipse = fitEllipse( edgePoints );
 
                 float eyeRadius = 0.0f;
 
-                float elp = 0.0f;
+//                float elp = 0.0f;
                 float cir = 0.0f;
-                float area = 0.0f;
+//                float area = 0.0f;
                 float voting = 0.0f;
 
 
@@ -171,7 +171,7 @@ namespace pw {
 
                     std::vector<float> edgePointsFromCenter(edgePoints.size());
                     for (int i = 0; i < edgePoints.size(); ++i) {
-                        edgePointsFromCenter[i] = cw::calDistanceSq(edgePoints[i], myEllipse.center);
+                        edgePointsFromCenter[i] = cw::calDistanceSq(edgePoints[i], eyeCenter);
 
                     }
 
@@ -181,9 +181,9 @@ namespace pw {
 
                     voting = sqrt(edgePointsFromCenter[edgePointsFromCenter.size()/2]);
 
-                    elp = (myEllipse.size.width + myEllipse.size.height) * 0.25f;
+//                    elp = (myEllipse.size.width + myEllipse.size.height) * 0.25f;
                     cir = r.bestModel.GetRadius();
-                    area = (myEllipse.size.width * myEllipse.size.height) * 0.02f;
+//                    area = (myEllipse.size.width * myEllipse.size.height) * 0.02f;
 
                     eyeRadius = voting;
 
@@ -192,7 +192,7 @@ namespace pw {
                 //---------------------------------------------------------------------------------
                 //! Draw debug image
                 //---------------------------------------------------------------------------------
-                ellipse( debugImg, myEllipse, Scalar(255,50,0) );
+//                ellipse( debugImg, myEllipse, Scalar(255,50,0) );
 //
 //
 //                circle( debugImg,
@@ -202,7 +202,7 @@ namespace pw {
 
 
                 circle( debugImg,
-                        myEllipse.center,
+                        eyeCenter,
                         voting,
                         Scalar(50,200,0) );
 

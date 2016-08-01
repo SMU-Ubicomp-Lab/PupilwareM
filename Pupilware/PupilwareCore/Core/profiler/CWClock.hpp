@@ -25,7 +25,7 @@ namespace cw{
         
         void reset();
         double stop();
-        double getDeltaTime() const;
+        double getTime() const;
         const std::string& getName() const;
         
     private:

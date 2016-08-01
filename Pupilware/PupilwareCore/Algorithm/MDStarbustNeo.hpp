@@ -71,6 +71,8 @@ namespace pw {
         // It's used to improve a reflection problem in pupils.
         float prior;
         float sigma;
+        
+        std::vector<cv::Point2f>rays;
 
         // Just a window name for debuging
         std::shared_ptr<CVWindow> window;

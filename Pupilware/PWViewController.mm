@@ -57,6 +57,8 @@
     pw::PWVideoWriter videoWriter;
     pw::PWCSVExporter csvExporter;
     
+    cw::CWClock mainClock;
+    
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -214,12 +216,14 @@
 -(void)initVideoWriter
 {
     
-    NSString* fileName = self.model.getFaceFileName;
+//    NSString* fileName = self.model.getFaceFileName;
+
+    NSString* fileName = @"face.mp4";
     
     NSString* videoPath = [ObjCAdapter getOutputFilePath: fileName];
     
     cv::Size frameSize (720,1280);
-    if(!videoWriter.open([videoPath UTF8String], 30, frameSize))
+    if(!videoWriter.open([videoPath UTF8String], 15, frameSize))
     {
         NSLog(@"Video Writer is not opened correctedly.");
     }
@@ -229,7 +233,10 @@
 -(void)initCSVExporter
 {
     
-    NSString* filePath = [ObjCAdapter getOutputFilePath: self.model.getCSVFileName];
+//    NSString* filePath = [ObjCAdapter getOutputFilePath: self.model.getCSVFileName];
+
+    NSString* filePath = [ObjCAdapter getOutputFilePath: @"face.csv"];
+
     
     csvExporter.open([filePath UTF8String]);
 }
@@ -286,10 +293,10 @@
 {
     
     /* Process from a video file, uncomment this block*/
-//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//    NSString *documentsDirectory = [paths objectAtIndex:0];
-//    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"v513.mp4"];
-//    [self.videoManager open:filePath];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"v513.mp4"];
+    [self.videoManager open:filePath];
     /*----------------------------------------------------------------------------------------*/
     
     
@@ -309,30 +316,42 @@
             return cvFrame;
         }
         
+
+        cv::Mat scaledFace;
+        cv::pyrDown(cvFrame, scaledFace);
+        cv::pyrDown(scaledFace, scaledFace);
+        
         /*
          * Since we use iOS Face Recongizer, we need to inject faceMeta manually.
          */
-        auto cameraImage = [ObjCAdapter Mat2CIImage:cvFrame
+        auto cameraImage = [ObjCAdapter Mat2CIImage:scaledFace
                                         withContext:blockSelf.videoManager.ciContext];
 
         auto faceMeta = [blockSelf.faceRecognizer recognize:cameraImage];
+
+        faceMeta = faceMeta * 4;
         
         faceMeta.setFrameNumber( (int)blockSelf.currentFrameNumber );
         blockSelf->pupilwareController->setFaceMeta(faceMeta);
+        
+        
         
         /* Write data to files*/
         blockSelf->videoWriter << cvFrame;
         blockSelf->csvExporter << faceMeta;
         
-        
+
         /* Update UI */
         [blockSelf updateUI:faceMeta.hasFace()];
         
+        
         /* Process the rest of the work (e.g. pupil segmentation..) */
         blockSelf->pupilwareController->processFrame(cvFrame, (int)blockSelf.currentFrameNumber );
+
         
         /* create debug image */
-        cv::Mat debugImg = [blockSelf _getDebugImage];
+        cv::Mat debugImg;
+        debugImg = [blockSelf _getDebugImage];
         
         if(debugImg.empty()){
             debugImg = cvFrame;
@@ -343,7 +362,10 @@
         [blockSelf advanceFrame];
         
         
-        return debugImg;
+        NSLog(@"spf %f", blockSelf->mainClock.getTime());
+        blockSelf->mainClock.reset();
+        
+        return cvFrame;
         
         
         //TODO: Enable This block in release built.

@@ -90,13 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pupilware/PupilwareCore/PupilwareController.cpp"
-            timestampString = "490644863.296459"
+            timestampString = "491597377.137209"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "436"
-            endingLineNumber = "436"
-            landmarkName = "PupilwareControllerImpl::getRawPupilSignal()"
-            landmarkType = "5">
+            startingLineNumber = "415"
+            endingLineNumber = "415">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -106,11 +104,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pupilware/PupilwareCore/PupilwareController.cpp"
-            timestampString = "490644863.296459"
+            timestampString = "491597377.137209"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "468"
-            endingLineNumber = "468"
+            startingLineNumber = "447"
+            endingLineNumber = "447"
             landmarkName = "PupilwareControllerImpl::getGraphImage()"
             landmarkType = "5">
          </BreakpointContent>
@@ -122,12 +120,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pupilware/PupilwareCore/PupilwareController.cpp"
-            timestampString = "490645484.542926"
+            timestampString = "491592434.668523"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "376"
-            endingLineNumber = "376"
+            startingLineNumber = "360"
+            endingLineNumber = "360"
             landmarkName = "PupilwareControllerImpl::processFrame( const cv::Mat&amp; srcFrame, unsigned int frameNumber )"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pupilware/PupilwareCore/ImageProcessing/SimpleImageSegmenter.cpp"
+            timestampString = "491595220.856321"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
+            landmarkName = "SimpleImageSegmenter::extractEyes(cv::Rect faceROI, cv::Rect &amp;outLeftEyeRegion, cv::Rect &amp;outRightEyeRegion)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
