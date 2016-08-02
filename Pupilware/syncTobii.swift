@@ -18,6 +18,7 @@ class SyncTobbiGlass: GCDAsyncUdpSocketDelegate {
     var port: UInt16 = 3002
     var localPortData: UInt16 = 3000
     var localPortVideo: UInt16 = 3001
+    var baseUrl = "http://localhost"
     var socketData: GCDAsyncUdpSocket?
     var socketVideo: GCDAsyncUdpSocket?
     let timeout = 1
@@ -30,6 +31,7 @@ class SyncTobbiGlass: GCDAsyncUdpSocketDelegate {
     init(host: String, port: UInt16){
         self.host = host
         self.port = port
+        self.baseUrl = "http://" + host
         
         socketData = GCDAsyncUdpSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
         socketVideo = GCDAsyncUdpSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
@@ -87,6 +89,63 @@ class SyncTobbiGlass: GCDAsyncUdpSocketDelegate {
         }
         print("Data received: \(stringData)")
         
+    }
+    
+    private func dataTask(request: NSMutableURLRequest, method: String, completion: (success: Bool, object: AnyObject?) -> ()) {
+        request.HTTPMethod = method
+        let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+        
+        session.dataTaskWithRequest(request) { (data, response, error) -> Void in
+            
+            if let data = data {
+                let json = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
+                if let response = response as? NSHTTPURLResponse where 200...299 ~= response.statusCode {
+                    completion(success: true, object: json)
+                } else {
+                    completion(success: false, object: json)
+                }
+            }
+            }.resume()
+    }
+    
+    private func post(request: NSMutableURLRequest, completion: (success: Bool, object: AnyObject?) -> ()) {
+        dataTask(request, method: "POST", completion: completion)
+    }
+    
+    private func get(request: NSMutableURLRequest, completion: (success: Bool, object: AnyObject?) -> ()) {
+        dataTask(request, method: "GET", completion: completion)
+    }
+    
+    func createProject() {
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/projects")!)
+        post(request) { (success: Bool, object: AnyObject?) in
+            print("Get json : \(object)")
+        }
+    }
+    
+    func createParticipant(projectId: Int) {
+        
+        
+    }
+    
+    func createCalibration(projectId: Int, participantId: Int) {
+    
+    }
+    
+    func startCalibration(calibrationId: Int) {
+    
+    }
+    
+    func createRecording(participantId: Int) {
+    
+    }
+    
+    func startRecording(recordingId: Int) {
+    
+    }
+    
+    func stopRecording(recodingId: Int) {
+    
     }
 }
 

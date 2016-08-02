@@ -15,7 +15,8 @@ class homeVC: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        sT.startConnect()
+        //sT.startConnect()
+        sT.createProject()
     }
 }
 
