@@ -51,18 +51,19 @@ namespace pw{
 
 
         // Pick only one face for now.
+        const int downSampleLevel = 2;
         if (faces.size() > 0) {
             outFaceRect = faces[0];
-            outFaceRect.x = outFaceRect.x * 2;
-            outFaceRect.y = outFaceRect.y * 2;
-            outFaceRect.width = outFaceRect.width * 2;
-            outFaceRect.height = outFaceRect.height * 2;
+            outFaceRect.x = outFaceRect.x * downSampleLevel;
+            outFaceRect.y = outFaceRect.y * downSampleLevel;
+            outFaceRect.width = outFaceRect.width * downSampleLevel;
+            outFaceRect.height = outFaceRect.height * downSampleLevel;
 
             return true;
 
         }
         else {
-            cout << "[Info] A face has not found.";
+            cout << "[Info] A face has not found." << std::endl;
         }
 
         return false;

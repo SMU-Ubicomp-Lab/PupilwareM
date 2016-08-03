@@ -43,7 +43,7 @@
     unsigned long currentFrameNumber;
     //----------------------
     
-    int count;
+    int previousFrameNumber;
 }
 
 -(id)init{
@@ -70,6 +70,8 @@
 -(void) start{
     if(!pupilwareController->hasStarted())
     {
+        NSLog(@"[Info] Pupilware is starting...");
+        
         pupilwareController->start();
         currentFrameNumber = 0;
         
@@ -88,9 +90,13 @@
         // TODO: change the sleep function to waiting until the thread is returned.
         sleep(1);
         
+        NSLog(@"[Info] Pupilware Start cleaning up.");
+        
         pupilwareController->stop();
         pupilwareController->clearBuffer();
         csvExporter.close();
+        
+        NSLog(@"[Info] Pupilware is fully closed.");
     }
 }
 
@@ -102,6 +108,8 @@
     
     dispatch_async(queue, ^{
         
+        NSLog(@"[Info] Pupilware Thread is started.");
+        
         while(self.b_startedThread){
             
             int currentFrameN = 0;
@@ -111,13 +119,15 @@
             @synchronized (self) {
                 
                 /* Check if there is new data. */
-                if( count == self->currentFrameNumber ) continue;
+                if( previousFrameNumber == self->currentFrameNumber ) continue;
                 if( currentFrame.empty() ) continue;
                 
+                /* copy data to local variables*/
                 currentFrameN = (int)self->currentFrameNumber;
                 frame = currentFrame.clone();
                 
-                /* create debug image */
+                /* store last frame debug image */
+                /* just in case someone else what the data */
                 cv::Mat debugImg = [self _getDebugImage];
                 
                 if(debugImg.empty()){
@@ -132,21 +142,23 @@
                 continue;
             }
             
-            //            cw::CWClock c;
+//            cw::CWClock c;
             
             /* Process the rest of the work (e.g. pupil segmentation..) */
             self->pupilwareController->processFrame(frame, currentFrameN );
             self->csvExporter << self->pupilwareController->getFaceMeta();
             
             
-            //            NSLog(@"previousFrameNumber %d, currentFrameNumber %d", count, currentFrameN);
-            count = currentFrameN;
+//            NSLog(@"previousFrameNumber %d, currentFrameNumber %d", previousFrameNumber, currentFrameN);
+            previousFrameNumber = currentFrameN;
             
-            //            sleep(0.1);
+//            sleep(0.1);
             
-            //            NSLog(@"spfP %f", c.stop());
+//            NSLog(@"spfP %f", c.stop());
             
         }
+        
+        NSLog(@"[Info] Pupilware Thread is returned.");
         
     });
 
@@ -199,11 +211,15 @@
     
 }
 
--(const cv::Mat&)getDebugFrame{
+-(cv::Mat)getDebugFrame{
+    
+    cv::Mat temp;
     
     @synchronized (self) {
-        return debugFrame;
+        temp = self->debugFrame.clone();
     }
+    
+    return temp;
     
 }
 

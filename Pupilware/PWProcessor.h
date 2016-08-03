@@ -12,7 +12,7 @@
 @interface PWProcessor : NSObject
 
 -(void) addFrame:(const cv::Mat&) frame withFrameNumber:(unsigned long) frameNumber;
--(const cv::Mat&)getDebugFrame;
+-(cv::Mat)getDebugFrame;
 -(void) start;
 -(void) stop;
 -(BOOL) isStarted;

@@ -210,10 +210,6 @@
     self.view.backgroundColor = nil;
     
     
-    /* Use IOS Face Recoginizer */
-    self.faceRecognizer = [[IOSFaceRecognizer alloc] initWithContext:self.videoManager.ciContext];
-    
-    
     __block typeof(self) blockSelf = self;
     
     [self.videoManager setProcessBlock:^(const cv::Mat& cvFrame){
@@ -224,10 +220,8 @@
         
         cv::Mat returnFrame = cvFrame;
         
-        /* Write data to files*/
         blockSelf->videoWriter << cvFrame;
 
-        /* Update UI */
         [blockSelf updateUI: [blockSelf.processor hasFace]];
         
 
@@ -238,7 +232,7 @@
             
 //            NSLog(@">> add %lu", (unsigned long)blockSelf.currentFrameNumber);
             
-            returnFrame = [blockSelf.processor getDebugFrame].clone();
+            returnFrame = [blockSelf.processor getDebugFrame];
 
         }
 
