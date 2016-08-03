@@ -2,6 +2,9 @@
 //  PWProcessor.m
 //  Pupilware
 //
+//  This class connect to C++ Pupilware Core.
+//  It also provides higher level interface for users.
+//
 //  Created by Chatchai Wangwiwattana on 8/2/16.
 //  Copyright © 2016 Chatchai Mark Wangwiwattana. All rights reserved.
 //
@@ -24,7 +27,7 @@
 @interface PWProcessor()
 
 @property (atomic) BOOL b_startedThread;
-
+@property (strong, nonatomic) dispatch_queue_t queue;
 @end
 
 
@@ -50,12 +53,29 @@
     
     if( [super init] ){
         
+        self.outputFileName = @"face.csv";
         [self initPupilwareCtrl];
         
     }
     
     return self;
 }
+
+-(void) setParameter:(PWParameter*)params{
+    
+    if(params == nil ){
+        NSLog(@"Parameter is nil. Reject the request.");
+        return;
+    }
+    
+    pwAlgo->setSigma([params.sigma floatValue]);
+    pwAlgo->setPrior([params.prior floatValue]);
+    pwAlgo->setThreshold([params.threshold floatValue]);
+    pwAlgo->setRayNumber([params.sbRayNumber intValue]);
+    pwAlgo->setDegreeOffset([params.degreeOffset intValue]);
+    
+}
+
 
 -(void) addFrame:(const cv::Mat&) frame withFrameNumber:(unsigned long) frameNumber{
     
@@ -88,9 +108,8 @@
         [self stopProcessThread];
         
         // TODO: change the sleep function to waiting until the thread is returned.
-        sleep(1);
-        
         NSLog(@"[Info] Pupilware Start cleaning up.");
+        sleep(1);
         
         pupilwareController->stop();
         pupilwareController->clearBuffer();
@@ -104,9 +123,9 @@
     
     self.b_startedThread = YES;
     
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    self.queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     
-    dispatch_async(queue, ^{
+    dispatch_async(self.queue, ^{
         
         NSLog(@"[Info] Pupilware Thread is started.");
         
@@ -153,7 +172,6 @@
             previousFrameNumber = currentFrameN;
             
 //            sleep(0.1);
-            
 //            NSLog(@"spfP %f", c.stop());
             
         }
@@ -184,11 +202,7 @@
 -(void)initCSVExporter
 {
     
-    //    NSString* filePath = [ObjCAdapter getOutputFilePath: self.model.getCSVFileName];
-    
-    NSString* filePath = [ObjCAdapter getOutputFilePath: @"face.csv"];
-    
-    
+    NSString* filePath = self.outputFileName;
     csvExporter.open([filePath UTF8String]);
 }
 
@@ -203,7 +217,6 @@
 
     pupilwareController->setPupilSegmentationAlgorihtm( pwAlgo );
     
-
     NSString *path = [[NSBundle mainBundle] pathForResource:@"haarcascade_frontalface_default" ofType:@"xml"];
     const char *filePath = [path cStringUsingEncoding:NSUTF8StringEncoding];
     pupilwareController->setFaceSegmentationAlgoirhtm(std::make_shared<pw::SimpleImageSegmenter>(filePath));
@@ -248,6 +261,31 @@
     
     return debugImg;
 }
+
+
+
+//TODO: Enable This block in release built.
+/********************************************
+ try{
+ // Whatever code in the block is, put it in here.!
+ }
+ catch(AssertionFailureException e){
+ 
+ //Catch if anything wrong during processing.
+ 
+ std::cerr<<"[ERROR!!] Assertion does not meet. Serious error detected. " << std::endl;
+ e.LogError();
+ 
+ //TODO: Manage execption, make sure data is safe and saved.
+ // - save files
+ // - destroy damage memory
+ // - Show UI Error message
+ // - write log files
+ 
+ return cameraImage;
+ 
+ }
+ */
 
 
 

@@ -2,12 +2,16 @@
 //  PWProcessor.h
 //  Pupilware
 //
+//  This class connect to C++ Pupilware Core.
+//  It also provides higher level interface for users.
+//
 //  Created by Chatchai Wangwiwattana on 8/2/16.
 //  Copyright © 2016 Chatchai Mark Wangwiwattana. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <opencv2/opencv.hpp>
+#import "PWParameter.h"
 
 @interface PWProcessor : NSObject
 
@@ -17,6 +21,9 @@
 -(void) stop;
 -(BOOL) isStarted;
 -(BOOL) hasFace;
+-(void) setParameter:(PWParameter*)params;
+
+@property(strong, nonatomic) NSString* outputFileName;
 
 @end
 

@@ -420,10 +420,10 @@
     NSLog(@"Dump x %f", x.at<double>(0, 2));
     
     
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    [defaults setInteger: x.at<double>(0,0) forKey:@"s_threshold"];
-//    [defaults setInteger: x.at<double>(0,1) forKey:@"s_markCost"];
-//    [defaults setInteger: x.at<double>(0,2) forKey:@"s_intensityThreshold"];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setFloat: x.at<double>(0,0) forKey:kSBThreshold];
+    [defaults setFloat: x.at<double>(0,2) forKey:kSBSigma];
+    [defaults setFloat: x.at<double>(0,1) forKey:kSBPrior];
 
 }
 

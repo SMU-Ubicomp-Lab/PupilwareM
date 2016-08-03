@@ -15,7 +15,7 @@
 
 #import "PupilwareCore/PWVideoWriter.hpp"
 #import "Libraries/ObjCAdapter.h"
-//#import "constants.h"
+#import "constants.h"
 
 @class DataModel;
 
@@ -102,6 +102,9 @@
 {
     [self closeSystem];
     
+    /* Video manage must stop last */
+    [self.videoManager stop];
+    
     [super viewWillDisappear:animated];
     
 }
@@ -158,6 +161,24 @@
 {
     if(![self.processor isStarted])
     {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        
+        PWParameter *params = [[PWParameter alloc] init];
+        params.threshold=@((float)[defaults floatForKey:kSBThreshold]);
+        params.prior=@((float)[defaults floatForKey:kSBPrior]);
+        params.sigma=@((float)[defaults floatForKey:kSBSigma]);
+        params.sbRayNumber=@((int)[defaults integerForKey:kSBNumberOfRays]);
+        params.degreeOffset=@((int)[defaults integerForKey:kSBDegreeOffset]);
+        [self.processor setParameter:params];
+        
+        NSLog(@"Prior = %@", params.prior);
+        NSLog(@"sigma = %@", params.sigma);
+        NSLog(@"threshold = %@", params.threshold);
+        
+        if (self.model != nil) {
+            self.processor.outputFileName = [ObjCAdapter getOutputFilePath: self.model.getCSVFileName];
+        }
+        
         [self.videoManager start];
         [self.processor start];
         [self initVideoWriter];
@@ -171,8 +192,9 @@
     if([self.processor isStarted])
     {
         [self.processor stop];
-        [self.videoManager stop];
         videoWriter.close();
+    
+        
     }
 }
 
@@ -249,34 +271,11 @@
 //        blockSelf->mainClock.reset();
         
         return returnFrame;
-        
-        
-        //TODO: Enable This block in release built.
-        /********************************************
-        try{
-         // Whatever code in the block is, put it in here.!
-        }
-         catch(AssertionFailureException e){
-         
-            //Catch if anything wrong during processing.
-         
-            std::cerr<<"[ERROR!!] Assertion does not meet. Serious error detected. " << std::endl;
-            e.LogError();
-             
-            //TODO: Manage execption, make sure data is safe and saved.
-            // - save files
-            // - destroy damage memory
-            // - Show UI Error message
-            // - write log files
-         
-             return cameraImage;
-             
-         }
-         */
      
     }];
 
 }
+
 
 -(void) updateUI:(bool) hasFace
 {
@@ -296,7 +295,6 @@
                        });
     }
 }
-
 
 
 

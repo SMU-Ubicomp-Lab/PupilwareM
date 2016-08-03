@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5C0AFE8D1D50FD6D00E8BE4E /* PWProcessor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C0AFE8C1D50FD6D00E8BE4E /* PWProcessor.mm */; };
+		5C0AFE901D52617F00E8BE4E /* PWParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0AFE8F1D52617F00E8BE4E /* PWParameter.m */; };
 		5C2E00F91D2D9C3E0099A306 /* mainex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C2E00F81D2D9C3E0099A306 /* mainex.cpp */; };
 		5C4B46161D21A77400455A77 /* PWFaceMeta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B46141D21A77400455A77 /* PWFaceMeta.cpp */; };
 		5C4B461C1D21AB9200455A77 /* MDStarbustNeo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B461A1D21AB9200455A77 /* MDStarbustNeo.cpp */; };
@@ -86,6 +87,8 @@
 /* Begin PBXFileReference section */
 		5C0AFE8B1D50FD6D00E8BE4E /* PWProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWProcessor.h; sourceTree = "<group>"; };
 		5C0AFE8C1D50FD6D00E8BE4E /* PWProcessor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWProcessor.mm; sourceTree = "<group>"; };
+		5C0AFE8E1D52617F00E8BE4E /* PWParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWParameter.h; sourceTree = "<group>"; };
+		5C0AFE8F1D52617F00E8BE4E /* PWParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWParameter.m; sourceTree = "<group>"; };
 		5C2E00F61D2D9C3E0099A306 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
 		5C2E00F81D2D9C3E0099A306 /* mainex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mainex.cpp; sourceTree = "<group>"; };
 		5C4B46141D21A77400455A77 /* PWFaceMeta.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWFaceMeta.cpp; sourceTree = "<group>"; };
@@ -437,6 +440,8 @@
 				97A89CB01C5B6D7900D9E193 /* popOverController.swift */,
 				5C0AFE8B1D50FD6D00E8BE4E /* PWProcessor.h */,
 				5C0AFE8C1D50FD6D00E8BE4E /* PWProcessor.mm */,
+				5C0AFE8E1D52617F00E8BE4E /* PWParameter.h */,
+				5C0AFE8F1D52617F00E8BE4E /* PWParameter.m */,
 				97E965AC1C5D6CB400D652CB /* Libraries */,
 				973A50291C5DBE6200EDDB20 /* Config */,
 				97A321581C59CE7100B1EB98 /* images */,
@@ -604,6 +609,7 @@
 				5CC9A1231D25A25700ADB4BD /* PWCSVExporter.cpp in Sources */,
 				5CF4D5A21D186FB30050CBBA /* PWDataModel.cpp in Sources */,
 				5CF4D59F1D186FB30050CBBA /* MDStarbustG.cpp in Sources */,
+				5C0AFE901D52617F00E8BE4E /* PWParameter.m in Sources */,
 				5CF4D5C21D1870020050CBBA /* Ransac.cpp in Sources */,
 				5CF4D5A61D186FB30050CBBA /* SignalProcessingHelper.cpp in Sources */,
 				5CF4D59D1D186FB30050CBBA /* IPupilAlgorithm.cpp in Sources */,
