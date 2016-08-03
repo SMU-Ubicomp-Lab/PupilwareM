@@ -124,28 +124,62 @@ class SyncTobbiGlass: GCDAsyncUdpSocketDelegate {
     }
     
     func createParticipant(projectId: Int) {
+        let json = ["pa_project": projectId]
+        let jsonData = try? NSJSONSerialization.dataWithJSONObject(json, options: .PrettyPrinted)
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/participants")!)
+        
+        request.HTTPBody = jsonData
+        post(request) { (success: Bool, object: AnyObject?) in
+            print("Get json : \(object)")
+        }
         
         
     }
     
     func createCalibration(projectId: Int, participantId: Int) {
-    
+        let json = ["ca_project": projectId, "ca_type": "defualt", "ca_participant": participantId]
+        let jsonData = try? NSJSONSerialization.dataWithJSONObject(json, options: .PrettyPrinted)
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/calibration")!)
+        
+        request.HTTPBody = jsonData
+        post(request) { (success: Bool, object: AnyObject?) in
+            print("Get json : \(object)")
+        }
     }
     
     func startCalibration(calibrationId: Int) {
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/calibration" + String(calibrationId) + "/start")!)
+        post(request) { (success: Bool, object: AnyObject?) in
+            print("Get json : \(object)")
+        }
     
     }
     
     func createRecording(participantId: Int) {
-    
+        let json = ["rec_participant": participantId]
+        let jsonData = try? NSJSONSerialization.dataWithJSONObject(json, options: .PrettyPrinted)
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/recodings")!)
+        
+        request.HTTPBody = jsonData
+        post(request) { (success: Bool, object: AnyObject?) in
+            print("Get json : \(object)")
+        }
     }
     
     func startRecording(recordingId: Int) {
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/recodings" + String(recordingId) + "/start")!)
     
+        post(request) { (success: Bool, object: AnyObject?) in
+            print("Get json : \(object)")
+        }
     }
     
-    func stopRecording(recodingId: Int) {
-    
+    func stopRecording(recordingId: Int) {
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/recodings" + String(recordingId) + "/stop")!)
+        
+        post(request) { (success: Bool, object: AnyObject?) in
+            print("Get json : \(object)")
+        }
     }
 }
 
