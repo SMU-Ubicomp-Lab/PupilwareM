@@ -94,18 +94,13 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    [self startVideoManager];
-    
-    [self.processor start];
+    [self startSystem];
 }
 
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-    [self stopVideoManager];
-    [self.processor stop];
-    videoWriter.close();
+    [self closeSystem];
     
     [super viewWillDisappear:animated];
     
@@ -139,44 +134,48 @@
 //}
 
 
+-(void) togglePupilware{
+    
+    if([self.processor isStarted])
+    {
+        [self closeSystem];
+    }
+    else
+    {
+        [self startSystem];
+    }
+    
+}
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    Objective C Implementation     /////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
--(void)startVideoManager
+-(void)startSystem
 {
-    if(![self.videoManager isRunning])
+    if(![self.processor isStarted])
     {
         [self.videoManager start];
-    }
-}
-
-
--(void)stopVideoManager
-{
-    if([self.videoManager isRunning])
-    {
-        [self.videoManager stop];
-    }
-}
-
-
--(void) togglePupilware{
-    
-    if([self.processor isStarted])
-    {
-        [self.processor stop];
-        videoWriter.close();
-    }
-    else
-    {
         [self.processor start];
         [self initVideoWriter];
     }
 
 }
+
+
+-(void)closeSystem
+{
+    if([self.processor isStarted])
+    {
+        [self.processor stop];
+        [self.videoManager stop];
+        videoWriter.close();
+    }
+}
+
 
 -(void)initVideoWriter
 {
@@ -199,10 +198,10 @@
 {
     
     /* Process from a video file, uncomment this block*/
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"v513.mp4"];
-    [self.videoManager open:filePath];
+//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    NSString *documentsDirectory = [paths objectAtIndex:0];
+//    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"v513.mp4"];
+//    [self.videoManager open:filePath];
     /*----------------------------------------------------------------------------------------*/
     
     
@@ -218,6 +217,12 @@
             return cvFrame;
         }
         
+        // if the vidoe is done?
+        if (cvFrame.empty()) {
+            [blockSelf closeSystem];
+            return cvFrame;
+        }
+        
         cv::Mat returnFrame = cvFrame;
         
         blockSelf->videoWriter << cvFrame;
@@ -230,13 +235,13 @@
             [blockSelf.processor addFrame:cvFrame
                           withFrameNumber:blockSelf.currentFrameNumber ];
             
-//            NSLog(@">> add %lu", (unsigned long)blockSelf.currentFrameNumber);
-            
             returnFrame = [blockSelf.processor getDebugFrame];
+            
+            // NSLog(@">> add %lu", (unsigned long)blockSelf.currentFrameNumber);
 
         }
 
-        /* Move to next frame */
+        
         [blockSelf advanceFrame];
         
         
@@ -293,13 +298,13 @@
 }
 
 
+
+
 -(void) advanceFrame{
     self.currentFrameNumber += 1;
     
     if ([self.model.bridgeDelegate isTestingFinished]) {
-        [self.processor stop];
-        [self.videoManager stop];
-        videoWriter.close();
+        [self closeSystem];
     }
 }
 

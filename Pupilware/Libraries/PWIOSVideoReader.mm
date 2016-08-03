@@ -108,6 +108,9 @@
                     returnImage = [ObjCAdapter Mat2CIImage:debugFrame
                                                withContext:blockSelf.videoManager.ciContext];
                 }
+                else{
+                    blockSelf.processBlock(cv::Mat());
+                }
                 
                 
                 return returnImage;

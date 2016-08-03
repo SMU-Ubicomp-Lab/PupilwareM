@@ -136,11 +136,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pupilware/PupilwareCore/ImageProcessing/SimpleImageSegmenter.cpp"
-            timestampString = "491771553.126292"
+            timestampString = "491936133.039937"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
+            startingLineNumber = "77"
+            endingLineNumber = "77"
             landmarkName = "SimpleImageSegmenter::extractEyes(cv::Rect faceROI, cv::Rect &amp;outLeftEyeRegion, cv::Rect &amp;outRightEyeRegion)"
             landmarkType = "5">
          </BreakpointContent>
@@ -152,27 +152,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Pupilware/PWViewController.mm"
-            timestampString = "491861042.0256"
+            timestampString = "491937098.614673"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "98"
-            endingLineNumber = "98"
-            landmarkName = "-viewDidAppear:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pupilware/PWViewController.mm"
-            timestampString = "491861690.860516"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "252"
-            endingLineNumber = "252"
+            startingLineNumber = "251"
+            endingLineNumber = "251"
             landmarkName = "-initVideoManager"
             landmarkType = "5">
          </BreakpointContent>
@@ -183,13 +167,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Pupilware/PWViewController.mm"
-            timestampString = "491861042.0256"
+            filePath = "Pupilware/Libraries/PWIOSVideoReader.mm"
+            timestampString = "491936273.070352"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "124"
-            endingLineNumber = "124"
-            landmarkName = "-startBtnClicked:"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
+            landmarkName = "-setProcessBlock:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -199,13 +183,61 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Pupilware/PWViewController.mm"
-            timestampString = "491861042.0256"
+            filePath = "Pupilware/Libraries/PWIOSVideoReader.mm"
+            timestampString = "491936277.203182"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "122"
-            endingLineNumber = "122"
-            landmarkName = "-startBtnClicked:"
+            startingLineNumber = "81"
+            endingLineNumber = "81"
+            landmarkName = "-setProcessBlock:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[PWIOSVideoReader setProcessBlock:]"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/redeian/Documents/projects/PupilwareM/Pupilware/Libraries/PWIOSVideoReader.mm"
+                  timestampString = "491936806.401915"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81"
+                  offsetFromSymbolStart = "164">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__36-[PWIOSVideoReader setProcessBlock:]_block_invoke"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/redeian/Documents/projects/PupilwareM/Pupilware/Libraries/PWIOSVideoReader.mm"
+                  timestampString = "491936806.402061"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "83"
+                  endingLineNumber = "83"
+                  offsetFromSymbolStart = "48">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pupilware/Libraries/PWIOSVideoReader.mm"
+            timestampString = "491936818.521791"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
+            landmarkName = "-init"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -215,14 +247,46 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Pupilware/PWViewController.mm"
-            timestampString = "491861042.0256"
+            filePath = "Pupilware/Libraries/PWIOSVideoReader.mm"
+            timestampString = "491936831.913848"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "168"
-            endingLineNumber = "168"
-            landmarkName = "-togglePupilware"
+            startingLineNumber = "129"
+            endingLineNumber = "129"
+            landmarkName = "-setProcessBlock:"
             landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[PWIOSVideoReader setProcessBlock:]"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/redeian/Documents/projects/PupilwareM/Pupilware/Libraries/PWIOSVideoReader.mm"
+                  timestampString = "491936831.922337"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "129"
+                  endingLineNumber = "129"
+                  offsetFromSymbolStart = "372">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__36-[PWIOSVideoReader setProcessBlock:]_block_invoke.40"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/redeian/Documents/projects/PupilwareM/Pupilware/Libraries/PWIOSVideoReader.mm"
+                  timestampString = "491936831.922638"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "132"
+                  endingLineNumber = "132"
+                  offsetFromSymbolStart = "48">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
