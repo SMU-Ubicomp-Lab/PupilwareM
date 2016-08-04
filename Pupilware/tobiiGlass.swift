@@ -11,7 +11,7 @@ import CocoaAsyncSocket
 
 
 
-class SyncTobbiGlass: GCDAsyncUdpSocketDelegate {
+class TobiiGlass: GCDAsyncUdpSocketDelegate {
 
     
     var host = "localhost"
@@ -89,6 +89,16 @@ class SyncTobbiGlass: GCDAsyncUdpSocketDelegate {
         }
         print("Data received: \(stringData)")
         
+        let strData = "{\"name\":\"James\"}"
+        //let jsonData = convertStringToDictionary(strData)
+        //print(jsonData)
+        var jsonData = try? NSJSONSerialization.JSONObjectWithData(data, options: [])  as? [String:String]
+        
+       // if (jsonData!!["s"] == "0" && jsonData!!["pd"] != nil) {
+            
+            let filePath = getDocumentsDirectory().stringByAppendingPathComponent("output.txt")
+            writeToCSV(filePath, row: stringData)
+        //}
     }
     
     private func dataTask(request: NSMutableURLRequest, method: String, completion: (success: Bool, object: AnyObject?) -> ()) {
@@ -131,6 +141,7 @@ class SyncTobbiGlass: GCDAsyncUdpSocketDelegate {
         request.HTTPBody = jsonData
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
+            
         }
         
         
@@ -180,6 +191,51 @@ class SyncTobbiGlass: GCDAsyncUdpSocketDelegate {
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
         }
+    }
+    
+    func getDocumentsDirectory() -> NSString {
+        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+        let documentsDirectory = paths[0]
+        return documentsDirectory
+    }
+
+    func writeToCSV(fileName: String, row: String) {
+        let data = row.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+        
+        if NSFileManager.defaultManager().fileExistsAtPath(fileName) {
+            print("writing to " + fileName)
+            if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
+                fileHandle.seekToEndOfFile()
+                fileHandle.writeData(data)
+                fileHandle.closeFile()
+            }
+            else {
+                print("Can't open fileHandle")
+            }
+        }
+        else {
+            NSFileManager.defaultManager().createFileAtPath(fileName, contents: nil, attributes: nil)
+            print("File not exist")
+            print("created" + fileName)
+        }
+    }
+    
+    func createCSVfile(subjectId: String, testId: String) {
+        let filePath = getDocumentsDirectory().stringByAppendingPathComponent("output.txt")
+        print(filePath)
+        NSFileManager.defaultManager().createFileAtPath(filePath, contents: nil, attributes: nil)
+    }
+    
+    func convertStringToDictionary(text: String) -> [String:String]? {
+        print(text)
+        if let data = text.dataUsingEncoding(NSUTF8StringEncoding) {
+            do {
+                return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:String]
+            } catch let error as NSError {
+                print(error)
+            }
+        }
+        return nil
     }
 }
 

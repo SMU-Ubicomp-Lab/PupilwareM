@@ -11,12 +11,11 @@ import UIKit
 class homeVC: UITabBarController {
     let model = DataModel.sharedInstance
 
-    let sT = SyncTobbiGlass(host: "192.168.71.50", port: 49152)
+    let tobiiGlass = TobiiGlass(host: "192.168.71.50", port: 49152)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //sT.startConnect()
-        sT.createProject()
+        tobiiGlass.startConnect()
     }
 }
 

@@ -595,5 +595,355 @@
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pupilware/syncTobii.swift"
+            timestampString = "491953298.193058"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "205"
+            endingLineNumber = "205"
+            landmarkName = "writeToCSV(_:row:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pupilware/tobiiGlass.swift"
+            timestampString = "491970337.200818"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "94"
+            endingLineNumber = "94"
+            landmarkName = "udpSocket(_:didReceiveData:fromAddress:withFilterContext:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "function signature specialization &lt;Arg[0] = Owned To Guaranteed, Arg[1] = Owned To Guaranteed, Arg[2] = Dead and Owned To Guaranteed, Arg[3] = Dead and Owned To Guaranteed&gt; of Pupilware.TobiiGlass.udpSocket (Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.GCDAsyncUdpSocket&gt;, didReceiveData : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, fromAddress : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, withFilterContext : Swift.ImplicitlyUnwrappedOptional&lt;Swift.AnyObject&gt;) -&gt; ()"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/xinyi/Developer/pupilware/PupilwareM/Pupilware/tobiiGlass.swift"
+                  timestampString = "491971888.889787"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "95"
+                  endingLineNumber = "95"
+                  offsetFromSymbolStart = "1016">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "function signature specialization &lt;Arg[0] = Owned To Guaranteed, Arg[1] = Owned To Guaranteed, Arg[2] = Dead and Owned To Guaranteed, Arg[3] = Dead and Owned To Guaranteed&gt; of Pupilware.TobiiGlass.udpSocket (Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.GCDAsyncUdpSocket&gt;, didReceiveData : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, fromAddress : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, withFilterContext : Swift.ImplicitlyUnwrappedOptional&lt;Swift.AnyObject&gt;) -&gt; ()"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/xinyi/Developer/pupilware/PupilwareM/Pupilware/tobiiGlass.swift"
+                  timestampString = "491971888.890252"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "95"
+                  endingLineNumber = "95"
+                  offsetFromSymbolStart = "1024">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pupilware/tobiiGlass.swift"
+            timestampString = "491971887.803101"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
+            landmarkName = "udpSocket(_:didReceiveData:fromAddress:withFilterContext:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pupilware/tobiiGlass.swift"
+            timestampString = "491971887.803101"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "197"
+            endingLineNumber = "197"
+            landmarkName = "getDocumentsDirectory()"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Pupilware.TobiiGlass.createCSVfile (Swift.String, testId : Swift.String) -&gt; ()"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/xinyi/Developer/pupilware/PupilwareM/Pupilware/tobiiGlass.swift"
+                  timestampString = "491971888.892188"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "197"
+                  endingLineNumber = "197"
+                  offsetFromSymbolStart = "76">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "function signature specialization &lt;Arg[0] = Dead&gt; of Pupilware.TobiiGlass.getDocumentsDirectory () -&gt; __ObjC.NSString"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/xinyi/Developer/pupilware/PupilwareM/Pupilware/tobiiGlass.swift"
+                  timestampString = "491971888.892329"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "197"
+                  endingLineNumber = "197"
+                  offsetFromSymbolStart = "16">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "function signature specialization &lt;Arg[0] = Owned To Guaranteed, Arg[1] = Owned To Guaranteed, Arg[2] = Dead and Owned To Guaranteed, Arg[3] = Dead and Owned To Guaranteed&gt; of Pupilware.TobiiGlass.udpSocket (Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.GCDAsyncUdpSocket&gt;, didReceiveData : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, fromAddress : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, withFilterContext : Swift.ImplicitlyUnwrappedOptional&lt;Swift.AnyObject&gt;) -&gt; ()"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/xinyi/Developer/pupilware/PupilwareM/Pupilware/tobiiGlass.swift"
+                  timestampString = "491971888.892438"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "197"
+                  endingLineNumber = "197"
+                  offsetFromSymbolStart = "1888">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pupilware/tobiiGlass.swift"
+            timestampString = "491972515.247436"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "226"
+            endingLineNumber = "226"
+            landmarkName = "createCSVfile(_:testId:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pupilware/tobiiGlass.swift"
+            timestampString = "491972515.247436"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "225"
+            endingLineNumber = "225"
+            landmarkName = "createCSVfile(_:testId:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pupilware/tobiiGlass.swift"
+            timestampString = "491971887.803101"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
+            landmarkName = "udpSocket(_:didReceiveData:fromAddress:withFilterContext:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pupilware/tobiiGlass.swift"
+            timestampString = "491971983.549687"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "99"
+            endingLineNumber = "99"
+            landmarkName = "udpSocket(_:didReceiveData:fromAddress:withFilterContext:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "function signature specialization &lt;Arg[0] = Owned To Guaranteed, Arg[1] = Owned To Guaranteed, Arg[2] = Dead and Owned To Guaranteed, Arg[3] = Dead and Owned To Guaranteed&gt; of Pupilware.TobiiGlass.udpSocket (Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.GCDAsyncUdpSocket&gt;, didReceiveData : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, fromAddress : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, withFilterContext : Swift.ImplicitlyUnwrappedOptional&lt;Swift.AnyObject&gt;) -&gt; ()"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/xinyi/Developer/pupilware/PupilwareM/Pupilware/tobiiGlass.swift"
+                  timestampString = "491972075.921659"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "99"
+                  endingLineNumber = "99"
+                  offsetFromSymbolStart = "1820">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "function signature specialization &lt;Arg[0] = Owned To Guaranteed, Arg[1] = Owned To Guaranteed, Arg[2] = Dead and Owned To Guaranteed, Arg[3] = Dead and Owned To Guaranteed&gt; of Pupilware.TobiiGlass.udpSocket (Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.GCDAsyncUdpSocket&gt;, didReceiveData : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, fromAddress : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, withFilterContext : Swift.ImplicitlyUnwrappedOptional&lt;Swift.AnyObject&gt;) -&gt; ()"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/xinyi/Developer/pupilware/PupilwareM/Pupilware/tobiiGlass.swift"
+                  timestampString = "491972075.921778"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "99"
+                  endingLineNumber = "99"
+                  offsetFromSymbolStart = "1852">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pupilware/tobiiGlass.swift"
+            timestampString = "491971984.791665"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
+            landmarkName = "udpSocket(_:didReceiveData:fromAddress:withFilterContext:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "function signature specialization &lt;Arg[0] = Owned To Guaranteed, Arg[1] = Owned To Guaranteed, Arg[2] = Dead and Owned To Guaranteed, Arg[3] = Dead and Owned To Guaranteed&gt; of Pupilware.TobiiGlass.udpSocket (Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.GCDAsyncUdpSocket&gt;, didReceiveData : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, fromAddress : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, withFilterContext : Swift.ImplicitlyUnwrappedOptional&lt;Swift.AnyObject&gt;) -&gt; ()"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/xinyi/Developer/pupilware/PupilwareM/Pupilware/tobiiGlass.swift"
+                  timestampString = "491972075.94481"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "100"
+                  endingLineNumber = "100"
+                  offsetFromSymbolStart = "2096">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "function signature specialization &lt;Arg[0] = Owned To Guaranteed, Arg[1] = Owned To Guaranteed, Arg[2] = Dead and Owned To Guaranteed, Arg[3] = Dead and Owned To Guaranteed&gt; of Pupilware.TobiiGlass.udpSocket (Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.GCDAsyncUdpSocket&gt;, didReceiveData : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, fromAddress : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, withFilterContext : Swift.ImplicitlyUnwrappedOptional&lt;Swift.AnyObject&gt;) -&gt; ()"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/xinyi/Developer/pupilware/PupilwareM/Pupilware/tobiiGlass.swift"
+                  timestampString = "491972075.944918"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "100"
+                  endingLineNumber = "100"
+                  offsetFromSymbolStart = "2112">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pupilware/tobiiGlass.swift"
+            timestampString = "491972056.707343"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
+            landmarkName = "getDocumentsDirectory()"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Pupilware.TobiiGlass.createCSVfile (Swift.String, testId : Swift.String) -&gt; ()"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/xinyi/Developer/pupilware/PupilwareM/Pupilware/tobiiGlass.swift"
+                  timestampString = "491972075.945533"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "199"
+                  endingLineNumber = "199"
+                  offsetFromSymbolStart = "160">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "function signature specialization &lt;Arg[0] = Dead&gt; of Pupilware.TobiiGlass.getDocumentsDirectory () -&gt; __ObjC.NSString"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/xinyi/Developer/pupilware/PupilwareM/Pupilware/tobiiGlass.swift"
+                  timestampString = "491972075.945631"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "199"
+                  endingLineNumber = "199"
+                  offsetFromSymbolStart = "96">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "function signature specialization &lt;Arg[0] = Owned To Guaranteed, Arg[1] = Owned To Guaranteed, Arg[2] = Dead and Owned To Guaranteed, Arg[3] = Dead and Owned To Guaranteed&gt; of Pupilware.TobiiGlass.udpSocket (Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.GCDAsyncUdpSocket&gt;, didReceiveData : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, fromAddress : Swift.ImplicitlyUnwrappedOptional&lt;__ObjC.NSData&gt;, withFilterContext : Swift.ImplicitlyUnwrappedOptional&lt;Swift.AnyObject&gt;) -&gt; ()"
+                  moduleName = "Pupilware"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/xinyi/Developer/pupilware/PupilwareM/Pupilware/tobiiGlass.swift"
+                  timestampString = "491972075.945712"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "199"
+                  endingLineNumber = "199"
+                  offsetFromSymbolStart = "1968">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

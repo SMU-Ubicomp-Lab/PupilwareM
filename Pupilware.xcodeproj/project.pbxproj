@@ -79,7 +79,7 @@
 		97E94F7A1C5CB10C00D652CB /* PWUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F731C5CB10C00D652CB /* PWUtilities.mm */; };
 		97E94F7E1C5CB16800D652CB /* VideoAnalgesic.m in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F7D1C5CB16800D652CB /* VideoAnalgesic.m */; };
 		AE7728231D08BDD40096CCBD /* NMSimplex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE7728211D08BDD40096CCBD /* NMSimplex.cpp */; };
-		AEDC08D11D4F9AC100D547F8 /* syncTobii.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDC08D01D4F9AC100D547F8 /* syncTobii.swift */; };
+		AEDC08D11D4F9AC100D547F8 /* tobiiGlass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDC08D01D4F9AC100D547F8 /* tobiiGlass.swift */; };
 		AEDC08D31D4FD82000D547F8 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEDC08D21D4FD82000D547F8 /* CocoaAsyncSocket.framework */; };
 		AEDC08D61D4FE2E000D547F8 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEDC08D51D4FE2E000D547F8 /* opencv2.framework */; };
 /* End PBXBuildFile section */
@@ -205,7 +205,7 @@
 		97E965AB1C5CBA3F00D652CB /* PupilPrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PupilPrefixHeader.pch; path = ../PupilPrefixHeader.pch; sourceTree = "<group>"; };
 		AE7728211D08BDD40096CCBD /* NMSimplex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NMSimplex.cpp; sourceTree = "<group>"; };
 		AE7728221D08BDD40096CCBD /* NMSimplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMSimplex.h; sourceTree = "<group>"; };
-		AEDC08D01D4F9AC100D547F8 /* syncTobii.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = syncTobii.swift; sourceTree = "<group>"; };
+		AEDC08D01D4F9AC100D547F8 /* tobiiGlass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tobiiGlass.swift; sourceTree = "<group>"; };
 		AEDC08D21D4FD82000D547F8 /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/iOS/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
 		AEDC08D51D4FE2E000D547F8 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../../opencv3/opencv2.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -437,7 +437,7 @@
 				97A89CB21C5B72EE00D9E193 /* expModalVC.swift */,
 				971AB1DC1C683BC900E03643 /* calModalVC.swift */,
 				97A89CB01C5B6D7900D9E193 /* popOverController.swift */,
-				AEDC08D01D4F9AC100D547F8 /* syncTobii.swift */,
+				AEDC08D01D4F9AC100D547F8 /* tobiiGlass.swift */,
 				97E965AC1C5D6CB400D652CB /* Libraries */,
 				973A50291C5DBE6200EDDB20 /* Config */,
 				97A321581C59CE7100B1EB98 /* images */,
@@ -649,7 +649,7 @@
 				97A321491C59CDB300B1EB98 /* homeVC.swift in Sources */,
 				5C90AB1C1D34057D00FF7C5F /* PWIOSVideoReader.mm in Sources */,
 				5CCDBBA81D2046B3006C0B63 /* ObjCAdapter.mm in Sources */,
-				AEDC08D11D4F9AC100D547F8 /* syncTobii.swift in Sources */,
+				AEDC08D11D4F9AC100D547F8 /* tobiiGlass.swift in Sources */,
 				975C29031CA074210001FF95 /* targetSetupVC.swift in Sources */,
 				5CF4D59C1D186FB30050CBBA /* DummyAlgo.cpp in Sources */,
 				97A321471C59CDB300B1EB98 /* AppDelegate.swift in Sources */,
