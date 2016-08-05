@@ -60,8 +60,8 @@
         
     }
     return _videoManager;
-    
 }
+
 
 -(DataModel*)model{
     if(!_model){
@@ -69,6 +69,7 @@
     }
     return _model;
 }
+
 
 -(PWProcessor*)processor{
     if(!_processor){
@@ -169,15 +170,17 @@
         params.sigma=@((float)[defaults floatForKey:kSBSigma]);
         params.sbRayNumber=@((int)[defaults integerForKey:kSBNumberOfRays]);
         params.degreeOffset=@((int)[defaults integerForKey:kSBDegreeOffset]);
-        [self.processor setParameter:params];
+//        [self.processor setParameter:params];
         
+        NSLog(@"[Waning] The processor does not pick up these parameter just yet.");
         NSLog(@"Prior = %@", params.prior);
         NSLog(@"sigma = %@", params.sigma);
         NSLog(@"threshold = %@", params.threshold);
         
-        if (self.model != nil) {
-            self.processor.outputFileName = [ObjCAdapter getOutputFilePath: self.model.getCSVFileName];
-        }
+    
+//        self.processor.outputFileName = [ObjCAdapter getOutputFilePath: self.model.getCSVFileName];
+        self.processor.outputFileName = [ObjCAdapter getOutputFilePath: @"face.csv"];
+        
         
         [self.videoManager start];
         [self.processor start];
@@ -277,6 +280,7 @@
 }
 
 
+
 -(void) updateUI:(bool) hasFace
 {
     if(hasFace)
@@ -305,5 +309,6 @@
         [self closeSystem];
     }
 }
+
 
 @end

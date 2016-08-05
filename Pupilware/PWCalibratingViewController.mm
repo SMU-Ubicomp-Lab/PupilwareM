@@ -394,7 +394,7 @@
     // !!! Buffering the entire frame consume a lot of memory
     // Well, for 10 secs, it uses about 180Mb. Not too bad actually.
     
-    
+    //TODO: test these parameters
     cv::TermCriteria termcrit = cv::TermCriteria( cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS,
                                                   50,
                                                   0.000001 );
@@ -406,7 +406,7 @@
     ptr_F->setUp(pupilwareController, pwAlgo);
     ptr_F->setBuffer(videoFrameBuffer, faceMetaBuffer);
     
-    cv::Mat x=(cv::Mat_<double>(1,3)<<10.0,15.0, 20.0),
+    cv::Mat x=(cv::Mat_<double>(1,3)<<10.0, 15.0, 20.0),
     step=(cv::Mat_<double>(3,1)<<5.0, 5.0, 5.0);
     //etalon_x=(cv::Mat_<double>(1,2)<<-0.0,0.0);
     //double etalon_res=0.0;
@@ -414,6 +414,7 @@
     solver->setInitStep(step);
     solver->setTermCriteria(termcrit);
     solver->minimize(x);
+    
     
     NSLog(@"Dump x %f", x.at<double>(0, 0));
     NSLog(@"Dump x %f", x.at<double>(0, 1));
@@ -432,6 +433,7 @@
     videoFrameBuffer.clear();
     faceMetaBuffer.clear();
 }
+
 
 -(void)closeFiles{
     

@@ -98,11 +98,6 @@ namespace pw {
 
 
 
-        // Cost function to predict if the pixel an edge or reflection
-        virtual float getCost(int step, int eyeWidth, int thresholdValue) const;
-
-
-
         float findPupilSize(const cv::Mat &colorEyeFrame,
                             cv::Point eyeCenter,
                             cv::Mat &debugImg) const;

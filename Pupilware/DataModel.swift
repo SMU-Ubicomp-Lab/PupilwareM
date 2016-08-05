@@ -84,7 +84,9 @@ import Foundation
         let id:String = String(Int64(NSDate().timeIntervalSince1970*1000.0))
         calibration_files.face = "\(currentSubjectID)_calib_face_\(id).mp4"
         calibration_files.params = "\(currentSubjectID)_calib_params_\(id).csv"
-        calibration_files.data = "\(currentSubjectID)_calib_data_\(id)"
+        calibration_files.data = "\(currentSubjectID)_calib_data_\(id).csv"
+        // TODO How would I know that what calibration is for what experiment?
+        // add experiment mode, lighting level, and orientation would be great.
 
     }
 

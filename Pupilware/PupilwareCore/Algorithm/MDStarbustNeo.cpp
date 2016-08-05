@@ -20,10 +20,10 @@ namespace pw {
     MDStarbustNeo::MDStarbustNeo( const string& name ):
             IPupilAlgorithm(name),
             threshold(0.014),
-            rayNumber(15),
-            degreeOffset(25),
-            prior(1.0f),
-            sigma(1.0f){
+            rayNumber(17),
+            degreeOffset(0),
+            prior(0.5f),
+            sigma(0.2f){
 
     }
 
@@ -272,25 +272,31 @@ namespace pw {
         cv::threshold(grayEye, walkMat, th, 255, CV_THRESH_TRUNC);
 
         {
-            int ksize = grayEye.cols * 0.07;
-            float sigma = ksize * 0.20;
+            int ksize = grayEye.cols * 0.07; // can I make it bigger? let test it.
+            float sigma = ksize * this->sigma;
             Mat kernelX = getGaussianKernel(ksize, sigma);
             Mat kernelY = getGaussianKernel(ksize, sigma);
             Mat kernelXY = kernelX * kernelY.t();
 
+            // find min and max values in kernelXY.
             double min;
             double max;
             cv::minMaxIdx(kernelXY, &min, &max);
-            cv::Mat adjMap2d;
-            cv::convertScaleAbs(kernelXY, adjMap2d, 255 / max);
+            
+            // scale kernelXY to 0-255 range;
+            cv::Mat maskImage;
+            cv::convertScaleAbs(kernelXY, maskImage, 255 / max);
 
+            // create a rect that have the same size as the gausian kernel,
+            // locating it at the eye center.
             cv::Rect r;
             r.width = kernelXY.cols;
             r.height = kernelXY.rows;
             r.x = std::max(0,startingPoint.x - r.width/2);
             r.y = std::max(0,startingPoint.y - r.height/2);
 
-            walkMat(r) = walkMat(r) - ((adjMap2d/255.0f)*th);
+            //
+            walkMat(r) = walkMat(r) - (maskImage*this->prior);
 
 
         }
@@ -380,30 +386,6 @@ namespace pw {
 //        }
 
 //        outEdgePoints.assign(edgePointThisRound.begin(), edgePointThisRound.end());
-    }
-
-    float MDStarbustNeo::getCost(int step, int eyeWidth, int thresholdValue ) const {
-
-        int ksize = eyeWidth * 0.07;
-        float sigma = ksize * 0.20;
-
-        cv::Mat gaussianKernel = cv::getGaussianKernel(ksize, sigma);
-
-
-        double min;
-        double max;
-        cv::minMaxIdx(gaussianKernel, &min, &max);
-        cv::Mat adjMap;
-        cv::convertScaleAbs(gaussianKernel, adjMap, 255 / max);
-        cv::imshow("Gaussian Kernel", adjMap);
-
-
-        const double scale = (thresholdValue * 0.5 ) / max;
-
-        /* Start at the middle of the gaussian kernel, and walk outward. */
-        const int startingPoint = ksize/2;
-
-        return *gaussianKernel.ptr<double>(startingPoint + step) * scale;
     }
 
 
