@@ -8,12 +8,14 @@
 
 import Foundation
 import CocoaAsyncSocket
+import UIKit
 
 
 
 class TobiiGlass: GCDAsyncUdpSocketDelegate {
 
-    
+    static let sharedInstance = TobiiGlass(host: "10.8.151.117", port: 49152)
+    let model = DataModel.sharedInstance
     var host = "localhost"
     var port: UInt16 = 3002
     var localPortData: UInt16 = 3000
@@ -89,16 +91,17 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         }
         print("Data received: \(stringData)")
         
-        let strData = "{\"name\":\"James\"}"
-        //let jsonData = convertStringToDictionary(strData)
-        //print(jsonData)
-        var jsonData = try? NSJSONSerialization.JSONObjectWithData(data, options: [])  as? [String:String]
+        //let strData = "{\"name\":\"James\"}"
+        //print(strData)
+        let jsonData = convertStringToDictionary(stringData)
         
-       // if (jsonData!!["s"] == "0" && jsonData!!["pd"] != nil) {
-            
+        if (jsonData!["s"] == "0" && jsonData!["pd"] != nil) {
+        
+            print("Get pupil dilation  \(jsonData!["pd"])")
+            let pupilString = jsonData!["eye"]! + "," + jsonData!["pd"]! + String(NSDate())
             let filePath = getDocumentsDirectory().stringByAppendingPathComponent("output.txt")
-            writeToCSV(filePath, row: stringData)
-        //}
+            writeToCSV(filePath, row: pupilString)
+        }
     }
     
     private func dataTask(request: NSMutableURLRequest, method: String, completion: (success: Bool, object: AnyObject?) -> ()) {
@@ -130,10 +133,12 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/projects")!)
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
+            var jsonData = object as? [String: String]
+            self.model.tobiiProject = jsonData!["pr_id"]!
         }
     }
     
-    func createParticipant(projectId: Int) {
+    func createParticipant(projectId: String) {
         let json = ["pa_project": projectId]
         let jsonData = try? NSJSONSerialization.dataWithJSONObject(json, options: .PrettyPrinted)
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/participants")!)
@@ -141,52 +146,71 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         request.HTTPBody = jsonData
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
+            var jsonData = object as? [String: String]
+            self.model.tobiiSubjectIds[self.model.currentSubjectID] = jsonData!["pa_id"]!
             
         }
         
-        
     }
     
-    func createCalibration(projectId: Int, participantId: Int) {
+    func createCalibration(projectId: String, participantId: String) {
         let json = ["ca_project": projectId, "ca_type": "defualt", "ca_participant": participantId]
         let jsonData = try? NSJSONSerialization.dataWithJSONObject(json, options: .PrettyPrinted)
-        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/calibration")!)
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/calibrations")!)
         
         request.HTTPBody = jsonData
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
+            var jsonData = object as? [String: String]
+            self.model.tobiiCurrentCalibration = jsonData!["ca_id"]!
+            self.startCalibration(self.model.tobiiCurrentCalibration)
         }
     }
     
-    func startCalibration(calibrationId: Int) {
-        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/calibration" + String(calibrationId) + "/start")!)
+    func startCalibration(calibrationId: String) {
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/calibrations/" + String(calibrationId) + "/start")!)
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
+            var jsonData = object as? [String: String]
+            self.model.tobiiCurrentCalibration = jsonData!["ca_state"]!
         }
     
     }
     
-    func createRecording(participantId: Int) {
+    func checkCalibration(calibrationId: String) {
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/calibrations/" + String(calibrationId) + "/status")!)
+        get(request) { (success: Bool, object: AnyObject?) in
+            print("Get json : \(object)")
+            var jsonData = object as? [String: String]
+            self.model.tobiiCurrentCalibrationState = jsonData!["ca_state"]!
+        }
+
+    }
+    
+    func createRecording(participantId: String) {
         let json = ["rec_participant": participantId]
         let jsonData = try? NSJSONSerialization.dataWithJSONObject(json, options: .PrettyPrinted)
-        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/recodings")!)
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/recordings")!)
         
         request.HTTPBody = jsonData
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
+            var jsonData = object as? [String: String]
+            self.model.tobiiCurrentRecording = jsonData!["rec_id"]!
+            self.startRecording(self.model.tobiiCurrentRecording)
         }
     }
     
-    func startRecording(recordingId: Int) {
-        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/recodings" + String(recordingId) + "/start")!)
+    func startRecording(recordingId: String) {
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/recordings/" + String(recordingId) + "/start")!)
     
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
         }
     }
     
-    func stopRecording(recordingId: Int) {
-        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/recodings" + String(recordingId) + "/stop")!)
+    func stopRecording(recordingId: String) {
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/recordings/" + String(recordingId) + "/stop")!)
         
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
@@ -227,7 +251,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
     }
     
     func convertStringToDictionary(text: String) -> [String:String]? {
-        print(text)
+        //print(text)
         if let data = text.dataUsingEncoding(NSUTF8StringEncoding) {
             do {
                 return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:String]

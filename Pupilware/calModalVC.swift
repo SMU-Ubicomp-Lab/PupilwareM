@@ -35,6 +35,11 @@ class calModalVC: UIViewController, BridgeDelegate{
     func finishCalibration(){
         delegate?.calibrationComplete()
         self.dismissViewControllerAnimated(true, completion: nil)
+        if (self.model.tobiiCurrentCalibrationState == "calibrated") {
+            print("Tobii calibration success")
+        } else {
+            print("Tobii calibration failed")
+        }
     }
     
     func startTrackingFace(){

@@ -11,6 +11,18 @@ import Foundation
 
 @objc class DataModel: NSObject{
     static let sharedInstance = DataModel()
+    
+    
+    // For tobii
+    var tobiiProject:String = ""
+    var tobiiCurrentParticipant = ""
+    var tobiiCurrentCalibration = ""
+    var tobiiCurrentCalibrationState = ""
+    var tobiiCurrentRecording = ""
+    var tobiiSubjectIds: [String: String] = [:]
+    
+    
+    
     var currentSubjectID:String = ""
     var allSubjectIDs:[String] = []
     var faceInView:Bool = false
@@ -57,11 +69,17 @@ import Foundation
         if let data = NSUserDefaults.standardUserDefaults().objectForKey("allSubjectIDs") as? NSData {
             self.allSubjectIDs = NSKeyedUnarchiver.unarchiveObjectWithData(data) as! [String]
         }
+        
+        if let tobiiData = NSUserDefaults.standardUserDefaults().objectForKey("tobiiSubjects") as? NSData {
+            self.tobiiSubjectIds = NSKeyedUnarchiver.unarchiveObjectWithData(tobiiData) as! [String: String]
+        }
     }
     
     func archiveSubjectIDs(){
         let data = NSKeyedArchiver.archivedDataWithRootObject(allSubjectIDs)
+        let tobiiData = NSKeyedArchiver.archivedDataWithRootObject(tobiiSubjectIds)
         NSUserDefaults.standardUserDefaults().setObject(data, forKey: "allSubjectIDs")
+        NSUserDefaults.standardUserDefaults().setObject(tobiiData, forKey: "tobiiSubjects")
     }
     
     func getFaceFileName()->NSString{
