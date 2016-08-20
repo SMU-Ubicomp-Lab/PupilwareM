@@ -24,7 +24,7 @@ namespace cw{
     }
     
     void CWProfiler::_accumulateTime(const cw::CWClock &clock){
-        profiles[clock.getName()] += clock.getDeltaTime();
+        profiles[clock.getName()] += clock.getTime();
         
         print();
     }

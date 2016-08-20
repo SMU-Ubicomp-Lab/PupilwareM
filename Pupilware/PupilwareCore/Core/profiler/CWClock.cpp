@@ -28,7 +28,7 @@ namespace cw
     }
     
     
-    double CWClock::getDeltaTime() const{
+    double CWClock::getTime() const{
         return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count();
     }
     
@@ -38,7 +38,7 @@ namespace cw
     
     double CWClock::stop(){
 //        CWProfiler::accumulateTime(*this);
-        auto dt = getDeltaTime();
+        auto dt = getTime();
         reset();
         return dt;
     }

@@ -76,6 +76,8 @@ namespace pw{
         virtual const PWDataModel& getRawPupilSignal()const =0;
         virtual const std::vector<float>& getSmoothPupilSignal() const =0;
         
+        virtual const pw::PWFaceMeta& getFaceMeta() const =0;
+        
         
         /*!--------------------------------------------------------------------
          * Static Functions

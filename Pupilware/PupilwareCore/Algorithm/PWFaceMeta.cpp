@@ -16,9 +16,34 @@ namespace pw {
     , eyeDistancePx(0)
     , frameNumber(0){}
 
-    
-    PWFaceMeta::~PWFaceMeta(){}
-    
+
+    PWFaceMeta& PWFaceMeta::operator*( double scalar ){
+        
+        faceRect.x      = faceRect.x * scalar;
+        faceRect.y      = faceRect.y * scalar;
+        faceRect.width  = faceRect.width * scalar;
+        faceRect.height = faceRect.height * scalar;
+        
+        
+        leftEyeRect.x      = leftEyeRect.x * scalar;
+        leftEyeRect.y      = leftEyeRect.y * scalar;
+        leftEyeRect.width  = leftEyeRect.width * scalar;
+        leftEyeRect.height = leftEyeRect.height * scalar;
+        
+        rightEyeRect.x      = rightEyeRect.x * scalar;
+        rightEyeRect.y      = rightEyeRect.y * scalar;
+        rightEyeRect.width  = rightEyeRect.width * scalar;
+        rightEyeRect.height = rightEyeRect.height * scalar;
+        
+        leftEyeCenter.x     = leftEyeCenter.x * scalar;
+        leftEyeCenter.y     = leftEyeCenter.y * scalar;
+        
+        rightEyeCenter.x    = rightEyeCenter.x * scalar;
+        rightEyeCenter.y    = rightEyeCenter.y * scalar;
+        
+        
+        return *this;
+    }
     
     cv::Point PWFaceMeta::getLeftEyeCenter() const {
         return leftEyeCenter;

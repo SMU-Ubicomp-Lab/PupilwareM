@@ -71,6 +71,8 @@ namespace pw {
         // It's used to improve a reflection problem in pupils.
         float prior;
         float sigma;
+        
+        std::vector<cv::Point2f>rays;
 
         // Just a window name for debuging
         std::shared_ptr<CVWindow> window;
@@ -93,11 +95,6 @@ namespace pw {
 
 
         bool isValidEllipse(const cv::RotatedRect &theEllipse) const;
-
-
-
-        // Cost function to predict if the pixel an edge or reflection
-        virtual float getCost(int step, int eyeWidth, int thresholdValue) const;
 
 
 

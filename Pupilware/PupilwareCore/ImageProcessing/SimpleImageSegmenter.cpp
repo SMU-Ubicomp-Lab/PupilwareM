@@ -37,24 +37,33 @@ namespace pw{
 
         assert(grayFrame.channels() == 1);
 
+        Mat scaledFrame;
+        cv::pyrDown(grayFrame, scaledFrame);
+        
+        
         std::vector<cv::Rect> faces;
 
         // Detect faces
-        faceCascade.detectMultiScale(grayFrame,
-                                     faces, 1.1, 2,
+        faceCascade.detectMultiScale(scaledFrame,
+                                     faces, 1.2, 2,
                                      0 | CV_HAAR_SCALE_IMAGE | CV_HAAR_FIND_BIGGEST_OBJECT,
                                      cv::Size(150, 150));
 
 
         // Pick only one face for now.
+        const int downSampleLevel = 2;
         if (faces.size() > 0) {
             outFaceRect = faces[0];
+            outFaceRect.x = outFaceRect.x * downSampleLevel;
+            outFaceRect.y = outFaceRect.y * downSampleLevel;
+            outFaceRect.width = outFaceRect.width * downSampleLevel;
+            outFaceRect.height = outFaceRect.height * downSampleLevel;
 
             return true;
 
         }
         else {
-            cout << "[Info] A face has not found.";
+            cout << "[Info] A face has not found." << std::endl;
         }
 
         return false;
