@@ -20,6 +20,8 @@
 		5C90F5891D396E56006E6E71 /* CWProfiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C90F5861D396E56006E6E71 /* CWProfiler.cpp */; };
 		5C9EA49E1D1DD6A6003BE62C /* PWViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C9EA49D1D1DD6A6003BE62C /* PWViewController.mm */; };
 		5C9EA4AC1D1EE45B003BE62C /* haarcascade_frontalface_default.xml in Resources */ = {isa = PBXBuildFile; fileRef = 5C9EA4AB1D1EE45B003BE62C /* haarcascade_frontalface_default.xml */; };
+		5CAE93A51D55113900FCBD9A /* MaximumCircleFit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CAE93A31D55113900FCBD9A /* MaximumCircleFit.cpp */; };
+		5CBC0A681D57AD66007F8DFD /* BlinkDetection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CBC0A661D57AD66007F8DFD /* BlinkDetection.cpp */; };
 		5CC9A1231D25A25700ADB4BD /* PWCSVExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */; };
 		5CCDBBA81D2046B3006C0B63 /* ObjCAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5CCDBBA71D2046B3006C0B63 /* ObjCAdapter.mm */; };
 		5CCDBBAB1D205D2B006C0B63 /* IOSFaceRecognizer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5CCDBBAA1D205D2B006C0B63 /* IOSFaceRecognizer.mm */; };
@@ -111,6 +113,10 @@
 		5C9EA49C1D1DD6A6003BE62C /* PWViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWViewController.h; sourceTree = "<group>"; };
 		5C9EA49D1D1DD6A6003BE62C /* PWViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWViewController.mm; sourceTree = "<group>"; };
 		5C9EA4AB1D1EE45B003BE62C /* haarcascade_frontalface_default.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = haarcascade_frontalface_default.xml; sourceTree = "<group>"; };
+		5CAE93A31D55113900FCBD9A /* MaximumCircleFit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MaximumCircleFit.cpp; sourceTree = "<group>"; };
+		5CAE93A41D55113900FCBD9A /* MaximumCircleFit.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MaximumCircleFit.hpp; sourceTree = "<group>"; };
+		5CBC0A661D57AD66007F8DFD /* BlinkDetection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BlinkDetection.cpp; sourceTree = "<group>"; };
+		5CBC0A671D57AD66007F8DFD /* BlinkDetection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BlinkDetection.hpp; sourceTree = "<group>"; };
 		5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWCSVExporter.cpp; sourceTree = "<group>"; };
 		5CC9A1221D25A25700ADB4BD /* PWCSVExporter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWCSVExporter.hpp; sourceTree = "<group>"; };
 		5CCDBBA61D2046B3006C0B63 /* ObjCAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ObjCAdapter.h; path = Libraries/ObjCAdapter.h; sourceTree = "<group>"; };
@@ -295,6 +301,10 @@
 			children = (
 				5C4B46141D21A77400455A77 /* PWFaceMeta.cpp */,
 				5C4B46151D21A77400455A77 /* PWFaceMeta.hpp */,
+				5CBC0A661D57AD66007F8DFD /* BlinkDetection.cpp */,
+				5CBC0A671D57AD66007F8DFD /* BlinkDetection.hpp */,
+				5CAE93A31D55113900FCBD9A /* MaximumCircleFit.cpp */,
+				5CAE93A41D55113900FCBD9A /* MaximumCircleFit.hpp */,
 				5CF4D57C1D186FB30050CBBA /* ALOfflineFile.cpp */,
 				5CF4D57D1D186FB30050CBBA /* ALOfflineFile.hpp */,
 				5CF4D57E1D186FB30050CBBA /* DummyAlgo.cpp */,
@@ -643,11 +653,13 @@
 				97D487291C933F0A00774958 /* settingsVC.swift in Sources */,
 				5CF4D5BF1D1870020050CBBA /* CWUIHelper.cpp in Sources */,
 				5CF4D5BE1D1870020050CBBA /* CWCVHelper.cpp in Sources */,
+				5CAE93A51D55113900FCBD9A /* MaximumCircleFit.cpp in Sources */,
 				5C2E00F91D2D9C3E0099A306 /* mainex.cpp in Sources */,
 				5CF4D5C31D1870020050CBBA /* Snakuscules.cpp in Sources */,
 				AE7728231D08BDD40096CCBD /* NMSimplex.cpp in Sources */,
 				5CF4D5BD1D1870020050CBBA /* CVWindow.cpp in Sources */,
 				5C90F5891D396E56006E6E71 /* CWProfiler.cpp in Sources */,
+				5CBC0A681D57AD66007F8DFD /* BlinkDetection.cpp in Sources */,
 				97A3215A1C59CFF100B1EB98 /* DataModel.swift in Sources */,
 				5CF4D59E1D186FB30050CBBA /* MDStarbust.cpp in Sources */,
 			);
