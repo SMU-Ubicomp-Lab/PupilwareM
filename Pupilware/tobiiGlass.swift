@@ -14,7 +14,7 @@ import UIKit
 
 class TobiiGlass: GCDAsyncUdpSocketDelegate {
 
-    static let sharedInstance = TobiiGlass(host: "10.8.151.117", port: 49152)
+    static let sharedInstance = TobiiGlass(host: "192.168.0.9", port: 49152)
     let model = DataModel.sharedInstance
     var host = "localhost"
     var port: UInt16 = 3002
@@ -90,6 +90,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
             return
         }
         print("Data received: \(stringData)")
+        print(self.model.tobiiSubjectIds)
         
         //let strData = "{\"name\":\"James\"}"
         //print(strData)
@@ -148,7 +149,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
             print("Get json : \(object)")
             var jsonData = object as? [String: String]
             self.model.tobiiSubjectIds[self.model.currentSubjectID] = jsonData!["pa_id"]!
-            
+            self.model.archiveSubjectIDs()
         }
         
     }
