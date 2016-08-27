@@ -26,8 +26,9 @@ double NMSimplex::calc(const double* x) const {
     cv::Mat leftEyeVideoImage, rightEyeVideoImage;
     std::vector<float> results;
     algo->setThreshold(x[0]);
-    algo->setPrior(x[1]);
-    algo->setSigma(x[2]);
+    algo->setSigma(x[1]);
+    algo->setPrior(x[2]);
+    
     
     float stdV;
     if(!processor->hasStarted())
@@ -46,7 +47,10 @@ double NMSimplex::calc(const double* x) const {
         auto rawPupilSizes = processor->getRawPupilSignal().getLeftPupilSizes();
         stdV = calStd(rawPupilSizes);
         
-//        NSLog(@"[%d] Pupil Signal Size %lu", j, rawPupilSizes.size());
+        std::cout << "th " << x[0] << " ,sig " << x[1] << " ,prior " << x[2] << std::endl;
+        std::cout << "stdV " << stdV << std::endl;
+        
+        
         
         /* clear stage and do processing */
         processor->stop();

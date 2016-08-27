@@ -80,6 +80,7 @@ namespace pw {
         window->update(debugImg);
         
         this->debugImage = debugImg;
+        
 
         return PWPupilSize(  leftPupilRadius / meta.getEyeDistancePx()
                             ,rightPupilRadius / meta.getEyeDistancePx() );
@@ -187,7 +188,6 @@ namespace pw {
 
                     eyeRadius = voting;
 
-   
 
                 //---------------------------------------------------------------------------------
                 //! Draw debug image
@@ -422,10 +422,11 @@ namespace pw {
     }
     
     
-    
-    
     void MDStarbustNeo::setThreshold( float value ){
-        threshold = fmax(value, 0);
+        
+        // Constrain to minimum acceptable threahold.
+        threshold = fmax(value, 0.005);
+        
         if (threshold > 1) {
             threshold = 1;
         }

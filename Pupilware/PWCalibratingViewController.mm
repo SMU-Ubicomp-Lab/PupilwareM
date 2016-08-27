@@ -394,10 +394,16 @@
     // !!! Buffering the entire frame consume a lot of memory
     // Well, for 10 secs, it uses about 180Mb. Not too bad actually.
     
-    //TODO: test these parameters
-    cv::TermCriteria termcrit = cv::TermCriteria( cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS,
-                                                  50,
-                                                  0.000001 );
+    NSLog(@"Calibrating...");
+    
+    
+    const int kMaxCount = 10;
+    const double kEpsilon = 0.000001;
+    cv::TermCriteria termcrit = cv::TermCriteria( cv::TermCriteria::MAX_ITER+cv::TermCriteria::EPS, // Type
+                                                  kMaxCount,
+                                                  kEpsilon );
+    
+    NSLog(@"NMSimplex : maxCount %d , epsilon %f", kMaxCount, kEpsilon);
     
     //Apply Nelder Mead Search to find the best parameters
     cv::Ptr<cv::DownhillSolver> solver=cv::DownhillSolver::create();
@@ -405,11 +411,27 @@
     
     ptr_F->setUp(pupilwareController, pwAlgo);
     ptr_F->setBuffer(videoFrameBuffer, faceMetaBuffer);
+ 
+    // There are just list of default values.
+//    threshold(0.014),
+//    rayNumber(17),
+//    degreeOffset(0),
+//    prior(0.5f),
+//    sigma(0.2f)
     
-    cv::Mat x=(cv::Mat_<double>(1,3)<<10.0, 15.0, 20.0),
-    step=(cv::Mat_<double>(3,1)<<5.0, 5.0, 5.0);
+    const double thresholdInitPoint = 0.014;
+    const double sigmaInitPoint = 0.2;
+    const double priorInitPoint = 0.5;
+    cv::Mat x=(cv::Mat_<double>(1,3)<<thresholdInitPoint, sigmaInitPoint, priorInitPoint);
+    
+    const double thresholdMovingStep = 0.001;
+    const double sigmaMovingStep = 0.01;
+    const double priorMovingSteop = 0.05;
+    cv::Mat step=(cv::Mat_<double>(3,1)<<thresholdMovingStep, sigmaMovingStep, priorMovingSteop);
     //etalon_x=(cv::Mat_<double>(1,2)<<-0.0,0.0);
     //double etalon_res=0.0;
+    
+    
     solver->setFunction(ptr_F);
     solver->setInitStep(step);
     solver->setTermCriteria(termcrit);

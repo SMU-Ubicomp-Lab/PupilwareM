@@ -36,7 +36,7 @@
 @implementation PWProcessor
 {
     std::shared_ptr<pw::PupilwareController> pupilwareController;
-    std::shared_ptr<pw::BlinkDetection> pwAlgo;
+    std::shared_ptr<pw::MDStarbustNeo> pwAlgo;
     
     pw::PWCSVExporter csvExporter;
     
@@ -214,7 +214,7 @@
     self->currentFrameNumber = 0;
     
     pupilwareController = pw::PupilwareController::Create();
-    pwAlgo = std::make_shared<pw::BlinkDetection>("MaximumCircleFit");
+    pwAlgo = std::make_shared<pw::MDStarbustNeo>("MDStarburstNeo");
 
     pupilwareController->setPupilSegmentationAlgorihtm( pwAlgo );
     
