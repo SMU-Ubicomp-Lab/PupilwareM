@@ -16,7 +16,8 @@
 #import "PupilwareCore/PupilwareController.hpp"
 #import "PupilwareCore/Algorithm/IPupilAlgorithm.hpp"
 #import "PupilwareCore/Algorithm/MDStarbustNeo.hpp"
-#import "PupilwareCore/Algorithm/MDStarbust.hpp"
+#import "PupilwareCore/Algorithm/MaximumCircleFit.hpp"
+#import "PupilwareCore/Algorithm/BlinkDetection.hpp"
 #import "PupilwareCore/ImageProcessing/SimpleImageSegmenter.hpp"
 
 
@@ -68,11 +69,11 @@
         return;
     }
     
-    pwAlgo->setSigma([params.sigma floatValue]);
-    pwAlgo->setPrior([params.prior floatValue]);
-    pwAlgo->setThreshold([params.threshold floatValue]);
-    pwAlgo->setRayNumber([params.sbRayNumber intValue]);
-    pwAlgo->setDegreeOffset([params.degreeOffset intValue]);
+//    pwAlgo->setSigma([params.sigma floatValue]);
+//    pwAlgo->setPrior([params.prior floatValue]);
+//    pwAlgo->setThreshold([params.threshold floatValue]);
+//    pwAlgo->setRayNumber([params.sbRayNumber intValue]);
+//    pwAlgo->setDegreeOffset([params.degreeOffset intValue]);
     
 }
 
@@ -213,7 +214,7 @@
     self->currentFrameNumber = 0;
     
     pupilwareController = pw::PupilwareController::Create();
-    pwAlgo = std::make_shared<pw::MDStarbustNeo>("StarbustNeo");
+    pwAlgo = std::make_shared<pw::MDStarbustNeo>("MDStarburstNeo");
 
     pupilwareController->setPupilSegmentationAlgorihtm( pwAlgo );
     

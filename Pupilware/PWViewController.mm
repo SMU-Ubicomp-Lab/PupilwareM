@@ -177,9 +177,10 @@
         NSLog(@"sigma = %@", params.sigma);
         NSLog(@"threshold = %@", params.threshold);
         
+        
     
-//        self.processor.outputFileName = [ObjCAdapter getOutputFilePath: self.model.getCSVFileName];
-        self.processor.outputFileName = [ObjCAdapter getOutputFilePath: @"face.csv"];
+        self.processor.outputFileName = [ObjCAdapter getOutputFilePath: self.model.getCSVFileName];
+//        self.processor.outputFileName = [ObjCAdapter getOutputFilePath: @"face.csv"];
         
         
         [self.videoManager start];
@@ -205,8 +206,8 @@
 -(void)initVideoWriter
 {
     
-    //    NSString* fileName = self.model.getFaceFileName;
-    NSString* fileName = @"face.mp4";
+        NSString* fileName = self.model.getFaceFileName;
+//    NSString* fileName = @"face.mp4";
     
     NSString* videoPath = [ObjCAdapter getOutputFilePath: fileName];
     
