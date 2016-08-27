@@ -65,10 +65,22 @@ import Foundation
     }
     
     func getFaceFileName()->NSString{
+        if(self.currentTest == nil)
+        {
+            let time:String = String(Int64(NSDate().timeIntervalSince1970*1000.0))
+            return "default_face_" + time + ".mp4"
+        }
+        
         return self.currentTest!.getFaceFileName()
     }
     
     func getCSVFileName()->NSString{
+        if(self.currentTest == nil)
+        {
+            let time:String = String(Int64(NSDate().timeIntervalSince1970*1000.0))
+            return "default_name_" + time + ".csv"
+        }
+        
         return self.currentTest!.getCSVFileName()
     }
     

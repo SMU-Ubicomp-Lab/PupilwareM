@@ -12,6 +12,7 @@
 		5C2E00F91D2D9C3E0099A306 /* mainex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C2E00F81D2D9C3E0099A306 /* mainex.cpp */; };
 		5C4B46161D21A77400455A77 /* PWFaceMeta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B46141D21A77400455A77 /* PWFaceMeta.cpp */; };
 		5C4B461C1D21AB9200455A77 /* MDStarbustNeo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B461A1D21AB9200455A77 /* MDStarbustNeo.cpp */; };
+		5C5772AB1D71F85300CAA428 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5C5772AA1D71F85300CAA428 /* Assets.xcassets */; };
 		5C5CA09A1D3574B80024D983 /* tsavgol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C5CA0991D3574B80024D983 /* tsavgol.cpp */; };
 		5C6ACBF01D271D8500691F7A /* PWCalibratingViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C6ACBEF1D271D8400691F7A /* PWCalibratingViewController.mm */; };
 		5C82A9B01D2479C6001F5345 /* PWVideoWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C82A9AE1D2479C6001F5345 /* PWVideoWriter.cpp */; };
@@ -56,7 +57,6 @@
 		97A321471C59CDB300B1EB98 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A321461C59CDB300B1EB98 /* AppDelegate.swift */; };
 		97A321491C59CDB300B1EB98 /* homeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A321481C59CDB300B1EB98 /* homeVC.swift */; };
 		97A3214C1C59CDB300B1EB98 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97A3214A1C59CDB300B1EB98 /* Main.storyboard */; };
-		97A3214E1C59CDB300B1EB98 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97A3214D1C59CDB300B1EB98 /* Assets.xcassets */; };
 		97A321511C59CDB300B1EB98 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97A3214F1C59CDB300B1EB98 /* LaunchScreen.storyboard */; };
 		97A3215A1C59CFF100B1EB98 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A321591C59CFF100B1EB98 /* DataModel.swift */; };
 		97A3215C1C59E1BB00B1EB98 /* subjectIDModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A3215B1C59E1BB00B1EB98 /* subjectIDModalVC.swift */; };
@@ -97,6 +97,7 @@
 		5C4B46151D21A77400455A77 /* PWFaceMeta.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWFaceMeta.hpp; sourceTree = "<group>"; };
 		5C4B461A1D21AB9200455A77 /* MDStarbustNeo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MDStarbustNeo.cpp; sourceTree = "<group>"; };
 		5C4B461B1D21AB9200455A77 /* MDStarbustNeo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MDStarbustNeo.hpp; sourceTree = "<group>"; };
+		5C5772AA1D71F85300CAA428 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5C5CA0991D3574B80024D983 /* tsavgol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tsavgol.cpp; sourceTree = "<group>"; };
 		5C6ACBEE1D271D8400691F7A /* PWCalibratingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWCalibratingViewController.h; sourceTree = "<group>"; };
 		5C6ACBEF1D271D8400691F7A /* PWCalibratingViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWCalibratingViewController.mm; sourceTree = "<group>"; };
@@ -177,7 +178,6 @@
 		97A321461C59CDB300B1EB98 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		97A321481C59CDB300B1EB98 /* homeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = homeVC.swift; sourceTree = "<group>"; };
 		97A3214B1C59CDB300B1EB98 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		97A3214D1C59CDB300B1EB98 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97A321501C59CDB300B1EB98 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97A321521C59CDB300B1EB98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		97A321591C59CFF100B1EB98 /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
@@ -401,10 +401,10 @@
 		973A50291C5DBE6200EDDB20 /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				5C5772AA1D71F85300CAA428 /* Assets.xcassets */,
 				97E965AB1C5CBA3F00D652CB /* PupilPrefixHeader.pch */,
 				97A321461C59CDB300B1EB98 /* AppDelegate.swift */,
 				97E94F361C5CAD2800D652CB /* Pupilware-Bridging-Header.h */,
-				97A3214D1C59CDB300B1EB98 /* Assets.xcassets */,
 				97A321521C59CDB300B1EB98 /* Info.plist */,
 				97A3214F1C59CDB300B1EB98 /* LaunchScreen.storyboard */,
 			);
@@ -593,8 +593,8 @@
 				9748FF731C6092B700143D54 /* beaker.png in Resources */,
 				9748FF721C6092B700143D54 /* gear.png in Resources */,
 				976803C91C97429E003D63C8 /* target.png in Resources */,
-				97A3214E1C59CDB300B1EB98 /* Assets.xcassets in Resources */,
 				97A3214C1C59CDB300B1EB98 /* Main.storyboard in Resources */,
+				5C5772AB1D71F85300CAA428 /* Assets.xcassets in Resources */,
 				9748FF711C6092B700143D54 /* calibrate.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
