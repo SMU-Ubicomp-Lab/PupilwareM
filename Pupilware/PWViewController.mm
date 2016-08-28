@@ -164,18 +164,18 @@
     {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         
-        PWParameter *params = [[PWParameter alloc] init];
-        params.threshold=@((float)[defaults floatForKey:kSBThreshold]);
-        params.prior=@((float)[defaults floatForKey:kSBPrior]);
-        params.sigma=@((float)[defaults floatForKey:kSBSigma]);
-        params.sbRayNumber=@((int)[defaults integerForKey:kSBNumberOfRays]);
-        params.degreeOffset=@((int)[defaults integerForKey:kSBDegreeOffset]);
+        pw::PWParameter params;
+        params.threshold=((float)[defaults floatForKey:kSBThreshold]);
+        params.prior=((float)[defaults floatForKey:kSBPrior]);
+        params.sigma=((float)[defaults floatForKey:kSBSigma]);
+        params.sbRayNumber=((int)[defaults integerForKey:kSBNumberOfRays]);
+        params.degreeOffset=((int)[defaults integerForKey:kSBDegreeOffset]);
 //        [self.processor setParameter:params];
         
         NSLog(@"[Waning] The processor does not pick up these parameter just yet.");
-        NSLog(@"Prior = %@", params.prior);
-        NSLog(@"sigma = %@", params.sigma);
-        NSLog(@"threshold = %@", params.threshold);
+        NSLog(@"Prior = %f", params.prior);
+        NSLog(@"sigma = %f", params.sigma);
+        NSLog(@"threshold = %f", params.threshold);
         
         
     

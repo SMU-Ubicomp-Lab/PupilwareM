@@ -33,6 +33,7 @@
 
 #import "PupilwareCore/PWVideoWriter.hpp"
 #import "PupilwareCore/PWCSVExporter.hpp"
+#import "PupilwareCore/PWParameter.hpp"
 
 /*---------------------------------------------------------------
  Objective C Header
@@ -289,6 +290,14 @@
     csvExporter.open([filePath UTF8String]);
 }
 
+-(void)saveCurrentSettingToFile:(const pw::PWParameter&) param
+{
+    NSString* filePath = [ObjCAdapter getOutputFilePath: self.model.getCalibrationParamsFileName];
+    
+
+    pw::PWCSVExporter::toCSV(param, [filePath UTF8String]);
+}
+
 
 -(void)initPupilwareCtrl
 {
@@ -413,11 +422,11 @@
     ptr_F->setBuffer(videoFrameBuffer, faceMetaBuffer);
  
     // There are just list of default values.
-//    threshold(0.014),
-//    rayNumber(17),
-//    degreeOffset(0),
-//    prior(0.5f),
-//    sigma(0.2f)
+    //    threshold(0.014),
+    //    rayNumber(17),
+    //    degreeOffset(0),
+    //    prior(0.5f),
+    //    sigma(0.2f)
     
     const double thresholdInitPoint = 0.014;
     const double sigmaInitPoint = 0.2;
@@ -438,16 +447,23 @@
     solver->minimize(x);
     
     
-    NSLog(@"Dump x %f", x.at<double>(0, 0));
-    NSLog(@"Dump x %f", x.at<double>(0, 1));
-    NSLog(@"Dump x %f", x.at<double>(0, 2));
+    pw::PWParameter param;
+    param.threshold = x.at<double>(0,0);
+    param.sigma = x.at<double>(0,1);
+    param.prior = x.at<double>(0,2);
     
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setFloat: x.at<double>(0,0) forKey:kSBThreshold];
-    [defaults setFloat: x.at<double>(0,2) forKey:kSBSigma];
-    [defaults setFloat: x.at<double>(0,1) forKey:kSBPrior];
+    [self saveCurrentSettingToFile: param];
 
+    // Display on log
+    NSLog(@"Dump x %f", param.threshold);
+    NSLog(@"Dump x %f", param.sigma);
+    NSLog(@"Dump x %f", param.prior);
+    
+    // Save to default
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setFloat: param.threshold forKey:kSBThreshold];
+    [defaults setFloat: param.sigma     forKey:kSBSigma];
+    [defaults setFloat: param.prior     forKey:kSBPrior];
 }
 
 

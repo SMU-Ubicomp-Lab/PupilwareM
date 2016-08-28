@@ -67,7 +67,7 @@ import Foundation
     func getFaceFileName()->NSString{
         if(self.currentTest == nil)
         {
-            let time:String = String(Int64(NSDate().timeIntervalSince1970*1000.0))
+            let time:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
             return "default_face_" + time + ".mp4"
         }
         
@@ -77,7 +77,7 @@ import Foundation
     func getCSVFileName()->NSString{
         if(self.currentTest == nil)
         {
-            let time:String = String(Int64(NSDate().timeIntervalSince1970*1000.0))
+            let time:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
             return "default_name_" + time + ".csv"
         }
         
@@ -93,7 +93,7 @@ import Foundation
     }
     
     func setNewCalibrationFiles(){
-        let id:String = String(Int64(NSDate().timeIntervalSince1970*1000.0))
+        let id:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
         calibration_files.face = "\(currentSubjectID)_calib_face_\(id).mp4"
         calibration_files.params = "\(currentSubjectID)_calib_params_\(id).csv"
         calibration_files.data = "\(currentSubjectID)_calib_data_\(id).csv"
@@ -170,7 +170,7 @@ protocol Test{
 
 class TargetTest: Test{
     let model = DataModel.sharedInstance
-    let ID:String = String(Int64(NSDate().timeIntervalSince1970*1000.0))
+    let ID:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
     var missing_digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
     var labels = (face:"", csvFile:"", calFile:"")
     
@@ -301,7 +301,7 @@ class TargetTest: Test{
 
 class DigitTest: Test{
     let model = DataModel.sharedInstance
-    let ID:String = String(Int64(NSDate().timeIntervalSince1970*1000.0))
+    let ID:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
     var digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
     var labels = (face:"", csvFile:"", calFile:"")
     
@@ -383,29 +383,11 @@ class DigitTest: Test{
                 default:print("DIGIT TEST NOT FOUND")
                 }
             case 6:
-                switch iter{
-                case 1:return [1, 2, 3, 4, 5, 6]
-                case 2:return [1, 2, 3, 4, 5, 6]
-                case 3:return [1, 2, 3, 4, 5, 6]
-                case 4:return [1, 2, 3, 4, 5, 6]
-                default:print("DIGIT TEST NOT FOUND")
-                }
+                return getListOfDigits(6)
             case 7:
-                switch iter{
-                case 1:return [1, 2, 3, 4, 5, 6, 7]
-                case 2:return [1, 2, 3, 4, 5, 6, 7]
-                case 3:return [1, 2, 3, 4, 5, 6, 7]
-                case 4:return [1, 2, 3, 4, 5, 6, 7]
-                default:print("DIGIT TEST NOT FOUND")
-                }
+                return getListOfDigits(7)
             case 8:
-                switch iter{
-                case 1:return [1, 2, 3, 4, 5, 6, 7, 8]
-                case 2:return [1, 2, 3, 4, 5, 6, 7, 8]
-                case 3:return [1, 2, 3, 4, 5, 6, 7, 8]
-                case 4:return [1, 2, 3, 4, 5, 6, 7, 8]
-                default:print("DIGIT TEST NOT FOUND")
-                }
+                return getListOfDigits(8)
             default:
                 print("DIGIT TEST NOT FOUND")
             }
@@ -479,7 +461,7 @@ class DigitTest: Test{
                     print("Couldn't write to file: \(error.localizedDescription)")
                 }
             } else {
-                print("Couldn't create file for some reason")
+                print("Couldn't create a file for some reasons")
             }
         } else {
             print("File already exists")

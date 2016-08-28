@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		5C0AFE8D1D50FD6D00E8BE4E /* PWProcessor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C0AFE8C1D50FD6D00E8BE4E /* PWProcessor.mm */; };
-		5C0AFE901D52617F00E8BE4E /* PWParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0AFE8F1D52617F00E8BE4E /* PWParameter.m */; };
 		5C2E00F91D2D9C3E0099A306 /* mainex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C2E00F81D2D9C3E0099A306 /* mainex.cpp */; };
 		5C4B46161D21A77400455A77 /* PWFaceMeta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B46141D21A77400455A77 /* PWFaceMeta.cpp */; };
 		5C4B461C1D21AB9200455A77 /* MDStarbustNeo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B461A1D21AB9200455A77 /* MDStarbustNeo.cpp */; };
@@ -23,6 +22,7 @@
 		5C9EA4AC1D1EE45B003BE62C /* haarcascade_frontalface_default.xml in Resources */ = {isa = PBXBuildFile; fileRef = 5C9EA4AB1D1EE45B003BE62C /* haarcascade_frontalface_default.xml */; };
 		5CAE93A51D55113900FCBD9A /* MaximumCircleFit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CAE93A31D55113900FCBD9A /* MaximumCircleFit.cpp */; };
 		5CBC0A681D57AD66007F8DFD /* BlinkDetection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CBC0A661D57AD66007F8DFD /* BlinkDetection.cpp */; };
+		5CC83FB41D736A430083803F /* PWParameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CC83FB21D736A430083803F /* PWParameter.cpp */; };
 		5CC9A1231D25A25700ADB4BD /* PWCSVExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */; };
 		5CCDBBA81D2046B3006C0B63 /* ObjCAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5CCDBBA71D2046B3006C0B63 /* ObjCAdapter.mm */; };
 		5CCDBBAB1D205D2B006C0B63 /* IOSFaceRecognizer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5CCDBBAA1D205D2B006C0B63 /* IOSFaceRecognizer.mm */; };
@@ -89,8 +89,6 @@
 /* Begin PBXFileReference section */
 		5C0AFE8B1D50FD6D00E8BE4E /* PWProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWProcessor.h; sourceTree = "<group>"; };
 		5C0AFE8C1D50FD6D00E8BE4E /* PWProcessor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWProcessor.mm; sourceTree = "<group>"; };
-		5C0AFE8E1D52617F00E8BE4E /* PWParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWParameter.h; sourceTree = "<group>"; };
-		5C0AFE8F1D52617F00E8BE4E /* PWParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWParameter.m; sourceTree = "<group>"; };
 		5C2E00F61D2D9C3E0099A306 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
 		5C2E00F81D2D9C3E0099A306 /* mainex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mainex.cpp; sourceTree = "<group>"; };
 		5C4B46141D21A77400455A77 /* PWFaceMeta.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWFaceMeta.cpp; sourceTree = "<group>"; };
@@ -118,6 +116,8 @@
 		5CAE93A41D55113900FCBD9A /* MaximumCircleFit.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MaximumCircleFit.hpp; sourceTree = "<group>"; };
 		5CBC0A661D57AD66007F8DFD /* BlinkDetection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BlinkDetection.cpp; sourceTree = "<group>"; };
 		5CBC0A671D57AD66007F8DFD /* BlinkDetection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BlinkDetection.hpp; sourceTree = "<group>"; };
+		5CC83FB21D736A430083803F /* PWParameter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWParameter.cpp; sourceTree = "<group>"; };
+		5CC83FB31D736A430083803F /* PWParameter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWParameter.hpp; sourceTree = "<group>"; };
 		5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWCSVExporter.cpp; sourceTree = "<group>"; };
 		5CC9A1221D25A25700ADB4BD /* PWCSVExporter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWCSVExporter.hpp; sourceTree = "<group>"; };
 		5CCDBBA61D2046B3006C0B63 /* ObjCAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ObjCAdapter.h; path = Libraries/ObjCAdapter.h; sourceTree = "<group>"; };
@@ -292,6 +292,8 @@
 				5C82A9AF1D2479C6001F5345 /* PWVideoWriter.hpp */,
 				5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */,
 				5CC9A1221D25A25700ADB4BD /* PWCSVExporter.hpp */,
+				5CC83FB21D736A430083803F /* PWParameter.cpp */,
+				5CC83FB31D736A430083803F /* PWParameter.hpp */,
 			);
 			path = PupilwareCore;
 			sourceTree = "<group>";
@@ -450,8 +452,6 @@
 				97A89CB01C5B6D7900D9E193 /* popOverController.swift */,
 				5C0AFE8B1D50FD6D00E8BE4E /* PWProcessor.h */,
 				5C0AFE8C1D50FD6D00E8BE4E /* PWProcessor.mm */,
-				5C0AFE8E1D52617F00E8BE4E /* PWParameter.h */,
-				5C0AFE8F1D52617F00E8BE4E /* PWParameter.m */,
 				97E965AC1C5D6CB400D652CB /* Libraries */,
 				973A50291C5DBE6200EDDB20 /* Config */,
 				97A321581C59CE7100B1EB98 /* images */,
@@ -610,6 +610,7 @@
 				97E94F7A1C5CB10C00D652CB /* PWUtilities.mm in Sources */,
 				5CF4D5A41D186FB30050CBBA /* SimpleImageSegmenter.cpp in Sources */,
 				97DB32CB1C75AB930024A22F /* adminVC.swift in Sources */,
+				5CC83FB41D736A430083803F /* PWParameter.cpp in Sources */,
 				97A89CB31C5B72EE00D9E193 /* expModalVC.swift in Sources */,
 				97A89CB11C5B6D7900D9E193 /* popOverController.swift in Sources */,
 				5C82A9B01D2479C6001F5345 /* PWVideoWriter.cpp in Sources */,
@@ -620,7 +621,6 @@
 				5CC9A1231D25A25700ADB4BD /* PWCSVExporter.cpp in Sources */,
 				5CF4D5A21D186FB30050CBBA /* PWDataModel.cpp in Sources */,
 				5CF4D59F1D186FB30050CBBA /* MDStarbustG.cpp in Sources */,
-				5C0AFE901D52617F00E8BE4E /* PWParameter.m in Sources */,
 				5CF4D5C21D1870020050CBBA /* Ransac.cpp in Sources */,
 				5CF4D5A61D186FB30050CBBA /* SignalProcessingHelper.cpp in Sources */,
 				5CF4D59D1D186FB30050CBBA /* IPupilAlgorithm.cpp in Sources */,

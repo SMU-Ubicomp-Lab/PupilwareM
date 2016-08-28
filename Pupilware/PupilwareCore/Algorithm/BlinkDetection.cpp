@@ -58,7 +58,7 @@ namespace pw {
 
             if( maxSize < (int)contours[i].size() )
             {
-                maxSize = contours[i].size();
+                maxSize = (int)contours[i].size();
                 bigBlobIndex = i;
             }
         }

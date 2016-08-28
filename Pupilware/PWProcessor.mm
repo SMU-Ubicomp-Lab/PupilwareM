@@ -62,7 +62,7 @@
     return self;
 }
 
--(void) setParameter:(PWParameter*)params{
+-(void) setParameter:(pw::PWParameter*)params{
     
     if(params == nil ){
         NSLog(@"Parameter is nil. Reject the request.");

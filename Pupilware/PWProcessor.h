@@ -11,7 +11,7 @@
 
 #import <Foundation/Foundation.h>
 #import <opencv2/opencv.hpp>
-#import "PWParameter.h"
+#import "PupilwareCore/PWParameter.hpp"
 
 @interface PWProcessor : NSObject
 
@@ -21,7 +21,7 @@
 -(void) stop;
 -(BOOL) isStarted;
 -(BOOL) hasFace;
--(void) setParameter:(PWParameter*)params;
+-(void) setParameter:(pw::PWParameter*)params;
 
 @property(strong, nonatomic) NSString* outputFileName;
 

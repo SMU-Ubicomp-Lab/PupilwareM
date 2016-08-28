@@ -11,6 +11,7 @@
 #include "preHeader.hpp"
 #include "Algorithm/PWFaceMeta.hpp"
 #include "Algorithm/PWDataModel.hpp"
+#include "PWParameter.hpp"
 
 #include <chrono>
 
@@ -112,5 +113,22 @@ namespace pw{
         f.close();
 
     }
+
     
+    void PWCSVExporter::toCSV( const PWParameter& param, const std::string& fileName ){
+        
+        std::ofstream f(fileName);
+        
+        if (f.is_open()) {
+            
+            f << "threshold, sigma, prior" << std::endl;
+            f << param.threshold <<
+            "," << param.sigma <<
+            "," << param.prior << std::endl;
+            
+        }
+        
+        f.close();
+        
+    }
 }
