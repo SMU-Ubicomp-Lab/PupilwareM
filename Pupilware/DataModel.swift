@@ -93,12 +93,29 @@ import Foundation
     }
     
     func setNewCalibrationFiles(){
+        
+//        var testType = "unknown"
+//        if(self.currentTest is TargetTest)
+//        {
+//            testType = "target"
+//        }
+//        else if(self.currentTest is DigitTest)
+//        {
+//            let dTest = self.currentTest as! DigitTest
+//            
+//            if (lumMode){
+//                testType = "digit_lux\(dTest.lux)"
+//            }
+//            else{
+//                testType = "digit_angle\(dTest.angle)"
+//            }
+//        }
+        
         let id:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
         calibration_files.face = "\(currentSubjectID)_calib_face_\(id).mp4"
         calibration_files.params = "\(currentSubjectID)_calib_params_\(id).csv"
         calibration_files.data = "\(currentSubjectID)_calib_data_\(id).csv"
-        // TODO How would I know that what calibration is for what experiment?
-        // add experiment mode, lighting level, and orientation would be great.
+        
 
     }
 

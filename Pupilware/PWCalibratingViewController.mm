@@ -309,43 +309,7 @@
     pwAlgo = std::make_shared<pw::MDStarbustNeo>("StarbustNeo");
     
     pupilwareController->setPupilSegmentationAlgorihtm( pwAlgo );
-    
-    /*! 
-     * If there is no a face segmentation algorithm,
-     * we have to manually give Face Meta data to the system.
-     */
-//    NSString *path = [[NSBundle mainBundle] pathForResource:@"haarcascade_frontalface_default" ofType:@"xml"];
-//    const char *filePath = [path cStringUsingEncoding:NSUTF8StringEncoding];
-//    
-//    NSLog(@"%s", filePath);
-//    pupilwareController->setFaceSegmentationAlgoirhtm(std::make_shared<pw::SimpleImageSegmenter>(filePath));
-    
 
-    // TODO: Load default setting
-    
-    /* Load Initial Setting to the Pupilware Controller*/
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    
-//    pwAlgo->setThreshold((float)[defaults floatForKey:kSBThreshold]);
-//    pwAlgo->setPrior((float)[defaults floatForKey:kSBPrior]);
-//    pwAlgo->setSigma((float)[defaults floatForKey:kSBSigma]);
-//    pwAlgo->setRayNumber((int)[defaults integerForKey:kSBNumberOfRays]);
-//    pwAlgo->setDegreeOffset((int)[defaults integerForKey:kSBDegreeOffset]);
-    
-    
-//    processor->windowSize_ud        = (int)[defaults integerForKey:kWindowSize];
-//    processor->mbWindowSize_ud      = (int)[defaults integerForKey:kMbWindowSize];
-//    processor->eyeDistance_ud       = self.model.getDist;
-//    processor->baselineStart_ud     = self.model.getBaseStart;
-//    processor->baselineEnd_ud       = self.model.getBaseEnd;
-//    processor->baseline             = self.model.getBaseline;
-//    processor->cogHigh              = self.model.getCogHigh;
-//    
-//    // Following four parameters are optimal parameters resulting from the calibration process
-//    //
-//    
-//    NSLog(@"Default values in PWViewCOntroller");
-//    NSLog(@"Eye Distance %f, window size %d, mbWindowsize %d, baseline start %d, basline end %d, threshold %d, mark cost %d, Baseline %f, coghigh %f", processor->eyeDistance_ud, processor->windowSize_ud, processor->mbWindowSize_ud, processor->baselineStart_ud, processor->baselineEnd_ud, processor->threshold_ud, processor->markCost, processor->baseline, processor->cogHigh);
     
 }
 

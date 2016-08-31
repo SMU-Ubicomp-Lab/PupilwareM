@@ -168,9 +168,10 @@
         params.threshold=((float)[defaults floatForKey:kSBThreshold]);
         params.prior=((float)[defaults floatForKey:kSBPrior]);
         params.sigma=((float)[defaults floatForKey:kSBSigma]);
-        params.sbRayNumber=((int)[defaults integerForKey:kSBNumberOfRays]);
-        params.degreeOffset=((int)[defaults integerForKey:kSBDegreeOffset]);
-//        [self.processor setParameter:params];
+//        params.sbRayNumber=((int)[defaults integerForKey:kSBNumberOfRays]);
+//        params.degreeOffset=((int)[defaults integerForKey:kSBDegreeOffset]);
+
+        [self.processor setParameter:&params];
         
         NSLog(@"[Waning] The processor does not pick up these parameter just yet.");
         NSLog(@"Prior = %f", params.prior);

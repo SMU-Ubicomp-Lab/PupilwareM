@@ -110,11 +110,11 @@ class expModalVC: UIViewController, BridgeDelegate{
     
     func testCompleted(){
         self.completeButton.enabled = true
-        testFinished = true;
+        
     }
     
     @IBAction func completePressed(sender: AnyObject) {
-        
+        testFinished = true;
         if testFinished {
             self.dismissViewControllerAnimated(true, completion: nil)
             delegate?.digitSpanTestComplete()
