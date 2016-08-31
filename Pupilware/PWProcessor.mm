@@ -54,7 +54,7 @@
     
     if( [super init] ){
         
-        self.outputFileName = @"face.csv";
+        self.outputFaceFileName = @"face.csv";
         [self initPupilwareCtrl];
         
     }
@@ -69,9 +69,11 @@
         return;
     }
     
-//    pwAlgo->setSigma([params.sigma floatValue]);
-//    pwAlgo->setPrior([params.prior floatValue]);
-//    pwAlgo->setThreshold([params.threshold floatValue]);
+    pwAlgo->setSigma(params->sigma);
+    pwAlgo->setPrior(params->prior);
+    pwAlgo->setThreshold(params->threshold);
+    
+    // TODO:
 //    pwAlgo->setRayNumber([params.sbRayNumber intValue]);
 //    pwAlgo->setDegreeOffset([params.degreeOffset intValue]);
     
@@ -111,6 +113,9 @@
         // TODO: change the sleep function to waiting until the thread is returned.
         NSLog(@"[Info] Pupilware Start cleaning up.");
         sleep(1);
+        
+        pw::PWCSVExporter::toCSV(pupilwareController->getRawPupilSignal(),
+                                 [self.outputPupilFileName UTF8String]);
         
         pupilwareController->stop();
         pupilwareController->clearBuffer();
@@ -203,7 +208,7 @@
 -(void)initCSVExporter
 {
     
-    NSString* filePath = self.outputFileName;
+    NSString* filePath = self.outputFaceFileName;
     csvExporter.open([filePath UTF8String]);
 }
 

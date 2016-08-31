@@ -6,6 +6,7 @@
 //  Copyright © 2016 SMU Ubicomp Lab. All rights reserved.
 //
 
+
 #import "PWViewController.h"
 
 #import "PupilwareCore/preHeader.hpp"
@@ -178,10 +179,9 @@
         NSLog(@"sigma = %f", params.sigma);
         NSLog(@"threshold = %f", params.threshold);
         
-        
     
-        self.processor.outputFileName = [ObjCAdapter getOutputFilePath: self.model.getCSVFileName];
-//        self.processor.outputFileName = [ObjCAdapter getOutputFilePath: @"face.csv"];
+        self.processor.outputFaceFileName = [ObjCAdapter getOutputFilePath: self.model.getFaceMetaFileName];
+        self.processor.outputPupilFileName = [ObjCAdapter getOutputFilePath: self.model.getPupilFileName];
         
         
         [self.videoManager start];
@@ -198,7 +198,6 @@
     {
         [self.processor stop];
         videoWriter.close();
-    
         
     }
 }
@@ -207,7 +206,7 @@
 -(void)initVideoWriter
 {
     
-        NSString* fileName = self.model.getFaceFileName;
+        NSString* fileName = self.model.getFaceVideoFileName;
 //    NSString* fileName = @"face.mp4";
     
     NSString* videoPath = [ObjCAdapter getOutputFilePath: fileName];
@@ -308,6 +307,7 @@
     self.currentFrameNumber += 1;
     
     if ([self.model.bridgeDelegate isTestingFinished]) {
+        
         [self closeSystem];
     }
 }

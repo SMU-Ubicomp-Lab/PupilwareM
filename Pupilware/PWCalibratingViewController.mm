@@ -239,11 +239,20 @@
         
         self.buffering = false;
         
-        [self calibrate];
+        [self.model.bridgeDelegate trackingFaceDone];
         
-        [self clearBuffer];
+        __block typeof(self) blockSelf = self;
         
-        [self.model.bridgeDelegate finishCalibration];
+        auto queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
+            [blockSelf calibrate];
+            [blockSelf clearBuffer];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [blockSelf.model.bridgeDelegate finishCalibration];
+            });
+            
+        });
         
     }
 }

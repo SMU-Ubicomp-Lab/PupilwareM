@@ -23,7 +23,8 @@
 -(BOOL) hasFace;
 -(void) setParameter:(pw::PWParameter*)params;
 
-@property(strong, nonatomic) NSString* outputFileName;
+@property(strong, nonatomic) NSString* outputFaceFileName;
+@property(strong, nonatomic) NSString* outputPupilFileName;
 
 @end
 

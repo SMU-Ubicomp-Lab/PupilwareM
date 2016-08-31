@@ -26,7 +26,7 @@ import Foundation
         3: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         4: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         5: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
-    ] as [Int:[Int:[Bool]]]
+        ] as [Int:[Int:[Bool]]]
     
     var digitTestAngleProgress = [
         1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
@@ -64,29 +64,43 @@ import Foundation
         NSUserDefaults.standardUserDefaults().setObject(data, forKey: "allSubjectIDs")
     }
     
-    func getFaceFileName()->NSString{
+    func getFaceVideoFileName()->NSString{
         if(self.currentTest == nil)
         {
             let time:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
             return "default_face_" + time + ".mp4"
         }
         
-        return self.currentTest!.getFaceFileName()
+        return self.currentTest!.getFaceVideoFileName()
     }
     
-    func getCSVFileName()->NSString{
+    func getFaceMetaFileName()->NSString{
         if(self.currentTest == nil)
         {
             let time:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
-            return "default_name_" + time + ".csv"
+            return "default_fmeta_" + time + ".csv"
         }
         
-        return self.currentTest!.getCSVFileName()
+        return self.currentTest!.getFaceMetaFileName()
     }
+    
     
     func calParamFileName()->NSString{
         return self.currentTest!.getCALFileName()
     }
+    
+    
+    func getPupilFileName()->NSString{
+        
+        if(self.currentTest == nil)
+        {
+            let time:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
+            return "default_pupil_" + time + ".csv"
+        }
+        
+        return self.currentTest!.getPupilSizeFileName()
+    }
+    
     
     func writeMetaData(){
         self.currentTest?.writeData()
@@ -94,31 +108,31 @@ import Foundation
     
     func setNewCalibrationFiles(){
         
-//        var testType = "unknown"
-//        if(self.currentTest is TargetTest)
-//        {
-//            testType = "target"
-//        }
-//        else if(self.currentTest is DigitTest)
-//        {
-//            let dTest = self.currentTest as! DigitTest
-//            
-//            if (lumMode){
-//                testType = "digit_lux\(dTest.lux)"
-//            }
-//            else{
-//                testType = "digit_angle\(dTest.angle)"
-//            }
-//        }
+        //        var testType = "unknown"
+        //        if(self.currentTest is TargetTest)
+        //        {
+        //            testType = "target"
+        //        }
+        //        else if(self.currentTest is DigitTest)
+        //        {
+        //            let dTest = self.currentTest as! DigitTest
+        //
+        //            if (lumMode){
+        //                testType = "digit_lux\(dTest.lux)"
+        //            }
+        //            else{
+        //                testType = "digit_angle\(dTest.angle)"
+        //            }
+        //        }
         
         let id:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
         calibration_files.face = "\(currentSubjectID)_calib_face_\(id).mp4"
         calibration_files.params = "\(currentSubjectID)_calib_params_\(id).csv"
         calibration_files.data = "\(currentSubjectID)_calib_data_\(id).csv"
         
-
+        
     }
-
+    
     func getCalibrationFaceVideoFileName()->NSString{
         return calibration_files.face
     }
@@ -126,11 +140,11 @@ import Foundation
     func getCalibrationParamsFileName()->NSString{
         return calibration_files.params
     }
-
+    
     func getCalibrationDataFileName()->NSString{
         return calibration_files.data
     }
-
+    
     
     func resetProgress(){
         digitTestLumProgress = [
@@ -180,8 +194,9 @@ protocol Test{
     func completeTest()
     func getDigits()->[Int]
     func writeData()
-    func getFaceFileName()->String
-    func getCSVFileName()->String
+    func getFaceVideoFileName()->String
+    func getFaceMetaFileName()->String
+    func getPupilSizeFileName()->String
     func getCALFileName()->String
 }
 
@@ -189,7 +204,7 @@ class TargetTest: Test{
     let model = DataModel.sharedInstance
     let ID:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
     var missing_digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
-    var labels = (face:"", csvFile:"", calFile:"")
+    var labels = (face:"", faceMetaFile:"", pupilFile:"", calFile:"")
     
     
     init(subjectID:String, missing_digits:Int, iter:Int, exact_lux:Double){
@@ -200,11 +215,12 @@ class TargetTest: Test{
         self.subjectID = subjectID
         self.angle = -1
         self.labels.face = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_face.mp4"
-        self.labels.csvFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_result.csv"
+        self.labels.faceMetaFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_fmeta.csv"
+        self.labels.pupilFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_result.csv"
         self.labels.calFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_calib.csv"
     }
     
-    func getFaceFileName() -> String {
+    func getFaceVideoFileName() -> String {
         return labels.face
     }
     
@@ -212,8 +228,12 @@ class TargetTest: Test{
         return labels.calFile
     }
     
-    func getCSVFileName() -> String {
-        return labels.csvFile
+    func getFaceMetaFileName() -> String {
+        return labels.faceMetaFile
+    }
+    
+    func getPupilSizeFileName() -> String {
+        return labels.pupilFile
     }
     
     func completeTest(){
@@ -268,7 +288,8 @@ class TargetTest: Test{
             "exact_lux_level" : self.exact_lux,
             "angle" : self.angle,
             "face_file_name" : self.labels.face,
-            "csv_data_file_name" : self.labels.csvFile,
+            "pupil_data_file_name" : self.labels.pupilFile,
+            "face_data_file_name" : self.labels.faceMetaFile,
             "calibration_face" : model.getCalibrationFaceVideoFileName(),
             "parameter_file" : model.getCalibrationParamsFileName(),
             "calibration_data_file" : model.getCalibrationDataFileName(),
@@ -320,7 +341,7 @@ class DigitTest: Test{
     let model = DataModel.sharedInstance
     let ID:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
     var digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
-    var labels = (face:"", csvFile:"", calFile:"")
+    var labels = (face:"", faceMetaFile:"", pupilFile:"", calFile:"")
     
     
     init(subjectID:String, digits:Int, iter:Int, lux:Int, exact_lux:Double){
@@ -331,7 +352,8 @@ class DigitTest: Test{
         self.subjectID = subjectID
         self.angle = -1
         self.labels.face = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_face.mp4"
-        self.labels.csvFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_result.csv"
+        self.labels.faceMetaFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_fmeta.csv"
+        self.labels.pupilFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_result.csv"
         self.labels.calFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_calib.csv"
     }
     
@@ -343,12 +365,13 @@ class DigitTest: Test{
         self.subjectID = subjectID
         self.angle = angle
         self.labels.face = "\(self.subjectID)_digit_ang\(self.angle)_dgt\(self.digits)_itr\(self.iter)_face.mp4"
-        self.labels.csvFile = "\(self.subjectID)_digit_ang\(self.angle)_dgt\(self.digits)_itr\(self.iter)_result.csv"
+        self.labels.faceMetaFile = "\(self.subjectID)_digit_ang\(self.angle)_dgt\(self.digits)_itr\(self.iter)_fmeta.csv"
+        self.labels.pupilFile = "\(self.subjectID)_digit_ang\(self.angle)_dgt\(self.digits)_itr\(self.iter)_result.csv"
         self.labels.calFile = "\(self.subjectID)_digit_ang\(self.angle)_dgt\(self.digits)_itr\(self.iter)_calib.csv"
     }
-
     
-    func getFaceFileName() -> String {
+    
+    func getFaceVideoFileName() -> String {
         return labels.face
     }
     
@@ -356,13 +379,17 @@ class DigitTest: Test{
         return labels.calFile
     }
     
-    func getCSVFileName() -> String {
-        return labels.csvFile
+    func getFaceMetaFileName() -> String {
+        return labels.faceMetaFile
+    }
+    
+    func getPupilSizeFileName() -> String {
+        return labels.pupilFile
     }
     
     func completeTest(){
         if lux == -1{
-             model.completeDigitTest(angle, digit: digits, iter: iter)
+            model.completeDigitTest(angle, digit: digits, iter: iter)
         }else{
             model.completeDigitTest(lux, digit: digits, iter: iter)
         }
@@ -380,34 +407,34 @@ class DigitTest: Test{
     
     func getDigits()->[Int]{
         switch digits{
-            case 5:
-                switch iter{
-                case 1:
-                    //case 1:return [1, 2, 3, 4, 5]
-                    return getListOfDigits(5)
-                case 2:
-                    //return [1, 2, 3, 4, 5]
-                    return getListOfDigits(5)
-
-                case 3:
-                    //return [1, 2, 3, 4, 5]
-                    return getListOfDigits(5)
-
-                case 4:
-                    // return [1, 2, 3, 4, 5]
-                    return getListOfDigits(5)
-
-                default:print("DIGIT TEST NOT FOUND")
-                }
-            case 6:
-                return getListOfDigits(6)
-            case 7:
-                return getListOfDigits(7)
-            case 8:
-                return getListOfDigits(8)
-            default:
-                print("DIGIT TEST NOT FOUND")
+        case 5:
+            switch iter{
+            case 1:
+                //case 1:return [1, 2, 3, 4, 5]
+                return getListOfDigits(5)
+            case 2:
+                //return [1, 2, 3, 4, 5]
+                return getListOfDigits(5)
+                
+            case 3:
+                //return [1, 2, 3, 4, 5]
+                return getListOfDigits(5)
+                
+            case 4:
+                // return [1, 2, 3, 4, 5]
+                return getListOfDigits(5)
+                
+            default:print("DIGIT TEST NOT FOUND")
             }
+        case 6:
+            return getListOfDigits(6)
+        case 7:
+            return getListOfDigits(7)
+        case 8:
+            return getListOfDigits(8)
+        default:
+            print("DIGIT TEST NOT FOUND")
+        }
         return []
     }
     
@@ -440,8 +467,8 @@ class DigitTest: Test{
             "lux_level" : self.lux,
             "exact_lux_level" : self.exact_lux,
             "angle" : self.angle,
-            "face_filename" : self.labels.face,
-            "csv_data_filename" : self.labels.csvFile,
+            "face_file_name" : self.labels.face,
+            "pupil_data_file_name" : self.labels.pupilFile,
             "calibration_face" : model.getCalibrationFaceVideoFileName(),
             "parameter_file" : model.getCalibrationParamsFileName(),
             "calibration_data_file" : model.getCalibrationDataFileName(),
