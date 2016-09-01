@@ -206,8 +206,7 @@
 -(void)initVideoWriter
 {
     
-        NSString* fileName = self.model.getFaceVideoFileName;
-//    NSString* fileName = @"face.mp4";
+    NSString* fileName = self.model.getFaceVideoFileName;
     
     NSString* videoPath = [ObjCAdapter getOutputFilePath: fileName];
     
@@ -306,10 +305,28 @@
 -(void) advanceFrame{
     self.currentFrameNumber += 1;
     
+
+    if ([self.model.bridgeDelegate isNumberStarted]) {
+        
+        if (self.model.numberStartFrame <= 0) {
+            NSLog(@"Start Number %lu", (unsigned long)self.currentFrameNumber);
+            self.model.numberStartFrame = self.currentFrameNumber;
+        }
+    }
+    
+    if ([self.model.bridgeDelegate isNumberStoped]) {
+        
+        if(self.model.numberStopFrame <= 0){
+            NSLog(@"stop Number %lu", (unsigned long)self.currentFrameNumber);
+            self.model.numberStopFrame = self.currentFrameNumber;
+        }
+    }
+    
     if ([self.model.bridgeDelegate isTestingFinished]) {
         
         [self closeSystem];
     }
+    
 }
 
 

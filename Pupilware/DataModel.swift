@@ -19,6 +19,8 @@ import Foundation
     var calibration_files = (face:"", params:"", data:"")
     var settings = (dist:60, movAvg:11, medBlur:11, baseStart:20, baseEnd:40, thresh:15, markCost:1, baseline: 0, cogHigh:0)
     var lumMode = true
+    var numberStartFrame = 0
+    var numberStopFrame = 0
     var bridgeDelegate:BridgeDelegate?
     var digitTestLumProgress = [
         1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
@@ -294,7 +296,9 @@ class TargetTest: Test{
             "parameter_file" : model.getCalibrationParamsFileName(),
             "calibration_data_file" : model.getCalibrationDataFileName(),
             "write_time" : self.getTimeStamp(),
-            "ID" : self.ID
+            "ID" : self.ID,
+            "numberStartFrame" : model.numberStartFrame,
+            "numberStopFrame" : model.numberStopFrame
         ]
         
         var jsonData: NSData!
@@ -473,7 +477,9 @@ class DigitTest: Test{
             "parameter_file" : model.getCalibrationParamsFileName(),
             "calibration_data_file" : model.getCalibrationDataFileName(),
             "write_time" : self.getTimeStamp(),
-            "ID" : self.ID
+            "ID" : self.ID,
+            "numberStartFrame" : model.numberStartFrame,
+            "numberStopFrame" : model.numberStopFrame
         ]
         
         var jsonData: NSData!
@@ -523,5 +529,7 @@ class DigitTest: Test{
     func faceNotInView()
     
     
+    optional func isNumberStarted() -> Bool
+    optional func isNumberStoped() -> Bool
     optional func isTestingFinished() -> Bool
 }

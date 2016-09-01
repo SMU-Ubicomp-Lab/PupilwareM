@@ -22,7 +22,8 @@ class expModalVC: UIViewController, BridgeDelegate{
     var testName:String = "Experiment N"
     var index:Int = 0
     var testStarted:Bool = false
-    var testFinished = false;
+    var testFinished = false
+    var numberStoped = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +32,8 @@ class expModalVC: UIViewController, BridgeDelegate{
         self.progressBar.setProgress(0, animated: true)
         self.completeButton.enabled = false
         
-        testFinished = false;
+        testFinished = false
+        numberStoped = false
         
     }
     
@@ -49,6 +51,14 @@ class expModalVC: UIViewController, BridgeDelegate{
     
     func isTestingFinished() -> Bool {
         return testFinished;
+    }
+    
+    func isNumberStarted() -> Bool{
+        return testStarted;
+    }
+    
+    func isNumberStoped() -> Bool{
+        return numberStoped;
     }
     
     func faceInView(){
@@ -92,10 +102,17 @@ class expModalVC: UIViewController, BridgeDelegate{
                     {(finished: Bool) -> Void in
                         self.index += 1
                         if self.index < numbers.count{
+                            
+                            // There is numbers left, start face in that number again.
                             self.startDigitSpanTest()
+                            
                         }else if (self.index == numbers.count){
+                            
+                            // If there is no number left, as the participant to repeat
+                            self.numberStoped = true;
                             self.mainLabel!.text = "repeat back"
                             self.mainLabel.font = self.mainLabel.font.fontWithSize(25)
+                
                             UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations:
                             {
                                     self.mainLabel!.alpha = 1.0
