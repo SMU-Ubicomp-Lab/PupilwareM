@@ -18,6 +18,7 @@ class calModalVC: UIViewController, BridgeDelegate{
     @IBOutlet weak var loadingIcon: UIActivityIndicatorView!
     
     override func viewDidLoad() {
+        print("In calModalVC.swift")
         super.viewDidLoad()
         self.model.bridgeDelegate = self
         self.topBar.title = testName
@@ -33,6 +34,7 @@ class calModalVC: UIViewController, BridgeDelegate{
     }
     
     func finishCalibration(){
+        print("calibration finished")
         delegate?.calibrationComplete()
         self.dismissViewControllerAnimated(true, completion: nil)
         if (self.model.tobiiCurrentCalibrationState == "calibrated") {

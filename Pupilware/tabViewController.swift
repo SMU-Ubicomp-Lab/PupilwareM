@@ -77,6 +77,10 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         self.tobiiGlass.createRecording(self.model.tobiiSubjectIds[self.model.currentSubjectID]!)
         self.presentCalibrationModal()
     }
+    
+    @IBAction func calibrateGlass(sender: AnyObject) {
+        self.presentCalibrationGlassModal()
+    }
 
     func checkStartButton(){
         if self.model.digitIteration > 0{
@@ -242,6 +246,14 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         self.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
         self.modalPresentationStyle = .CurrentContext
         self.presentViewController(nav, animated: true, completion: nil)
+    }
+    
+    func presentCalibrationGlassModal(){
+        let vc = self.storyboard?.instantiateViewControllerWithIdentifier("calibrateGlass") as! CalibrateGlassViewController;
+       // let nav = UINavigationController(rootViewController: vc)
+        self.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
+        self.modalPresentationStyle = .CurrentContext
+        self.presentViewController(vc, animated: true, completion: nil)
     }
     
     func presentSettingsPopover(sender: AnyObject){
