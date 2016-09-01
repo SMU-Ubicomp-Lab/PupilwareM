@@ -36,7 +36,6 @@ class ACTModel {
         }
     }
     
-
     func getPrevQuestion() ->Array<String> {
         if currentQuestionIndex - 1 > -1 {
             currentQuestionIndex -= 1
@@ -45,7 +44,6 @@ class ACTModel {
             return []
         }
     }
-    
     
     func getCurrentQuestionIndex() -> Int {
         return currentQuestionIndex
@@ -62,5 +60,4 @@ class ACTModel {
     func getSurveyText()-> Array<String> {
         return surveyText
     }
-    
 }

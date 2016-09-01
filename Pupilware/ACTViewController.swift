@@ -12,7 +12,6 @@ import UIKit
 
 class ACTViewController: UIViewController {
     
-    
     var start: CGPoint?
     let questionsModle = ACTModel.sharedInstance
     let model = DataModel.sharedInstance
@@ -53,8 +52,6 @@ class ACTViewController: UIViewController {
     
     @IBOutlet weak var answerE: UIButton!
     
-    
-    
     @IBAction func answerAclicked(sender: UIButton) {
         sender.backgroundColor = UIColor.greenColor()
         answerB.backgroundColor = nil
@@ -68,7 +65,6 @@ class ACTViewController: UIViewController {
             participantsSurvey[currentQuestionIndex] = "A"
         }
     }
-    
     
     @IBAction func answerBclicked(sender: UIButton) {
         sender.backgroundColor = UIColor.greenColor()
@@ -85,7 +81,6 @@ class ACTViewController: UIViewController {
 
     }
     
-    
     @IBAction func answerCclicked(sender: UIButton) {
         sender.backgroundColor = UIColor.greenColor()
         answerA.backgroundColor = nil
@@ -98,9 +93,7 @@ class ACTViewController: UIViewController {
         } else {
             participantsSurvey[currentQuestionIndex] = "C"
         }
-
     }
-    
     
     @IBAction func answerDclicked(sender: UIButton) {
         sender.backgroundColor = UIColor.greenColor()
@@ -116,7 +109,6 @@ class ACTViewController: UIViewController {
         }
     }
     
-    
     @IBAction func answerEclicked(sender: UIButton) {
         sender.backgroundColor = UIColor.greenColor()
         answerA.backgroundColor = nil
@@ -129,12 +121,10 @@ class ACTViewController: UIViewController {
         } else {
             participantsSurvey[currentQuestionIndex] = "E"
         }
-
     }
     
-    
     @IBAction func submitTest(sender: UIButton) {
-        
+        saveData()
         let alertController = UIAlertController(title: "ACT TEST", message:
             "Test submitted, Thank you", preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
@@ -144,8 +134,6 @@ class ACTViewController: UIViewController {
     
     @IBOutlet weak var submitButton: UIButton!
     @IBOutlet weak var prevButton: UIButton!
-    
-    
     @IBOutlet weak var nextButton: UIButton!
     
     @IBAction func getPrev(sender: UIButton) {
@@ -153,7 +141,6 @@ class ACTViewController: UIViewController {
         inSurvey = 0
         self.updateQuestion()
     }
-    
     
     @IBAction func getNext(sender: UIButton) {
         if (inSurvey == 0) {
@@ -163,7 +150,6 @@ class ACTViewController: UIViewController {
             currentQuestion = questionsModle.getNextQuestion()
             inSurvey = 0
         }
-        
         self.updateQuestion()
     }
     
@@ -171,17 +157,10 @@ class ACTViewController: UIViewController {
         questionLabel.text = currentQuestion[0]
         answerA.setTitle(currentQuestion[1], forState: UIControlState.Normal)
         answerB.setTitle(currentQuestion[2], forState: UIControlState.Normal)
-        
         answerC.setTitle(currentQuestion[3], forState: UIControlState.Normal)
-        
         answerD.setTitle(currentQuestion[4], forState: UIControlState.Normal)
-        
         answerE.setTitle(currentQuestion[5], forState: UIControlState.Normal)
-        
-        
         currentQuestionIndex = questionsModle.getCurrentQuestionIndex()
-        
-        
         var selected = ""
         if inSurvey == 1 {
             selected = participantsSurvey[currentQuestionIndex]
@@ -195,7 +174,6 @@ class ACTViewController: UIViewController {
             answerC.backgroundColor = nil
             answerD.backgroundColor = nil
             answerE.backgroundColor = nil
-        
             break
         case "B":
             answerA.backgroundColor = nil
@@ -232,10 +210,7 @@ class ACTViewController: UIViewController {
             answerD.backgroundColor = nil
             answerE.backgroundColor = nil
         }
-        
-       
-
-        
+    
         if currentQuestionIndex == 0 {
             prevButton.enabled = false
         } else {
@@ -273,10 +248,50 @@ class ACTViewController: UIViewController {
         CGContextMoveToPoint(context, start.x, start.y)
         CGContextAddLineToPoint(context, end.x, end.y)
         CGContextStrokePath(context)
-        
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        
         UIGraphicsEndImageContext()
         drawImageView.image = newImage
+    }
+    
+    func getDocumentsDirectory() -> NSString {
+        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+        let documentsDirectory = paths[0]
+        return documentsDirectory
+    }
+
+    func writeToCSV(fileName: String, row: String) {
+        let data = row.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+        
+        if NSFileManager.defaultManager().fileExistsAtPath(fileName) {
+            print("writing to " + fileName)
+            if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
+                fileHandle.seekToEndOfFile()
+                fileHandle.writeData(data)
+                fileHandle.closeFile()
+            }
+            else {
+                print("Can't open fileHandle")
+            }
+        }
+        else {
+            NSFileManager.defaultManager().createFileAtPath(fileName, contents: nil, attributes: nil)
+            print("File not exist")
+            print("created" + fileName)
+            if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
+                fileHandle.seekToEndOfFile()
+                fileHandle.writeData(data)
+                fileHandle.closeFile()
+            }
+            else {
+                print("Can't open fileHandle")
+            }
+        }
+    }
+    
+    func saveData() {
+        let filePath = getDocumentsDirectory().stringByAppendingPathComponent("output.txt")
+        let stringAns = participantAnswers.joinWithSeparator(",")
+        let stringSurveys = participantsSurvey.joinWithSeparator(",")
+        writeToCSV(filePath, row: stringAns + stringSurveys)
     }
 }
