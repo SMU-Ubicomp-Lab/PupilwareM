@@ -225,7 +225,7 @@
     /* Process from a video file, uncomment this block*/
 //    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 //    NSString *documentsDirectory = [paths objectAtIndex:0];
-//    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"v513.mp4"];
+//    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"v511.mp4"];
 //    [self.videoManager open:filePath];
     /*----------------------------------------------------------------------------------------*/
     

@@ -104,8 +104,8 @@ namespace pw {
         
         
         Mat blur;
-        cv::GaussianBlur(grayEye, blur,Size(3,3), 3);
-        
+        cv::GaussianBlur(grayEye, blur,Size(15,15), 7);
+//        cv::equalizeHist(blur, blur);
 /*------- Center of Mass Method -------*/
 //        int th = cw::calDynamicThreshold( blur, 0.006 );
 //        Mat binary;
@@ -120,7 +120,7 @@ namespace pw {
         Snakuscules sn;
         sn.fit(blur,               // src image
                 cPoint,             // initial seed point
-                grayEye.cols*0.2,   // radius
+                grayEye.cols*0.1,   // radius
                 2.0,                // alpha
                 20                  // max iteration
                 );

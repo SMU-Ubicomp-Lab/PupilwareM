@@ -45,7 +45,7 @@ namespace pw{
 
         // Detect faces
         faceCascade.detectMultiScale(scaledFrame,
-                                     faces, 1.2, 2,
+                                     faces, 1.1, 2,
                                      0 | CV_HAAR_SCALE_IMAGE | CV_HAAR_FIND_BIGGEST_OBJECT,
                                      cv::Size(150, 150));
 
@@ -74,7 +74,7 @@ namespace pw{
                                           cv::Rect &outLeftEyeRegion,
                                           cv::Rect &outRightEyeRegion) {
 
-        const float kEyePercentTop = 30.0f;
+        const float kEyePercentTop = 27.0f;
         const float kEyePercentSide = 13.0f;
         const float kEyePercentHeight = 25.0f;
         const float kEyePercentWidth = 35.0f;
