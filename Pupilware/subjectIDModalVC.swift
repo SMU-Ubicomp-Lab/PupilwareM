@@ -11,6 +11,7 @@ import UIKit
 
 class subjectIDModalVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     let model = DataModel.sharedInstance
+    let tobiiGlass = TobiiGlass.sharedInstance
     @IBOutlet weak var subjectTable: UITableView!
     var delegate:sendBackDelegate?
     
@@ -50,6 +51,8 @@ class subjectIDModalVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             //}
             
             self.model.archiveSubjectIDs()
+            self.tobiiGlass.createParticipant(self.model.tobiiProject)
+            self.model.tobiiSubjectIds[name] = ""
             self.subjectTable.reloadData()
         }
         loginAction.enabled = false

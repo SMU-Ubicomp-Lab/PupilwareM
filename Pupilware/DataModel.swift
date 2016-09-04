@@ -11,6 +11,18 @@ import Foundation
 
 @objc class DataModel: NSObject{
     static let sharedInstance = DataModel()
+    
+    
+    // For tobii
+    var tobiiProject:String = ""
+    var tobiiCurrentParticipant = ""
+    var tobiiCurrentCalibration = ""
+    var tobiiCurrentCalibrationState = ""
+    var tobiiCurrentRecording = ""
+    var tobiiSubjectIds: [String: String] = [:]
+    
+    
+    
     var currentSubjectID:String = ""
     var allSubjectIDs:[String] = []
     var faceInView:Bool = false
@@ -22,6 +34,7 @@ import Foundation
     var numberStartFrame = 0
     var numberStopFrame = 0
     var bridgeDelegate:BridgeDelegate?
+    var glassDelegate:GlassDelegate?
     var digitTestLumProgress = [
         1: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
         2: [5:[false, false, false, false],6:[false, false, false, false],7:[false, false, false, false],8:[false, false, false, false]],
@@ -59,11 +72,17 @@ import Foundation
         if let data = NSUserDefaults.standardUserDefaults().objectForKey("allSubjectIDs") as? NSData {
             self.allSubjectIDs = NSKeyedUnarchiver.unarchiveObjectWithData(data) as! [String]
         }
+        
+        if let tobiiData = NSUserDefaults.standardUserDefaults().objectForKey("tobiiSubjects") as? NSData {
+            self.tobiiSubjectIds = NSKeyedUnarchiver.unarchiveObjectWithData(tobiiData) as! [String: String]
+        }
     }
     
     func archiveSubjectIDs(){
         let data = NSKeyedArchiver.archivedDataWithRootObject(allSubjectIDs)
+        let tobiiData = NSKeyedArchiver.archivedDataWithRootObject(tobiiSubjectIds)
         NSUserDefaults.standardUserDefaults().setObject(data, forKey: "allSubjectIDs")
+        NSUserDefaults.standardUserDefaults().setObject(tobiiData, forKey: "tobiiSubjects")
     }
     
     func getFaceVideoFileName()->NSString{
@@ -532,4 +551,8 @@ class DigitTest: Test{
     optional func isNumberStarted() -> Bool
     optional func isNumberStoped() -> Bool
     optional func isTestingFinished() -> Bool
+}
+
+@objc protocol GlassDelegate {
+    func finishGlassCalibration()
 }

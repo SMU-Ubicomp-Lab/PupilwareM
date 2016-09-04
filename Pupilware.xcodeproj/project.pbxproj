@@ -7,11 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5C0AFE8D1D50FD6D00E8BE4E /* PWProcessor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C0AFE8C1D50FD6D00E8BE4E /* PWProcessor.mm */; };
 		5C2E00F91D2D9C3E0099A306 /* mainex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C2E00F81D2D9C3E0099A306 /* mainex.cpp */; };
 		5C4B46161D21A77400455A77 /* PWFaceMeta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B46141D21A77400455A77 /* PWFaceMeta.cpp */; };
 		5C4B461C1D21AB9200455A77 /* MDStarbustNeo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B461A1D21AB9200455A77 /* MDStarbustNeo.cpp */; };
-		5C5772AB1D71F85300CAA428 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5C5772AA1D71F85300CAA428 /* Assets.xcassets */; };
 		5C5CA09A1D3574B80024D983 /* tsavgol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C5CA0991D3574B80024D983 /* tsavgol.cpp */; };
 		5C6ACBF01D271D8500691F7A /* PWCalibratingViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C6ACBEF1D271D8400691F7A /* PWCalibratingViewController.mm */; };
 		5C82A9B01D2479C6001F5345 /* PWVideoWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C82A9AE1D2479C6001F5345 /* PWVideoWriter.cpp */; };
@@ -20,9 +18,6 @@
 		5C90F5891D396E56006E6E71 /* CWProfiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C90F5861D396E56006E6E71 /* CWProfiler.cpp */; };
 		5C9EA49E1D1DD6A6003BE62C /* PWViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C9EA49D1D1DD6A6003BE62C /* PWViewController.mm */; };
 		5C9EA4AC1D1EE45B003BE62C /* haarcascade_frontalface_default.xml in Resources */ = {isa = PBXBuildFile; fileRef = 5C9EA4AB1D1EE45B003BE62C /* haarcascade_frontalface_default.xml */; };
-		5CAE93A51D55113900FCBD9A /* MaximumCircleFit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CAE93A31D55113900FCBD9A /* MaximumCircleFit.cpp */; };
-		5CBC0A681D57AD66007F8DFD /* BlinkDetection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CBC0A661D57AD66007F8DFD /* BlinkDetection.cpp */; };
-		5CC83FB41D736A430083803F /* PWParameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CC83FB21D736A430083803F /* PWParameter.cpp */; };
 		5CC9A1231D25A25700ADB4BD /* PWCSVExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */; };
 		5CCDBBA81D2046B3006C0B63 /* ObjCAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5CCDBBA71D2046B3006C0B63 /* ObjCAdapter.mm */; };
 		5CCDBBAB1D205D2B006C0B63 /* IOSFaceRecognizer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5CCDBBAA1D205D2B006C0B63 /* IOSFaceRecognizer.mm */; };
@@ -57,6 +52,7 @@
 		97A321471C59CDB300B1EB98 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A321461C59CDB300B1EB98 /* AppDelegate.swift */; };
 		97A321491C59CDB300B1EB98 /* homeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A321481C59CDB300B1EB98 /* homeVC.swift */; };
 		97A3214C1C59CDB300B1EB98 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97A3214A1C59CDB300B1EB98 /* Main.storyboard */; };
+		97A3214E1C59CDB300B1EB98 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97A3214D1C59CDB300B1EB98 /* Assets.xcassets */; };
 		97A321511C59CDB300B1EB98 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97A3214F1C59CDB300B1EB98 /* LaunchScreen.storyboard */; };
 		97A3215A1C59CFF100B1EB98 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A321591C59CFF100B1EB98 /* DataModel.swift */; };
 		97A3215C1C59E1BB00B1EB98 /* subjectIDModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A3215B1C59E1BB00B1EB98 /* subjectIDModalVC.swift */; };
@@ -82,20 +78,28 @@
 		97E94F661C5CAFFD00D652CB /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97E94F651C5CAFFD00D652CB /* AssetsLibrary.framework */; };
 		97E94F7A1C5CB10C00D652CB /* PWUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F731C5CB10C00D652CB /* PWUtilities.mm */; };
 		97E94F7E1C5CB16800D652CB /* VideoAnalgesic.m in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F7D1C5CB16800D652CB /* VideoAnalgesic.m */; };
-		AE7728201D0653530096CCBD /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE77281F1D0653530096CCBD /* opencv2.framework */; };
 		AE7728231D08BDD40096CCBD /* NMSimplex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE7728211D08BDD40096CCBD /* NMSimplex.cpp */; };
+		AE8C91DC1D6900D30067A0E6 /* PWParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8C91DB1D6900D30067A0E6 /* PWParameter.m */; };
+		AE8C91E01D6901360067A0E6 /* PWProcessor.mm in Sources */ = {isa = PBXBuildFile; fileRef = AE8C91DF1D6901360067A0E6 /* PWProcessor.mm */; };
+		AE8C92081D6C9F7B0067A0E6 /* calbrateGlassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8C92071D6C9F7B0067A0E6 /* calbrateGlassViewController.swift */; };
+		AEA10AA71D77C1BA0057FD96 /* ACTModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA10AA61D77C1BA0057FD96 /* ACTModel.swift */; };
+		AEA10AA91D77F2540057FD96 /* broom.png in Resources */ = {isa = PBXBuildFile; fileRef = AEA10AA81D77F2540057FD96 /* broom.png */; };
+		AEA10AAB1D77F4420057FD96 /* refresh.png in Resources */ = {isa = PBXBuildFile; fileRef = AEA10AAA1D77F4420057FD96 /* refresh.png */; };
+		AEA10AAD1D77F6200057FD96 /* notepad.png in Resources */ = {isa = PBXBuildFile; fileRef = AEA10AAC1D77F6200057FD96 /* notepad.png */; };
+		AEAE8A311D715E4600E3150D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEAE8A301D715E4600E3150D /* opencv2.framework */; };
+		AEAE8A351D737A7700E3150D /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = AEAE8A341D737A7700E3150D /* check.png */; };
+		AEAE8A371D7389C900E3150D /* ACTViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAE8A361D7389C900E3150D /* ACTViewController.swift */; };
+		AEDC08D11D4F9AC100D547F8 /* tobiiGlass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDC08D01D4F9AC100D547F8 /* tobiiGlass.swift */; };
+		AEDC08D31D4FD82000D547F8 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEDC08D21D4FD82000D547F8 /* CocoaAsyncSocket.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5C0AFE8B1D50FD6D00E8BE4E /* PWProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWProcessor.h; sourceTree = "<group>"; };
-		5C0AFE8C1D50FD6D00E8BE4E /* PWProcessor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWProcessor.mm; sourceTree = "<group>"; };
 		5C2E00F61D2D9C3E0099A306 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
 		5C2E00F81D2D9C3E0099A306 /* mainex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mainex.cpp; sourceTree = "<group>"; };
 		5C4B46141D21A77400455A77 /* PWFaceMeta.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWFaceMeta.cpp; sourceTree = "<group>"; };
 		5C4B46151D21A77400455A77 /* PWFaceMeta.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWFaceMeta.hpp; sourceTree = "<group>"; };
 		5C4B461A1D21AB9200455A77 /* MDStarbustNeo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MDStarbustNeo.cpp; sourceTree = "<group>"; };
 		5C4B461B1D21AB9200455A77 /* MDStarbustNeo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MDStarbustNeo.hpp; sourceTree = "<group>"; };
-		5C5772AA1D71F85300CAA428 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5C5CA0991D3574B80024D983 /* tsavgol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tsavgol.cpp; sourceTree = "<group>"; };
 		5C6ACBEE1D271D8400691F7A /* PWCalibratingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWCalibratingViewController.h; sourceTree = "<group>"; };
 		5C6ACBEF1D271D8400691F7A /* PWCalibratingViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWCalibratingViewController.mm; sourceTree = "<group>"; };
@@ -112,12 +116,6 @@
 		5C9EA49C1D1DD6A6003BE62C /* PWViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWViewController.h; sourceTree = "<group>"; };
 		5C9EA49D1D1DD6A6003BE62C /* PWViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWViewController.mm; sourceTree = "<group>"; };
 		5C9EA4AB1D1EE45B003BE62C /* haarcascade_frontalface_default.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = haarcascade_frontalface_default.xml; sourceTree = "<group>"; };
-		5CAE93A31D55113900FCBD9A /* MaximumCircleFit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MaximumCircleFit.cpp; sourceTree = "<group>"; };
-		5CAE93A41D55113900FCBD9A /* MaximumCircleFit.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MaximumCircleFit.hpp; sourceTree = "<group>"; };
-		5CBC0A661D57AD66007F8DFD /* BlinkDetection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BlinkDetection.cpp; sourceTree = "<group>"; };
-		5CBC0A671D57AD66007F8DFD /* BlinkDetection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BlinkDetection.hpp; sourceTree = "<group>"; };
-		5CC83FB21D736A430083803F /* PWParameter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWParameter.cpp; sourceTree = "<group>"; };
-		5CC83FB31D736A430083803F /* PWParameter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWParameter.hpp; sourceTree = "<group>"; };
 		5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWCSVExporter.cpp; sourceTree = "<group>"; };
 		5CC9A1221D25A25700ADB4BD /* PWCSVExporter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWCSVExporter.hpp; sourceTree = "<group>"; };
 		5CCDBBA61D2046B3006C0B63 /* ObjCAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ObjCAdapter.h; path = Libraries/ObjCAdapter.h; sourceTree = "<group>"; };
@@ -178,6 +176,7 @@
 		97A321461C59CDB300B1EB98 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		97A321481C59CDB300B1EB98 /* homeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = homeVC.swift; sourceTree = "<group>"; };
 		97A3214B1C59CDB300B1EB98 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		97A3214D1C59CDB300B1EB98 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97A321501C59CDB300B1EB98 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97A321521C59CDB300B1EB98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		97A321591C59CFF100B1EB98 /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
@@ -213,9 +212,22 @@
 		97E94F7D1C5CB16800D652CB /* VideoAnalgesic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoAnalgesic.m; sourceTree = "<group>"; };
 		97E94F7F1C5CB1F800D652CB /* constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
 		97E965AB1C5CBA3F00D652CB /* PupilPrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PupilPrefixHeader.pch; path = ../PupilPrefixHeader.pch; sourceTree = "<group>"; };
-		AE77281F1D0653530096CCBD /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		AE7728211D08BDD40096CCBD /* NMSimplex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NMSimplex.cpp; sourceTree = "<group>"; };
 		AE7728221D08BDD40096CCBD /* NMSimplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMSimplex.h; sourceTree = "<group>"; };
+		AE8C91DB1D6900D30067A0E6 /* PWParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWParameter.m; sourceTree = "<group>"; };
+		AE8C91DD1D6900E70067A0E6 /* PWParameter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWParameter.h; sourceTree = "<group>"; };
+		AE8C91DE1D69012B0067A0E6 /* PWProcessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWProcessor.h; sourceTree = "<group>"; };
+		AE8C91DF1D6901360067A0E6 /* PWProcessor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWProcessor.mm; sourceTree = "<group>"; };
+		AE8C92071D6C9F7B0067A0E6 /* calbrateGlassViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = calbrateGlassViewController.swift; sourceTree = "<group>"; };
+		AEA10AA61D77C1BA0057FD96 /* ACTModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ACTModel.swift; sourceTree = "<group>"; };
+		AEA10AA81D77F2540057FD96 /* broom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = broom.png; sourceTree = "<group>"; };
+		AEA10AAA1D77F4420057FD96 /* refresh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = refresh.png; sourceTree = "<group>"; };
+		AEA10AAC1D77F6200057FD96 /* notepad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notepad.png; sourceTree = "<group>"; };
+		AEAE8A301D715E4600E3150D /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		AEAE8A341D737A7700E3150D /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = check.png; sourceTree = "<group>"; };
+		AEAE8A361D7389C900E3150D /* ACTViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ACTViewController.swift; sourceTree = "<group>"; };
+		AEDC08D01D4F9AC100D547F8 /* tobiiGlass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tobiiGlass.swift; sourceTree = "<group>"; };
+		AEDC08D21D4FD82000D547F8 /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/iOS/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,7 +235,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE7728201D0653530096CCBD /* opencv2.framework in Frameworks */,
+				AEAE8A311D715E4600E3150D /* opencv2.framework in Frameworks */,
+				AEDC08D31D4FD82000D547F8 /* CocoaAsyncSocket.framework in Frameworks */,
 				97E94F661C5CAFFD00D652CB /* AssetsLibrary.framework in Frameworks */,
 				97E94F641C5CAFF700D652CB /* Accelerate.framework in Frameworks */,
 				97E94F621C5CAFEB00D652CB /* Foundation.framework in Frameworks */,
@@ -292,8 +305,6 @@
 				5C82A9AF1D2479C6001F5345 /* PWVideoWriter.hpp */,
 				5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */,
 				5CC9A1221D25A25700ADB4BD /* PWCSVExporter.hpp */,
-				5CC83FB21D736A430083803F /* PWParameter.cpp */,
-				5CC83FB31D736A430083803F /* PWParameter.hpp */,
 			);
 			path = PupilwareCore;
 			sourceTree = "<group>";
@@ -303,10 +314,6 @@
 			children = (
 				5C4B46141D21A77400455A77 /* PWFaceMeta.cpp */,
 				5C4B46151D21A77400455A77 /* PWFaceMeta.hpp */,
-				5CBC0A661D57AD66007F8DFD /* BlinkDetection.cpp */,
-				5CBC0A671D57AD66007F8DFD /* BlinkDetection.hpp */,
-				5CAE93A31D55113900FCBD9A /* MaximumCircleFit.cpp */,
-				5CAE93A41D55113900FCBD9A /* MaximumCircleFit.hpp */,
 				5CF4D57C1D186FB30050CBBA /* ALOfflineFile.cpp */,
 				5CF4D57D1D186FB30050CBBA /* ALOfflineFile.hpp */,
 				5CF4D57E1D186FB30050CBBA /* DummyAlgo.cpp */,
@@ -403,10 +410,10 @@
 		973A50291C5DBE6200EDDB20 /* Config */ = {
 			isa = PBXGroup;
 			children = (
-				5C5772AA1D71F85300CAA428 /* Assets.xcassets */,
 				97E965AB1C5CBA3F00D652CB /* PupilPrefixHeader.pch */,
 				97A321461C59CDB300B1EB98 /* AppDelegate.swift */,
 				97E94F361C5CAD2800D652CB /* Pupilware-Bridging-Header.h */,
+				97A3214D1C59CDB300B1EB98 /* Assets.xcassets */,
 				97A321521C59CDB300B1EB98 /* Info.plist */,
 				97A3214F1C59CDB300B1EB98 /* LaunchScreen.storyboard */,
 			);
@@ -438,7 +445,12 @@
 				5C9EA49D1D1DD6A6003BE62C /* PWViewController.mm */,
 				5C6ACBEE1D271D8400691F7A /* PWCalibratingViewController.h */,
 				5C6ACBEF1D271D8400691F7A /* PWCalibratingViewController.mm */,
+				AE8C91DD1D6900E70067A0E6 /* PWParameter.h */,
+				AE8C91DB1D6900D30067A0E6 /* PWParameter.m */,
+				AE8C91DE1D69012B0067A0E6 /* PWProcessor.h */,
+				AE8C91DF1D6901360067A0E6 /* PWProcessor.mm */,
 				97A321591C59CFF100B1EB98 /* DataModel.swift */,
+				AEA10AA61D77C1BA0057FD96 /* ACTModel.swift */,
 				97A89CAE1C5B5EA600D9E193 /* tabViewController.swift */,
 				975C29021CA074210001FF95 /* targetSetupVC.swift */,
 				97DB32CA1C75AB930024A22F /* adminVC.swift */,
@@ -450,8 +462,9 @@
 				97A89CB21C5B72EE00D9E193 /* expModalVC.swift */,
 				971AB1DC1C683BC900E03643 /* calModalVC.swift */,
 				97A89CB01C5B6D7900D9E193 /* popOverController.swift */,
-				5C0AFE8B1D50FD6D00E8BE4E /* PWProcessor.h */,
-				5C0AFE8C1D50FD6D00E8BE4E /* PWProcessor.mm */,
+				AEDC08D01D4F9AC100D547F8 /* tobiiGlass.swift */,
+				AE8C92071D6C9F7B0067A0E6 /* calbrateGlassViewController.swift */,
+				AEAE8A361D7389C900E3150D /* ACTViewController.swift */,
 				97E965AC1C5D6CB400D652CB /* Libraries */,
 				973A50291C5DBE6200EDDB20 /* Config */,
 				97A321581C59CE7100B1EB98 /* images */,
@@ -463,6 +476,10 @@
 		97A321581C59CE7100B1EB98 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				AEA10AAC1D77F6200057FD96 /* notepad.png */,
+				AEA10AAA1D77F4420057FD96 /* refresh.png */,
+				AEA10AA81D77F2540057FD96 /* broom.png */,
+				AEAE8A341D737A7700E3150D /* check.png */,
 				976803C61C97429E003D63C8 /* hash.png */,
 				976803C71C97429E003D63C8 /* target.png */,
 				9748FF6E1C6092B700143D54 /* calibrate.png */,
@@ -490,7 +507,8 @@
 		97E94F691C5CB02900D652CB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				AE77281F1D0653530096CCBD /* opencv2.framework */,
+				AEAE8A301D715E4600E3150D /* opencv2.framework */,
+				AEDC08D21D4FD82000D547F8 /* CocoaAsyncSocket.framework */,
 				97E94F651C5CAFFD00D652CB /* AssetsLibrary.framework */,
 				97E94F631C5CAFF700D652CB /* Accelerate.framework */,
 				97E94F611C5CAFEB00D652CB /* Foundation.framework */,
@@ -537,6 +555,7 @@
 				97A3213F1C59CDB300B1EB98 /* Sources */,
 				97A321401C59CDB300B1EB98 /* Frameworks */,
 				97A321411C59CDB300B1EB98 /* Resources */,
+				AEDC08D41D4FD85C00D547F8 /* Carthage */,
 			);
 			buildRules = (
 			);
@@ -559,8 +578,7 @@
 				TargetAttributes = {
 					97A321421C59CDB300B1EB98 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = 8N25HJ2H24;
-						LastSwiftMigration = 0800;
+						DevelopmentTeam = ME4966827L;
 					};
 				};
 			};
@@ -588,18 +606,40 @@
 			buildActionMask = 2147483647;
 			files = (
 				97A321511C59CDB300B1EB98 /* LaunchScreen.storyboard in Resources */,
+				AEA10AAD1D77F6200057FD96 /* notepad.png in Resources */,
+				AEA10AAB1D77F4420057FD96 /* refresh.png in Resources */,
+				AEA10AA91D77F2540057FD96 /* broom.png in Resources */,
 				5C9EA4AC1D1EE45B003BE62C /* haarcascade_frontalface_default.xml in Resources */,
 				976803C81C97429E003D63C8 /* hash.png in Resources */,
 				9748FF731C6092B700143D54 /* beaker.png in Resources */,
+				AEAE8A351D737A7700E3150D /* check.png in Resources */,
 				9748FF721C6092B700143D54 /* gear.png in Resources */,
 				976803C91C97429E003D63C8 /* target.png in Resources */,
+				97A3214E1C59CDB300B1EB98 /* Assets.xcassets in Resources */,
 				97A3214C1C59CDB300B1EB98 /* Main.storyboard in Resources */,
-				5C5772AB1D71F85300CAA428 /* Assets.xcassets in Resources */,
 				9748FF711C6092B700143D54 /* calibrate.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		AEDC08D41D4FD85C00D547F8 /* Carthage */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/CocoaAsyncSocket.framework",
+			);
+			name = Carthage;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		97A3213F1C59CDB300B1EB98 /* Sources */ = {
@@ -610,7 +650,7 @@
 				97E94F7A1C5CB10C00D652CB /* PWUtilities.mm in Sources */,
 				5CF4D5A41D186FB30050CBBA /* SimpleImageSegmenter.cpp in Sources */,
 				97DB32CB1C75AB930024A22F /* adminVC.swift in Sources */,
-				5CC83FB41D736A430083803F /* PWParameter.cpp in Sources */,
+				AE8C92081D6C9F7B0067A0E6 /* calbrateGlassViewController.swift in Sources */,
 				97A89CB31C5B72EE00D9E193 /* expModalVC.swift in Sources */,
 				97A89CB11C5B6D7900D9E193 /* popOverController.swift in Sources */,
 				5C82A9B01D2479C6001F5345 /* PWVideoWriter.cpp in Sources */,
@@ -621,6 +661,7 @@
 				5CC9A1231D25A25700ADB4BD /* PWCSVExporter.cpp in Sources */,
 				5CF4D5A21D186FB30050CBBA /* PWDataModel.cpp in Sources */,
 				5CF4D59F1D186FB30050CBBA /* MDStarbustG.cpp in Sources */,
+				AE8C91DC1D6900D30067A0E6 /* PWParameter.m in Sources */,
 				5CF4D5C21D1870020050CBBA /* Ransac.cpp in Sources */,
 				5CF4D5A61D186FB30050CBBA /* SignalProcessingHelper.cpp in Sources */,
 				5CF4D59D1D186FB30050CBBA /* IPupilAlgorithm.cpp in Sources */,
@@ -632,6 +673,7 @@
 				97E94F4F1C5CAD8500D652CB /* BEMCircle.m in Sources */,
 				5CF4D5A31D186FB30050CBBA /* IImageSegmenter.cpp in Sources */,
 				97E94F7E1C5CB16800D652CB /* VideoAnalgesic.m in Sources */,
+				AEA10AA71D77C1BA0057FD96 /* ACTModel.swift in Sources */,
 				97A89CAF1C5B5EA600D9E193 /* tabViewController.swift in Sources */,
 				5C4B461C1D21AB9200455A77 /* MDStarbustNeo.cpp in Sources */,
 				5C6ACBF01D271D8500691F7A /* PWCalibratingViewController.mm in Sources */,
@@ -644,23 +686,23 @@
 				97DB32CD1C75ABB30024A22F /* luxVC.swift in Sources */,
 				97A321491C59CDB300B1EB98 /* homeVC.swift in Sources */,
 				5C90AB1C1D34057D00FF7C5F /* PWIOSVideoReader.mm in Sources */,
+				AEAE8A371D7389C900E3150D /* ACTViewController.swift in Sources */,
 				5CCDBBA81D2046B3006C0B63 /* ObjCAdapter.mm in Sources */,
+				AEDC08D11D4F9AC100D547F8 /* tobiiGlass.swift in Sources */,
 				975C29031CA074210001FF95 /* targetSetupVC.swift in Sources */,
-				5C0AFE8D1D50FD6D00E8BE4E /* PWProcessor.mm in Sources */,
 				5CF4D59C1D186FB30050CBBA /* DummyAlgo.cpp in Sources */,
 				97A321471C59CDB300B1EB98 /* AppDelegate.swift in Sources */,
 				9711B09A1C7F670F006EE548 /* iterCell.swift in Sources */,
 				5CF4D5C51D1870020050CBBA /* GraphUtils.cpp in Sources */,
+				AE8C91E01D6901360067A0E6 /* PWProcessor.mm in Sources */,
 				97D487291C933F0A00774958 /* settingsVC.swift in Sources */,
 				5CF4D5BF1D1870020050CBBA /* CWUIHelper.cpp in Sources */,
 				5CF4D5BE1D1870020050CBBA /* CWCVHelper.cpp in Sources */,
-				5CAE93A51D55113900FCBD9A /* MaximumCircleFit.cpp in Sources */,
 				5C2E00F91D2D9C3E0099A306 /* mainex.cpp in Sources */,
 				5CF4D5C31D1870020050CBBA /* Snakuscules.cpp in Sources */,
 				AE7728231D08BDD40096CCBD /* NMSimplex.cpp in Sources */,
 				5CF4D5BD1D1870020050CBBA /* CVWindow.cpp in Sources */,
 				5C90F5891D396E56006E6E71 /* CWProfiler.cpp in Sources */,
-				5CBC0A681D57AD66007F8DFD /* BlinkDetection.cpp in Sources */,
 				97A3215A1C59CFF100B1EB98 /* DataModel.swift in Sources */,
 				5CF4D59E1D186FB30050CBBA /* MDStarbust.cpp in Sources */,
 			);
@@ -791,6 +833,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -809,7 +852,6 @@
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Pupilware/Pupilware-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
@@ -826,6 +868,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -844,7 +887,6 @@
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Pupilware/Pupilware-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};

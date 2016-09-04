@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "B63034BED4A8FE5FCB9741D0E5A9EDA8DB71B885",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "B63034BED4A8FE5FCB9741D0E5A9EDA8DB71B885" : 0,
+    "DE04DE2F7DEBE78586ED25CC854B6B7553F76B75" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "8B08611E-AF8A-45A7-9CAC-895094120D3B",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "B63034BED4A8FE5FCB9741D0E5A9EDA8DB71B885" : "PupilwareM\/",
+    "DE04DE2F7DEBE78586ED25CC854B6B7553F76B75" : "..\/opencv31\/opencv"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Pupilware",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Pupilware.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/SMU-Ubicomp-Lab\/PupilwareM",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B63034BED4A8FE5FCB9741D0E5A9EDA8DB71B885"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/opencv\/opencv.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DE04DE2F7DEBE78586ED25CC854B6B7553F76B75"
+    }
+  ]
+}
