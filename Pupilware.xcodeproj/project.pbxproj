@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5C0B78171D7CA6AD0015B26B /* PWParameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C0B78151D7CA6AD0015B26B /* PWParameter.cpp */; };
 		5C2E00F91D2D9C3E0099A306 /* mainex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C2E00F81D2D9C3E0099A306 /* mainex.cpp */; };
 		5C4B46161D21A77400455A77 /* PWFaceMeta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B46141D21A77400455A77 /* PWFaceMeta.cpp */; };
 		5C4B461C1D21AB9200455A77 /* MDStarbustNeo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B461A1D21AB9200455A77 /* MDStarbustNeo.cpp */; };
@@ -79,7 +80,6 @@
 		97E94F7A1C5CB10C00D652CB /* PWUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F731C5CB10C00D652CB /* PWUtilities.mm */; };
 		97E94F7E1C5CB16800D652CB /* VideoAnalgesic.m in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F7D1C5CB16800D652CB /* VideoAnalgesic.m */; };
 		AE7728231D08BDD40096CCBD /* NMSimplex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE7728211D08BDD40096CCBD /* NMSimplex.cpp */; };
-		AE8C91DC1D6900D30067A0E6 /* PWParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8C91DB1D6900D30067A0E6 /* PWParameter.m */; };
 		AE8C91E01D6901360067A0E6 /* PWProcessor.mm in Sources */ = {isa = PBXBuildFile; fileRef = AE8C91DF1D6901360067A0E6 /* PWProcessor.mm */; };
 		AE8C92081D6C9F7B0067A0E6 /* calbrateGlassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8C92071D6C9F7B0067A0E6 /* calbrateGlassViewController.swift */; };
 		AEA10AA71D77C1BA0057FD96 /* ACTModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA10AA61D77C1BA0057FD96 /* ACTModel.swift */; };
@@ -94,6 +94,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5C0B78151D7CA6AD0015B26B /* PWParameter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWParameter.cpp; sourceTree = "<group>"; };
+		5C0B78161D7CA6AD0015B26B /* PWParameter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWParameter.hpp; sourceTree = "<group>"; };
 		5C2E00F61D2D9C3E0099A306 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
 		5C2E00F81D2D9C3E0099A306 /* mainex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mainex.cpp; sourceTree = "<group>"; };
 		5C4B46141D21A77400455A77 /* PWFaceMeta.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWFaceMeta.cpp; sourceTree = "<group>"; };
@@ -214,8 +216,6 @@
 		97E965AB1C5CBA3F00D652CB /* PupilPrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PupilPrefixHeader.pch; path = ../PupilPrefixHeader.pch; sourceTree = "<group>"; };
 		AE7728211D08BDD40096CCBD /* NMSimplex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NMSimplex.cpp; sourceTree = "<group>"; };
 		AE7728221D08BDD40096CCBD /* NMSimplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMSimplex.h; sourceTree = "<group>"; };
-		AE8C91DB1D6900D30067A0E6 /* PWParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWParameter.m; sourceTree = "<group>"; };
-		AE8C91DD1D6900E70067A0E6 /* PWParameter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWParameter.h; sourceTree = "<group>"; };
 		AE8C91DE1D69012B0067A0E6 /* PWProcessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWProcessor.h; sourceTree = "<group>"; };
 		AE8C91DF1D6901360067A0E6 /* PWProcessor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PWProcessor.mm; sourceTree = "<group>"; };
 		AE8C92071D6C9F7B0067A0E6 /* calbrateGlassViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = calbrateGlassViewController.swift; sourceTree = "<group>"; };
@@ -305,6 +305,8 @@
 				5C82A9AF1D2479C6001F5345 /* PWVideoWriter.hpp */,
 				5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */,
 				5CC9A1221D25A25700ADB4BD /* PWCSVExporter.hpp */,
+				5C0B78151D7CA6AD0015B26B /* PWParameter.cpp */,
+				5C0B78161D7CA6AD0015B26B /* PWParameter.hpp */,
 			);
 			path = PupilwareCore;
 			sourceTree = "<group>";
@@ -445,8 +447,6 @@
 				5C9EA49D1D1DD6A6003BE62C /* PWViewController.mm */,
 				5C6ACBEE1D271D8400691F7A /* PWCalibratingViewController.h */,
 				5C6ACBEF1D271D8400691F7A /* PWCalibratingViewController.mm */,
-				AE8C91DD1D6900E70067A0E6 /* PWParameter.h */,
-				AE8C91DB1D6900D30067A0E6 /* PWParameter.m */,
 				AE8C91DE1D69012B0067A0E6 /* PWProcessor.h */,
 				AE8C91DF1D6901360067A0E6 /* PWProcessor.mm */,
 				97A321591C59CFF100B1EB98 /* DataModel.swift */,
@@ -578,7 +578,7 @@
 				TargetAttributes = {
 					97A321421C59CDB300B1EB98 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = ME4966827L;
+						DevelopmentTeam = 8N25HJ2H24;
 					};
 				};
 			};
@@ -656,12 +656,12 @@
 				5C82A9B01D2479C6001F5345 /* PWVideoWriter.cpp in Sources */,
 				5CF4D5C11D1870020050CBBA /* Circle.cpp in Sources */,
 				97E94F511C5CAD8500D652CB /* BEMPermanentPopupView.m in Sources */,
+				5C0B78171D7CA6AD0015B26B /* PWParameter.cpp in Sources */,
 				5CF4D5A51D186FB30050CBBA /* ISignalProcessor.cpp in Sources */,
 				5C90F5881D396E56006E6E71 /* CWClock.cpp in Sources */,
 				5CC9A1231D25A25700ADB4BD /* PWCSVExporter.cpp in Sources */,
 				5CF4D5A21D186FB30050CBBA /* PWDataModel.cpp in Sources */,
 				5CF4D59F1D186FB30050CBBA /* MDStarbustG.cpp in Sources */,
-				AE8C91DC1D6900D30067A0E6 /* PWParameter.m in Sources */,
 				5CF4D5C21D1870020050CBBA /* Ransac.cpp in Sources */,
 				5CF4D5A61D186FB30050CBBA /* SignalProcessingHelper.cpp in Sources */,
 				5CF4D59D1D186FB30050CBBA /* IPupilAlgorithm.cpp in Sources */,
