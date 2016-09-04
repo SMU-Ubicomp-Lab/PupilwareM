@@ -472,7 +472,7 @@
             </objects>
             <point key="canvasLocation" x="2631" y="713"/>
         </scene>
-        <!--View Controller-->
+        <!--LiveTest-->
         <scene sceneID="5al-vd-ag9">
             <objects>
                 <viewController id="Ujk-lY-LaN" customClass="PWViewController" sceneMemberID="viewController">
@@ -484,10 +484,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vxq-eu-mg2">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vxq-eu-mg2">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xMF-7d-IyU">
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xMF-7d-IyU">
                                         <rect key="frame" x="238" y="246" width="125" height="43"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="43" id="RcI-dE-xka"/>
@@ -500,7 +500,7 @@
                                             <action selector="startBtnClicked:" destination="Ujk-lY-LaN" eventType="touchUpInside" id="yLX-Vb-tt1"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lgT-lc-G7x">
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lgT-lc-G7x">
                                         <rect key="frame" x="238" y="297" width="125" height="43"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="43" id="ArU-8B-BSJ"/>
@@ -531,6 +531,8 @@
                             <constraint firstItem="Vxq-eu-mg2" firstAttribute="top" secondItem="MIp-ad-ey8" secondAttribute="topMargin" id="uF1-E0-7H9"/>
                         </constraints>
                     </view>
+                    <tabBarItem key="tabBarItem" title="LiveTest" image="beaker.png" id="BCd-W2-SlU"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w6E-3F-PVa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -734,6 +736,7 @@
                         <segue destination="jtn-tl-2JC" kind="relationship" relationship="viewControllers" id="DLJ-hg-Ki4"/>
                         <segue destination="Y9A-vL-5dW" kind="relationship" relationship="viewControllers" id="ZAZ-iC-McX"/>
                         <segue destination="Rna-1x-h7G" kind="relationship" relationship="viewControllers" id="IW1-Yh-peS"/>
+                        <segue destination="Ujk-lY-LaN" kind="relationship" relationship="viewControllers" id="PzN-Dw-wA1"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lhu-AZ-axg" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1689,6 +1692,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="beaker.png" width="20" height="28"/>
         <image name="broom.png" width="30" height="30"/>
         <image name="check.png" width="30" height="30"/>
         <image name="gear.png" width="20" height="20"/>
