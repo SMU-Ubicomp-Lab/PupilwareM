@@ -23,6 +23,9 @@ class ACTViewController: UIViewController {
     var participantAnswers = [String](count: 5, repeatedValue: "")
 
     override func viewDidLoad() {
+        super.viewDidLoad()
+        self.questionLabel.layer.borderColor = UIColor.blackColor().CGColor
+        self.questionLabel.layer.borderWidth = 1
         submitButton.hidden = true
         participantId = model.currentSubjectID
         questionsModle.reset()
@@ -51,7 +54,7 @@ class ACTViewController: UIViewController {
     @IBOutlet weak var answerE: UIButton!
     
     @IBAction func answerAclicked(sender: UIButton) {
-        sender.backgroundColor = UIColor.greenColor()
+        sender.backgroundColor = UIColor.lightGrayColor()
         answerB.backgroundColor = nil
         answerC.backgroundColor = nil
         answerD.backgroundColor = nil
@@ -61,7 +64,7 @@ class ACTViewController: UIViewController {
     }
     
     @IBAction func answerBclicked(sender: UIButton) {
-        sender.backgroundColor = UIColor.greenColor()
+        sender.backgroundColor = UIColor.lightGrayColor()
         answerA.backgroundColor = nil
         answerC.backgroundColor = nil
         answerD.backgroundColor = nil
@@ -72,7 +75,7 @@ class ACTViewController: UIViewController {
     }
     
     @IBAction func answerCclicked(sender: UIButton) {
-        sender.backgroundColor = UIColor.greenColor()
+        sender.backgroundColor = UIColor.lightGrayColor()
         answerA.backgroundColor = nil
         answerB.backgroundColor = nil
         answerD.backgroundColor = nil
@@ -82,7 +85,7 @@ class ACTViewController: UIViewController {
     }
     
     @IBAction func answerDclicked(sender: UIButton) {
-        sender.backgroundColor = UIColor.greenColor()
+        sender.backgroundColor = UIColor.lightGrayColor()
         answerA.backgroundColor = nil
         answerB.backgroundColor = nil
         answerC.backgroundColor = nil
@@ -92,7 +95,7 @@ class ACTViewController: UIViewController {
     }
     
     @IBAction func answerEclicked(sender: UIButton) {
-        sender.backgroundColor = UIColor.greenColor()
+        sender.backgroundColor = UIColor.lightGrayColor()
         answerA.backgroundColor = nil
         answerB.backgroundColor = nil
         answerC.backgroundColor = nil
@@ -139,7 +142,7 @@ class ACTViewController: UIViewController {
         
         switch selected {
         case "A":
-            answerA.backgroundColor = UIColor.greenColor()
+            answerA.backgroundColor = UIColor.lightGrayColor()
             answerB.backgroundColor = nil
             answerC.backgroundColor = nil
             answerD.backgroundColor = nil
@@ -147,7 +150,7 @@ class ACTViewController: UIViewController {
             break
         case "B":
             answerA.backgroundColor = nil
-            answerB.backgroundColor = UIColor.greenColor()
+            answerB.backgroundColor = UIColor.lightGrayColor()
             answerC.backgroundColor = nil
             answerD.backgroundColor = nil
             answerE.backgroundColor = nil
@@ -155,7 +158,7 @@ class ACTViewController: UIViewController {
         case "C":
             answerA.backgroundColor = nil
             answerB.backgroundColor = nil
-            answerC.backgroundColor = UIColor.greenColor()
+            answerC.backgroundColor = UIColor.lightGrayColor()
             answerD.backgroundColor = nil
             answerE.backgroundColor = nil
             break
@@ -163,7 +166,7 @@ class ACTViewController: UIViewController {
             answerA.backgroundColor = nil
             answerB.backgroundColor = nil
             answerC.backgroundColor = nil
-            answerD.backgroundColor = UIColor.greenColor()
+            answerD.backgroundColor = UIColor.lightGrayColor()
             answerE.backgroundColor = nil
             break
         case "E":
@@ -171,7 +174,7 @@ class ACTViewController: UIViewController {
             answerB.backgroundColor = nil
             answerC.backgroundColor = nil
             answerD.backgroundColor = nil
-            answerE.backgroundColor = UIColor.greenColor()
+            answerE.backgroundColor = UIColor.lightGrayColor()
             break
         default:
             answerA.backgroundColor = nil
