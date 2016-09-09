@@ -25,7 +25,8 @@ class CalibrateGlassViewController: UIViewController, GlassDelegate{
         dispatch_after(time, dispatch_get_main_queue()) {
             //put your code which should be executed with a delay here
             
-            self.model.glassDelegate?.finishGlassCalibration()
+            //self.model.glassDelegate?.finishGlassCalibration()
+            self.finishGlassCalibration()
         }
     }
     
