@@ -19,10 +19,8 @@ class ACTViewController: UIViewController {
     var currentQuestion: Array<String> = []
     var currentOptions = []
     var totalQuestions = 0
-    var inSurvey = 0
     var participantId = ""
     var participantAnswers = [String](count: 5, repeatedValue: "")
-    var participantsSurvey = [String](count: 5, repeatedValue: "")
 
     override func viewDidLoad() {
         submitButton.hidden = true
@@ -59,11 +57,7 @@ class ACTViewController: UIViewController {
         answerD.backgroundColor = nil
         answerE.backgroundColor = nil
         
-        if inSurvey == 0 {
-            participantAnswers[currentQuestionIndex] = "A"
-        } else {
-            participantsSurvey[currentQuestionIndex] = "A"
-        }
+        participantAnswers[currentQuestionIndex] = "A"
     }
     
     @IBAction func answerBclicked(sender: UIButton) {
@@ -73,12 +67,8 @@ class ACTViewController: UIViewController {
         answerD.backgroundColor = nil
         answerE.backgroundColor = nil
         
-        if inSurvey == 0 {
-            participantAnswers[currentQuestionIndex] = "B"
-        } else {
-            participantsSurvey[currentQuestionIndex] = "B"
-        }
-
+        participantAnswers[currentQuestionIndex] = "B"
+       
     }
     
     @IBAction func answerCclicked(sender: UIButton) {
@@ -88,11 +78,7 @@ class ACTViewController: UIViewController {
         answerD.backgroundColor = nil
         answerE.backgroundColor = nil
         
-        if inSurvey == 0 {
-            participantAnswers[currentQuestionIndex] = "C"
-        } else {
-            participantsSurvey[currentQuestionIndex] = "C"
-        }
+        participantAnswers[currentQuestionIndex] = "C"
     }
     
     @IBAction func answerDclicked(sender: UIButton) {
@@ -102,11 +88,7 @@ class ACTViewController: UIViewController {
         answerC.backgroundColor = nil
         answerE.backgroundColor = nil
         
-        if inSurvey == 0 {
-            participantAnswers[currentQuestionIndex] = "D"
-        } else {
-            participantsSurvey[currentQuestionIndex] = "D"
-        }
+        participantAnswers[currentQuestionIndex] = "D"
     }
     
     @IBAction func answerEclicked(sender: UIButton) {
@@ -116,11 +98,7 @@ class ACTViewController: UIViewController {
         answerC.backgroundColor = nil
         answerD.backgroundColor = nil
         
-        if inSurvey == 0 {
-            participantAnswers[currentQuestionIndex] = "E"
-        } else {
-            participantsSurvey[currentQuestionIndex] = "E"
-        }
+        participantAnswers[currentQuestionIndex] = "E"
     }
     
     @IBAction func submitTest(sender: UIButton) {
@@ -138,19 +116,13 @@ class ACTViewController: UIViewController {
     
     @IBAction func getPrev(sender: UIButton) {
         currentQuestion = questionsModle.getPrevQuestion()
-        inSurvey = 0
         self.updateQuestion()
     }
     
     @IBAction func getNext(sender: UIButton) {
-        if (inSurvey == 0) {
-            currentQuestion = questionsModle.getSurveyText()
-            inSurvey = 1
-        } else {
-            currentQuestion = questionsModle.getNextQuestion()
-            inSurvey = 0
-        }
+        currentQuestion = questionsModle.getNextQuestion()
         self.updateQuestion()
+        self.presentSurveyModal()
     }
     
     func updateQuestion() {
@@ -162,11 +134,9 @@ class ACTViewController: UIViewController {
         answerE.setTitle(currentQuestion[5], forState: UIControlState.Normal)
         currentQuestionIndex = questionsModle.getCurrentQuestionIndex()
         var selected = ""
-        if inSurvey == 1 {
-            selected = participantsSurvey[currentQuestionIndex]
-        } else {
-            selected = participantAnswers[currentQuestionIndex]
-        }
+
+        selected = participantAnswers[currentQuestionIndex]
+        
         switch selected {
         case "A":
             answerA.backgroundColor = UIColor.greenColor()
@@ -217,7 +187,7 @@ class ACTViewController: UIViewController {
             prevButton.enabled = true
         }
         
-        if currentQuestionIndex ==  totalQuestions - 1 && inSurvey == 1 {
+        if currentQuestionIndex ==  totalQuestions - 1 {
             nextButton.enabled = false
             submitButton.hidden = false
         } else {
@@ -291,7 +261,15 @@ class ACTViewController: UIViewController {
     func saveData() {
         let filePath = getDocumentsDirectory().stringByAppendingPathComponent("output.txt")
         let stringAns = participantAnswers.joinWithSeparator(",")
-        let stringSurveys = participantsSurvey.joinWithSeparator(",")
-        writeToCSV(filePath, row: stringAns + stringSurveys)
+        writeToCSV(filePath, row: stringAns)
+    }
+    
+    func presentSurveyModal(){
+        let vc = self.storyboard?.instantiateViewControllerWithIdentifier("surveyView") as! SurveyViewController;
+        // let nav = UINavigationController(rootViewController: vc)
+        vc.quizNo = currentQuestionIndex
+        self.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
+        self.modalPresentationStyle = .CurrentContext
+        self.presentViewController(vc, animated: true, completion: nil)
     }
 }
