@@ -560,6 +560,126 @@ class DigitTest: Test{
     }
 }
 
+
+class ACTTest: Test{
+    let model = DataModel.sharedInstance
+    let ID:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
+    var itemID:Int, subjectID:String
+    var labels = (face:"", faceMetaFile:"", pupilFile:"", calFile:"")
+    
+    
+    init(subjectID:String, itemID:Int){
+        self.itemID = itemID
+        self.subjectID = subjectID
+        
+        self.labels.face = "\(self.subjectID)_ACT_\(self.itemID)_face.mp4"
+        self.labels.faceMetaFile = "\(self.subjectID)_ACT_\(self.itemID)_fmeta.csv"
+        self.labels.pupilFile = "\(self.subjectID)_ACT_\(self.itemID)_result.csv"
+        self.labels.calFile = "\(self.subjectID)_ACT_\(self.itemID)_calib.csv"
+    }
+    
+    
+    func getFaceVideoFileName() -> String {
+        return labels.face
+    }
+    
+    func getCALFileName() -> String {
+        return labels.calFile
+    }
+    
+    func getFaceMetaFileName() -> String {
+        return labels.faceMetaFile
+    }
+    
+    func getPupilSizeFileName() -> String {
+        return labels.pupilFile
+    }
+    
+    func completeTest(){
+        self.writeData()
+    }
+    
+    
+    func getDigits()->[Int]{
+        // ??
+        return [];
+    }
+    
+    func getTimeStamp()->String{
+        let currentDateTime = NSDate()
+        let formatter = NSDateFormatter()
+        formatter.timeStyle = NSDateFormatterStyle.MediumStyle
+        formatter.dateStyle = NSDateFormatterStyle.ShortStyle
+        return formatter.stringFromDate(currentDateTime)
+    }
+    
+    func writeData(){
+        var attempt = 1
+        while (attempt <= 999){
+            let fileName = "\(self.subjectID)_digit_meta_\(self.ID)_\(String(format: "%03d", attempt)).json"
+            if(self.writeJSONFile(fileName)){
+                break
+            }
+            attempt += 1
+            print("WRITE FAILED CRITICAL ERROR ATTEMPT: \(attempt)")
+        }
+    }
+    
+    func writeJSONFile(fileName:String)->Bool{
+        let data: [String: AnyObject] = [
+            "user_id": self.subjectID,
+            "type" : "ACT",
+            "itemID" : self.itemID,
+            "face_file_name" : self.labels.face,
+            "pupil_data_file_name" : self.labels.pupilFile,
+            "calibration_face" : model.getCalibrationFaceVideoFileName(),
+            "parameter_file" : model.getCalibrationParamsFileName(),
+            "calibration_data_file" : model.getCalibrationDataFileName(),
+            "write_time" : self.getTimeStamp(),
+            "ID" : self.ID
+        ]
+        
+        var jsonData: NSData!
+        do {
+            jsonData = try NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions())
+            let jsonString = String(data: jsonData, encoding: NSUTF8StringEncoding)
+            print(jsonString!)
+        } catch let error as NSError {
+            print("Array to JSON conversion failed: \(error.localizedDescription)")
+        }
+        
+        let documentsDirectoryPathString = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).first!
+        let documentsDirectoryPath = NSURL(string: documentsDirectoryPathString)!
+        
+        let jsonFilePath = documentsDirectoryPath.URLByAppendingPathComponent(fileName)
+        let fileManager = NSFileManager.defaultManager()
+        var isDirectory: ObjCBool = false
+        
+        // creating a .json file in the Documents folder
+        if !fileManager.fileExistsAtPath(jsonFilePath.absoluteString, isDirectory: &isDirectory) {
+            let created = fileManager.createFileAtPath(jsonFilePath.absoluteString, contents: nil, attributes: nil)
+            if created {
+                print("File created")
+                do {
+                    let file = try NSFileHandle(forWritingToURL: jsonFilePath)
+                    file.writeData(jsonData)
+                    print("JSON data was written to the file successfully!")
+                } catch let error as NSError {
+                    print("Couldn't write to file: \(error.localizedDescription)")
+                }
+            } else {
+                print("Couldn't create a file for some reasons")
+            }
+        } else {
+            print("File already exists")
+            return false
+        }
+        return true
+    }
+}
+
+
+
 @objc protocol BridgeDelegate{
     func trackingFaceDone()
     func startTrackingFace()

@@ -10,11 +10,15 @@ import Foundation
 import UIKit
 
 
-class ACTViewController: UIViewController {
+class ACTViewController: UIViewController, BridgeDelegate {
     
     var start: CGPoint?
     let questionsModle = ACTModel.sharedInstance
     let model = DataModel.sharedInstance
+    
+    var delegate:sendBackDelegate?
+    var testFinished = false
+    
     var currentQuestionIndex = 0
     var currentQuestion: Array<String> = []
     var currentOptions = []
@@ -24,6 +28,10 @@ class ACTViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.model.bridgeDelegate = self
+        
+        
         self.questionLabel.layer.borderColor = UIColor.blackColor().CGColor
         self.questionLabel.layer.borderWidth = 1
         submitButton.hidden = true
@@ -35,7 +43,49 @@ class ACTViewController: UIViewController {
         currentQuestion = questionsModle.getInitQuestion()
         self.updateQuestion()
     }
-
+    
+    
+    override func viewWillAppear(animated: Bool) {
+        
+        // Add new test to the Data Model,
+        // Pupilware will get these file name from it. :P
+        self.model.currentTest = ACTTest(subjectID: self.model.currentSubjectID, itemID: currentQuestionIndex)
+        
+    }
+    //-----------------------------------------------------
+    // Bridge Delegation Func
+    //
+    
+    func trackingFaceDone(){
+        
+    }
+    func startTrackingFace(){
+        
+    }
+    func finishCalibration(){
+    
+    }
+    
+    func faceInView(){
+        // todo: show face in view UI
+    }
+    func faceNotInView(){
+        // todo: show face not in view warning UI
+    }
+    
+    func isNumberStarted() -> Bool{
+        return false;
+    }
+    func isNumberStoped() -> Bool{
+        return false;
+    }
+    
+    func isTestingFinished() -> Bool{
+        return self.testFinished;
+    }
+    
+    //-----------------------------------------------------
+    
     @IBOutlet weak var drawImageView: UIImageView!
     
     @IBAction func clearImage(sender: UIButton) {
@@ -111,6 +161,11 @@ class ACTViewController: UIViewController {
         alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
         
         self.presentViewController(alertController, animated: true, completion: nil)
+        
+        
+        
+        // Tell pupilware to stop system.
+        self.testFinished = true;
     }
     
     @IBOutlet weak var submitButton: UIButton!

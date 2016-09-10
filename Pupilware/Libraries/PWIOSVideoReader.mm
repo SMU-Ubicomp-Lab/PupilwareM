@@ -174,4 +174,10 @@
    [self.videoManager stop];
 }
 
+-(void)setPreviewView:(GLKView*) view{
+    if(view){
+       [self.videoManager setVideoPreviewView: view];
+    }
+}
+
 @end

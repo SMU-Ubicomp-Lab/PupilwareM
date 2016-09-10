@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <GLKit/GLKit.h>
 
 @interface PWViewController : UIViewController
 
+//@property (weak, nonatomic) IBOutlet GLKView *preview;
+@property (weak, nonatomic) IBOutlet UIView *preview;
 
 @end
