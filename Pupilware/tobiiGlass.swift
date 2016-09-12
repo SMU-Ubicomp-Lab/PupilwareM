@@ -79,7 +79,8 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
     func sendPacket(socket: GCDAsyncUdpSocket, msg: String) {
         
         socket.sendData(msg.dataUsingEncoding(NSUTF8StringEncoding)!, toHost: host, port: port, withTimeout: 2, tag: 0)
-        //print("Data sent: \(msg)")
+
+//        print("Data sent: \(msg)")
     }
     
     @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {

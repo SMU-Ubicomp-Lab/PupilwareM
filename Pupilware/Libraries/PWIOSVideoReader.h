@@ -10,6 +10,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <GLKit/GLKit.h>
+
 
 typedef cv::Mat(^CVProcessBlock)(const cv::Mat&);
 
@@ -18,11 +20,16 @@ typedef cv::Mat(^CVProcessBlock)(const cv::Mat&);
 @property (strong,nonatomic) CVProcessBlock processBlock;
 @property (strong,nonatomic) CIContext *ciContext;
 
+@property (weak, nonatomic) GLKView* previewView;
+
 -(void)setProcessBlock:(CVProcessBlock) pBlock;
 -(BOOL)open:(NSString*)filename;
 -(BOOL)isOpened;
 -(BOOL)isRunning;
 -(void)start;
 -(void)stop;
+-(void)setPreviewView:(GLKView*) view;
+
+
 
 @end

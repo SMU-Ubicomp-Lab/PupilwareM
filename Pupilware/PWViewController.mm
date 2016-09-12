@@ -96,6 +96,12 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    if(self.preview)
+    {
+        [self.videoManager setPreviewView:self.preview];
+    }
+        
     [self startSystem];
 }
 
