@@ -14,7 +14,7 @@ import UIKit
 
 class TobiiGlass: GCDAsyncUdpSocketDelegate {
 
-    static let sharedInstance = TobiiGlass(host: "192.168.0.9", port: 49152)
+    static let sharedInstance = TobiiGlass(host: "192.168.71.50", port: 3000)
     let model = DataModel.sharedInstance
     var host = "localhost"
     var port: UInt16 = 3002
@@ -79,7 +79,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
     func sendPacket(socket: GCDAsyncUdpSocket, msg: String) {
         
         socket.sendData(msg.dataUsingEncoding(NSUTF8StringEncoding)!, toHost: host, port: port, withTimeout: 2, tag: 0)
-        print("Data sent: \(msg)")
+        //print("Data sent: \(msg)")
     }
     
     @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {
@@ -90,7 +90,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
             return
         }
         print("Data received: \(stringData)")
-        print(self.model.tobiiSubjectIds)
+        //print(self.model.tobiiSubjectIds)
         
         //let strData = "{\"name\":\"James\"}"
         //print(strData)
@@ -131,54 +131,72 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
     }
     
     func createProject() {
+        print("Create a new project...")
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/projects")!)
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: String]
             self.model.tobiiProject = jsonData!["pr_id"]!
+            print("New project created" + self.model.tobiiProject)
         }
     }
     
     func createParticipant(projectId: String) {
+        print("Creating participant for project " + projectId)
         let json = ["pa_project": projectId]
         let jsonData = try? NSJSONSerialization.dataWithJSONObject(json, options: .PrettyPrinted)
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/participants")!)
+        
+        let postLength = String(jsonData?.length)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(postLength, forHTTPHeaderField: "Content-Length")
         
         request.HTTPBody = jsonData
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: String]
             self.model.tobiiSubjectIds[self.model.currentSubjectID] = jsonData!["pa_id"]!
+            self.model.tobiiCurrentParticipant = jsonData!["pa_id"]!
             self.model.archiveSubjectIDs()
+            print("New Participant Created" + self.model.tobiiCurrentParticipant)
         }
         
     }
     
-    func createCalibration(projectId: String, participantId: String) {
-        let json = ["ca_project": projectId, "ca_type": "defualt", "ca_participant": participantId]
+    func createAndStartCalibration(projectId: String, participantId: String) {
+        print("Create and start calibration for pid" + projectId + " paticipant id" + participantId)
+        let json = ["ca_project": projectId, "ca_type": "default", "ca_participant": participantId]
         let jsonData = try? NSJSONSerialization.dataWithJSONObject(json, options: .PrettyPrinted)
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/calibrations")!)
+        
+        let postLength = String(jsonData?.length)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(postLength, forHTTPHeaderField: "Content-Length")
         
         request.HTTPBody = jsonData
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: String]
             self.model.tobiiCurrentCalibration = jsonData!["ca_id"]!
+            print("setting current calibration id" + self.model.tobiiCurrentCalibration)
             self.startCalibration(self.model.tobiiCurrentCalibration)
         }
     }
     
     func startCalibration(calibrationId: String) {
+        print("Start Calibration for " + calibrationId)
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/calibrations/" + String(calibrationId) + "/start")!)
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: String]
-            self.model.tobiiCurrentCalibration = jsonData!["ca_state"]!
+            self.model.tobiiCurrentCalibrationState = jsonData!["ca_state"]!
         }
     
     }
     
     func checkCalibration(calibrationId: String) {
+        print(model.tobiiCurrentCalibration)
+        print("Checking Calibration status for " + calibrationId)
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/calibrations/" + String(calibrationId) + "/status")!)
         get(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
@@ -192,6 +210,10 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         let json = ["rec_participant": participantId]
         let jsonData = try? NSJSONSerialization.dataWithJSONObject(json, options: .PrettyPrinted)
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/recordings")!)
+        
+        let postLength = String(jsonData?.length)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(postLength, forHTTPHeaderField: "Content-Length")
         
         request.HTTPBody = jsonData
         post(request) { (success: Bool, object: AnyObject?) in

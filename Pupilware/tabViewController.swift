@@ -73,7 +73,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     }
     
     @IBAction func shortPressCalibrate(sender: AnyObject) {
-        self.tobiiGlass.createCalibration(self.model.tobiiProject, participantId: self.model.tobiiCurrentParticipant)
+        //self.tobiiGlass.createCalibration(self.model.tobiiProject, participantId: self.model.tobiiCurrentParticipant)
         self.tobiiGlass.createRecording(self.model.tobiiSubjectIds[self.model.currentSubjectID]!)
         self.presentCalibrationModal()
     }
@@ -110,7 +110,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         self.tobiiGlass.stopRecording(self.model.tobiiCurrentRecording)
         
         //Check Tobii Glass calibration status, if failed, re calibrate
-        self.tobiiGlass.checkCalibration(self.model.tobiiCurrentCalibration)
+        //self.tobiiGlass.checkCalibration(self.model.tobiiCurrentCalibration)
         
     }
     
@@ -302,5 +302,4 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
         return .None
     }
-    
 }
