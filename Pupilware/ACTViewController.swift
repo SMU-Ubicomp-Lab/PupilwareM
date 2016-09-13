@@ -162,20 +162,13 @@ class ACTViewController: UIViewController, BridgeDelegate {
         
         self.presentViewController(alertController, animated: true, completion: nil)
         
-        
-        
         // Tell pupilware to stop system.
         self.testFinished = true;
     }
     
     @IBOutlet weak var submitButton: UIButton!
-    @IBOutlet weak var prevButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
     
-    @IBAction func getPrev(sender: UIButton) {
-        currentQuestion = questionsModle.getPrevQuestion()
-        self.updateQuestion()
-    }
     
     @IBAction func getNext(sender: UIButton) {
         currentQuestion = questionsModle.getNextQuestion()
@@ -239,12 +232,6 @@ class ACTViewController: UIViewController, BridgeDelegate {
             answerE.backgroundColor = nil
         }
     
-        if currentQuestionIndex == 0 {
-            prevButton.enabled = false
-        } else {
-            prevButton.enabled = true
-        }
-        
         if currentQuestionIndex ==  totalQuestions - 1 {
             nextButton.enabled = false
             submitButton.hidden = false
@@ -317,7 +304,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
     }
     
     func saveData() {
-        let filePath = getDocumentsDirectory().stringByAppendingPathComponent("output.txt")
+        let filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.currentSubjectID + "_ACT_Answers.txt")
         let stringAns = participantAnswers.joinWithSeparator(",")
         writeToCSV(filePath, row: stringAns)
     }
@@ -325,7 +312,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
     func presentSurveyModal(){
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("surveyView") as! SurveyViewController;
         // let nav = UINavigationController(rootViewController: vc)
-        vc.quizNo = currentQuestionIndex
+        vc.quizId = currentQuestionIndex
         self.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
         self.modalPresentationStyle = .CurrentContext
         self.presentViewController(vc, animated: true, completion: nil)

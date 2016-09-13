@@ -11,28 +11,26 @@ import UIKit
 
 class SurveyViewController: UIViewController {
 
-    var quizNo = 0
-    
+    var quizId = 0
+    let model = DataModel.sharedInstance
     
     @IBOutlet weak var slider1: StepSlider!
     
     @IBOutlet weak var slider2: StepSlider!
     
-    
     @IBOutlet weak var slider3: StepSlider!
-    
     
     @IBOutlet weak var slider4: StepSlider!
     
     
     @IBAction func finishSurvey(sender: UIButton) {
-        print(self.quizNo)
+        saveData()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     
     override func viewDidLoad() {
-         super.viewDidLoad()
+        super.viewDidLoad()
         
         self.slider1.customTrack = true
         self.slider1.minValue = 0
@@ -57,5 +55,46 @@ class SurveyViewController: UIViewController {
         self.slider4.maxValue = 5
         self.slider4.steps = 6
         self.slider4.value = 0
+    }
+    
+    func saveData() {
+        let filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.currentSubjectID + "_ACT_Surveys.txt")
+        let stringSurvey = String(quizId) + " " +  String(slider1.value) + " " + String(slider2.value) + " " + String(slider3.value) + " " + String(slider4.value)
+        writeToCSV(filePath, row: stringSurvey)
+    }
+    
+    func getDocumentsDirectory() -> NSString {
+        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+        let documentsDirectory = paths[0]
+        return documentsDirectory
+    }
+
+    func writeToCSV(fileName: String, row: String) {
+        let data = row.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+        
+        if NSFileManager.defaultManager().fileExistsAtPath(fileName) {
+            print("writing to " + fileName)
+            if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
+                fileHandle.seekToEndOfFile()
+                fileHandle.writeData(data)
+                fileHandle.closeFile()
+            }
+            else {
+                print("Can't open fileHandle")
+            }
+        }
+        else {
+            NSFileManager.defaultManager().createFileAtPath(fileName, contents: nil, attributes: nil)
+            print("File not exist")
+            print("created" + fileName)
+            if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
+                fileHandle.seekToEndOfFile()
+                fileHandle.writeData(data)
+                fileHandle.closeFile()
+            }
+            else {
+                print("Can't open fileHandle")
+            }
+        }
     }
 }
