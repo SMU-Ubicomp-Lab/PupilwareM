@@ -14,10 +14,10 @@ import UIKit
 
 class TobiiGlass: GCDAsyncUdpSocketDelegate {
 
-    static let sharedInstance = TobiiGlass(host: "192.168.71.50", port: 3000)
+    static let sharedInstance = TobiiGlass(host: "192.168.71.50", port: 49152)
     let model = DataModel.sharedInstance
     var host = "localhost"
-    var port: UInt16 = 3002
+    var port: UInt16 = 49152
     var localPortData: UInt16 = 3000
     var localPortVideo: UInt16 = 3001
     var baseUrl = "http://localhost"
@@ -91,19 +91,31 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
             return
         }
         print("Data received: \(stringData)")
-        //print(self.model.tobiiSubjectIds)
+
+        do {
+            let  jsonData = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers)
         
-        //let strData = "{\"name\":\"James\"}"
-        //print(strData)
-        let jsonData = convertStringToDictionary(stringData)
-        
-        if (jsonData!["s"] == "0" && jsonData!["pd"] != nil) {
-        
-            print("Get pupil dilation  \(jsonData!["pd"])")
-            let pupilString = jsonData!["eye"]! + "," + jsonData!["pd"]! + String(NSDate())
-            let filePath = getDocumentsDirectory().stringByAppendingPathComponent("output.txt")
-            writeToCSV(filePath, row: pupilString)
+            if let pupilDilation = jsonData["pd"] as? NSNumber {
+                
+                if let pupulState = jsonData["s"] as? NSNumber {
+                    
+                    if (pupulState == 0) {
+                        let pupilEye = jsonData["eye"] as! String
+                        let glassTimestamp = jsonData["ts"] as! NSNumber
+                        let timestamp = String(NSDate().timeIntervalSince1970)
+                        let pupilString = pupilEye + "," + String(pupilDilation) + "," + timestamp + "," + String(glassTimestamp)
+                        print("Got pupil info")
+                        print(pupilString)
+                        let filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.currentSubjectID + "_pupil.csv")
+                        writeToCSV(filePath, row: pupilString)
+                    }
+                }
+            }
+
+        } catch let error as NSError {
+            print(error)
         }
+
     }
     
     private func dataTask(request: NSMutableURLRequest, method: String, completion: (success: Bool, object: AnyObject?) -> ()) {
@@ -140,6 +152,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
             self.model.tobiiProject = jsonData!["pr_id"]!
             print("New project created" + self.model.tobiiProject)
         }
+        self.model.tobiiProject = "7ltj2ii"
     }
     
     func createParticipant(projectId: String) {
@@ -207,7 +220,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
 
     }
     
-    func createRecording(participantId: String) {
+    func createAndStartRecording(participantId: String) {
         let json = ["rec_participant": participantId]
         let jsonData = try? NSJSONSerialization.dataWithJSONObject(json, options: .PrettyPrinted)
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/recordings")!)
@@ -219,8 +232,9 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         request.HTTPBody = jsonData
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
-            var jsonData = object as? [String: String]
-            self.model.tobiiCurrentRecording = jsonData!["rec_id"]!
+            var jsonData = object as? [String: AnyObject]
+            print(jsonData)
+            self.model.tobiiCurrentRecording = jsonData!["rec_id"]! as! String
             self.startRecording(self.model.tobiiCurrentRecording)
         }
     }
@@ -266,24 +280,6 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
             print("File not exist")
             print("created" + fileName)
         }
-    }
-    
-    func createCSVfile(subjectId: String, testId: String) {
-        let filePath = getDocumentsDirectory().stringByAppendingPathComponent("output.txt")
-        print(filePath)
-        NSFileManager.defaultManager().createFileAtPath(filePath, contents: nil, attributes: nil)
-    }
-    
-    func convertStringToDictionary(text: String) -> [String:String]? {
-        //print(text)
-        if let data = text.dataUsingEncoding(NSUTF8StringEncoding) {
-            do {
-                return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:String]
-            } catch let error as NSError {
-                print(error)
-            }
-        }
-        return nil
     }
 }
 

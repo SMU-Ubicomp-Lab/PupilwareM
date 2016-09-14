@@ -15,8 +15,8 @@ class CalibrateGlassViewController: UIViewController, GlassDelegate{
     let model = DataModel.sharedInstance
     let tobiiGlass = TobiiGlass.sharedInstance
     let TIME_DELAY: Int64 = 2
-    let TIME_CALIBRATE: Int64 = 8
-    let TIME_CHECK: Int64 = 10
+    let TIME_CALIBRATE: Int64 = 12
+    let TIME_CHECK: Int64 = 13
 
     override func viewDidLoad() {
         super.viewDidLoad()
