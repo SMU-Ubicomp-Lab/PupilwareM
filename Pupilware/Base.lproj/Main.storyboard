@@ -1952,11 +1952,11 @@
             </objects>
             <point key="canvasLocation" x="-158" y="1437"/>
         </scene>
-        <!--Item-->
+        <!--ACT test-->
         <scene sceneID="HJx-LS-8dN">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Rna-1x-h7G" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" image="check.png" id="3tG-77-cIy"/>
+                    <tabBarItem key="tabBarItem" title="ACT test" image="check.png" id="3tG-77-cIy"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="rRV-fd-c2W">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
