@@ -3,7 +3,7 @@
 //  Pupilware
 //
 //  Created by Raymond Martin on 1/27/16.
-//  Copyright © 2016 Raymond Martin. All rights reserved.
+//  Copyright © 2016 SMU Ubicomp Lab. All rights reserved.
 //
 
 import UIKit
