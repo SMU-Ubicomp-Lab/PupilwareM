@@ -848,7 +848,7 @@
 				GCC_PREFIX_HEADER = PupilPrefixHeader.pch;
 				HEADER_SEARCH_PATHS = /usr/local/Cellar/eigen/3.2.8/include/eigen3;
 				INFOPLIST_FILE = Pupilware/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -883,7 +883,7 @@
 				GCC_PREFIX_HEADER = PupilPrefixHeader.pch;
 				HEADER_SEARCH_PATHS = /usr/local/Cellar/eigen/3.2.8/include/eigen3;
 				INFOPLIST_FILE = Pupilware/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

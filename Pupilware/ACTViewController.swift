@@ -24,7 +24,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
     var currentOptions = []
     var totalQuestions = 0
     var participantId = ""
-    var participantAnswers = [String](count: 5, repeatedValue: "")
+    var participantAnswers = [String](count: 9, repeatedValue: "")
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +38,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
         participantId = model.currentSubjectID
         questionsModle.reset()
         questionLabel.font = questionLabel.font.fontWithSize(20)
+        questionsModle.shuffelQuestions()
         totalQuestions = questionsModle.getQuestionsNumber()
         currentQuestionIndex = questionsModle.getCurrentQuestionIndex()
         currentQuestion = questionsModle.getInitQuestion()
@@ -305,8 +306,14 @@ class ACTViewController: UIViewController, BridgeDelegate {
     
     func saveData() {
         let filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.currentSubjectID + "_ACT_Answers.txt")
-        let stringAns = participantAnswers.joinWithSeparator(",")
-        writeToCSV(filePath, row: stringAns)
+        let stringAnswers = participantAnswers.joinWithSeparator(",")
+        let tmpPermutation = questionsModle.getPermutation()
+        let strPermutation = tmpPermutation.map
+            {
+                String($0)
+        }
+        let stringPermutation = strPermutation.joinWithSeparator(",")
+        writeToCSV(filePath, row: stringAnswers + stringPermutation )
     }
     
     func presentSurveyModal(){
