@@ -328,10 +328,10 @@
         }
     }
     
-    if ([self.model.bridgeDelegate isTestingFinished]) {
-        
-        [self closeSystem];
-    }
+//    if ([self.model.bridgeDelegate isTestingFinished]) {
+//        
+//        [self closeSystem];
+//    }
     
 }
 

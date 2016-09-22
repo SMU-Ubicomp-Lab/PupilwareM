@@ -11,7 +11,7 @@ import UIKit
 
 class tabViewController: UIViewController, UIPopoverPresentationControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, sendBackDelegate{
     let model = DataModel.sharedInstance
-    let tobiiGlass = TobiiGlass.sharedInstance
+//    let tobiiGlass = TobiiGlass.sharedInstance
     @IBOutlet weak var expSegment: UISegmentedControl!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var settingsCollection: UICollectionView!
@@ -69,7 +69,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         }else{
             model.currentTest = DigitTest(subjectID: model.currentSubjectID, digits: self.digitNum, iter: self.iter, angle: self.expSegment.selectedSegmentIndex+1, exact_lux: Double(UIScreen.mainScreen().brightness))
         }
-        self.tobiiGlass.createAndStartRecording(self.model.tobiiSubjectIds[self.model.currentSubjectID]!)
+//        self.tobiiGlass.createAndStartRecording(self.model.tobiiSubjectIds[self.model.currentSubjectID]!)
         self.presentDigitSpanModal()
     }
     
@@ -108,7 +108,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     
     func calibrationComplete(){
         expBlock.hidden = true
-        self.tobiiGlass.stopRecording(self.model.tobiiCurrentRecording)
+//        self.tobiiGlass.stopRecording(self.model.tobiiCurrentRecording)
         
         //Check Tobii Glass calibration status, if failed, re calibrate
         //self.tobiiGlass.checkCalibration(self.model.tobiiCurrentCalibration)
@@ -121,7 +121,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         model.currentTest = nil
         print(model.digitTestLumProgress)
         self.settingsCollection.reloadData()
-        self.tobiiGlass.stopRecording(self.model.tobiiCurrentRecording)
+//        self.tobiiGlass.stopRecording(self.model.tobiiCurrentRecording)
     }
     
     func presentLuxMeter(){
