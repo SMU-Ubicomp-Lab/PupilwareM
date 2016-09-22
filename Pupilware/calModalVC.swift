@@ -54,4 +54,8 @@ class calModalVC: UIViewController, BridgeDelegate{
         
     }
     
+    func sendLog(text:String){
+        self.mainLabel.text = text
+    }
+    
 }

@@ -14,14 +14,6 @@ namespace pw{
 
     struct PWParameter
     {
-    //    processor->windowSize_ud        = (int)[defaults integerForKey:kWindowSize];
-    //    processor->mbWindowSize_ud      = (int)[defaults integerForKey:kMbWindowSize];
-    //    processor->eyeDistance_ud       = self.model.getDist;
-    //    processor->baselineStart_ud     = self.model.getBaseStart;
-    //    processor->baselineEnd_ud       = self.model.getBaseEnd;
-    //    processor->baseline             = self.model.getBaseline;
-    //    processor->cogHigh              = self.model.getCogHigh;
-
         float           threshold;
         float           prior;
         float           sigma;

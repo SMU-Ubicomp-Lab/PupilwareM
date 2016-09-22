@@ -27,8 +27,6 @@ namespace pw {
         virtual PWPupilSize process( const cv::Mat& src, const PWFaceMeta &meta ) override final;
         virtual void exit() override final;
         
-        const cv::Mat& getDebugImage() const;
-        
     private:
         int th;
 
@@ -41,4 +39,4 @@ namespace pw {
     };
 }
 
-#endif /* BlinkDetection_hpp */
+#endif /* BlinkDetection */

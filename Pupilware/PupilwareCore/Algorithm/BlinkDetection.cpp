@@ -28,6 +28,7 @@ namespace pw {
         std::cout << "Init My Algorithm." << std::endl;
     }
 
+    int t = 50;
 
     PWPupilSize BlinkDetection::process( const cv::Mat& src, const PWFaceMeta &meta )
     {
@@ -37,9 +38,11 @@ namespace pw {
         std::vector<cv::Mat> bgr_planes;
         cv::split(leftEye, bgr_planes);
 
+        if(bgr_planes.size() <= 0)return PWPupilSize();
+
         cv::Mat leftEyeGray = bgr_planes[2]; //green channel;
 //        cv::cvtColor(leftEye, leftEyeGray, CV_BGR2GRAY);
-        const float th = 0.04;
+        const float th = 0.01;
 
         int threshold = cw::calDynamicThreshold( leftEyeGray, th);
 
@@ -58,7 +61,7 @@ namespace pw {
 
             if( maxSize < (int)contours[i].size() )
             {
-                maxSize = (int)contours[i].size();
+                maxSize = contours[i].size();
                 bigBlobIndex = i;
             }
         }
@@ -89,17 +92,14 @@ namespace pw {
             rectangle( debug, boundRect.tl(), boundRect.br(), cv::Scalar(255,0,255), 1, 8, 0 );
         }
 
-//
-//        cw::showImage("th", binaryMat);
-//        cw::showImage("blink",debug);
+
+        cw::showImage("th", binaryMat);
+        cw::showImage("blink",debug);
 
 //        cw::showHist("hist", leftEyeGray);
 //        cw::showHistRGB("histRGB", leftEye);
 //        cw::showHistRGB("histRGBRight", rightEye);
 
-        
-        this->debugImage = std::move(debug);
-        
         return PWPupilSize( blink, 0.0f);
     }
 
@@ -107,9 +107,5 @@ namespace pw {
     void BlinkDetection::exit()
     {
         std::cout << " Close my algorithm " << std::endl;
-    }
-    
-    const cv::Mat& BlinkDetection::getDebugImage() const{
-        return this->debugImage;
     }
 }

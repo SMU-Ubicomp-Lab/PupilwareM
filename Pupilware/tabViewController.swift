@@ -75,7 +75,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     
     @IBAction func shortPressCalibrate(sender: AnyObject) {
         //self.tobiiGlass.createCalibration(self.model.tobiiProject, participantId: self.model.tobiiCurrentParticipant)
-        self.tobiiGlass.createAndStartRecording(self.model.tobiiSubjectIds[self.model.currentSubjectID]!)
+//        self.tobiiGlass.createAndStartRecording(self.model.tobiiSubjectIds[self.model.currentSubjectID]!)
         self.presentCalibrationModal()
     }
     

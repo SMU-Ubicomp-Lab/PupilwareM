@@ -63,7 +63,7 @@ public class StepSlider: UISlider {
     func drawTrack() {
         
         let ctx = UIGraphicsGetCurrentContext()
-        CGContextSaveGState(ctx)
+        CGContextSaveGState(ctx!)
         
         // Remove the original track if custom
         if customTrack {
@@ -77,18 +77,18 @@ public class StepSlider: UISlider {
             setMinimumTrackImage(transparentImage, forState: .Normal)
             
             // Draw custom track
-            CGContextSetFillColorWithColor(ctx, trackColor.CGColor)
+            CGContextSetFillColorWithColor(ctx!, trackColor.CGColor)
             let x = trackOffset
             let y = Int((bounds.height / 2)) - (trackHeight / 2)
             let trackPath = UIBezierPath(rect: CGRect(x: Int(x), y: y, width: Int(bounds.width - (trackOffset * 2)), height: trackHeight))
             
-            CGContextAddPath(ctx, trackPath.CGPath)
-            CGContextFillPath(ctx)
+            CGContextAddPath(ctx!, trackPath.CGPath)
+            CGContextFillPath(ctx!)
         }
         
         
         // Draw ticks
-        CGContextSetFillColorWithColor(ctx, stepTickColor.CGColor)
+        CGContextSetFillColorWithColor(ctx!, stepTickColor.CGColor)
         
         for index in 0..<steps {
             
@@ -103,11 +103,11 @@ public class StepSlider: UISlider {
                 stepPath = UIBezierPath(rect: CGRect(x: x, y: y, width: Double(stepTickWidth), height: stepTickHeight))
             }
             
-            CGContextAddPath(ctx, stepPath.CGPath)
-            CGContextFillPath(ctx)
+            CGContextAddPath(ctx!, stepPath.CGPath)
+            CGContextFillPath(ctx!)
         }
         
-        CGContextRestoreGState(ctx)
+        CGContextRestoreGState(ctx!)
     }
 }
 

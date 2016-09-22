@@ -72,10 +72,8 @@
     pwAlgo->setSigma(params->sigma);
     pwAlgo->setPrior(params->prior);
     pwAlgo->setThreshold(params->threshold);
-    
-    // TODO:
-//    pwAlgo->setRayNumber([params.sbRayNumber intValue]);
-//    pwAlgo->setDegreeOffset([params.degreeOffset intValue]);
+    pwAlgo->setRayNumber(params->sbRayNumber);
+    pwAlgo->setDegreeOffset(params->degreeOffset);
     
 }
 

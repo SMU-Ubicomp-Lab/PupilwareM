@@ -691,6 +691,7 @@ class ACTTest: Test{
     optional func isNumberStarted() -> Bool
     optional func isNumberStoped() -> Bool
     optional func isTestingFinished() -> Bool
+    optional func sendLog(text:String)
 }
 
 @objc protocol GlassDelegate {

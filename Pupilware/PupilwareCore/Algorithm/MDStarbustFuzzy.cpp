@@ -6,7 +6,7 @@
 //  Copyright © 2016 Chatchai Wangwiwattana. All rights reserved.
 //
 
-#include "MDStarbustNeo.hpp"
+#include "MDStarbustFuzzy.hpp"
 #include "../Helpers/math/Ransac.h"
 #include "../Helpers/PWGraph.hpp"
 #include "../SignalProcessing/SignalProcessingHelper.hpp"
@@ -17,23 +17,23 @@ using namespace std;
 
 namespace pw {
 
-    MDStarbustNeo::MDStarbustNeo( const string& name ):
+    MDStarbustFuzzy::MDStarbustFuzzy( const string& name ):
             IPupilAlgorithm(name),
-            threshold(0.014),
+            threshold(0.3),
             rayNumber(17),
-            degreeOffset(0),
+            degreeOffset(60),
             prior(0.5f),
             sigma(0.2f){
 
     }
 
-    MDStarbustNeo::~MDStarbustNeo()
+    MDStarbustFuzzy::~MDStarbustFuzzy()
     {
 
     }
     
 
-    void MDStarbustNeo::init()
+    void MDStarbustFuzzy::init()
     {
         window = std::make_shared<CVWindow>(getName() + " Debug");
         window->resize(500, 500);
@@ -50,7 +50,7 @@ namespace pw {
 
     
     
-    PWPupilSize MDStarbustNeo::process( const cv::Mat& src, const PWFaceMeta &meta )
+    PWPupilSize MDStarbustFuzzy::process( const cv::Mat& src, const PWFaceMeta &meta )
     {
         assert(!src.empty());
         
@@ -65,7 +65,7 @@ namespace pw {
 
         cv::Point rightEyeCenterEyeCoord( meta.getRightEyeCenter().x - meta.getRightEyeRect().x ,
                                           meta.getRightEyeCenter().y - meta.getRightEyeRect().y);
-        
+
         Mat debugRightEye = src(meta.getRightEyeRect()).clone();
         float rightPupilRadius = findPupilSize( src(meta.getRightEyeRect())
                 , rightEyeCenterEyeCoord
@@ -76,13 +76,13 @@ namespace pw {
         hconcat(debugLeftEye,
                 debugRightEye,
                 debugImg);
-        
+
         window->update(debugImg);
         
         this->debugImage = debugImg;
 
         return PWPupilSize(  leftPupilRadius / meta.getEyeDistancePx()
-                            ,rightPupilRadius / meta.getEyeDistancePx() );
+                            ,0 );
 
     }
 
@@ -91,22 +91,23 @@ namespace pw {
 //    vector<float> areas;
 //    vector<float> votings;
 
-    float MDStarbustNeo::findPupilSize(const Mat &colorEyeFrame,
+
+    int thg = 0;
+    int iris = 1;
+    float MDStarbustFuzzy::findPupilSize(const Mat &colorEyeFrame,
                                        cv::Point eyeCenter,
                                        Mat &debugImg) const {
 
         vector<Mat> rgbChannels(3);
         split(colorEyeFrame, rgbChannels);
 
-        if(rgbChannels.size() <= 0 ) return 0.0f;
-
         // Only use a red channel.
         Mat grayEye = rgbChannels[2];
-        
-        
+
+
         Mat blur;
-        cv::GaussianBlur(grayEye, blur,Size(15,15), 7);
-        
+        cv::GaussianBlur(grayEye, blur,Size(3,3), 3);
+
 /*------- Center of Mass Method -------*/
 //        int th = cw::calDynamicThreshold( blur, 0.006 );
 //        Mat binary;
@@ -115,22 +116,23 @@ namespace pw {
 //        eyeCenter = p;
 /*-------------------------------------*/
 
-        
+
 /*-------- Snakucules Method ----------*/
         cv::Point cPoint = eyeCenter;
         Snakuscules sn;
         sn.fit(blur,               // src image
                cPoint,             // initial seed point
-               grayEye.cols*0.1,   // radius
+               20,   // radius
                2.0,                // alpha
-               20                  // max iteration
+               40                  // max iteration
         );
+
         cPoint = sn.getFitCenter();
         eyeCenter = cPoint;
-        int innterRadius = sn.getInnerRadius();
+        iris = sn.getInnerRadius();
         circle( debugImg,
                 eyeCenter,
-                innterRadius,
+                iris,
                 Scalar(200,200,0) );
 /*-------------------------------------*/
 
@@ -165,31 +167,31 @@ namespace pw {
 
                 float elp = 0.0f;
                 float cir = 0.0f;
-                float area = 0.0f;
+//                float area = 0.0f;
                 float voting = 0.0f;
 
 
-                    //TODO: Use RANSAC Circle radius? How about Ellipse wight?
+                //TODO: Use RANSAC Circle radius? How about Ellipse wight?
 
-                    std::vector<float> edgePointsFromCenter(edgePoints.size());
-                    for (int i = 0; i < edgePoints.size(); ++i) {
-                        edgePointsFromCenter[i] = cw::calDistanceSq(edgePoints[i], eyeCenter);
+                std::vector<float> edgePointsFromCenter(edgePoints.size());
+                for (int i = 0; i < edgePoints.size(); ++i) {
+                    edgePointsFromCenter[i] = cw::calDistanceSq(edgePoints[i], eyeCenter);
 
-                    }
+                }
 
-                    std::nth_element (edgePointsFromCenter.begin()
-                            , edgePointsFromCenter.begin()+edgePointsFromCenter.size()/2
-                            , edgePointsFromCenter.end());
+                std::nth_element (edgePointsFromCenter.begin()
+                        , edgePointsFromCenter.begin()+edgePointsFromCenter.size()/2
+                        , edgePointsFromCenter.end());
 
-                    voting = sqrt(edgePointsFromCenter[edgePointsFromCenter.size()/2]);
+                voting = sqrt(edgePointsFromCenter[edgePointsFromCenter.size()/2]);
 
-                    elp = (myEllipse.size.width + myEllipse.size.height) * 0.25f;
-                    cir = r.bestModel.GetRadius();
-                    area = (myEllipse.size.width * myEllipse.size.height) * 0.02f;
+                elp = (myEllipse.size.width + myEllipse.size.height) * 0.25f;
+                cir = r.bestModel.GetRadius();
+//                    area = (myEllipse.size.width * myEllipse.size.height) * 0.02f;
 
-                    eyeRadius = area;
+                eyeRadius = voting;
 
-   
+
 
                 //---------------------------------------------------------------------------------
                 //! Draw debug image
@@ -247,13 +249,13 @@ namespace pw {
     }
 
 
-    bool MDStarbustNeo::isValidEllipse(const RotatedRect &theEllipse) const {
+    bool MDStarbustFuzzy::isValidEllipse(const RotatedRect &theEllipse) const {
         return max(theEllipse.size.width, theEllipse.size.height) /
                min(theEllipse.size.width, theEllipse.size.height) < 1.5;
     }
 
 
-    void MDStarbustNeo::findEdgePoints(Mat grayEye,
+    void MDStarbustFuzzy::findEdgePoints(Mat grayEye,
                                     const Point &startingPoint,
                                     const vector<Point2f> &rays,
                                     vector<Point2f> &outEdgePoints,
@@ -268,44 +270,58 @@ namespace pw {
         Mat blur;
         cv::GaussianBlur(grayEye, blur, Size(blurKernalSize*2+1,blurKernalSize*2+1), 3);
 
-        int th = cw::calDynamicThreshold(blur, threshold);
-
-        Mat walkMat = grayEye;
-        cv::threshold(grayEye, walkMat, th, 255, CV_THRESH_TRUNC);
-
-        {
-            int ksize = grayEye.cols * 0.07; // can I make it bigger? let test it.
-            float sigma = ksize * this->sigma;
-            Mat kernelX = getGaussianKernel(ksize, sigma);
-            Mat kernelY = getGaussianKernel(ksize, sigma);
-            Mat kernelXY = kernelX * kernelY.t();
-
-            // find min and max values in kernelXY.
-            double min;
-            double max;
-            cv::minMaxIdx(kernelXY, &min, &max);
-            
-            // scale kernelXY to 0-255 range;
-            cv::Mat maskImage;
-            cv::convertScaleAbs(kernelXY, maskImage, 255 / max);
-
-            // create a rect that have the same size as the gausian kernel,
-            // locating it at the eye center.
-            const float haftKernalSize = kernelXY.cols/2;
-            cv::Rect r;
-
-            r.x = std::fmax(0,startingPoint.x - haftKernalSize);
-            r.y = std::fmax(0,startingPoint.y - haftKernalSize);
-            r.width = std::min(kernelXY.cols, walkMat.cols-r.x);
-            r.height = std::min(kernelXY.rows, walkMat.rows-r.y);
-            
-            //
-            walkMat(r) = walkMat(r) - (maskImage(cv::Rect(0,0,r.width,r.height))*this->prior);
-            
-        }
+        const int tx = std::fmax(startingPoint.x - iris,0);
+        const int ty = std::fmax(startingPoint.y - iris,0);
+        const int thi = (iris*2 + ty) > grayEye.rows? grayEye.rows - startingPoint.y :iris*2;
+        Mat irisMat = grayEye(Rect( tx, ty,
+                                  iris*2, thi));
 
 
-//        cw::showImage("thth", walkMat, 1);
+        equalizeHist(irisMat, irisMat);
+
+//        int th = cw::calDynamicThreshold(irisMat, threshold);
+        int th = 40;
+
+
+        Mat walkMat;
+        cv::threshold(irisMat, walkMat, th, 255, CV_THRESH_TRUNC);
+
+        cw::openOperation(walkMat, walkMat,3);
+
+        cw::showImage("iris", irisMat);
+        cw::showImage("walk", walkMat);
+
+
+//        {
+//            int ksize = grayEye.cols * 0.07; // can I make it bigger? let test it.
+//            float sigma = ksize * this->sigma;
+//            Mat kernelX = getGaussianKernel(ksize, sigma);
+//            Mat kernelY = getGaussianKernel(ksize, sigma);
+//            Mat kernelXY = kernelX * kernelY.t();
+//
+//            // find min and max values in kernelXY.
+//            double min;
+//            double max;
+//            cv::minMaxIdx(kernelXY, &min, &max);
+//
+//            // scale kernelXY to 0-255 range;
+//            cv::Mat maskImage;
+//            cv::convertScaleAbs(kernelXY, maskImage, 255 / max);
+//
+//            // create a rect that have the same size as the gausian kernel,
+//            // locating it at the eye center.
+//            cv::Rect r;
+//            r.width = kernelXY.cols;
+//            r.height = kernelXY.rows;
+//            r.x = std::max(0,startingPoint.x - r.width/2);
+//            r.y = std::max(0,startingPoint.y - r.height/2);
+//
+//            //
+//            walkMat(r) = walkMat(r) - (maskImage*this->prior);
+//
+//
+//        }
+
 
         Point seedPoint = startingPoint;
 
@@ -341,6 +357,12 @@ namespace pw {
                     {
                         outEdgePoints.push_back(nextPoint);
                         edgePointThisRound.push_back(nextPoint);
+
+                        int dist = nextPoint.y - startingPoint.y;
+                        Point flippedPoint = Point(nextPoint.x, nextPoint.y - (dist*2));
+
+                        outEdgePoints.push_back(flippedPoint);
+                        edgePointThisRound.push_back(flippedPoint);
                         break;
                     }
                 }
@@ -392,15 +414,13 @@ namespace pw {
     }
 
 
-    void MDStarbustNeo::createRays(vector<Point2f> &rays) const {
+    void MDStarbustFuzzy::createRays(vector<Point2f> &rays) const {
 
         // TODO: It does not have to create ray every frame.
 
         float radiansOffset = (degreeOffset * M_PI / 180.0f);
 
         const float step = (2*M_PI - (radiansOffset*2))/float(rayNumber);
-        
-        std::cout << "creating rays : " << rayNumber << "rays, " << " with degree " << degreeOffset << std::endl;
 
         /* The circle walk counter clock wise, because OpenCV is 'y' top->down.
          * The beginning of rays are at the top of circle,
@@ -416,37 +436,39 @@ namespace pw {
     }
     
 
-    const cv::Mat& MDStarbustNeo::getDebugImage() const{
+    const cv::Mat& MDStarbustFuzzy::getDebugImage() const{
         return this->debugImage;
     }
     
 
-    void MDStarbustNeo::exit()
+    void MDStarbustFuzzy::exit()
     {
         // Clean up code here.
     }
     
     
-    void MDStarbustNeo::setThreshold( float value ){
+    
+    
+    void MDStarbustFuzzy::setThreshold( float value ){
         threshold = fmax(value, 0);
         if (threshold > 1) {
             threshold = 1;
         }
     }
     
-    void MDStarbustNeo::setRayNumber( int value ){
+    void MDStarbustFuzzy::setRayNumber( int value ){
         rayNumber = max(value, 0);
     }
     
-    void MDStarbustNeo::setDegreeOffset( int value ){
+    void MDStarbustFuzzy::setDegreeOffset( int value ){
         degreeOffset = min(max(value, 0), 355);
     }
     
-    void MDStarbustNeo::setPrior( float value ){
+    void MDStarbustFuzzy::setPrior( float value ){
         prior = fmax(value, 0);
     }
     
-    void MDStarbustNeo::setSigma( float value ){
+    void MDStarbustFuzzy::setSigma( float value ){
         sigma = fmax(value, 0);
     }
     

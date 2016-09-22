@@ -8,6 +8,7 @@
 namespace pw{
 
     struct PWPupilSize{
+        PWPupilSize():leftRadius(0.0f), rightRadius(0.0f){}
         PWPupilSize(float leftRadius, float rightRadius):
                 leftRadius(leftRadius),rightRadius(rightRadius)
         { }
