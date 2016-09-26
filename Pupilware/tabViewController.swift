@@ -29,7 +29,6 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         
         //self.expBlock.hidden = true
         
-        
         self.settingsCollection.allowsMultipleSelection = true
         self.containerView.layer.cornerRadius = 5
         self.expBlock.layer.cornerRadius = 5
@@ -63,6 +62,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     }
 
     @IBAction func startDigitTest(sender: AnyObject) {
+        model.inTest = true
         //settup test settings
         if (model.lumMode){
             model.currentTest = DigitTest(subjectID: model.currentSubjectID, digits: self.digitNum, iter: self.iter, lux: self.expSegment.selectedSegmentIndex+1, exact_lux: Double(UIScreen.mainScreen().brightness))
@@ -74,6 +74,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     }
     
     @IBAction func shortPressCalibrate(sender: AnyObject) {
+        self.model.inCalibration = true
         //self.tobiiGlass.createCalibration(self.model.tobiiProject, participantId: self.model.tobiiCurrentParticipant)
         self.tobiiGlass.createAndStartRecording(self.model.tobiiSubjectIds[self.model.currentSubjectID]!)
         self.presentCalibrationModal()
@@ -119,6 +120,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         print(model.digitTestLumProgress)
         model.currentTest?.completeTest()
         model.currentTest = nil
+        model.inTest = false
         print(model.digitTestLumProgress)
         self.settingsCollection.reloadData()
         self.tobiiGlass.stopRecording(self.model.tobiiCurrentRecording)

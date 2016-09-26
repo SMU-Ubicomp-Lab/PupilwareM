@@ -84,38 +84,43 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
     }
     
     @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {
-    
-        print(sock.localPort())
         guard let stringData = String(data: data, encoding: NSUTF8StringEncoding) else {
             print(">>> Data received, but cannot be converted to String")
             return
         }
         print("Data received: \(stringData)")
 
-        do {
-            let  jsonData = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers)
-        
-            if let pupilDilation = jsonData["pd"] as? NSNumber {
+        //Only write to file if in testing or calibration
+        if (model.inTest || model.inCalibration) {
+            var filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiPupilFileName())
+            if (model.inCalibration) {
+                filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCaliFileName())
+            }
+            
+            do {
+                let  jsonData = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers)
                 
-                if let pupulState = jsonData["s"] as? NSNumber {
+                if let pupilDilation = jsonData["pd"] as? NSNumber {
                     
-                    if (pupulState == 0) {
-                        let pupilEye = jsonData["eye"] as! String
-                        let glassTimestamp = jsonData["ts"] as! NSNumber
-                        let timestamp = String(NSDate().timeIntervalSince1970)
-                        let pupilString = pupilEye + "," + String(pupilDilation) + "," + timestamp + "," + String(glassTimestamp)
-                        print("Got pupil info")
-                        print(pupilString)
-                        let filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.currentSubjectID + "_pupil.csv")
-                        writeToCSV(filePath, row: pupilString)
+                    if let pupulState = jsonData["s"] as? NSNumber {
+                        
+                        if (pupulState == 0) {
+                            let pupilEye = jsonData["eye"] as! String
+                            let glassTimestamp = jsonData["ts"] as! NSNumber
+                            let timestamp = String(NSDate().timeIntervalSince1970)
+                            let pupilString = pupilEye + "," + String(pupilDilation) + "," + timestamp + "," + String(glassTimestamp)
+                            print("Got pupil info:")
+                            print(pupilString)
+                            writeToCSV(filePath, row: pupilString)
+                        }
                     }
                 }
+                
+            } catch let error as NSError {
+                print(error)
             }
-
-        } catch let error as NSError {
-            print(error)
         }
-
+        
     }
     
     private func dataTask(request: NSMutableURLRequest, method: String, completion: (success: Bool, object: AnyObject?) -> ()) {

@@ -34,6 +34,7 @@ class calModalVC: UIViewController, BridgeDelegate{
     }
     
     func finishCalibration(){
+        self.model.inCalibration = false
         print("calibration finished")
         delegate?.calibrationComplete()
         self.dismissViewControllerAnimated(true, completion: nil)

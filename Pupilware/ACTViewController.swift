@@ -50,6 +50,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
         
         // Add new test to the Data Model,
         // Pupilware will get these file name from it. :P
+        self.model.inTest = true
         self.model.currentTest = ACTTest(subjectID: self.model.currentSubjectID, itemID: currentQuestionIndex)
         
     }
@@ -164,7 +165,9 @@ class ACTViewController: UIViewController, BridgeDelegate {
         self.presentViewController(alertController, animated: true, completion: nil)
         
         // Tell pupilware to stop system.
+        self.model.inTest = false
         self.testFinished = true;
+        
     }
     
     @IBOutlet weak var submitButton: UIButton!

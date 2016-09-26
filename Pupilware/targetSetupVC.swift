@@ -43,6 +43,7 @@ class targetSetupVC: UIViewController, UIPopoverPresentationControllerDelegate, 
     }
     
     @IBAction func startTargetTest(sender: AnyObject) {
+        model.inTest = true
         model.currentTest = TargetTest(subjectID: model.currentSubjectID, missing_digits: self.targetNum, iter: self.iter, exact_lux: Double(UIScreen.mainScreen().brightness))
         self.presentTargetTestModal()
     }
@@ -86,6 +87,7 @@ class targetSetupVC: UIViewController, UIPopoverPresentationControllerDelegate, 
         print(model.digitTestLumProgress)
         model.currentTest?.completeTest()
         model.currentTest = nil
+        model.inTest = false
         print(model.digitTestLumProgress)
         self.targetCollection.reloadData()
     }

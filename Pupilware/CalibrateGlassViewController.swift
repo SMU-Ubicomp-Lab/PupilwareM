@@ -59,7 +59,6 @@ class CalibrateGlassViewController: UIViewController, GlassDelegate{
         if model.tobiiCurrentCalibrationState != "calibrated" {
             message = "Calibration failed! Please recalibrate"
         }
-        
         let alertController = UIAlertController(title: "Calibration", message:
             message, preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: {

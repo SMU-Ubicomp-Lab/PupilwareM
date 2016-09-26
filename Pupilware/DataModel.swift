@@ -20,7 +20,9 @@ import Foundation
     var tobiiCurrentCalibrationState = ""
     var tobiiCurrentRecording = ""
     var tobiiSubjectIds: [String: String] = [:]
-    
+    var recordingMap:[String: String] = [:]
+    var inTest = false
+    var inCalibration = false
     
     
     var currentSubjectID:String = ""
@@ -122,6 +124,13 @@ import Foundation
         return self.currentTest!.getPupilSizeFileName()
     }
     
+    func getTobiiPupilFileName()-> String {
+        return self.currentTest!.getTobiiPupilFileName()
+    }
+    
+    func getTobiiCaliFileName()->String {
+        return self.currentTest!.getTobiiCaliFileName()
+    }
     
     func writeMetaData(){
         self.currentTest?.writeData()
@@ -219,6 +228,8 @@ protocol Test{
     func getFaceMetaFileName()->String
     func getPupilSizeFileName()->String
     func getCALFileName()->String
+    func getTobiiPupilFileName()->String
+    func getTobiiCaliFileName()->String
 }
 
 class TargetTest: Test{
@@ -226,6 +237,7 @@ class TargetTest: Test{
     let ID:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
     var missing_digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
     var labels = (face:"", faceMetaFile:"", pupilFile:"", calFile:"")
+    var tobiiLabels = (pupilFile: "", calFile:"")
     
     
     init(subjectID:String, missing_digits:Int, iter:Int, exact_lux:Double){
@@ -239,6 +251,8 @@ class TargetTest: Test{
         self.labels.faceMetaFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_fmeta.csv"
         self.labels.pupilFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_result.csv"
         self.labels.calFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_calib.csv"
+        self.tobiiLabels.pupilFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_result_tobii.csv"
+        self.tobiiLabels.calFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_calib_tobii.csv"
     }
     
     func getFaceVideoFileName() -> String {
@@ -255,6 +269,14 @@ class TargetTest: Test{
     
     func getPupilSizeFileName() -> String {
         return labels.pupilFile
+    }
+    
+    func getTobiiPupilFileName() -> String {
+        return tobiiLabels.pupilFile
+    }
+    
+    func getTobiiCaliFileName() -> String {
+        return tobiiLabels.calFile
     }
     
     func completeTest(){
@@ -319,7 +341,10 @@ class TargetTest: Test{
             "write_time" : self.getTimeStamp(),
             "ID" : self.ID,
             "numberStartFrame" : model.numberStartFrame,
-            "numberStopFrame" : model.numberStopFrame
+            "numberStopFrame" : model.numberStopFrame,
+            "tobii_recoding_id": model.tobiiCurrentRecording,
+            "tobii_subject_id": model.tobiiCurrentParticipant,
+            "tobii_project": model.tobiiProject
         ]
         
         var jsonData: NSData!
@@ -367,6 +392,7 @@ class DigitTest: Test{
     let ID:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
     var digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
     var labels = (face:"", faceMetaFile:"", pupilFile:"", calFile:"")
+    var tobiiLabels = (pupilFile: "", calFile:"")
     
     
     init(subjectID:String, digits:Int, iter:Int, lux:Int, exact_lux:Double){
@@ -380,6 +406,8 @@ class DigitTest: Test{
         self.labels.faceMetaFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_fmeta.csv"
         self.labels.pupilFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_result.csv"
         self.labels.calFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_calib.csv"
+        self.tobiiLabels.pupilFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_result_tobii.csv"
+        self.tobiiLabels.calFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_calib_tobii.csv"
     }
     
     init(subjectID:String, digits:Int, iter:Int, angle:Int, exact_lux:Double){
@@ -393,6 +421,8 @@ class DigitTest: Test{
         self.labels.faceMetaFile = "\(self.subjectID)_digit_ang\(self.angle)_dgt\(self.digits)_itr\(self.iter)_fmeta.csv"
         self.labels.pupilFile = "\(self.subjectID)_digit_ang\(self.angle)_dgt\(self.digits)_itr\(self.iter)_result.csv"
         self.labels.calFile = "\(self.subjectID)_digit_ang\(self.angle)_dgt\(self.digits)_itr\(self.iter)_calib.csv"
+        self.tobiiLabels.pupilFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_result_tobii.csv"
+        self.tobiiLabels.calFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_calib_tobii.csv"
     }
     
     
@@ -410,6 +440,14 @@ class DigitTest: Test{
     
     func getPupilSizeFileName() -> String {
         return labels.pupilFile
+    }
+    
+    func getTobiiPupilFileName() -> String {
+        return tobiiLabels.pupilFile
+    }
+    
+    func getTobiiCaliFileName() -> String {
+        return tobiiLabels.calFile
     }
     
     func completeTest(){
@@ -518,7 +556,10 @@ class DigitTest: Test{
             "write_time" : self.getTimeStamp(),
             "ID" : self.ID,
             "numberStartFrame" : model.numberStartFrame,
-            "numberStopFrame" : model.numberStopFrame
+            "numberStopFrame" : model.numberStopFrame,
+            "tobii_recoding_id": model.tobiiCurrentRecording,
+            "tobii_subject_id": model.tobiiCurrentParticipant,
+            "tobii_project": model.tobiiProject
         ]
         
         var jsonData: NSData!
@@ -566,6 +607,7 @@ class ACTTest: Test{
     let ID:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
     var itemID:Int, subjectID:String
     var labels = (face:"", faceMetaFile:"", pupilFile:"", calFile:"")
+    var tobiiLabels = (pupilFile:"" ,calFile: "")
     
     
     init(subjectID:String, itemID:Int){
@@ -576,6 +618,8 @@ class ACTTest: Test{
         self.labels.faceMetaFile = "\(self.subjectID)_ACT_\(self.itemID)_fmeta.csv"
         self.labels.pupilFile = "\(self.subjectID)_ACT_\(self.itemID)_result.csv"
         self.labels.calFile = "\(self.subjectID)_ACT_\(self.itemID)_calib.csv"
+        self.tobiiLabels.pupilFile = "\(self.subjectID)_ACT_\(self.itemID)_result_tobii.csv"
+        self.tobiiLabels.calFile = "\(self.subjectID)_ACT_\(self.itemID)_calib_tobii.csv"
     }
     
     
@@ -593,6 +637,14 @@ class ACTTest: Test{
     
     func getPupilSizeFileName() -> String {
         return labels.pupilFile
+    }
+    
+    func getTobiiPupilFileName() -> String {
+        return tobiiLabels.pupilFile
+    }
+    
+    func getTobiiCaliFileName() -> String {
+        return tobiiLabels.calFile
     }
     
     func completeTest(){
@@ -636,7 +688,10 @@ class ACTTest: Test{
             "parameter_file" : model.getCalibrationParamsFileName(),
             "calibration_data_file" : model.getCalibrationDataFileName(),
             "write_time" : self.getTimeStamp(),
-            "ID" : self.ID
+            "ID" : self.ID,
+            "tobii_recoding_id": model.tobiiCurrentRecording,
+            "tobii_subject_id": model.tobiiCurrentParticipant,
+            "tobii_project": model.tobiiProject
         ]
         
         var jsonData: NSData!
