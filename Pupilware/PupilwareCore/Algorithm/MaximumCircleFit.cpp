@@ -10,6 +10,7 @@
 #include "../Helpers/PWGraph.hpp"
 #include "../Helpers/math/Snakuscules.hpp"
 #include "../Helpers/CWCVHelper.hpp"
+#include "../SignalProcessing/SignalProcessingHelper.hpp"
 
 using namespace cv;
 using namespace std;
@@ -34,8 +35,6 @@ namespace pw {
         window = std::make_shared<CVWindow>(getName() + " Debug");
         window->resize(500, 500);
         window->moveWindow(200,300);
-//        window->addTrackbar("threshold", &threshold, 255 );
-
 
         // intialization of KF...
         KF.init(2, 1, 0);
@@ -48,6 +47,8 @@ namespace pw {
     
     }
 
+    std::vector<float> smooth;
+    std::vector<float> pupilSize;
     PWPupilSize MaximumCircleFit::process( const cv::Mat& src, const PWFaceMeta &meta )
     {
         assert(!src.empty());
@@ -69,6 +70,18 @@ namespace pw {
                 , rightEyeCenterEyeCoord
                 , debugRightEye );
 
+
+//        pupilSize.push_back(leftPupilRadius);
+//
+//        cw::trimMeanFilt(pupilSize, smooth, 31);
+//        // big
+//        const float kMinValue = 4.0f;
+//        const float kMaxValue = 15.0f;
+//        auto g = PWGraph("smooth");
+//        g.drawGraph("soom", smooth, Scalar(0,0,255), kMinValue, kMaxValue);
+//        g.show();
+
+//        float rightPupilRadius = 1;
 
 //        float pupilSize = estimatePupilSize( leftPupilRadius/meta.getEyeDistancePx(),
 //                                             rightPupilRadius/meta.getEyeDistancePx() );
@@ -129,7 +142,6 @@ namespace pw {
         return predictPupilSize;
     }
 
-
     float MaximumCircleFit::findPupilSize(const Mat &colorEyeFrame,
                                        cv::Point eyeCenter,
                                        Mat &debugImg) {
@@ -137,25 +149,23 @@ namespace pw {
         vector<Mat> rgbChannels(3);
         split(colorEyeFrame, rgbChannels);
 
+        if(rgbChannels.size() <= 0 ) return 0.0f;
         // Only use a red channel.
         Mat grayEye = rgbChannels[2];
-        
-        
-        Mat blur;
-        cv::GaussianBlur(grayEye, blur,Size(3,3), 3);
 
-        
+        Mat blur;
+        cv::GaussianBlur(grayEye, blur,Size(15,15), 7);
+
 /*-------- Snakucules Method ----------*/
         cv::Point cPoint = eyeCenter;
         Snakuscules sn;
         sn.fit(blur,               // src image
                 cPoint,             // initial seed point
-                grayEye.cols*0.14,   // radius
+                grayEye.cols*0.1,   // radius
                 2.0,                // alpha
-                40                  // max iteration
+                20                  // max iteration
                 );
-        cPoint = sn.getFitCenter();
-        eyeCenter = cPoint;
+        eyeCenter = sn.getFitCenter();
         int irisRadius = sn.getInnerRadius();
         circle( debugImg,
                 eyeCenter,
@@ -163,34 +173,103 @@ namespace pw {
                 Scalar(200,200,0) );
 /*-------------------------------------*/
 
-        float maxE = -1000;
-        int maxR = 1;
+            int ksize = irisRadius*2;
+            float sigma = 2;
+            Mat kernelX = getGaussianKernel(ksize, sigma);
+            Mat kernelY = getGaussianKernel(ksize, sigma);
+            Mat kernelXY = kernelX * kernelY.t();
 
-        for (int r = 1; r < irisRadius-3; ++r) {
-            float e1 = calCircularEnergy(grayEye, eyeCenter, r);
-            float e2 = calCircularEnergy(grayEye, eyeCenter, r+1);
-            float e = e2-e1;
+            // find min and max values in kernelXY.
+            double min;
+            double max;
+            cv::minMaxIdx(kernelXY, &min, &max);
 
-            if(e > maxE)
-            {
-                maxE = e;
-                maxR = r;
-            }
+            // scale kernelXY to 0-255 range;
+            cv::Mat maskImage;
+            cv::convertScaleAbs(kernelXY, maskImage, 255 / max);
 
-        }
+            // create a rect that have the same size as the gausian kernel,
+            // locating it at the eye center.
+            cv::Rect r;
+            r.width = kernelXY.cols;
+            r.height = kernelXY.rows;
+            r.x = std::max(0,eyeCenter.x - r.width/2);
+            r.y = std::max(0,eyeCenter.y - r.height/2);
 
+        const int tx = std::fmax(eyeCenter.x - irisRadius,0);
+        const int ty = std::fmax(eyeCenter.y - irisRadius,0);
+        const int t_height = (irisRadius*2 + ty) >= blur.rows? blur.rows - eyeCenter.y :irisRadius*2;
+        const int t_width = (irisRadius*2 + tx) >= blur.cols? blur.cols - eyeCenter.x :irisRadius*2;
+        Mat iris = blur(Rect( tx, ty, t_width, t_height));
+        cv::equalizeHist(iris,iris);
+
+        blur(r) = blur(r) - (maskImage(cv::Rect(0,0,t_width, t_height))*0.5);
+
+//        cw::showImage("open", iris);
+//        cw::showImage("m", maskImage);
+
+/*-------- Snakucules Method ----------*/
+        Snakuscules sn2;
+        sn2.fit(blur,               // src image
+               cPoint,             // initial seed point
+               irisRadius*0.3,   // radius
+               1.6,                // alpha
+               10                  // max iteration
+        );
+        Point pPoint = sn2.getFitCenter();
+        int pupilRadius = sn2.getInnerRadius();
         circle( debugImg,
                 eyeCenter,
-                maxR,
-                Scalar(200,200,0) );
+                pupilRadius,
+                Scalar(200,0,200) );
+        circle( debugImg,
+                eyeCenter,
+                sn2.getOuterRadius(),
+                Scalar(200,0,200) );
+/*-------------------------------------*/
 
 
-        return maxR;
+//        float maxE = -1000;
+//        int maxR = 1;
+//
+//        std::cout << ">>> start " << std::endl;
+//        for (int r = 1; r < irisRadius-2; ++r) {
+//            size_t bigSum = 0;
+//            size_t bigCount = 1; //not 0 to avoid divide by zero
+//            size_t smallSum = 0;
+//            size_t smallCount = 1;
+//
+//            calCircularEnergy(grayEye, eyeCenter, r+2, bigSum, bigCount);
+//            calCircularEnergy(grayEye, eyeCenter, r, smallSum, smallCount);
+//
+//            float e1 = (bigSum - smallSum) / (double)(bigCount-smallCount);
+//            float e2 = smallSum / smallCount;
+//            float e = e1 - e2;
+//
+//            std::cout << e1 << " , " << e2 << ", " << e << std::endl;
+//
+//            if(e > maxE)
+//            {
+//                maxE = e;
+//                maxR = r;
+//            }
+//
+//        }
+//
+//        std::cout << "<<<--- end " << maxE <<  std::endl;
+
+//        circle( debugImg,
+//                eyeCenter,
+//                maxR,
+//                Scalar(200,200,0) );
+
+
+        return sn2.getInnerRadius();
     }
 
     float MaximumCircleFit::calCircularEnergy(const cv::Mat& src,
                                               const cv::Point& center,
-                                              int radius){
+                                              int radius, size_t& outSum, size_t& outCount){
 
         Mat debug = src.clone();
 
@@ -201,7 +280,7 @@ namespace pw {
 
         for (int i = 0; i < src.rows; ++i) {
             for (int j = 0; j < src.cols; ++j) {
-                if( fabs(cw::calDistanceSq( cv::Point(j,i), center  ) - radiusSq) < 20 ){
+                if( cw::calDistanceSq( cv::Point(j,i), center  ) < radiusSq ){
                     auto intensity = src.ptr<uchar>(i,j);
                     sum += *intensity;
                     count++;
@@ -212,7 +291,10 @@ namespace pw {
             }
         }
 
-//        cw::showImage("debug", debug, 0);
+        cw::showImage("debug", debug, 0);
+
+        outSum = sum;
+        outCount = count;
 
         return sum / (double)count ;
     }

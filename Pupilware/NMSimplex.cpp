@@ -19,7 +19,7 @@ void NMSimplex::setBuffer(std::vector<cv::Mat> & videoFrameBuffer, std::vector<p
     faceBuffer = faceMetaBuffer;
 }
 int NMSimplex::getDims() const {
-    return 3;
+    return 5;
 }
 
 double NMSimplex::calc(const double* x) const {
@@ -28,6 +28,8 @@ double NMSimplex::calc(const double* x) const {
     algo->setThreshold(x[0]);
     algo->setSigma(x[1]);
     algo->setPrior(x[2]);
+    algo->setDegreeOffset(x[3]*10);
+    algo->setRayNumber(x[4]*10);
     
     
     float stdV;
@@ -47,7 +49,12 @@ double NMSimplex::calc(const double* x) const {
         auto rawPupilSizes = processor->getRawPupilSignal().getLeftPupilSizes();
         stdV = calStd(rawPupilSizes);
         
-        std::cout << "th " << x[0] << " ,sig " << x[1] << " ,prior " << x[2] << std::endl;
+        std::cout   << "th " << x[0] << " ,sig "
+                    << x[1] << " ,prior "
+                    << x[2] << " , degree "
+                    << x[3] << " , ray "
+                    << x[4] << std::endl;
+        
         std::cout << "stdV " << stdV << std::endl;
         
         

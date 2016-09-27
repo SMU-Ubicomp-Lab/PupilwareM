@@ -39,9 +39,13 @@ namespace pw{
      * the expensive square root operation every call.
      */
     float Snakuscules::_calInnerRadius( int radius, float alpha ){
-        REQUIRES(radius > 0, "Radius must more than 0");
+
         REQUIRES(radius < MaxSqrtRadius, "Radius must less than " << MaxSqrtRadius);
-        
+
+        if(radius <= 0 ){
+            return 0.0f;
+        }
+
         if(radiusBuffer[radius]<=0.0f){
             radiusBuffer[radius] = radius * (1.0/sqrt(alpha));
         }
@@ -131,10 +135,19 @@ namespace pw{
 
         REQUIRES( !srcGray.empty(), "The source must not be empty." );
         REQUIRES( srcGray.channels() == 1, "The source Mat must be one channel." );
-        REQUIRES( radius > 0, "the radius must be more than zero. Now radius is " << radius );
+//        REQUIRES( radius > 0, "the radius must be more than zero. Now radius is " << radius );
         REQUIRES( alpha > 0, "the alpha must be more than zero. Now alpha is " << alpha );
         REQUIRES( maxIteration >= 0 && maxIteration < 1000, "Max iteration must between 0 - 1000" );
 
+        if(radius <= 1 ){
+            m_center = cv::Point(0,0);
+            m_outerRadius = 1;
+            m_innerRadius =  1;
+
+            std::cout << "[Warning] Snakuscules is not support. radius is <= 1; ";
+
+            return;
+        }
 
         cv::Point cPoint = seedPoint;
 

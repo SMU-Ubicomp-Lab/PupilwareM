@@ -21,7 +21,7 @@
 #define kSBDegreeOffset   @"s_sb_degreeOffset"
 
 // Calibration Setting
-const float kCalibrationDuration = 10.0f;  //Allow 10 secs to collect frames before analysis data
+const float kCalibrationDuration = 7.0f;  //Allow 10 secs to collect frames before analysis data
 
 
 #endif

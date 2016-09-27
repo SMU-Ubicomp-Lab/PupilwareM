@@ -104,9 +104,10 @@ double calStd( const std::vector<float>& v)
     return stdev;
 }
 
-// TODO This function is wrong! do not use it!!
+
 double calTrimStd( const std::vector<float>& v, float percentTrim)
 {
+    // TODO This function is wrong! do not use it!!
     assert(false);
     assert(percentTrim >=0 );
     assert(percentTrim <=0.5);

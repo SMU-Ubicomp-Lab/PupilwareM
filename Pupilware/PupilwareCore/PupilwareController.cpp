@@ -192,17 +192,7 @@ namespace pw{
         
         // Init algorithms
         pwSegAlgo->init();
-        
-        
-        // intialization of KF...
-        KF.init(2, 1, 0);
-        KF.transitionMatrix = (Mat_<float>(2, 2) << 1, 1, 0, 1);
-        
-        setIdentity(KF.measurementMatrix);
-        setIdentity(KF.processNoiseCov, Scalar::all(1e-5));
-        setIdentity(KF.measurementNoiseCov, Scalar::all(0.02));
-        setIdentity(KF.errorCovPost, Scalar::all(1));
-        
+    
         
     }
     
@@ -211,15 +201,10 @@ namespace pw{
         
         if(!isStarted) return;
         
-        // Clean up
         pwSegAlgo->exit();
-        
         isStarted = false;
-        
-        // Not process signel in here, becasue calibration does not need it.
-        // I don't want to add overhade to calibaration process.
-        
     }
+    
     
     void PupilwareControllerImpl::processSignal(){
         BasicSignalProcessor sp;
@@ -233,6 +218,7 @@ namespace pw{
         
     }
     
+    
     void PupilwareControllerImpl::clearBuffer(){
         
         currentFrameNumber = 0;
@@ -244,15 +230,16 @@ namespace pw{
         smoothPupilSize.clear();
     }
     
+    
     const pw::PWFaceMeta& PupilwareControllerImpl::getFaceMeta(  ) const{
         return this->faceMeta;
     }
+    
     
     void PupilwareControllerImpl::setFaceMeta( const PWFaceMeta& faceMeta ){
         this->faceMeta = faceMeta;
     }
     
-    double ticks = 0.0f;
     
     void PupilwareControllerImpl::processFrame( const cv::Mat& srcFrame, unsigned int frameNumber ){
 
@@ -289,13 +276,14 @@ namespace pw{
         else{
             
             Mat grayFrame;
-            cvtColor(srcBGR, grayFrame, CV_BGR2GRAY);    // TODO: Please change to Red channal
+            cvtColor(srcBGR, grayFrame, CV_BGR2GRAY);
             
             /* segment face */
-            auto faceRect = faceMeta.getFaceRect();
+            cv::Rect faceRect;
             if(!imgSegAlgo->findFace(grayFrame, faceRect))
             {
-                //Face is not in the frame, then return... :(
+                // Clear exiting face data, and return :)
+                faceMeta = PWFaceMeta();
                 return;
             }
             
@@ -348,52 +336,12 @@ namespace pw{
         auto result = pwSegAlgo->process( srcBGR, faceMeta );
         
         //-------------------------
-        double precTick = ticks;
-        ticks = (double) cv::getTickCount();
-        double dT = (ticks - precTick) / cv::getTickFrequency(); //seconds
-        KF.transitionMatrix.at<float>(1) = dT;
-        
-        Mat prediction = KF.predict();
-        
-        double predictPupilSize = 0.0;
-        predictPupilSize = prediction.at<float>(0);
-        
-        float errorLeft = fabs(predictPupilSize - result.leftRadius);
-        float errorRight = fabs(predictPupilSize - result.rightRadius);
-        float alpha = errorLeft/( errorLeft + errorRight );
-        
-        
-        float mesPupilRadius = (((1.0-alpha) * result.leftRadius) + (alpha * result.rightRadius));
-        
-        Mat measurement = Mat::zeros(1, 1, CV_32F);
-        
-        const float maxPupuilSize = 0.08;
-        const float minPupilSize = 0.03;
-        if ( (mesPupilRadius <= maxPupuilSize && mesPupilRadius >= minPupilSize)
-            && (!faceMeta.isLeftEyeClosed() || !faceMeta.isRightEyeClosed()) ) {
-            measurement.at<float>(0) = mesPupilRadius;
-            predictPupilSize = KF.correct(measurement).at<float>(0);
-            
-        }
-        else{
-            predictPupilSize = prediction.at<float>(0);
-//            std::cout << "predict " << predictPupilSize << std::endl;
-        }
-        
-        smoothPupilSize.push_back(predictPupilSize);
-        
-        //-------------------------
         
         
         //! Store data to lists
         //
-//        storage.setPupilSizeAt( currentFrameNumber, result );
         storage.addPupilSize(result);
         eyeDistancePx.push_back( eyeDist );
-//        leftEyeCloses.push_back( faceMeta.isLeftEyeClosed()?0.06:0 );
-//        rightEyeCloses.push_back( faceMeta.isRightEyeClosed()?0.06:0 );
-        
-        
         
         // DEBUG -----------------------------------------------------------------------------
         debugImg = srcBGR.clone();
@@ -447,11 +395,9 @@ namespace pw{
     
     cv::Mat PupilwareControllerImpl::getGraphImage() const{
         
-        //TODO Dont forget to specify max value.
-        
         const int graphHeight = 600;
         const float maxValue = 0.07;
-        const float minValue = 0.03;
+        const float minValue = 0.0;
         
         PWGraph graph("PupilSignal");
         
@@ -479,14 +425,6 @@ namespace pw{
                         maxValue,                           // Max value
                         debugImg.cols,                      // Width
                         graphHeight);                       // Height
-        
-        graph.drawGraph(" ",
-                        smoothPupilSize,        // Data
-                        cv::Scalar(200,100,0),               // Line color
-                        minValue,                                  // Min value
-                        maxValue,                                  // Max value
-                        debugImg.cols,                      // Width
-                        graphHeight);                               // Height
 
         
         return graph.getGraphImage();

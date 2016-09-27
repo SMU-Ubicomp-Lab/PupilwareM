@@ -3,7 +3,7 @@
 //  Pupilware
 //
 //  Created by Raymond Martin on 1/29/16.
-//  Copyright © 2016 Raymond Martin. All rights reserved.
+//  Copyright © 2016 SMU Ubicomp Lab. All rights reserved.
 //
 
 import Foundation
@@ -11,7 +11,7 @@ import UIKit
 
 class tabViewController: UIViewController, UIPopoverPresentationControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, sendBackDelegate{
     let model = DataModel.sharedInstance
-    let tobiiGlass = TobiiGlass.sharedInstance
+//    let tobiiGlass = TobiiGlass.sharedInstance
     @IBOutlet weak var expSegment: UISegmentedControl!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var settingsCollection: UICollectionView!
@@ -69,14 +69,14 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         }else{
             model.currentTest = DigitTest(subjectID: model.currentSubjectID, digits: self.digitNum, iter: self.iter, angle: self.expSegment.selectedSegmentIndex+1, exact_lux: Double(UIScreen.mainScreen().brightness))
         }
-        self.tobiiGlass.createAndStartRecording(self.model.tobiiSubjectIds[self.model.currentSubjectID]!)
+//        self.tobiiGlass.createAndStartRecording(self.model.tobiiSubjectIds[self.model.currentSubjectID]!)
         self.presentDigitSpanModal()
     }
     
     @IBAction func shortPressCalibrate(sender: AnyObject) {
         self.model.inCalibration = true
         //self.tobiiGlass.createCalibration(self.model.tobiiProject, participantId: self.model.tobiiCurrentParticipant)
-        self.tobiiGlass.createAndStartRecording(self.model.tobiiSubjectIds[self.model.currentSubjectID]!)
+//        self.tobiiGlass.createAndStartRecording(self.model.tobiiSubjectIds[self.model.currentSubjectID]!)
         self.presentCalibrationModal()
     }
     
@@ -109,7 +109,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     
     func calibrationComplete(){
         expBlock.hidden = true
-        self.tobiiGlass.stopRecording(self.model.tobiiCurrentRecording)
+//        self.tobiiGlass.stopRecording(self.model.tobiiCurrentRecording)
         
         //Check Tobii Glass calibration status, if failed, re calibrate
         //self.tobiiGlass.checkCalibration(self.model.tobiiCurrentCalibration)
@@ -123,7 +123,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
         model.inTest = false
         print(model.digitTestLumProgress)
         self.settingsCollection.reloadData()
-        self.tobiiGlass.stopRecording(self.model.tobiiCurrentRecording)
+//        self.tobiiGlass.stopRecording(self.model.tobiiCurrentRecording)
     }
     
     func presentLuxMeter(){

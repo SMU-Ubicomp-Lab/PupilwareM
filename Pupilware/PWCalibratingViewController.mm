@@ -394,7 +394,7 @@
     ptr_F->setUp(pupilwareController, pwAlgo);
     ptr_F->setBuffer(videoFrameBuffer, faceMetaBuffer);
  
-    // There are just list of default values.
+    // #  List of default values.
     //    threshold(0.014),
     //    rayNumber(17),
     //    degreeOffset(0),
@@ -404,39 +404,73 @@
     const double thresholdInitPoint = 0.014;
     const double sigmaInitPoint = 0.2;
     const double priorInitPoint = 0.5;
-    cv::Mat x=(cv::Mat_<double>(1,3)<<thresholdInitPoint, sigmaInitPoint, priorInitPoint);
+    
+    /*! 
+     *  Degree Offset and Raynumber is int.
+     *  But NMSimplex is optimizing in decimal number, so
+     *  I scaled it down. (divided by 10)
+     */
+    const double degreeInitPoint = 0;
+    const double rayNumberInitPoint = 1.7;
+    
+    cv::Mat x=(cv::Mat_<double>(1,5)<<
+               thresholdInitPoint,
+               sigmaInitPoint,
+               priorInitPoint,
+               degreeInitPoint,
+               rayNumberInitPoint);
     
     const double thresholdMovingStep = 0.001;
     const double sigmaMovingStep = 0.01;
-    const double priorMovingSteop = 0.05;
-    cv::Mat step=(cv::Mat_<double>(3,1)<<thresholdMovingStep, sigmaMovingStep, priorMovingSteop);
+    const double priorMovingStep = 0.05;
+    const double degreeMovingStep = 1.0;
+    const double rayNumberStep = 0.2;
+    cv::Mat step=(cv::Mat_<double>(5,1)<<thresholdMovingStep,
+                  sigmaMovingStep,
+                  priorMovingStep,
+                  degreeMovingStep,
+                  rayNumberStep);
+    
+
     //etalon_x=(cv::Mat_<double>(1,2)<<-0.0,0.0);
     //double etalon_res=0.0;
-    
     
     solver->setFunction(ptr_F);
     solver->setInitStep(step);
     solver->setTermCriteria(termcrit);
     solver->minimize(x);
     
-    
     pw::PWParameter param;
     param.threshold = x.at<double>(0,0);
     param.sigma = x.at<double>(0,1);
     param.prior = x.at<double>(0,2);
     
+    /*!
+     *  I multiply by 10 because I scaled the number to decimal point to optimizing,
+     *  so I have to scaled it back to int.
+     *  !! I do the same in NMSimplex class. Make sure you change there too.
+     */
+    param.degreeOffset = (int)(x.at<double>(0,3) * 10);
+    param.sbRayNumber = (int)(x.at<double>(0,4) * 10);
+    
+    
     [self saveCurrentSettingToFile: param];
 
     // Display on log
-    NSLog(@"Dump x %f", param.threshold);
-    NSLog(@"Dump x %f", param.sigma);
-    NSLog(@"Dump x %f", param.prior);
+    NSLog(@"final th %f", param.threshold);
+    NSLog(@"final sig %f", param.sigma);
+    NSLog(@"final prior %f", param.prior);
+    NSLog(@"final degree %d", param.degreeOffset);
+    NSLog(@"final raynumber %d", param.sbRayNumber);
     
     // Save to default
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setFloat: param.threshold forKey:kSBThreshold];
-    [defaults setFloat: param.sigma     forKey:kSBSigma];
-    [defaults setFloat: param.prior     forKey:kSBPrior];
+    [defaults setFloat:     param.threshold     forKey:kSBThreshold];
+    [defaults setFloat:     param.sigma         forKey:kSBSigma];
+    [defaults setFloat:     param.prior         forKey:kSBPrior];
+    [defaults setInteger:   param.degreeOffset  forKey:kSBDegreeOffset];
+    [defaults setInteger:   param.sbRayNumber   forKey:kSBNumberOfRays];
+    
 }
 
 

@@ -97,11 +97,11 @@
 {
     [super viewDidAppear:animated];
     
-    if(self.preview)
-    {
-        [self.videoManager setPreviewView:self.preview];
-    }
-        
+//    if(self.preview)
+//    {
+//        [self.videoManager setPreviewView:self.preview];
+//    }
+    
     [self startSystem];
 }
 
@@ -175,8 +175,8 @@
         params.threshold=((float)[defaults floatForKey:kSBThreshold]);
         params.prior=((float)[defaults floatForKey:kSBPrior]);
         params.sigma=((float)[defaults floatForKey:kSBSigma]);
-//        params.sbRayNumber=((int)[defaults integerForKey:kSBNumberOfRays]);
-//        params.degreeOffset=((int)[defaults integerForKey:kSBDegreeOffset]);
+        params.sbRayNumber=((int)[defaults integerForKey:kSBNumberOfRays]);
+        params.degreeOffset=((int)[defaults integerForKey:kSBDegreeOffset]);
 
         [self.processor setParameter:&params];
         
@@ -259,7 +259,7 @@
         blockSelf->videoWriter << cvFrame;
 
         [blockSelf updateUI: [blockSelf.processor hasFace]];
-        
+
 
         /* Put data to shared memory */
         {
@@ -328,10 +328,10 @@
         }
     }
     
-    if ([self.model.bridgeDelegate isTestingFinished]) {
-        
-        [self closeSystem];
-    }
+//    if ([self.model.bridgeDelegate isTestingFinished]) {
+//        
+//        [self closeSystem];
+//    }
     
 }
 

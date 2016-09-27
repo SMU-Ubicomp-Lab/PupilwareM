@@ -3,7 +3,7 @@
 //  Pupilware
 //
 //  Created by Xinyi Ding on 8/28/16.
-//  Copyright © 2016 Raymond Martin. All rights reserved.
+//  Copyright © 2016 SMU Ubicomp Lab. All rights reserved.
 //
 
 import Foundation
@@ -68,11 +68,13 @@ class ACTViewController: UIViewController, BridgeDelegate {
     
     }
     
+    @IBOutlet weak var faceLabel: UILabel!
+    
     func faceInView(){
-        // todo: show face in view UI
+        faceLabel.text = ""
     }
     func faceNotInView(){
-        // todo: show face not in view warning UI
+        faceLabel.text = "Keep Face in View"
     }
     
     func isNumberStarted() -> Bool{
@@ -262,11 +264,11 @@ class ACTViewController: UIViewController, BridgeDelegate {
         
         let context = UIGraphicsGetCurrentContext()
         drawImageView?.image?.drawInRect(CGRect(x:0, y:0, width: drawImageView.frame.width, height: drawImageView.frame.height))
-        CGContextSetLineWidth(context, 6)
-        CGContextBeginPath(context)
-        CGContextMoveToPoint(context, start.x, start.y)
-        CGContextAddLineToPoint(context, end.x, end.y)
-        CGContextStrokePath(context)
+        CGContextSetLineWidth(context!, 6)
+        CGContextBeginPath(context!)
+        CGContextMoveToPoint(context!, start.x, start.y)
+        CGContextAddLineToPoint(context!, end.x, end.y)
+        CGContextStrokePath(context!)
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         drawImageView.image = newImage

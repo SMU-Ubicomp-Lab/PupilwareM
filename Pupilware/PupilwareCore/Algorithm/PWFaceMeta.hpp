@@ -8,7 +8,7 @@
 
 #ifndef PWFaceMeta_hpp
 #define PWFaceMeta_hpp
-
+#include <opencv2/opencv.hpp>
 
 namespace pw {
     
@@ -30,6 +30,7 @@ namespace pw {
         
     public:
         PWFaceMeta();
+        virtual ~PWFaceMeta();
         
         unsigned int        getFrameNumber() const;
         void                setFrameNumber( unsigned int frameNumber );
@@ -59,8 +60,10 @@ namespace pw {
         void                setEyeDistancePx( float eyeDist );
         
         inline bool hasFace() const { return (faceRect.width != 0 && faceRect.height != 0); }
-        
-        PWFaceMeta& operator*( double );
+
+        cv::Point    getLocalLeftEyeCenter() const;
+        cv::Point    getLocalRightEyeCenter() const;
+
         
     };
 }

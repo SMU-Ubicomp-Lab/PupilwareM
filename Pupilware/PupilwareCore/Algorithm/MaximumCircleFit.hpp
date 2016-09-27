@@ -60,7 +60,11 @@ namespace pw {
 
         float estimatePupilSize( float left, float right);
 
-        float calCircularEnergy(const cv::Mat& src, const cv::Point& center, int radius);
+        float calCircularEnergy(const cv::Mat& src,
+                                const cv::Point& center,
+                                int radius,
+                                size_t& outSum,
+                                size_t& outCount);
     };
 }
 

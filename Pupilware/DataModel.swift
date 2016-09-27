@@ -4,7 +4,7 @@
 //
 //  Created by Raymond Martin on 1/27/16.
 //  Edited by Chatchai Mark Wangwiwattana on 7/26/2016.
-//  Copyright © 2016 Raymond Martin. All rights reserved.
+//  Copyright © 2016 SMU Ubicomp Lab. All rights reserved.
 //
 
 import Foundation
@@ -746,6 +746,7 @@ class ACTTest: Test{
     optional func isNumberStarted() -> Bool
     optional func isNumberStoped() -> Bool
     optional func isTestingFinished() -> Bool
+    optional func sendLog(text:String)
 }
 
 @objc protocol GlassDelegate {

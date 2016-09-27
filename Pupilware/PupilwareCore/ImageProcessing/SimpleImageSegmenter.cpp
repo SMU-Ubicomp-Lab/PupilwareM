@@ -37,33 +37,24 @@ namespace pw{
 
         assert(grayFrame.channels() == 1);
 
-        Mat scaledFrame;
-        cv::pyrDown(grayFrame, scaledFrame);
-        
-        
         std::vector<cv::Rect> faces;
 
         // Detect faces
-        faceCascade.detectMultiScale(scaledFrame,
+        faceCascade.detectMultiScale(grayFrame,
                                      faces, 1.1, 2,
                                      0 | CV_HAAR_SCALE_IMAGE | CV_HAAR_FIND_BIGGEST_OBJECT,
                                      cv::Size(150, 150));
 
 
         // Pick only one face for now.
-        const int downSampleLevel = 2;
         if (faces.size() > 0) {
             outFaceRect = faces[0];
-            outFaceRect.x = outFaceRect.x * downSampleLevel;
-            outFaceRect.y = outFaceRect.y * downSampleLevel;
-            outFaceRect.width = outFaceRect.width * downSampleLevel;
-            outFaceRect.height = outFaceRect.height * downSampleLevel;
 
             return true;
 
         }
         else {
-            cout << "[Info] A face has not found." << std::endl;
+//            cout << "[Info] A face has not found.";
         }
 
         return false;
@@ -74,9 +65,9 @@ namespace pw{
                                           cv::Rect &outLeftEyeRegion,
                                           cv::Rect &outRightEyeRegion) {
 
-        const float kEyePercentTop = 27.0f;
-        const float kEyePercentSide = 13.0f;
-        const float kEyePercentHeight = 25.0f;
+        const float kEyePercentTop = 30.0f;
+        const float kEyePercentSide = 16.0f;
+        const float kEyePercentHeight = 22.0f;
         const float kEyePercentWidth = 35.0f;
 
         //-- Find eye regions
@@ -84,11 +75,16 @@ namespace pw{
         int eye_region_height = static_cast<int>(faceROI.width * (kEyePercentHeight / 100.0f));
         int eye_region_top = static_cast<int>(faceROI.height * (kEyePercentTop / 100.0f));
 
-        cv::Rect leftEyeRegion(static_cast<int>(faceROI.width * (kEyePercentSide / 100.0f)),
-                               eye_region_top, eye_region_width, eye_region_height);
+        cv::Rect leftEyeRegion(static_cast<int>(faceROI.width * (kEyePercentSide / 100.0f)) ,
+                               eye_region_top,
+                               eye_region_width,
+                               eye_region_height);
+
         cv::Rect rightEyeRegion(
                 static_cast<int>(faceROI.width - eye_region_width - faceROI.width * (kEyePercentSide / 100.0f)),
-                eye_region_top, eye_region_width, eye_region_height);
+                eye_region_top,
+                eye_region_width,
+                eye_region_height);
 
 
         outLeftEyeRegion = leftEyeRegion;
@@ -111,24 +107,24 @@ namespace pw{
 
         
 /*-------- Center of Mass technique -------------*/
-//        int th = cw::calDynamicThreshold( blur, 0.006 );
-//
-//        Mat binary;
-//        cv::threshold(grayEyeROI, binary, th, 255, CV_THRESH_BINARY_INV);
-//
-//        cv::Point p = cw::calCenterOfMass(binary);
-//        return p;
+        int th = cw::calDynamicThreshold( blur, 0.006 );
+
+        Mat binary;
+        cv::threshold(grayEyeROI, binary, th, 255, CV_THRESH_BINARY_INV);
+
+        cv::Point p = cw::calCenterOfMass(binary);
+        return p;
 /*----------------------------------------------*/
 
 /*---------- Snakuscules technique -------------*/
-        cv::Point cPoint = Point(grayEyeROI.cols/2, grayEyeROI.rows/2);
-
-        Snakuscules sn;
-        sn.fit( blur, cPoint, 20, 2.0, 20 );
-
-        cPoint = sn.getFitCenter();
-
-        return cPoint;
+//        cv::Point cPoint = Point(grayEyeROI.cols/2, grayEyeROI.rows/2);
+//
+//        Snakuscules sn;
+//        sn.fit( blur, cPoint, 20, 2.0, 40 );
+//
+//        cPoint = sn.getFitCenter();
+//
+//        return cPoint;
 /*----------------------------------------------*/
         
 

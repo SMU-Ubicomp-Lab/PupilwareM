@@ -71,6 +71,5 @@ namespace pw{
         rightPupilSizes.clear();
         
     }
-    
 
 }
