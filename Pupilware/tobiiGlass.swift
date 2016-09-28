@@ -92,9 +92,9 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
 
         //Only write to file if in testing or calibration
         if (model.inTest || model.inCalibration) {
-            var filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiPupilFileName())
-            if (model.inCalibration) {
-                filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCaliFileName())
+            var filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCaliFileName())
+            if (model.inTest) {
+                filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiPupilFileName())
             }
             
             do {
