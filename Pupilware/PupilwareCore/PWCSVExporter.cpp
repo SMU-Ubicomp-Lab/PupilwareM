@@ -120,10 +120,12 @@ namespace pw{
         
         if (f.is_open()) {
             
-            f << "threshold, sigma, prior" << std::endl;
+            f << "threshold, sigma, prior, degree_offset, ray_number" << std::endl;
             f << param.threshold <<
             "," << param.sigma <<
-            "," << param.prior << std::endl;
+            "," << param.prior <<
+            "," << param.degreeOffset <<
+            "," << param.sbRayNumber << std::endl;
             
         }
         

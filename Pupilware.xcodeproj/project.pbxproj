@@ -63,10 +63,6 @@
 		97D487291C933F0A00774958 /* settingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97D487281C933F0A00774958 /* settingsVC.swift */; };
 		97DB32CB1C75AB930024A22F /* adminVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DB32CA1C75AB930024A22F /* adminVC.swift */; };
 		97DB32CD1C75ABB30024A22F /* luxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DB32CC1C75ABB30024A22F /* luxVC.swift */; };
-		97E94F4F1C5CAD8500D652CB /* BEMCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F481C5CAD8500D652CB /* BEMCircle.m */; };
-		97E94F501C5CAD8500D652CB /* BEMLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F4A1C5CAD8500D652CB /* BEMLine.m */; };
-		97E94F511C5CAD8500D652CB /* BEMPermanentPopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F4C1C5CAD8500D652CB /* BEMPermanentPopupView.m */; };
-		97E94F521C5CAD8500D652CB /* BEMSimpleLineGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 97E94F4E1C5CAD8500D652CB /* BEMSimpleLineGraphView.m */; };
 		97E94F541C5CAF9D00D652CB /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97E94F531C5CAF9D00D652CB /* AudioToolbox.framework */; };
 		97E94F561C5CAFA400D652CB /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97E94F551C5CAFA400D652CB /* CoreAudio.framework */; };
 		97E94F581C5CAFAA00D652CB /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97E94F571C5CAFAA00D652CB /* CoreVideo.framework */; };
@@ -192,14 +188,6 @@
 		97DB32CA1C75AB930024A22F /* adminVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = adminVC.swift; sourceTree = "<group>"; };
 		97DB32CC1C75ABB30024A22F /* luxVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = luxVC.swift; sourceTree = "<group>"; };
 		97E94F361C5CAD2800D652CB /* Pupilware-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Pupilware-Bridging-Header.h"; sourceTree = "<group>"; };
-		97E94F471C5CAD8500D652CB /* BEMCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BEMCircle.h; sourceTree = "<group>"; };
-		97E94F481C5CAD8500D652CB /* BEMCircle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEMCircle.m; sourceTree = "<group>"; };
-		97E94F491C5CAD8500D652CB /* BEMLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BEMLine.h; sourceTree = "<group>"; };
-		97E94F4A1C5CAD8500D652CB /* BEMLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEMLine.m; sourceTree = "<group>"; };
-		97E94F4B1C5CAD8500D652CB /* BEMPermanentPopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BEMPermanentPopupView.h; sourceTree = "<group>"; };
-		97E94F4C1C5CAD8500D652CB /* BEMPermanentPopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEMPermanentPopupView.m; sourceTree = "<group>"; };
-		97E94F4D1C5CAD8500D652CB /* BEMSimpleLineGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BEMSimpleLineGraphView.h; sourceTree = "<group>"; };
-		97E94F4E1C5CAD8500D652CB /* BEMSimpleLineGraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEMSimpleLineGraphView.m; sourceTree = "<group>"; };
 		97E94F531C5CAF9D00D652CB /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		97E94F551C5CAFA400D652CB /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		97E94F571C5CAFAA00D652CB /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -495,21 +483,6 @@
 			name = images;
 			sourceTree = "<group>";
 		};
-		97E94F461C5CAD6600D652CB /* BEMLine */ = {
-			isa = PBXGroup;
-			children = (
-				97E94F471C5CAD8500D652CB /* BEMCircle.h */,
-				97E94F481C5CAD8500D652CB /* BEMCircle.m */,
-				97E94F491C5CAD8500D652CB /* BEMLine.h */,
-				97E94F4A1C5CAD8500D652CB /* BEMLine.m */,
-				97E94F4B1C5CAD8500D652CB /* BEMPermanentPopupView.h */,
-				97E94F4C1C5CAD8500D652CB /* BEMPermanentPopupView.m */,
-				97E94F4D1C5CAD8500D652CB /* BEMSimpleLineGraphView.h */,
-				97E94F4E1C5CAD8500D652CB /* BEMSimpleLineGraphView.m */,
-			);
-			name = BEMLine;
-			sourceTree = "<group>";
-		};
 		97E94F691C5CB02900D652CB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -546,7 +519,6 @@
 				AE7728221D08BDD40096CCBD /* NMSimplex.h */,
 				97E94F721C5CB10C00D652CB /* PWUtilities.h */,
 				97E94F731C5CB10C00D652CB /* PWUtilities.mm */,
-				97E94F461C5CAD6600D652CB /* BEMLine */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -580,11 +552,11 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
 				LastUpgradeCheck = 0720;
-				ORGANIZATIONNAME = "Raymond Martin";
+				ORGANIZATIONNAME = "SMU Ubicomp Lab";
 				TargetAttributes = {
 					97A321421C59CDB300B1EB98 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = ME4966827L;
+						DevelopmentTeam = 8N25HJ2H24;
 						LastSwiftMigration = 0800;
 					};
 				};
@@ -662,7 +634,6 @@
 				97A89CB11C5B6D7900D9E193 /* popOverController.swift in Sources */,
 				5C82A9B01D2479C6001F5345 /* PWVideoWriter.cpp in Sources */,
 				5CF4D5C11D1870020050CBBA /* Circle.cpp in Sources */,
-				97E94F511C5CAD8500D652CB /* BEMPermanentPopupView.m in Sources */,
 				5C0B78171D7CA6AD0015B26B /* PWParameter.cpp in Sources */,
 				5CF4D5A51D186FB30050CBBA /* ISignalProcessor.cpp in Sources */,
 				5C90F5881D396E56006E6E71 /* CWClock.cpp in Sources */,
@@ -673,12 +644,9 @@
 				5CF4D5A61D186FB30050CBBA /* SignalProcessingHelper.cpp in Sources */,
 				5CF4D59D1D186FB30050CBBA /* IPupilAlgorithm.cpp in Sources */,
 				AE6CA2451D82704E0017F0F0 /* StepSlider.swift in Sources */,
-				97E94F501C5CAD8500D652CB /* BEMLine.m in Sources */,
-				97E94F521C5CAD8500D652CB /* BEMSimpleLineGraphView.m in Sources */,
 				5CF4D5A71D186FB30050CBBA /* BasicSignalProcessor.cpp in Sources */,
 				5CF4D5C41D1870020050CBBA /* PWGraph.cpp in Sources */,
 				5C4B46161D21A77400455A77 /* PWFaceMeta.cpp in Sources */,
-				97E94F4F1C5CAD8500D652CB /* BEMCircle.m in Sources */,
 				5CF4D5A31D186FB30050CBBA /* IImageSegmenter.cpp in Sources */,
 				97E94F7E1C5CB16800D652CB /* VideoAnalgesic.m in Sources */,
 				AEA10AA71D77C1BA0057FD96 /* ACTModel.swift in Sources */,
