@@ -18,6 +18,8 @@
 #include "Helpers/CWCVHelper.hpp"
 #include "Helpers/PWGraph.hpp"
 
+#include "PWFaceLandmarkDetector.hpp"
+
 using namespace cv;
 
 namespace pw{
@@ -90,6 +92,7 @@ namespace pw{
          */
         virtual void setSmoothWindowSize( int windowSize ) override;
         
+        virtual void setLandMarkFile( const std::string& landmarkFilename ) override;
         
         /*!
          * Getter Functions
@@ -132,6 +135,8 @@ namespace pw{
         KalmanFilter KF;
         Mat measurement = Mat::zeros(1, 1, CV_32F);
         
+        
+        PWFaceLandmarkDetector landmark;
     };
     
     
@@ -148,6 +153,10 @@ namespace pw{
     /*! --------------------------------------------------------------------------------
      * Implementation Functions
      */
+    
+    void PupilwareControllerImpl::setLandMarkFile(const std::string &landmarkFilename){
+        landmark.loadLandmarkFile(landmarkFilename);
+    }
     
     bool PupilwareControllerImpl::hasStarted() const{
         return isStarted;
@@ -345,6 +354,8 @@ namespace pw{
         
         // DEBUG -----------------------------------------------------------------------------
         debugImg = srcBGR.clone();
+        
+        landmark.searchLandMark(srcBGR, debugImg, faceMeta.getFaceRect());
 
         cv::rectangle(debugImg, faceMeta.getFaceRect(), cv::Scalar(255,0,0));
         
@@ -358,9 +369,10 @@ namespace pw{
                    20,
                    cv::Scalar(255,0,0));
         
-        cv::Mat graph = getGraphImage();
-        cv::flip(graph, graph, 1);
-        graph.copyTo(debugImg(cv::Rect(0, debugImg.rows - graph.rows -2, graph.cols, graph.rows)));
+//        cv::Mat graph = getGraphImage();
+//        cv::flip(graph, graph, 1);
+//        graph.copyTo(debugImg(cv::Rect(0, debugImg.rows - graph.rows -2, graph.cols, graph.rows)));
+        
         
         cvtColor(debugImg, debugImg, CV_BGR2RGBA, 4);
     }

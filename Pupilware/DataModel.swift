@@ -90,7 +90,7 @@ import Foundation
     func getFaceVideoFileName()->NSString{
         if(self.currentTest == nil)
         {
-            let time:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
+            let time:String = String(Int64(NSDate().timeIntervalSince1970))
             return "default_face_" + time + ".mp4"
         }
         
@@ -100,7 +100,7 @@ import Foundation
     func getFaceMetaFileName()->NSString{
         if(self.currentTest == nil)
         {
-            let time:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
+            let time:String = String(Int64(NSDate().timeIntervalSince1970))
             return "default_fmeta_" + time + ".csv"
         }
         
@@ -117,7 +117,7 @@ import Foundation
         
         if(self.currentTest == nil)
         {
-            let time:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
+            let time:String = String(Int64(NSDate().timeIntervalSince1970))
             return "default_pupil_" + time + ".csv"
         }
         
@@ -138,24 +138,7 @@ import Foundation
     
     func setNewCalibrationFiles(){
         
-        //        var testType = "unknown"
-        //        if(self.currentTest is TargetTest)
-        //        {
-        //            testType = "target"
-        //        }
-        //        else if(self.currentTest is DigitTest)
-        //        {
-        //            let dTest = self.currentTest as! DigitTest
-        //
-        //            if (lumMode){
-        //                testType = "digit_lux\(dTest.lux)"
-        //            }
-        //            else{
-        //                testType = "digit_angle\(dTest.angle)"
-        //            }
-        //        }
-        
-        let id:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
+        let id:String = String(Int64(NSDate().timeIntervalSince1970))
         calibration_files.face = "\(currentSubjectID)_calib_face_\(id).mp4"
         calibration_files.params = "\(currentSubjectID)_calib_params_\(id).csv"
         calibration_files.data = "\(currentSubjectID)_calib_data_\(id).csv"
@@ -235,7 +218,7 @@ protocol Test{
 
 class TargetTest: Test{
     let model = DataModel.sharedInstance
-    let ID:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
+    let ID:String = String(Int64(NSDate().timeIntervalSince1970))
     var missing_digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
     var labels = (face:"", faceMetaFile:"", pupilFile:"", calFile:"")
     var tobiiLabels = (pupilFile: "", calFile:"")
@@ -287,7 +270,7 @@ class TargetTest: Test{
     
     func getDigits()->[Int]{
         switch iter{
-        case 0: // intended for practicing (tutorial)
+        case 0: // first iteration is intended for practicing (tutorial)
             return [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 7, 13, 14, 15, 16, 17, 18, 19, 20]
         case 1:
             return [1, 2, 3, 4, 5, 9, 7, 8, 9, 10, 11, 1, 13, 14, 15, 16, 17, 13, 19, 20]
@@ -390,7 +373,7 @@ class TargetTest: Test{
 
 class DigitTest: Test{
     let model = DataModel.sharedInstance
-    let ID:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
+    let ID:String = String(Int64(NSDate().timeIntervalSince1970))
     var digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
     var labels = (face:"", faceMetaFile:"", pupilFile:"", calFile:"")
     var tobiiLabels = (pupilFile: "", calFile:"")
@@ -605,7 +588,7 @@ class DigitTest: Test{
 
 class ACTTest: Test{
     let model = DataModel.sharedInstance
-    let ID:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
+    let ID:String = String(Int64(NSDate().timeIntervalSince1970))
     var itemID:Int, subjectID:String
     var labels = (face:"", faceMetaFile:"", pupilFile:"", calFile:"")
     var tobiiLabels = (pupilFile:"" ,calFile: "")

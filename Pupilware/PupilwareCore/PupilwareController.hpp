@@ -67,6 +67,8 @@ namespace pw{
         virtual void setFaceMeta( const PWFaceMeta& faceMeta )=0;
         virtual void setSmoothWindowSize( int windowSize )=0;
         
+        virtual void setLandMarkFile( const std::string& landmarkFilename )=0;
+        
         /*!--------------------------------------------------------------------
          * Getter Functions
          */

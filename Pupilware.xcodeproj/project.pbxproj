@@ -22,6 +22,9 @@
 		5CC9A1231D25A25700ADB4BD /* PWCSVExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */; };
 		5CCDBBA81D2046B3006C0B63 /* ObjCAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5CCDBBA71D2046B3006C0B63 /* ObjCAdapter.mm */; };
 		5CCDBBAB1D205D2B006C0B63 /* IOSFaceRecognizer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5CCDBBAA1D205D2B006C0B63 /* IOSFaceRecognizer.mm */; };
+		5CD140061D9DB7A800074E8E /* libdlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CD140041D9DB7A800074E8E /* libdlib.a */; };
+		5CD140071D9DB7A800074E8E /* shape_predictor_68_face_landmarks.dat in Resources */ = {isa = PBXBuildFile; fileRef = 5CD140051D9DB7A800074E8E /* shape_predictor_68_face_landmarks.dat */; };
+		5CD1400D1D9DBE0900074E8E /* PWFaceLandmarkDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CD1400B1D9DBE0900074E8E /* PWFaceLandmarkDetector.cpp */; };
 		5CF4D59B1D186FB30050CBBA /* ALOfflineFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D57C1D186FB30050CBBA /* ALOfflineFile.cpp */; };
 		5CF4D59C1D186FB30050CBBA /* DummyAlgo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D57E1D186FB30050CBBA /* DummyAlgo.cpp */; };
 		5CF4D59D1D186FB30050CBBA /* IPupilAlgorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D5801D186FB30050CBBA /* IPupilAlgorithm.cpp */; };
@@ -122,6 +125,10 @@
 		5CCDBBA71D2046B3006C0B63 /* ObjCAdapter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ObjCAdapter.mm; path = Libraries/ObjCAdapter.mm; sourceTree = "<group>"; };
 		5CCDBBA91D205D2B006C0B63 /* IOSFaceRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOSFaceRecognizer.h; path = PupilwareCore/IOS/IOSFaceRecognizer.h; sourceTree = "<group>"; };
 		5CCDBBAA1D205D2B006C0B63 /* IOSFaceRecognizer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = IOSFaceRecognizer.mm; path = PupilwareCore/IOS/IOSFaceRecognizer.mm; sourceTree = "<group>"; };
+		5CD140041D9DB7A800074E8E /* libdlib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdlib.a; path = lib/libdlib.a; sourceTree = "<group>"; };
+		5CD140051D9DB7A800074E8E /* shape_predictor_68_face_landmarks.dat */ = {isa = PBXFileReference; lastKnownFileType = file; name = shape_predictor_68_face_landmarks.dat; path = lib/shape_predictor_68_face_landmarks.dat; sourceTree = "<group>"; };
+		5CD1400B1D9DBE0900074E8E /* PWFaceLandmarkDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWFaceLandmarkDetector.cpp; sourceTree = "<group>"; };
+		5CD1400C1D9DBE0900074E8E /* PWFaceLandmarkDetector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWFaceLandmarkDetector.hpp; sourceTree = "<group>"; };
 		5CF4D57C1D186FB30050CBBA /* ALOfflineFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ALOfflineFile.cpp; sourceTree = "<group>"; };
 		5CF4D57D1D186FB30050CBBA /* ALOfflineFile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ALOfflineFile.hpp; sourceTree = "<group>"; };
 		5CF4D57E1D186FB30050CBBA /* DummyAlgo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DummyAlgo.cpp; sourceTree = "<group>"; };
@@ -229,6 +236,7 @@
 			files = (
 				AEAE8A311D715E4600E3150D /* opencv2.framework in Frameworks */,
 				AEDC08D31D4FD82000D547F8 /* CocoaAsyncSocket.framework in Frameworks */,
+				5CD140061D9DB7A800074E8E /* libdlib.a in Frameworks */,
 				97E94F661C5CAFFD00D652CB /* AssetsLibrary.framework in Frameworks */,
 				97E94F641C5CAFF700D652CB /* Accelerate.framework in Frameworks */,
 				97E94F621C5CAFEB00D652CB /* Foundation.framework in Frameworks */,
@@ -257,6 +265,8 @@
 		5C5CA0951D3572A20024D983 /* Thirdparties */ = {
 			isa = PBXGroup;
 			children = (
+				5CD140041D9DB7A800074E8E /* libdlib.a */,
+				5CD140051D9DB7A800074E8E /* shape_predictor_68_face_landmarks.dat */,
 				5C5CA0991D3574B80024D983 /* tsavgol.cpp */,
 			);
 			path = Thirdparties;
@@ -293,6 +303,8 @@
 				5CF4D5941D186FB30050CBBA /* SignalProcessing */,
 				5CF4D5C61D1871800050CBBA /* PupilwareController.cpp */,
 				5CF4D5C71D1871800050CBBA /* PupilwareController.hpp */,
+				5CD1400B1D9DBE0900074E8E /* PWFaceLandmarkDetector.cpp */,
+				5CD1400C1D9DBE0900074E8E /* PWFaceLandmarkDetector.hpp */,
 				5C82A9AE1D2479C6001F5345 /* PWVideoWriter.cpp */,
 				5C82A9AF1D2479C6001F5345 /* PWVideoWriter.hpp */,
 				5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */,
@@ -591,6 +603,7 @@
 				5C9EA4AC1D1EE45B003BE62C /* haarcascade_frontalface_default.xml in Resources */,
 				976803C81C97429E003D63C8 /* hash.png in Resources */,
 				9748FF731C6092B700143D54 /* beaker.png in Resources */,
+				5CD140071D9DB7A800074E8E /* shape_predictor_68_face_landmarks.dat in Resources */,
 				AEAE8A351D737A7700E3150D /* check.png in Resources */,
 				9748FF721C6092B700143D54 /* gear.png in Resources */,
 				976803C91C97429E003D63C8 /* target.png in Resources */,
@@ -680,6 +693,7 @@
 				AE7728231D08BDD40096CCBD /* NMSimplex.cpp in Sources */,
 				5CF4D5BD1D1870020050CBBA /* CVWindow.cpp in Sources */,
 				5C90F5891D396E56006E6E71 /* CWProfiler.cpp in Sources */,
+				5CD1400D1D9DBE0900074E8E /* PWFaceLandmarkDetector.cpp in Sources */,
 				97A3215A1C59CFF100B1EB98 /* DataModel.swift in Sources */,
 				5CF4D59E1D186FB30050CBBA /* MDStarbust.cpp in Sources */,
 			);
@@ -815,13 +829,22 @@
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = PupilPrefixHeader.pch;
-				HEADER_SEARCH_PATHS = /usr/local/Cellar/eigen/3.2.8/include/eigen3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					DLIB_JPEG_SUPPORT,
+					DLIB_NO_GUI_SUPPORT,
+					NDEBUG,
+					DLIB_USE_BLAS,
+					DLIB_USE_LAPACK,
+				);
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Pupilware/PupilwareCore/Thirdparties/lib";
 				INFOPLIST_FILE = Pupilware/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/opencv2.framework",
+					"$(PROJECT_DIR)/Pupilware/PupilwareCore/Thirdparties",
+					"$(PROJECT_DIR)/Pupilware/PupilwareCore/Thirdparties/lib",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = smu.PupilwareM;
@@ -851,13 +874,22 @@
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = PupilPrefixHeader.pch;
-				HEADER_SEARCH_PATHS = /usr/local/Cellar/eigen/3.2.8/include/eigen3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					DLIB_JPEG_SUPPORT,
+					DLIB_NO_GUI_SUPPORT,
+					NDEBUG,
+					DLIB_USE_BLAS,
+					DLIB_USE_LAPACK,
+				);
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Pupilware/PupilwareCore/Thirdparties/lib";
 				INFOPLIST_FILE = Pupilware/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/opencv2.framework",
+					"$(PROJECT_DIR)/Pupilware/PupilwareCore/Thirdparties",
+					"$(PROJECT_DIR)/Pupilware/PupilwareCore/Thirdparties/lib",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = smu.PupilwareM;
