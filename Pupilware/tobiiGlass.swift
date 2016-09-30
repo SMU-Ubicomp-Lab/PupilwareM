@@ -48,7 +48,6 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
             print(">>> Error while initializing socket: \(err.localizedDescription)")
             socketData!.close()
         }
-
     }
     
     func sendKeepAliveMsg(socket: GCDAsyncUdpSocket, msg:String) {
@@ -56,7 +55,6 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
             sendPacket(socket, msg: msg)
             sleep(1)
         }
-        
     }
     
     func startConnect() {
@@ -66,7 +64,6 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         
         dispatch_async(backgroundQueue, {
             self.sendKeepAliveMsg(self.socketVideo!, msg: self.KA_VIDEO_MSG)
-        
         })
     }
     
@@ -75,12 +72,8 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         socketVideo = nil
     }
     
-    
     func sendPacket(socket: GCDAsyncUdpSocket, msg: String) {
-        
         socket.sendData(msg.dataUsingEncoding(NSUTF8StringEncoding)!, toHost: host, port: port, withTimeout: 2, tag: 0)
-
-//        print("Data sent: \(msg)")
     }
     
     @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {
@@ -120,7 +113,6 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
                 print(error)
             }
         }
-        
     }
     
     private func dataTask(request: NSMutableURLRequest, method: String, completion: (success: Bool, object: AnyObject?) -> ()) {
@@ -154,10 +146,14 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: String]
-            self.model.tobiiProject = jsonData!["pr_id"]!
-            print("New project created" + self.model.tobiiProject)
+            if let projectId = jsonData!["pr_id"] {
+                self.model.tobiiProject = projectId
+                print("New project created" + self.model.tobiiProject)
+            } else {
+                print("Creating project fails!")
+            }
         }
-        self.model.tobiiProject = "7ltj2ii"
+        self.model.tobiiProject = "7ltj2ii" //This is just for debug purpose, remove this before start any real test
     }
     
     func createParticipant(projectId: String) {
@@ -174,12 +170,16 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: String]
-            self.model.tobiiSubjectIds[self.model.currentSubjectID] = jsonData!["pa_id"]!
-            self.model.tobiiCurrentParticipant = jsonData!["pa_id"]!
-            self.model.archiveSubjectIDs()
-            print("New Participant Created" + self.model.tobiiCurrentParticipant)
+            
+            if let participantId = jsonData!["pa_id"] {
+                self.model.tobiiSubjectIds[self.model.currentSubjectID] = participantId
+                self.model.tobiiCurrentParticipant = participantId
+                self.model.archiveSubjectIDs()
+                print("New Participant Created" + self.model.tobiiCurrentParticipant)
+            } else {
+                print("Creating paticipant fails")
+            }
         }
-        
     }
     
     func createAndStartCalibration(projectId: String, participantId: String) {
@@ -196,9 +196,13 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: String]
-            self.model.tobiiCurrentCalibration = jsonData!["ca_id"]!
-            print("setting current calibration id" + self.model.tobiiCurrentCalibration)
-            self.startCalibration(self.model.tobiiCurrentCalibration)
+            if let calibrationId = jsonData!["ca_id"] {
+                self.model.tobiiCurrentCalibration = calibrationId
+                print("setting current calibration id" + self.model.tobiiCurrentCalibration)
+                self.startCalibration(self.model.tobiiCurrentCalibration)
+            } else {
+                print("Creating calibration fails")
+            }
         }
     }
     
@@ -208,9 +212,12 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: String]
-            self.model.tobiiCurrentCalibrationState = jsonData!["ca_state"]!
+            if let calibrationState = jsonData!["ca_state"] {
+                self.model.tobiiCurrentCalibrationState = calibrationState
+            } else {
+                print("Starting calibration fails")
+            }
         }
-    
     }
     
     func checkCalibration(calibrationId: String) {
@@ -220,9 +227,12 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         get(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: String]
-            self.model.tobiiCurrentCalibrationState = jsonData!["ca_state"]!
+            if let calibrationState = jsonData!["ca_state"] {
+                self.model.tobiiCurrentCalibrationState = calibrationState
+            } else {
+                print("Checking calibration state fails")
+            }
         }
-
     }
     
     func createAndStartRecording(participantId: String) {
@@ -238,9 +248,13 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: AnyObject]
-            print(jsonData)
-            self.model.tobiiCurrentRecording = jsonData!["rec_id"]! as! String
-            self.startRecording(self.model.tobiiCurrentRecording)
+
+            if let recordingId = jsonData!["rec_id"] {
+                self.model.tobiiCurrentRecording = recordingId as! String
+                self.startRecording(self.model.tobiiCurrentRecording)
+            } else {
+                print("Creating recording fails")
+            }
         }
     }
     
