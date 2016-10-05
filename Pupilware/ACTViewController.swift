@@ -25,6 +25,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
     var totalQuestions = 0
     var participantId = ""
     var participantAnswers = [String](count: 9, repeatedValue: "")
+    var currentQuestionAnswered = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,6 +109,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
     @IBOutlet weak var answerE: UIButton!
     
     @IBAction func answerAclicked(sender: UIButton) {
+        currentQuestionAnswered = true
         sender.backgroundColor = UIColor.lightGrayColor()
         answerB.backgroundColor = nil
         answerC.backgroundColor = nil
@@ -118,6 +120,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
     }
     
     @IBAction func answerBclicked(sender: UIButton) {
+        currentQuestionAnswered = true
         sender.backgroundColor = UIColor.lightGrayColor()
         answerA.backgroundColor = nil
         answerC.backgroundColor = nil
@@ -129,6 +132,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
     }
     
     @IBAction func answerCclicked(sender: UIButton) {
+        currentQuestionAnswered = true
         sender.backgroundColor = UIColor.lightGrayColor()
         answerA.backgroundColor = nil
         answerB.backgroundColor = nil
@@ -139,6 +143,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
     }
     
     @IBAction func answerDclicked(sender: UIButton) {
+        currentQuestionAnswered = true
         sender.backgroundColor = UIColor.lightGrayColor()
         answerA.backgroundColor = nil
         answerB.backgroundColor = nil
@@ -149,6 +154,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
     }
     
     @IBAction func answerEclicked(sender: UIButton) {
+        currentQuestionAnswered = true
         sender.backgroundColor = UIColor.lightGrayColor()
         answerA.backgroundColor = nil
         answerB.backgroundColor = nil
@@ -177,9 +183,20 @@ class ACTViewController: UIViewController, BridgeDelegate {
     
     
     @IBAction func getNext(sender: UIButton) {
+        if (!currentQuestionAnswered) {
+            let message = "Please answer the current question before move to the next one!"
+            let alertController = UIAlertController(title: "ACT Alert", message:
+                message, preferredStyle: UIAlertControllerStyle.Alert)
+            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: {
+                action -> Void in
+                self.dismissViewControllerAnimated(true, completion: nil)}))
+            self.presentViewController(alertController, animated: true, completion: nil)
+            return
+        }
         currentQuestion = questionsModle.getNextQuestion()
         self.updateQuestion()
         self.presentSurveyModal()
+        currentQuestionAnswered = false
     }
     
     func updateQuestion() {
