@@ -101,12 +101,29 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
                             let pupilEye = jsonData["eye"] as! String
                             let glassTimestamp = jsonData["ts"] as! NSNumber
                             let timestamp = String(NSDate().timeIntervalSince1970)
-                            let pupilString = pupilEye + "," + String(pupilDilation) + "," + timestamp + "," + String(glassTimestamp)
+                            let pupilString = pupilEye + "," + String(pupilDilation) + "," + timestamp + "," + String(glassTimestamp) + "\n"
                             print("Got pupil info:")
                             print(pupilString)
                             writeToCSV(filePath, row: pupilString)
                         }
                     }
+                }
+                
+                if let pupilCenter = jsonData["pc"] as? NSArray {
+                    
+                    let pupilEye = jsonData["eye"] as! String
+                    let glassTimestamp = jsonData["ts"] as! NSNumber
+                    let timestamp = String(NSDate().timeIntervalSince1970)
+                    let status = jsonData["s"] as! NSNumber
+                    
+                    var centerFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiLeftPupilCenterFileName())
+                    
+                    if (pupilEye == "right") {
+                        centerFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiRightPupilCenterFileName())
+                    }
+                    let centerString = String(pupilCenter[0]) + "," + String(pupilCenter[1]) + "," + String(pupilCenter[2])
+                    let pupilString = timestamp + "," + String(status) + "," + String(glassTimestamp) + "," + centerString + "\n"
+                    writeToCSV(centerFilePath, row: pupilString)
                 }
                 
             } catch let error as NSError {
