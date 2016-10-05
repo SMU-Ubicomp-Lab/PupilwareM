@@ -56,6 +56,10 @@ class ACTModel {
         return currentQuestionIndex
     }
     
+    func getPermutationIndex() -> Int {
+        return permutation[currentQuestionIndex]
+    }
+    
     func reset() {
         currentQuestionIndex = 0
     }
