@@ -24,6 +24,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
     var socketData: GCDAsyncUdpSocket?
     var socketVideo: GCDAsyncUdpSocket?
     let timeout = 1
+    var systemStatus = 0
     let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
     
     //Keep-alive message content used to request live data and live video streams
@@ -151,7 +152,11 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
         
         session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-            
+            if let error = error {
+                print(error.code)
+                let nc = NSNotificationCenter.defaultCenter()
+                nc.postNotificationName("SysUnavailable", object: nil)
+            }
             if let data = data {
                 let json = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
                 if let response = response as? NSHTTPURLResponse where 200...299 ~= response.statusCode {
@@ -262,6 +267,17 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
                 self.model.tobiiCurrentCalibrationState = calibrationState
             } else {
                 print("Checking calibration state fails")
+            }
+        }
+    }
+    
+    func checkSystemStatus() {
+
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/system/conf")!)
+        get(request) { (success: Bool, object: AnyObject?) in
+            if (!success) {
+                let nc = NSNotificationCenter.defaultCenter()
+                nc.postNotificationName("SysUnavailable", object: nil)
             }
         }
     }
