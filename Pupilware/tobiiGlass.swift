@@ -13,7 +13,7 @@ import UIKit
 
 
 class TobiiGlass: GCDAsyncUdpSocketDelegate {
-
+    
     static let sharedInstance = TobiiGlass(host: "192.168.71.50", port: 49152)
     let model = DataModel.sharedInstance
     var host = "localhost"
@@ -82,14 +82,9 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
             return
         }
         print("Data received: \(stringData)")
-
+        
         //Only write to file if in testing or calibration
         if (model.inTest || model.inCalibration) {
-            var filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCaliFileName())
-            if (model.inTest) {
-                filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiPupilFileName())
-            }
-            
             do {
                 let  jsonData = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers)
                 
@@ -101,10 +96,21 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
                             let pupilEye = jsonData["eye"] as! String
                             let glassTimestamp = jsonData["ts"] as! NSNumber
                             let timestamp = String(NSDate().timeIntervalSince1970)
-                            let pupilString = pupilEye + "," + String(pupilDilation) + "," + timestamp + "," + String(glassTimestamp) + "\n"
-                            print("Got pupil info:")
-                            print(pupilString)
-                            writeToCSV(filePath, row: pupilString)
+                            let pupilString =   timestamp + "," + String(glassTimestamp) + "," + String(pupilDilation) + "\n"
+                            
+                            var pupilFilePath = ""
+                            if (model.inTest) {
+                                pupilFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiLeftPupilFileName())
+                                if (pupilEye == "right") {
+                                    pupilFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiRightPupilFileName())
+                                }
+                            } else { //in calibration
+                                pupilFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationLeftFileName())
+                                if (pupilEye == "right") {
+                                    pupilFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationRightFileName())
+                                }
+                            }
+                            writeToCSV(pupilFilePath, row: pupilString)
                         }
                     }
                 }
@@ -116,10 +122,18 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
                     let timestamp = String(NSDate().timeIntervalSince1970)
                     let status = jsonData["s"] as! NSNumber
                     
-                    var centerFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiLeftPupilCenterFileName())
-                    
-                    if (pupilEye == "right") {
-                        centerFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiRightPupilCenterFileName())
+                    var centerFilePath = ""
+                    if (model.inTest) {
+                        centerFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiLeftPupilCenterFileName())
+                        if (pupilEye == "right") {
+                            centerFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiRightPupilCenterFileName())
+                        }
+                        
+                    } else { //in calibration
+                        centerFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationLeftCenterFileName())
+                        if (pupilEye == "right") {
+                            centerFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationRightCenterFileName())
+                        }
                     }
                     let centerString = String(pupilCenter[0]) + "," + String(pupilCenter[1]) + "," + String(pupilCenter[2])
                     let pupilString = timestamp + "," + String(status) + "," + String(glassTimestamp) + "," + centerString + "\n"
@@ -265,7 +279,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: AnyObject]
-
+            
             if let recordingId = jsonData!["rec_id"] {
                 self.model.tobiiCurrentRecording = recordingId as! String
                 self.startRecording(self.model.tobiiCurrentRecording)
@@ -277,7 +291,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
     
     func startRecording(recordingId: String) {
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/recordings/" + String(recordingId) + "/start")!)
-    
+        
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
         }
@@ -296,7 +310,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         let documentsDirectory = paths[0]
         return documentsDirectory
     }
-
+    
     func writeToCSV(fileName: String, row: String) {
         let data = row.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         

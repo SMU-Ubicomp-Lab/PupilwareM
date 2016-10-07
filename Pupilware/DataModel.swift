@@ -30,7 +30,8 @@ import Foundation
     var faceInView:Bool = false
     var currentTest:Test?
     var digitIteration = 0
-    var calibration_files = (face:"", params:"", data:"", tobii:"")
+    var calibration_files = (face:"", params:"", data:"", tobii:"", tobii_left:"", tobii_right:"")
+    var calibration_files_tobii = (pupilCenterLeft: "", pupilCenterRight:"")
     var settings = (dist:60, movAvg:11, medBlur:11, baseStart:20, baseEnd:40, thresh:15, markCost:1, baseline: 0, cogHigh:0)
     var lumMode = true
     var numberStartFrame = 0
@@ -132,6 +133,22 @@ import Foundation
         return calibration_files.tobii
     }
     
+    func getTobiiCalibrationLeftFileName() ->String {
+        return calibration_files.tobii_left
+    }
+    
+    func getTobiiCalibrationRightFileName() -> String {
+        return calibration_files.tobii_right
+    }
+    
+    func getTobiiCalibrationLeftCenterFileName() -> String {
+        return calibration_files_tobii.pupilCenterLeft
+    }
+    
+    func getTobiiCalibrationRightCenterFileName()-> String {
+        return calibration_files_tobii.pupilCenterRight
+    }
+    
     func getTobiiLeftPupilFileName() -> String {
         return self.currentTest!.getTobiiLeftPupilFileName()
     }
@@ -176,6 +193,10 @@ import Foundation
         calibration_files.params = "\(currentSubjectID)_calib_params_\(id).csv"
         calibration_files.data = "\(currentSubjectID)_calib_data_\(id).csv"
         calibration_files.tobii = "\(currentSubjectID)_calib_tobii_\(id).csv"
+        calibration_files.tobii_left = "\(currentSubjectID)_calib_tobii_left_\(id).csv"
+        calibration_files.tobii_right = "\(currentSubjectID)_calib_tobii_right_\(id).csv"
+        calibration_files_tobii.pupilCenterLeft =  "\(currentSubjectID)_calib_tobii_left_center_\(id).csv"
+        calibration_files_tobii.pupilCenterRight =  "\(currentSubjectID)_calib_tobii_right_center_\(id).csv"
     }
     
     func getCalibrationFaceVideoFileName()->NSString{
