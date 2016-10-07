@@ -96,7 +96,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
                             let pupilEye = jsonData["eye"] as! String
                             let glassTimestamp = jsonData["ts"] as! NSNumber
                             let timestamp = String(NSDate().timeIntervalSince1970)
-                            let pupilString =   timestamp + "," + String(glassTimestamp) + "," + String(pupilDilation) + "\n"
+                            let pupilString =   timestamp + "," + String(glassTimestamp.floatValue / 1000) + "," + String(pupilDilation) + "\n"
                             
                             var pupilFilePath = ""
                             if (model.inTest) {
@@ -136,7 +136,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
                         }
                     }
                     let centerString = String(pupilCenter[0]) + "," + String(pupilCenter[1]) + "," + String(pupilCenter[2])
-                    let pupilString = timestamp + "," + String(status) + "," + String(glassTimestamp) + "," + centerString + "\n"
+                    let pupilString = timestamp + "," + String(status) + "," + String(glassTimestamp.floatValue / 1000) + "," + centerString + "\n"
                     writeToCSV(centerFilePath, row: pupilString)
                 }
                 
