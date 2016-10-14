@@ -273,11 +273,30 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
     
     func checkSystemStatus() {
 
-        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/system/conf")!)
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/system/status")!)
         get(request) { (success: Bool, object: AnyObject?) in
             if (!success) {
                 let nc = NSNotificationCenter.defaultCenter()
                 nc.postNotificationName("SysUnavailable", object: nil)
+            }
+            
+            print("Get json : \(object)")
+            var jsonData = object as? [String: AnyObject]
+            if let sysBattery = jsonData!["sys_battery"] {
+                let battery = sysBattery as? [String: AnyObject]
+                self.model.batteryLevel = battery!["level"]!.stringValue
+                //print(self.model.batteryLevel)
+            }
+            
+            if let sysStatus = jsonData!["sys_status"] {
+                self.model.systemStatus = sysStatus as! String
+                //print(self.model.systemStatus)
+            }
+            
+            if let sysStorage = jsonData!["sys_storage"] {
+                let remaining = sysStorage as? [String: AnyObject]
+                self.model.storageLevel = remaining!["remaining"]!.stringValue
+                //print(self.model.storageLevel)
             }
         }
     }

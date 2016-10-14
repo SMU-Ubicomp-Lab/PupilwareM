@@ -23,6 +23,9 @@ import Foundation
     var recordingMap:[String: String] = [:]
     var inTest = false
     var inCalibration = false
+    var systemStatus = ""
+    var batteryLevel = ""
+    var storageLevel = ""
     
     
     var currentSubjectID:String = ""
