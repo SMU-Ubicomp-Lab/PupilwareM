@@ -192,14 +192,14 @@ import Foundation
         //        }
         
         let id:String = String(Int64(NSDate().timeIntervalSince1970*10.0))
-        calibration_files.face = "\(currentSubjectID)_calib_face_\(id).mp4"
-        calibration_files.params = "\(currentSubjectID)_calib_params_\(id).csv"
-        calibration_files.data = "\(currentSubjectID)_calib_data_\(id).csv"
-        calibration_files.tobii = "\(currentSubjectID)_calib_tobii_\(id).csv"
-        calibration_files.tobii_left = "\(currentSubjectID)_calib_tobii_left_\(id).csv"
-        calibration_files.tobii_right = "\(currentSubjectID)_calib_tobii_right_\(id).csv"
-        calibration_files_tobii.pupilCenterLeft =  "\(currentSubjectID)_calib_tobii_left_center_\(id).csv"
-        calibration_files_tobii.pupilCenterRight =  "\(currentSubjectID)_calib_tobii_right_center_\(id).csv"
+        calibration_files.face = "\(currentSubjectID)_\(id)_calibFace.mp4"
+        calibration_files.params = "\(currentSubjectID)_\(id)_calibParams.csv"
+        calibration_files.data = "\(currentSubjectID)_\(id)_calibData.csv"
+        calibration_files.tobii = "\(currentSubjectID)_\(id)_calibTobii.csv"
+        calibration_files.tobii_left = "\(currentSubjectID)_\(id)_calibTobiiLeft.csv"
+        calibration_files.tobii_right = "\(currentSubjectID)_\(id)_calibTobiiRight.csv"
+        calibration_files_tobii.pupilCenterLeft =  "\(currentSubjectID)_\(id)_calibTobiiLeftCenter.csv"
+        calibration_files_tobii.pupilCenterRight =  "\(currentSubjectID)_\(id)_calibTobiiRightCenter.csv"
     }
     
     func getCalibrationFaceVideoFileName()->NSString{
@@ -298,12 +298,12 @@ class TargetTest: Test{
         self.labels.faceMetaFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_fmeta.csv"
         self.labels.pupilFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_result.csv"
         self.labels.calFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_calib.csv"
-        self.tobiiLabels.pupilFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_result_tobii.csv"
-        self.tobiiLabels.calFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_calib_tobii.csv"
-        self.tobiiLabels.leftPupilFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_pupil_left_tobii.csv"
-        self.tobiiLabels.rightPupilFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_pupil_right_tobii.csv"
-        self.tobiiLabels.leftPupilCenterFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_pupil_left_center_tobii.csv"
-        self.tobiiLabels.rightPupilCenterFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_pupil_right_center_tobii.csv"
+        self.tobiiLabels.pupilFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_resultTobii.csv"
+        self.tobiiLabels.calFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_calibTobii.csv"
+        self.tobiiLabels.leftPupilFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_pupilLeftTobii.csv"
+        self.tobiiLabels.rightPupilFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_pupilRightTobii.csv"
+        self.tobiiLabels.leftPupilCenterFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_pupilLeftCenterTobii.csv"
+        self.tobiiLabels.rightPupilCenterFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_pupilRightCenterTobii.csv"
     }
     
     func getFaceVideoFileName() -> String {
@@ -492,12 +492,12 @@ class DigitTest: Test{
         self.labels.faceMetaFile = "\(self.subjectID)_digit_ang\(self.angle)_dgt\(self.digits)_itr\(self.iter)_fmeta.csv"
         self.labels.pupilFile = "\(self.subjectID)_digit_ang\(self.angle)_dgt\(self.digits)_itr\(self.iter)_result.csv"
         self.labels.calFile = "\(self.subjectID)_digit_ang\(self.angle)_dgt\(self.digits)_itr\(self.iter)_calib.csv"
-        self.tobiiLabels.pupilFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_result_tobii.csv"
-        self.tobiiLabels.calFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_calib_tobii.csv"
-        self.tobiiLabels.leftPupilFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupil_left_tobii.csv"
-        self.tobiiLabels.rightPupilFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupil_right_tobii.csv"
-        self.tobiiLabels.leftPupilCenterFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupil_left_center_tobii.csv"
-        self.tobiiLabels.rightPupilCenterFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupil_right_center_tobii.csv"
+        self.tobiiLabels.pupilFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_resultTobii.csv"
+        self.tobiiLabels.calFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_calibTobii.csv"
+        self.tobiiLabels.leftPupilFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupilLeftTobii.csv"
+        self.tobiiLabels.rightPupilFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupilRightTobii.csv"
+        self.tobiiLabels.leftPupilCenterFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupilLeftCenterTobii.csv"
+        self.tobiiLabels.rightPupilCenterFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupilRightCenterTobii.csv"
     }
     
     
@@ -710,12 +710,12 @@ class ACTTest: Test{
         self.labels.faceMetaFile = "\(self.subjectID)_ACT_\(self.itemID)_fmeta.csv"
         self.labels.pupilFile = "\(self.subjectID)_ACT_\(self.itemID)_result.csv"
         self.labels.calFile = "\(self.subjectID)_ACT_\(self.itemID)_calib.csv"
-        self.tobiiLabels.pupilFile = "\(self.subjectID)_ACT_\(self.itemID)_result_tobii.csv"
-        self.tobiiLabels.calFile = "\(self.subjectID)_ACT_\(self.itemID)_calib_tobii.csv"
-        self.tobiiLabels.leftPupilFile = "\(self.subjectID)_ACT_\(self.itemID)_pupil_left_tobii.csv"
-        self.tobiiLabels.rightPupilFile = "\(self.subjectID)_ACT_\(self.itemID)_pupil_right_tobii.csv"
-        self.tobiiLabels.leftPupilCenterFile = "\(self.subjectID)_ACT_\(self.itemID)_pupil_left_center_tobii.csv"
-        self.tobiiLabels.rightPupilCenterFile = "\(self.subjectID)_ACT_\(self.itemID)_pupil_right_center_tobii.csv"
+        self.tobiiLabels.pupilFile = "\(self.subjectID)_ACT_\(self.itemID)_resultTobii.csv"
+        self.tobiiLabels.calFile = "\(self.subjectID)_ACT_\(self.itemID)_calibTobii.csv"
+        self.tobiiLabels.leftPupilFile = "\(self.subjectID)_ACT_\(self.itemID)_pupilLeftTobii.csv"
+        self.tobiiLabels.rightPupilFile = "\(self.subjectID)_ACT_\(self.itemID)_pupilRightTobii.csv"
+        self.tobiiLabels.leftPupilCenterFile = "\(self.subjectID)_ACT_\(self.itemID)_pupilLeftCenterTobii.csv"
+        self.tobiiLabels.rightPupilCenterFile = "\(self.subjectID)_ACT_\(self.itemID)_pupilRightCenterTobii.csv"
     }
     
     
