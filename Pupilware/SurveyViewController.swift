@@ -73,7 +73,7 @@ class SurveyViewController: UIViewController {
         let data = row.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         
         if NSFileManager.defaultManager().fileExistsAtPath(fileName) {
-            print("writing to " + fileName)
+//            print("writing to " + fileName)
             if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
                 fileHandle.seekToEndOfFile()
                 fileHandle.writeData(data)

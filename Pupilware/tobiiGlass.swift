@@ -79,10 +79,10 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
     
     @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {
         guard let stringData = String(data: data, encoding: NSUTF8StringEncoding) else {
-            print(">>> Data received, but cannot be converted to String")
+//            print(">>> Data received, but cannot be converted to String")
             return
         }
-        print("Data received: \(stringData)")
+//        print("Data received: \(stringData)")
         
         //Only write to file if in testing or calibration
         if (model.inTest || model.inCalibration) {
@@ -189,7 +189,8 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
                 print("Creating project fails!")
             }
         }
-        self.model.tobiiProject = "7ltj2ii" //This is just for debug purpose, remove this before start any real test
+        
+        //self.model.tobiiProject = "7ltj2ii" //This is just for debug purpose, remove this before start any real test
     }
     
     func createParticipant(projectId: String) {
@@ -350,7 +351,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         let data = row.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         
         if NSFileManager.defaultManager().fileExistsAtPath(fileName) {
-            print("writing to " + fileName)
+//            print("writing to " + fileName)
             if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
                 fileHandle.seekToEndOfFile()
                 fileHandle.writeData(data)

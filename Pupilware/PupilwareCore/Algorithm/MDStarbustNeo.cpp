@@ -273,36 +273,36 @@ namespace pw {
         Mat walkMat = grayEye;
         cv::threshold(grayEye, walkMat, th, 255, CV_THRESH_TRUNC);
 
-        {
-            int ksize = grayEye.cols * 0.07; // can I make it bigger? let test it.
-            float sigma = ksize * this->sigma;
-            Mat kernelX = getGaussianKernel(ksize, sigma);
-            Mat kernelY = getGaussianKernel(ksize, sigma);
-            Mat kernelXY = kernelX * kernelY.t();
-
-            // find min and max values in kernelXY.
-            double min;
-            double max;
-            cv::minMaxIdx(kernelXY, &min, &max);
-            
-            // scale kernelXY to 0-255 range;
-            cv::Mat maskImage;
-            cv::convertScaleAbs(kernelXY, maskImage, 255 / max);
-
-            // create a rect that have the same size as the gausian kernel,
-            // locating it at the eye center.
-            const float haftKernalSize = kernelXY.cols/2;
-            cv::Rect r;
-
-            r.x = std::fmax(0,startingPoint.x - haftKernalSize);
-            r.y = std::fmax(0,startingPoint.y - haftKernalSize);
-            r.width = std::min(kernelXY.cols, walkMat.cols-r.x);
-            r.height = std::min(kernelXY.rows, walkMat.rows-r.y);
-            
-            //
-            walkMat(r) = walkMat(r) - (maskImage(cv::Rect(0,0,r.width,r.height))*this->prior);
-            
-        }
+//        {
+//            int ksize = grayEye.cols * 0.07; // can I make it bigger? let test it.
+//            float sigma = ksize * this->sigma;
+//            Mat kernelX = getGaussianKernel(ksize, sigma);
+//            Mat kernelY = getGaussianKernel(ksize, sigma);
+//            Mat kernelXY = kernelX * kernelY.t();
+//
+//            // find min and max values in kernelXY.
+//            double min;
+//            double max;
+//            cv::minMaxIdx(kernelXY, &min, &max);
+//            
+//            // scale kernelXY to 0-255 range;
+//            cv::Mat maskImage;
+//            cv::convertScaleAbs(kernelXY, maskImage, 255 / max);
+//
+//            // create a rect that have the same size as the gausian kernel,
+//            // locating it at the eye center.
+//            const float haftKernalSize = kernelXY.cols/2;
+//            cv::Rect r;
+//
+//            r.x = std::fmax(0,startingPoint.x - haftKernalSize);
+//            r.y = std::fmax(0,startingPoint.y - haftKernalSize);
+//            r.width = std::min(kernelXY.cols, walkMat.cols-r.x);
+//            r.height = std::min(kernelXY.rows, walkMat.rows-r.y);
+//            
+//            //
+//            walkMat(r) = walkMat(r) - (maskImage(cv::Rect(0,0,r.width,r.height))*this->prior);
+//            
+//        }
 
 
 //        cw::showImage("thth", walkMat, 1);
