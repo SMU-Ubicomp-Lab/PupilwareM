@@ -9,6 +9,8 @@
 #ifndef PWVideoWriter_hpp
 #define PWVideoWriter_hpp
 
+#include <fstream>
+
 namespace pw{
     
     class PWVideoWriter{
@@ -33,12 +35,10 @@ namespace pw{
         PWVideoWriter& operator=( const PWVideoWriter& other)   = default;
         PWVideoWriter& operator=( PWVideoWriter&& other )       = default;
         
-        
-        const int MAX_BUFFER_SIZE = 2048;
-        
         std::vector<cv::Mat> frameBuffer;
         
         cv::VideoWriter    capture;
+        std::ofstream       file;
         
     };
 }
