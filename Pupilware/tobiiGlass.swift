@@ -116,6 +116,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
                     }
                 }
                 
+                //Save pupil center data for distance calculation
                 if let pupilCenter = jsonData["pc"] as? NSArray {
                     
                     let pupilEye = jsonData["eye"] as! String
@@ -140,6 +141,33 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
                     let pupilString = timestamp + "," + String(status) + "," + String(glassTimestamp.floatValue / 1000) + "," + centerString + "\n"
                     writeToCSV(centerFilePath, row: pupilString)
                 }
+                
+                //Save Gaze data
+                if let gzDirect = jsonData["gd"] as? NSArray {
+                    
+                    let pupilEye = jsonData["eye"] as! String
+                    let glassTimestamp = jsonData["ts"] as! NSNumber
+                    let timestamp = String(NSDate().timeIntervalSince1970)
+                    let status = jsonData["s"] as! NSNumber
+                    
+                    var gzFilePath = ""
+                    if (model.inTest) {
+                        gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiLeftGazeDirectFileName())
+                        if (pupilEye == "right") {
+                            gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiRightGazeDirectFileName())
+                        }
+                        
+                    } else { //in calibration
+                        gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationLeftGazeDirectFileName())
+                        if (pupilEye == "right") {
+                            gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationRightGazeDirectFileName())
+                        }
+                    }
+                    let gzString = String(gzDirect[0]) + "," + String(gzDirect[1]) + "," + String(gzDirect[2])
+                    let pupilString = timestamp + "," + String(status) + "," + String(glassTimestamp.floatValue / 1000) + "," + gzString + "\n"
+                    writeToCSV(gzFilePath, row: pupilString)
+                }
+
                 
             } catch let error as NSError {
                 print(error)
