@@ -167,16 +167,6 @@ class ACTViewController: UIViewController, BridgeDelegate {
     }
     
     @IBAction func submitTest(sender: UIButton) {
-        if (!currentQuestionAnswered) {
-            let message = "Please answer the current question before submit the test!"
-            let alertController = UIAlertController(title: "ACT Alert", message:
-                message, preferredStyle: UIAlertControllerStyle.Alert)
-            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: {
-                action -> Void in
-                self.dismissViewControllerAnimated(true, completion: nil)}))
-            self.presentViewController(alertController, animated: true, completion: nil)
-            return
-        }
         saveData()
         let alertController = UIAlertController(title: "ACT TEST", message:
             "Test submitted, Thank you", preferredStyle: UIAlertControllerStyle.Alert)
@@ -205,11 +195,16 @@ class ACTViewController: UIViewController, BridgeDelegate {
             self.presentViewController(alertController, animated: true, completion: nil)
             return
         }
-        currentQuizId = questionsModel.getPermutationIndex()
-        currentQuestion = questionsModel.getNextQuestion()
+        if (currentQuestionIndex == totalQuestions - 1) {
+            nextButton.enabled = false
+            submitButton.hidden = false
+        } else {
+            currentQuestion = questionsModel.getNextQuestion()
+            currentQuestionAnswered = false
+            self.updateQuestion()
+        }
         self.presentSurveyModal()
-        currentQuestionAnswered = false
-        self.updateQuestion()
+        currentQuizId = questionsModel.getPermutationIndex()
     }
     
     func sendAlert() {
@@ -278,8 +273,8 @@ class ACTViewController: UIViewController, BridgeDelegate {
         }
     
         if currentQuestionIndex ==  totalQuestions - 1 {
-            nextButton.enabled = false
-            submitButton.hidden = false
+            //nextButton.enabled = false
+            //submitButton.hidden = false
         } else {
             nextButton.enabled = true
         }
