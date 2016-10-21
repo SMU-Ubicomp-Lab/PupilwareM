@@ -34,7 +34,7 @@ import Foundation
     var currentTest:Test?
     var digitIteration = 0
     var calibration_files = (face:"", params:"", data:"", tobii:"", tobii_left:"", tobii_right:"")
-    var calibration_files_tobii = (pupilCenterLeft: "", pupilCenterRight:"", gazeDirectLeft:"", gazeDirectRight:"")
+    var calibration_files_tobii = (pupilCenterLeft: "", pupilCenterRight:"", gazeDirectLeft:"", gazeDirectRight:"", gazePosition:"", gazePosition3D:"")
     var settings = (dist:60, movAvg:11, medBlur:11, baseStart:20, baseEnd:40, thresh:15, markCost:1, baseline: 0, cogHigh:0)
     var lumMode = true
     var numberStartFrame = 0
@@ -160,6 +160,14 @@ import Foundation
         return calibration_files_tobii.gazeDirectRight
     }
     
+    func getTobiiCalibrationGazePositionFileName() -> String {
+        return calibration_files_tobii.gazePosition
+    }
+    
+    func getTobiiCalibrationGazePosition3DFileName() -> String {
+        return calibration_files_tobii.gazePosition3D
+    }
+    
     func getTobiiLeftPupilFileName() -> String {
         return self.currentTest!.getTobiiLeftPupilFileName()
     }
@@ -182,6 +190,14 @@ import Foundation
     
     func getTobiiRightGazeDirectFileName() -> String {
         return self.currentTest!.getTobiiRightGazeDirectFileName()
+    }
+    
+    func getTobiiGazePositionFileName() -> String {
+        return self.currentTest!.getTobiiGazePositionFileName()
+    }
+    
+    func getTobiiGazePosition3DFileNmae() -> String {
+        return self.currentTest!.getTobiiGazePosition3DFileName()
     }
     
     func writeMetaData(){
@@ -218,6 +234,8 @@ import Foundation
         calibration_files_tobii.pupilCenterRight =  "\(currentSubjectID)_\(id)_calibTobiiRightCenter.csv"
         calibration_files_tobii.gazeDirectLeft = "\(currentSubjectID)_\(id)_calibTobiiLeftGazeDirect.csv"
         calibration_files_tobii.gazeDirectRight = "\(currentSubjectID)_\(id)_calibTobiiRightGazeDirect.csv"
+        calibration_files_tobii.gazePosition = "\(currentSubjectID)_\(id)_calibTobiiGazePosition.csv"
+        calibration_files_tobii.gazePosition3D = "\(currentSubjectID)_\(id)_calibTobiiGazePosition3D.csv"
     }
     
     func getCalibrationFaceVideoFileName()->NSString{
@@ -297,6 +315,8 @@ protocol Test{
     func getTobiiRightPupilCenterFileName() -> String
     func getTobiiLeftGazeDirectFileName() -> String
     func getTobiiRightGazeDirectFileName() -> String
+    func getTobiiGazePositionFileName() -> String
+    func getTobiiGazePosition3DFileName() -> String
 }
 
 class TargetTest: Test{
@@ -305,7 +325,7 @@ class TargetTest: Test{
     var missing_digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
     var labels = (face:"", faceMetaFile:"", pupilFile:"", calFile:"")
     var tobiiLabels = (pupilFile: "", calFile:"", leftPupilFile:"", rightPupilFile:"", leftPupilCenterFile:"", rightPupilCenterFile: "", leftGazeDirectFile:"",
-                       rightGazeDirectFile:"")
+                       rightGazeDirectFile:"", gazePositionFile: "", gazePosition3DFile:"")
     
     
     init(subjectID:String, missing_digits:Int, iter:Int, exact_lux:Double){
@@ -327,6 +347,8 @@ class TargetTest: Test{
         self.tobiiLabels.rightPupilCenterFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_pupilRightCenterTobii.csv"
         self.tobiiLabels.leftGazeDirectFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_gazeDirectLeftTobii.csv"
         self.tobiiLabels.rightGazeDirectFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_gazeDirectRightTobii.csv"
+        self.tobiiLabels.gazePositionFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_gazePositionTobii.csv"
+        self.tobiiLabels.gazePosition3DFile = "\(self.subjectID)_target_dgt\(self.missing_digits)_itr\(self.iter)_gazePosition3DTobii.csv"
     }
     
     func getFaceVideoFileName() -> String {
@@ -375,6 +397,14 @@ class TargetTest: Test{
     
     func getTobiiRightGazeDirectFileName() -> String {
         return tobiiLabels.rightGazeDirectFile
+    }
+    
+    func getTobiiGazePositionFileName() -> String {
+        return tobiiLabels.gazePositionFile
+    }
+    
+    func getTobiiGazePosition3DFileName() -> String {
+        return tobiiLabels.gazePosition3DFile
     }
     
     func completeTest(){
@@ -491,7 +521,7 @@ class DigitTest: Test{
     var digits:Int, iter:Int, lux:Int, exact_lux:Double, subjectID:String, angle:Int
     var labels = (face:"", faceMetaFile:"", pupilFile:"", calFile:"")
     var tobiiLabels = (pupilFile: "", calFile:"", leftPupilFile:"", rightPupilFile:"", leftPupilCenterFile:"", rightPupilCenterFile: "", leftGazeDirectFile:"",
-                       rightGazeDirectFile:"")
+                       rightGazeDirectFile:"", gazePositionFile:"", gazePosition3DFile:"")
     
     
     init(subjectID:String, digits:Int, iter:Int, lux:Int, exact_lux:Double){
@@ -513,6 +543,8 @@ class DigitTest: Test{
         self.tobiiLabels.rightPupilCenterFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupil_right_center_tobii.csv"
         self.tobiiLabels.leftGazeDirectFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupil_left_gaze_direct_tobii.csv"
         self.tobiiLabels.rightGazeDirectFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupil_right_gaze_direct_tobii.csv"
+        self.tobiiLabels.gazePositionFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupil_gaze_position_tobii.csv"
+        self.tobiiLabels.gazePosition3DFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupil_gaze_position_3d_tobii.csv"
     }
     
     init(subjectID:String, digits:Int, iter:Int, angle:Int, exact_lux:Double){
@@ -534,6 +566,8 @@ class DigitTest: Test{
         self.tobiiLabels.rightPupilCenterFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupilRightCenterTobii.csv"
         self.tobiiLabels.leftGazeDirectFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupilLeftGazeDirectTobii.csv"
         self.tobiiLabels.rightGazeDirectFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupilRightGazeDirectTobii.csv"
+        self.tobiiLabels.gazePositionFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupilGazePositionTobii.csv"
+        self.tobiiLabels.gazePosition3DFile = "\(self.subjectID)_digit_lux\(self.lux)_dgt\(self.digits)_itr\(self.iter)_pupilGazePosition3DTobii.csv"
         
     }
     
@@ -584,6 +618,14 @@ class DigitTest: Test{
     
     func getTobiiRightGazeDirectFileName() -> String {
         return tobiiLabels.rightGazeDirectFile
+    }
+    
+    func getTobiiGazePositionFileName() -> String {
+        return tobiiLabels.gazePositionFile
+    }
+    
+    func getTobiiGazePosition3DFileName() -> String {
+        return tobiiLabels.gazePosition3DFile
     }
     
     func completeTest(){
@@ -744,7 +786,7 @@ class ACTTest: Test{
     var itemID:Int, subjectID:String
     var labels = (face:"", faceMetaFile:"", pupilFile:"", calFile:"")
     var tobiiLabels = (pupilFile: "", calFile:"", leftPupilFile:"", rightPupilFile:"", leftPupilCenterFile:"", rightPupilCenterFile: "", leftGazeDirectFile:"",
-                       rightGazeDirectFile:"")
+                       rightGazeDirectFile:"", gazePositionFile:"", gazePosition3DFile: "")
     
     
     init(subjectID:String, itemID:Int){
@@ -763,6 +805,8 @@ class ACTTest: Test{
         self.tobiiLabels.rightPupilCenterFile = "\(self.subjectID)_ACT_\(self.itemID)_pupilRightCenterTobii.csv"
         self.tobiiLabels.leftGazeDirectFile = "\(self.subjectID)_ACT_\(self.itemID)_gazeDirectLeftTobii.csv"
         self.tobiiLabels.rightGazeDirectFile = "\(self.subjectID)_ACT_\(self.itemID)_gazeDirectRightTobii.csv"
+        self.tobiiLabels.gazePositionFile = "\(self.subjectID)_ACT_\(self.itemID)_gazePositionTobii.csv"
+        self.tobiiLabels.gazePosition3DFile =  "\(self.subjectID)_ACT_\(self.itemID)_gazePosition3DTobii.csv"
     }
     
     
@@ -812,6 +856,14 @@ class ACTTest: Test{
     
     func getTobiiLeftGazeDirectFileName() -> String {
         return tobiiLabels.leftGazeDirectFile
+    }
+    
+    func getTobiiGazePositionFileName() -> String {
+        return tobiiLabels.gazePositionFile
+    }
+    
+    func getTobiiGazePosition3DFileName() -> String {
+        return tobiiLabels.gazePosition3DFile
     }
     
     func completeTest(){

@@ -167,7 +167,43 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
                     let pupilString = timestamp + "," + String(status) + "," + String(glassTimestamp.floatValue / 1000) + "," + gzString + "\n"
                     writeToCSV(gzFilePath, row: pupilString)
                 }
-
+                
+                //Save Gaze Position data 
+                if let gzPosition = jsonData["gp"] as? NSArray {
+                    
+                    let glassTimestamp = jsonData["ts"] as! NSNumber
+                    let timestamp = String(NSDate().timeIntervalSince1970)
+                    let status = jsonData["s"] as! NSNumber
+                    let l = jsonData["l"] as! NSNumber
+                    
+                    var gzFilePath = ""
+                    if (model.inTest) {
+                        gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiGazePositionFileName())
+                    } else { //in calibration
+                        gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationGazePositionFileName())
+                    }
+                    let gzString = String(gzPosition[0]) + "," + String(gzPosition[1])
+                    let pupilString = timestamp + "," + String(status) + "," + String(glassTimestamp.floatValue / 1000) + "," + gzString + ", l:" + String(l) + "\n"
+                    writeToCSV(gzFilePath, row: pupilString)
+                }
+              
+                //Save Gaze Position 3D data 
+                if let gzPosition3D = jsonData["gp3"] as? NSArray {
+                    
+                    let glassTimestamp = jsonData["ts"] as! NSNumber
+                    let timestamp = String(NSDate().timeIntervalSince1970)
+                    let status = jsonData["s"] as! NSNumber
+                    
+                    var gzFilePath = ""
+                    if (model.inTest) {
+                        gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiGazePosition3DFileNmae())
+                    } else { //in calibration
+                        gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationGazePosition3DFileName())
+                    }
+                    let gzString = String(gzPosition3D[0]) + "," + String(gzPosition3D[1]) + "," + String(gzPosition3D[2])
+                    let pupilString = timestamp + "," + String(status) + "," + String(glassTimestamp.floatValue / 1000) + "," + gzString + "\n"
+                    writeToCSV(gzFilePath, row: pupilString)
+                }
                 
             } catch let error as NSError {
                 print(error)
