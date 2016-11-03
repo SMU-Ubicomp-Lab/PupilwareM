@@ -48,7 +48,8 @@ namespace pw {
     
     }
 
-    
+    // TODO: Bad practice, please refactor it.
+    float buff_mpi = 0.0f;
     
     PWPupilSize MDStarbustNeo::process( const cv::Mat& src, const PWFaceMeta &meta )
     {
@@ -62,6 +63,7 @@ namespace pw {
                 , leftEyeCenterEyeCoord
                 , debugLeftEye );
 
+        float leftMPI = buff_mpi;
 
         cv::Point rightEyeCenterEyeCoord( meta.getRightEyeCenter().x - meta.getRightEyeRect().x ,
                                           meta.getRightEyeCenter().y - meta.getRightEyeRect().y);
@@ -71,7 +73,8 @@ namespace pw {
                 , rightEyeCenterEyeCoord
                 , debugRightEye );
 
-
+        float rightMPI = buff_mpi;
+        
         Mat debugImg;
         hconcat(debugLeftEye,
                 debugRightEye,
@@ -81,8 +84,10 @@ namespace pw {
         
         this->debugImage = debugImg;
 
-        return PWPupilSize(  leftPupilRadius / meta.getEyeDistancePx()
-                            ,rightPupilRadius / meta.getEyeDistancePx() );
+        return PWPupilSize( leftPupilRadius / meta.getEyeDistancePx()
+                            ,rightPupilRadius / meta.getEyeDistancePx()
+                            ,leftMPI
+                            ,rightMPI);
 
     }
 
@@ -102,14 +107,6 @@ namespace pw {
         
         Mat blur;
         cv::GaussianBlur(grayEye, blur,Size(5,5), 7);
-        
-/*------- Center of Mass Method -------*/
-//        int th = cw::calDynamicThreshold( blur, 0.006 );
-//        Mat binary;
-//        cv::threshold(grayEye, binary, th, 255, CV_THRESH_BINARY_INV);
-//        cv::Point p = cw::calCenterOfMass(binary);
-//        eyeCenter = p;
-/*-------------------------------------*/
 
         
 /*-------- Snakucules Method ----------*/
@@ -123,10 +120,14 @@ namespace pw {
         );
         cPoint = sn.getFitCenter();
         eyeCenter = cPoint;
-        int innterRadius = max(1, (int)sn.getInnerRadius()-3);
+        int innerRadius = max(1, (int)sn.getInnerRadius()-3);
+        
+        buff_mpi = calMPI(blur, innerRadius, cPoint);
+
+        
         circle( debugImg,
                 eyeCenter,
-                innterRadius,
+                innerRadius,
                 Scalar(200,200,0) );
 /*-------------------------------------*/
 
@@ -321,6 +322,26 @@ namespace pw {
 //        }
 
 //        outEdgePoints.assign(edgePointThisRound.begin(), edgePointThisRound.end());
+    }
+    
+    float MDStarbustNeo::calMPI( const cv::Mat& grayEye, int irisRadius, cv::Point eyeCenter) const{
+        
+        if(irisRadius<=0) return 0.0f;
+        if(grayEye.empty()) return 0.0f;
+        
+        float mpi = 0.0f;
+        
+        cv::Rect irisRect(eyeCenter.x-irisRadius,
+                          eyeCenter.y-irisRadius,
+                          min(irisRadius*2, grayEye.cols - eyeCenter.x-irisRadius-1),
+                          min(irisRadius*2, grayEye.rows - eyeCenter.y-irisRadius-1));
+        
+        if(irisRect.width < 1 ) return 0.0f;
+        if(irisRect.height < 1 ) return 0.0f;
+        
+        mpi = cv::mean(grayEye(irisRect)).val[0];
+        
+        return mpi;
     }
 
 
