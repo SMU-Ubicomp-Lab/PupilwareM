@@ -100,7 +100,7 @@ namespace pw{
             auto rpupil = data.getRightPupilSizes();
             
             
-            f << "number, left, right" << std::endl;
+            f << "number,left,right" << std::endl;
             for (size_t i=0; i<lpupil.size(); ++i) {
                 f << i << ",";
                 f << lpupil[i] << ",";
@@ -120,7 +120,7 @@ namespace pw{
         
         if (f.is_open()) {
             
-            f << "threshold, sigma, prior, degree_offset, ray_number" << std::endl;
+            f << "threshold,sigma,prior,degree_offset,ray_number" << std::endl;
             f << param.threshold <<
             "," << param.sigma <<
             "," << param.prior <<
