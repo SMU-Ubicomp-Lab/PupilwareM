@@ -13,7 +13,7 @@ import UIKit
 
 
 class TobiiGlass: GCDAsyncUdpSocketDelegate {
-
+    
     static let sharedInstance = TobiiGlass(host: "192.168.71.50", port: 49152)
     let model = DataModel.sharedInstance
     var host = "localhost"
@@ -24,6 +24,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
     var socketData: GCDAsyncUdpSocket?
     var socketVideo: GCDAsyncUdpSocket?
     let timeout = 1
+    var systemStatus = 0
     let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
     
     //Keep-alive message content used to request live data and live video streams
@@ -48,7 +49,6 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
             print(">>> Error while initializing socket: \(err.localizedDescription)")
             socketData!.close()
         }
-
     }
     
     func sendKeepAliveMsg(socket: GCDAsyncUdpSocket, msg:String) {
@@ -56,7 +56,6 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
             sendPacket(socket, msg: msg)
             sleep(1)
         }
-        
     }
     
     func startConnect() {
@@ -66,7 +65,6 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         
         dispatch_async(backgroundQueue, {
             self.sendKeepAliveMsg(self.socketVideo!, msg: self.KA_VIDEO_MSG)
-        
         })
     }
     
@@ -75,28 +73,19 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         socketVideo = nil
     }
     
-    
     func sendPacket(socket: GCDAsyncUdpSocket, msg: String) {
-        
         socket.sendData(msg.dataUsingEncoding(NSUTF8StringEncoding)!, toHost: host, port: port, withTimeout: 2, tag: 0)
-
-//        print("Data sent: \(msg)")
     }
     
     @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {
         guard let stringData = String(data: data, encoding: NSUTF8StringEncoding) else {
-            print(">>> Data received, but cannot be converted to String")
+//            print(">>> Data received, but cannot be converted to String")
             return
         }
-        print("Data received: \(stringData)")
-
+//        print("Data received: \(stringData)")
+        
         //Only write to file if in testing or calibration
         if (model.inTest || model.inCalibration) {
-            var filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCaliFileName())
-            if (model.inTest) {
-                filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiPupilFileName())
-            }
-            
             do {
                 let  jsonData = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers)
                 
@@ -108,19 +97,118 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
                             let pupilEye = jsonData["eye"] as! String
                             let glassTimestamp = jsonData["ts"] as! NSNumber
                             let timestamp = String(NSDate().timeIntervalSince1970)
-                            let pupilString = pupilEye + "," + String(pupilDilation) + "," + timestamp + "," + String(glassTimestamp)
-                            print("Got pupil info:")
-                            print(pupilString)
-                            writeToCSV(filePath, row: pupilString)
+                            let pupilString =   timestamp + "," + String(glassTimestamp.floatValue / 1000) + "," + String(pupilDilation) + "\n"
+                            
+                            var pupilFilePath = ""
+                            if (model.inTest) {
+                                pupilFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiLeftPupilFileName())
+                                if (pupilEye == "right") {
+                                    pupilFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiRightPupilFileName())
+                                }
+                            } else { //in calibration
+                                pupilFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationLeftFileName())
+                                if (pupilEye == "right") {
+                                    pupilFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationRightFileName())
+                                }
+                            }
+                            writeToCSV(pupilFilePath, row: pupilString)
                         }
                     }
+                }
+                
+                //Save pupil center data for distance calculation
+                if let pupilCenter = jsonData["pc"] as? NSArray {
+                    
+                    let pupilEye = jsonData["eye"] as! String
+                    let glassTimestamp = jsonData["ts"] as! NSNumber
+                    let timestamp = String(NSDate().timeIntervalSince1970)
+                    let status = jsonData["s"] as! NSNumber
+                    
+                    var centerFilePath = ""
+                    if (model.inTest) {
+                        centerFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiLeftPupilCenterFileName())
+                        if (pupilEye == "right") {
+                            centerFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiRightPupilCenterFileName())
+                        }
+                        
+                    } else { //in calibration
+                        centerFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationLeftCenterFileName())
+                        if (pupilEye == "right") {
+                            centerFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationRightCenterFileName())
+                        }
+                    }
+                    let centerString = String(pupilCenter[0]) + "," + String(pupilCenter[1]) + "," + String(pupilCenter[2])
+                    let pupilString = timestamp + "," + String(status) + "," + String(glassTimestamp.floatValue / 1000) + "," + centerString + "\n"
+                    writeToCSV(centerFilePath, row: pupilString)
+                }
+                
+                //Save Gaze data
+                if let gzDirect = jsonData["gd"] as? NSArray {
+                    
+                    let pupilEye = jsonData["eye"] as! String
+                    let glassTimestamp = jsonData["ts"] as! NSNumber
+                    let timestamp = String(NSDate().timeIntervalSince1970)
+                    let status = jsonData["s"] as! NSNumber
+                    
+                    var gzFilePath = ""
+                    if (model.inTest) {
+                        gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiLeftGazeDirectFileName())
+                        if (pupilEye == "right") {
+                            gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiRightGazeDirectFileName())
+                        }
+                        
+                    } else { //in calibration
+                        gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationLeftGazeDirectFileName())
+                        if (pupilEye == "right") {
+                            gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationRightGazeDirectFileName())
+                        }
+                    }
+                    let gzString = String(gzDirect[0]) + "," + String(gzDirect[1]) + "," + String(gzDirect[2])
+                    let pupilString = timestamp + "," + String(status) + "," + String(glassTimestamp.floatValue / 1000) + "," + gzString + "\n"
+                    writeToCSV(gzFilePath, row: pupilString)
+                }
+                
+                //Save Gaze Position data 
+                if let gzPosition = jsonData["gp"] as? NSArray {
+                    
+                    let glassTimestamp = jsonData["ts"] as! NSNumber
+                    let timestamp = String(NSDate().timeIntervalSince1970)
+                    let status = jsonData["s"] as! NSNumber
+                    let l = jsonData["l"] as! NSNumber
+                    
+                    var gzFilePath = ""
+                    if (model.inTest) {
+                        gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiGazePositionFileName())
+                    } else { //in calibration
+                        gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationGazePositionFileName())
+                    }
+                    let gzString = String(gzPosition[0]) + "," + String(gzPosition[1])
+                    let pupilString = timestamp + "," + String(status) + "," + String(glassTimestamp.floatValue / 1000) + "," + gzString + ", l:" + String(l) + "\n"
+                    writeToCSV(gzFilePath, row: pupilString)
+                }
+              
+                //Save Gaze Position 3D data 
+                if let gzPosition3D = jsonData["gp3"] as? NSArray {
+                    
+                    let glassTimestamp = jsonData["ts"] as! NSNumber
+                    let timestamp = String(NSDate().timeIntervalSince1970)
+                    let status = jsonData["s"] as! NSNumber
+                    
+                    var gzFilePath = ""
+                    if (model.inTest) {
+                        gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiGazePosition3DFileNmae())
+                    } else { //in calibration
+                        gzFilePath = getDocumentsDirectory().stringByAppendingPathComponent(model.getTobiiCalibrationGazePosition3DFileName())
+                    }
+                    let gzString = String(gzPosition3D[0]) + "," + String(gzPosition3D[1]) + "," + String(gzPosition3D[2])
+                    let pupilString = timestamp + "," + String(status) + "," + String(glassTimestamp.floatValue / 1000) + "," + gzString + "\n"
+                    writeToCSV(gzFilePath, row: pupilString)
                 }
                 
             } catch let error as NSError {
                 print(error)
             }
         }
-        
     }
     
     private func dataTask(request: NSMutableURLRequest, method: String, completion: (success: Bool, object: AnyObject?) -> ()) {
@@ -128,7 +216,11 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
         
         session.dataTaskWithRequest(request) { (data, response, error) -> Void in
-            
+            if let error = error {
+                print(error.code)
+                let nc = NSNotificationCenter.defaultCenter()
+                nc.postNotificationName("SysUnavailable", object: nil)
+            }
             if let data = data {
                 let json = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
                 if let response = response as? NSHTTPURLResponse where 200...299 ~= response.statusCode {
@@ -154,10 +246,15 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: String]
-            self.model.tobiiProject = jsonData!["pr_id"]!
-            print("New project created" + self.model.tobiiProject)
+            if let projectId = jsonData!["pr_id"] {
+                self.model.tobiiProject = projectId
+                print("New project created" + self.model.tobiiProject)
+            } else {
+                print("Creating project fails!")
+            }
         }
-        self.model.tobiiProject = "7ltj2ii"
+        
+        //self.model.tobiiProject = "7ltj2ii" //This is just for debug purpose, remove this before start any real test
     }
     
     func createParticipant(projectId: String) {
@@ -174,12 +271,16 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: String]
-            self.model.tobiiSubjectIds[self.model.currentSubjectID] = jsonData!["pa_id"]!
-            self.model.tobiiCurrentParticipant = jsonData!["pa_id"]!
-            self.model.archiveSubjectIDs()
-            print("New Participant Created" + self.model.tobiiCurrentParticipant)
+            
+            if let participantId = jsonData!["pa_id"] {
+                self.model.tobiiSubjectIds[self.model.currentSubjectID] = participantId
+                self.model.tobiiCurrentParticipant = participantId
+                self.model.archiveSubjectIDs()
+                print("New Participant Created" + self.model.tobiiCurrentParticipant)
+            } else {
+                print("Creating paticipant fails")
+            }
         }
-        
     }
     
     func createAndStartCalibration(projectId: String, participantId: String) {
@@ -196,9 +297,13 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: String]
-            self.model.tobiiCurrentCalibration = jsonData!["ca_id"]!
-            print("setting current calibration id" + self.model.tobiiCurrentCalibration)
-            self.startCalibration(self.model.tobiiCurrentCalibration)
+            if let calibrationId = jsonData!["ca_id"] {
+                self.model.tobiiCurrentCalibration = calibrationId
+                print("setting current calibration id" + self.model.tobiiCurrentCalibration)
+                self.startCalibration(self.model.tobiiCurrentCalibration)
+            } else {
+                print("Creating calibration fails")
+            }
         }
     }
     
@@ -208,9 +313,12 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: String]
-            self.model.tobiiCurrentCalibrationState = jsonData!["ca_state"]!
+            if let calibrationState = jsonData!["ca_state"] {
+                self.model.tobiiCurrentCalibrationState = calibrationState
+            } else {
+                print("Starting calibration fails")
+            }
         }
-    
     }
     
     func checkCalibration(calibrationId: String) {
@@ -220,9 +328,42 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         get(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: String]
-            self.model.tobiiCurrentCalibrationState = jsonData!["ca_state"]!
+            if let calibrationState = jsonData!["ca_state"] {
+                self.model.tobiiCurrentCalibrationState = calibrationState
+            } else {
+                print("Checking calibration state fails")
+            }
         }
+    }
+    
+    func checkSystemStatus() {
 
+        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/system/status")!)
+        get(request) { (success: Bool, object: AnyObject?) in
+            if (!success) {
+                let nc = NSNotificationCenter.defaultCenter()
+                nc.postNotificationName("SysUnavailable", object: nil)
+            }
+            
+            print("Get json : \(object)")
+            var jsonData = object as? [String: AnyObject]
+            if let sysBattery = jsonData!["sys_battery"] {
+                let battery = sysBattery as? [String: AnyObject]
+                self.model.batteryLevel = battery!["level"]!.stringValue
+                //print(self.model.batteryLevel)
+            }
+            
+            if let sysStatus = jsonData!["sys_status"] {
+                self.model.systemStatus = sysStatus as! String
+                //print(self.model.systemStatus)
+            }
+            
+            if let sysStorage = jsonData!["sys_storage"] {
+                let remaining = sysStorage as? [String: AnyObject]
+                self.model.storageLevel = remaining!["remaining"]!.stringValue
+                //print(self.model.storageLevel)
+            }
+        }
     }
     
     func createAndStartRecording(participantId: String) {
@@ -238,15 +379,19 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
             var jsonData = object as? [String: AnyObject]
-            print(jsonData)
-            self.model.tobiiCurrentRecording = jsonData!["rec_id"]! as! String
-            self.startRecording(self.model.tobiiCurrentRecording)
+            
+            if let recordingId = jsonData!["rec_id"] {
+                self.model.tobiiCurrentRecording = recordingId as! String
+                self.startRecording(self.model.tobiiCurrentRecording)
+            } else {
+                print("Creating recording fails")
+            }
         }
     }
     
     func startRecording(recordingId: String) {
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/recordings/" + String(recordingId) + "/start")!)
-    
+        
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get json : \(object)")
         }
@@ -265,12 +410,12 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         let documentsDirectory = paths[0]
         return documentsDirectory
     }
-
+    
     func writeToCSV(fileName: String, row: String) {
         let data = row.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         
         if NSFileManager.defaultManager().fileExistsAtPath(fileName) {
-            print("writing to " + fileName)
+//            print("writing to " + fileName)
             if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
                 fileHandle.seekToEndOfFile()
                 fileHandle.writeData(data)

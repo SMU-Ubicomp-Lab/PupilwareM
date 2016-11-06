@@ -13,7 +13,7 @@ import UIKit
 class ACTViewController: UIViewController, BridgeDelegate {
     
     var start: CGPoint?
-    let questionsModle = ACTModel.sharedInstance
+    let questionsModel = ACTModel.sharedInstance
     let model = DataModel.sharedInstance
     
     var delegate:sendBackDelegate?
@@ -25,6 +25,8 @@ class ACTViewController: UIViewController, BridgeDelegate {
     var totalQuestions = 0
     var participantId = ""
     var participantAnswers = [String](count: 9, repeatedValue: "")
+    var currentQuestionAnswered = false
+    var currentQuizId = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,12 +38,13 @@ class ACTViewController: UIViewController, BridgeDelegate {
         self.questionLabel.layer.borderWidth = 1
         submitButton.hidden = true
         participantId = model.currentSubjectID
-        questionsModle.reset()
+        questionsModel.reset()
         questionLabel.font = questionLabel.font.fontWithSize(20)
-        questionsModle.shuffelQuestions()
-        totalQuestions = questionsModle.getQuestionsNumber()
-        currentQuestionIndex = questionsModle.getCurrentQuestionIndex()
-        currentQuestion = questionsModle.getInitQuestion()
+        questionsModel.shuffelQuestions()
+        totalQuestions = questionsModel.getQuestionsNumber()
+        currentQuestionIndex = questionsModel.getCurrentQuestionIndex()
+        currentQuestion = questionsModel.getInitQuestion()
+        currentQuizId = questionsModel.getPermutationIndex()
         self.updateQuestion()
     }
     
@@ -108,6 +111,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
     @IBOutlet weak var answerE: UIButton!
     
     @IBAction func answerAclicked(sender: UIButton) {
+        currentQuestionAnswered = true
         sender.backgroundColor = UIColor.lightGrayColor()
         answerB.backgroundColor = nil
         answerC.backgroundColor = nil
@@ -118,6 +122,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
     }
     
     @IBAction func answerBclicked(sender: UIButton) {
+        currentQuestionAnswered = true
         sender.backgroundColor = UIColor.lightGrayColor()
         answerA.backgroundColor = nil
         answerC.backgroundColor = nil
@@ -129,6 +134,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
     }
     
     @IBAction func answerCclicked(sender: UIButton) {
+        currentQuestionAnswered = true
         sender.backgroundColor = UIColor.lightGrayColor()
         answerA.backgroundColor = nil
         answerB.backgroundColor = nil
@@ -139,6 +145,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
     }
     
     @IBAction func answerDclicked(sender: UIButton) {
+        currentQuestionAnswered = true
         sender.backgroundColor = UIColor.lightGrayColor()
         answerA.backgroundColor = nil
         answerB.backgroundColor = nil
@@ -149,6 +156,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
     }
     
     @IBAction func answerEclicked(sender: UIButton) {
+        currentQuestionAnswered = true
         sender.backgroundColor = UIColor.lightGrayColor()
         answerA.backgroundColor = nil
         answerB.backgroundColor = nil
@@ -177,11 +185,37 @@ class ACTViewController: UIViewController, BridgeDelegate {
     
     
     @IBAction func getNext(sender: UIButton) {
-        currentQuestion = questionsModle.getNextQuestion()
-        self.updateQuestion()
+        if (!currentQuestionAnswered) {
+            let message = "Please answer the current question before move to the next one!"
+            let alertController = UIAlertController(title: "ACT Alert", message:
+                message, preferredStyle: UIAlertControllerStyle.Alert)
+            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: {
+                action -> Void in
+                self.dismissViewControllerAnimated(true, completion: nil)}))
+            self.presentViewController(alertController, animated: true, completion: nil)
+            return
+        }
+        if (currentQuestionIndex == totalQuestions - 1) {
+            nextButton.enabled = false
+            submitButton.hidden = false
+        } else {
+            currentQuestion = questionsModel.getNextQuestion()
+            currentQuestionAnswered = false
+            self.updateQuestion()
+        }
         self.presentSurveyModal()
+        currentQuizId = questionsModel.getPermutationIndex()
     }
     
+    func sendAlert() {
+        let message = "Please answer the current question before move to the next one!"
+        let alertController = UIAlertController(title: "ACT Alert", message:
+            message, preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: {
+            action -> Void in
+            self.dismissViewControllerAnimated(true, completion: nil)}))
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
     func updateQuestion() {
         questionLabel.text = currentQuestion[0]
         answerA.setTitle(currentQuestion[1], forState: UIControlState.Normal)
@@ -189,7 +223,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
         answerC.setTitle(currentQuestion[3], forState: UIControlState.Normal)
         answerD.setTitle(currentQuestion[4], forState: UIControlState.Normal)
         answerE.setTitle(currentQuestion[5], forState: UIControlState.Normal)
-        currentQuestionIndex = questionsModle.getCurrentQuestionIndex()
+        currentQuestionIndex = questionsModel.getCurrentQuestionIndex()
         var selected = ""
 
         selected = participantAnswers[currentQuestionIndex]
@@ -239,8 +273,8 @@ class ACTViewController: UIViewController, BridgeDelegate {
         }
     
         if currentQuestionIndex ==  totalQuestions - 1 {
-            nextButton.enabled = false
-            submitButton.hidden = false
+            //nextButton.enabled = false
+            //submitButton.hidden = false
         } else {
             nextButton.enabled = true
         }
@@ -283,48 +317,35 @@ class ACTViewController: UIViewController, BridgeDelegate {
     func writeToCSV(fileName: String, row: String) {
         let data = row.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         
-        if NSFileManager.defaultManager().fileExistsAtPath(fileName) {
-            print("writing to " + fileName)
-            if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
-                fileHandle.seekToEndOfFile()
-                fileHandle.writeData(data)
-                fileHandle.closeFile()
-            }
-            else {
-                print("Can't open fileHandle")
-            }
+        NSFileManager.defaultManager().createFileAtPath(fileName, contents: nil, attributes: nil)
+        print("File not exist")
+        print("created" + fileName)
+        if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
+            fileHandle.seekToEndOfFile()
+            fileHandle.writeData(data)
+            fileHandle.closeFile()
         }
         else {
-            NSFileManager.defaultManager().createFileAtPath(fileName, contents: nil, attributes: nil)
-            print("File not exist")
-            print("created" + fileName)
-            if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
-                fileHandle.seekToEndOfFile()
-                fileHandle.writeData(data)
-                fileHandle.closeFile()
-            }
-            else {
-                print("Can't open fileHandle")
-            }
+            print("Can't open fileHandle")
         }
     }
     
     func saveData() {
-        let filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.currentSubjectID + "_ACT_Answers.txt")
+        let filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.currentSubjectID + "_ACT_Answers.csv")
         let stringAnswers = participantAnswers.joinWithSeparator(",")
-        let tmpPermutation = questionsModle.getPermutation()
+        let tmpPermutation = questionsModel.getPermutation()
         let strPermutation = tmpPermutation.map
             {
                 String($0)
         }
         let stringPermutation = strPermutation.joinWithSeparator(",")
-        writeToCSV(filePath, row: stringAnswers + stringPermutation )
+        writeToCSV(filePath, row: stringPermutation + "\n" + stringAnswers)
     }
     
     func presentSurveyModal(){
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("surveyView") as! SurveyViewController;
         // let nav = UINavigationController(rootViewController: vc)
-        vc.quizId = currentQuestionIndex
+        vc.quizId = currentQuizId
         self.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
         self.modalPresentationStyle = .CurrentContext
         self.presentViewController(vc, animated: true, completion: nil)

@@ -43,7 +43,10 @@ namespace pw{
                      frameSize,     // Frame Size
                      true);         // isColor
         
+        file.open(filename + ".csv");
+        
         PROMISES(capture.isOpened(), "Video is not open, something has gone wrong.");
+        PROMISES(file.is_open(), "File is not open. The file name is [ " << filename);
         
         return true;
         
@@ -52,6 +55,10 @@ namespace pw{
     void PWVideoWriter::close(){
         if (capture.isOpened()) {
             capture.release();
+        }
+        
+        if(file.is_open()){
+            file.close();
         }
     }
 
@@ -68,7 +75,13 @@ namespace pw{
 
         
         if (capture.isOpened()) {
+            
             capture << frame;
+            
+            using namespace std::chrono;
+            milliseconds ms = duration_cast< milliseconds >( system_clock::now().time_since_epoch() );
+            
+            file << ms.count() << "\n";
         }
         
         

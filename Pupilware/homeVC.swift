@@ -15,8 +15,29 @@ class homeVC: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let nc = NSNotificationCenter.defaultCenter()
+        nc.addObserver(self,
+                       selector: #selector(homeVC.tobiiAlert),
+                       name: "SysUnavailable",
+                       object: nil)
         tobiiGlass.startConnect()
         tobiiGlass.createProject()
+        
+        let timer = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(homeVC.checkSys), userInfo: nil, repeats: true)
+    }
+    
+    func tobiiAlert() {
+        let message = "There might be a connection issue with tobii!"
+        let alertController = UIAlertController(title: "Tobii Alert!", message:
+            message, preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: {
+            action -> Void in
+            self.dismissViewControllerAnimated(true, completion: nil)}))
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func checkSys() {
+        tobiiGlass.checkSystemStatus()
     }
 }
 

@@ -58,8 +58,8 @@ class SurveyViewController: UIViewController {
     }
     
     func saveData() {
-        let filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.currentSubjectID + "_ACT_Surveys.txt")
-        let stringSurvey = String(quizId) + " " +  String(slider1.value) + " " + String(slider2.value) + " " + String(slider3.value) + " " + String(slider4.value)
+        let filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.currentSubjectID + "_ACT_Surveys.csv")
+        let stringSurvey = String(quizId) + "," +  String(slider1.value) + "," + String(slider2.value) + "," + String(slider3.value) + "," + String(slider4.value) + "\n"
         writeToCSV(filePath, row: stringSurvey)
     }
     
@@ -73,7 +73,7 @@ class SurveyViewController: UIViewController {
         let data = row.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         
         if NSFileManager.defaultManager().fileExistsAtPath(fileName) {
-            print("writing to " + fileName)
+//            print("writing to " + fileName)
             if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
                 fileHandle.seekToEndOfFile()
                 fileHandle.writeData(data)

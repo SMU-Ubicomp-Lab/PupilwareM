@@ -14,6 +14,9 @@ namespace pw{
 
         leftPupilSizes.push_back( ps.leftRadius );
         rightPupilSizes.push_back( ps.rightRadius );
+        
+        leftMPIs.push_back(ps.leftMPI);
+        rightMPIs.push_back(ps.rightMPI);
 
     }
 
@@ -38,6 +41,8 @@ namespace pw{
 
         leftPupilSizes[index] = ps.leftRadius;
         rightPupilSizes[index] = ps.rightRadius;
+        
+        std::cout<< "[Warning] MPI is not set here.!!" << std::endl;
     }
 
 
@@ -59,16 +64,30 @@ namespace pw{
         return rightPupilSizes;
     }
 
+    const std::vector<float>& PWDataModel::getLeftMPIs() const {
+        return leftMPIs;
+    }
+    
+    
+    const std::vector<float>& PWDataModel::getRightMPIs() const {
+        return rightMPIs;
+    }
 
     void PWDataModel::resize( size_t newSize ){
         leftPupilSizes.resize(newSize);
         rightPupilSizes.resize(newSize);
+        
+        leftMPIs.resize(newSize);
+        rightMPIs.resize(newSize);
     }
     
     
     void PWDataModel::clear(){
         leftPupilSizes.clear();
         rightPupilSizes.clear();
+        
+        leftMPIs.clear();
+        rightMPIs.clear();
         
     }
 

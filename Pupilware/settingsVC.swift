@@ -23,7 +23,9 @@ class settingsVC: UIViewController{
     @IBOutlet weak var baseline: UITextField!
     @IBOutlet weak var cogHigh: UITextField!
     
-    
+    @IBOutlet weak var sysStatus: UILabel!
+    @IBOutlet weak var battery: UILabel!    
+    @IBOutlet weak var storage: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +48,11 @@ class settingsVC: UIViewController{
         markCost.text = String(model.settings.markCost)
         baseline.text = String(model.settings.baseline)
         cogHigh.text = String(model.settings.cogHigh)
+        
+        //Tobii Glass
+        sysStatus.text = model.systemStatus
+        battery.text = model.batteryLevel
+        storage.text = model.storageLevel
     }
     
     @IBAction func donePressed(sender: AnyObject) {
