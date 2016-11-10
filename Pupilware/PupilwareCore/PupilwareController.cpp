@@ -355,7 +355,7 @@ namespace pw{
         // DEBUG -----------------------------------------------------------------------------
         debugImg = srcBGR.clone();
         
-        landmark.searchLandMark(srcBGR, debugImg, faceMeta.getFaceRect());
+//        landmark.searchLandMark(srcBGR, debugImg, faceMeta.getFaceRect());
 
         cv::rectangle(debugImg, faceMeta.getFaceRect(), cv::Scalar(255,0,0));
         

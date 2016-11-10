@@ -339,7 +339,7 @@ namespace pw {
         if(irisRect.width < 1 ) return 0.0f;
         if(irisRect.height < 1 ) return 0.0f;
         
-        mpi = cv::mean(grayEye(irisRect)).val[0];
+//        mpi = cv::mean(grayEye(irisRect)).val[0];
         
         return mpi;
     }
