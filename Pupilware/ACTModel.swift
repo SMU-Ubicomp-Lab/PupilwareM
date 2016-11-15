@@ -14,27 +14,30 @@ class ACTModel {
     static let sharedInstance = ACTModel()
     
     var currentQuestionIndex = 0
-    var questions = [
-        ["Question #1. For all real numbers b and c such that the product of c and 3 is b, which of the following expressions represents the sum of c and 3 in terms of b?","A.  b + 3", "B. 3b + 3", "C. 3(b +3)", "D. (b+3)/3", "E. b/3 + 3","0", "1"],
-        ["Question #2. For all real numbers b and c such that the product of c and 3 is b, which of the following expressions represents the sum of c and 3 in terms of b?","A.  b + 3", "B. 3b + 3", "C. 3(b +3)", "D. (b+3)/3", "E. b/3 + 3", "1", "1"],
-        ["Question #3. For all real numbers b and c such that the product of c and 3 is b, which of the following expressions represents the sum of c and 3 in terms of b?","A.  b + 3", "B. 3b + 3", "C. 3(b +3)", "D. (b+3)/3", "E. b/3 + 3", "2", "1"],
-        ["Question #4. For all real numbers b and c such that the product of c and 3 is b, which of the following expressions represents the sum of c and 3 in terms of b?","A.  b + 3", "B. 3b + 3", "C. 3(b +3)", "D. (b+3)/3", "E. b/3 + 3", "3", "2"],
-        ["Question #5. For all real numbers b and c such that the product of c and 3 is b, which of the following expressions represents the sum of c and 3 in terms of b?","A.  b + 3", "B. 3b + 3", "C. 3(b +3)", "D. (b+3)/3", "E. b/3 + 3", "4","2"],
-        ["Question #6. A box contains 7 blu marbles, 4 red marbles and 6 green marbles. How many additional blue marbles must be added in the box so that the probability of randomly drawing a blue marble is 1/2?","A. 2", "B. 3", "C. 4", "D. 5", "E.6", "5", "2"],
-        ["Question #7. An integer from 100 through 999, inclusive, is to be chosen at random. What is the probability that the number choosen will have 0 as at least 1 digit? ","A. 19/900", "B. 81/900", "C. 90/900", "D. 171/900", "E. 271/1000", "6", "3"],
-        ["Question #8. For all x in the domain of the function (x+1)/(x^3 - x), this function is equivalent to","A. 1/x^2 - 1/x^3", "B. 1/x^3 - 1/x", "C. 1/(x^2 - 1)", "D. 1/(x^2 - x)", "E. 1/ x^3", "7", "3"],
-        ["Questions #9. For a project in Home Economics class, Kirk is making a tablecloth for a circular table 3 feet in diameter. The finished tablecloth needs to hang down 5 inches over the edge of the table all the way around. To finish the edge of the tablecloth, Kirk will fold under and sew down 1 inch of the material all around the edge. Kirk is going to use a single piece of rectangular fabric that is 60 inches wide. What is the shortest lentgh of the fabric, in inches, Kirk could use to make the tablecloth without putting any separate pieces of fabric together? ","A. 15", "B. 24", "C. 30", "D. 42", "E. 48", "8", "3"]
-    ]
-    var permutationEasy :[Int] = [0, 1, 2]
-    var permutationMedium :[Int] = [3, 4, 5]
-    var permutationHard :[Int] = [6, 7, 8]
+    var questionsEasy = [["act1", "1"], ["act2", "0"], ["act3", "1"], ["act4", "0"], ["act5", "1"],
+                         ["act6", "0"], ["act7", "1"], ["act8", "0"], ["act9", "1"], ["act10","0"],
+                         ["act11", "1"], ["act12", "0"], ["act13", "1"], ["act14", "0"], ["act15","1"]]
+    
+    var questionsMedium = [["act16", "0"], ["act17", "1"], ["act18", "0"], ["act19", "1"], ["act20", "0"],
+                           ["act21", "1"], ["act22", "0"], ["act23", "1"], ["act24", "0"], ["act25","1"],
+                           ["act26", "0"], ["act27", "1"], ["act28", "0"], ["act29", "1"], ["act30","0"]]
+    
+    var questionsHard = [["act31", "1"], ["act32", "0"]]
+    
+    var questions: [[String]] = []
+    
+    var permutationEasy = Array(0...14)
+    var permutationMedium = Array(15...31)
+    var permutationHard = Array(32...33)
     var permutation :[Int] = []
     
     func shuffelQuestions() {
+        
         let shuffledEasy = GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(permutationEasy) as! [Int]
         let shuffledMedium = GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(permutationMedium) as! [Int]
         let shuffledHard = GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(permutationHard) as! [Int]
         
+        questions = questionsEasy + questionsMedium + questionsHard
         permutation = shuffledEasy + shuffledMedium + shuffledHard
     }
     
