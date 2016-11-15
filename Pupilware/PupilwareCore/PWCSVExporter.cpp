@@ -98,13 +98,17 @@ namespace pw{
         if (f.is_open()) {
             auto lpupil = data.getLeftPupilSizes();
             auto rpupil = data.getRightPupilSizes();
+            auto lmpi = data.getLeftMPIs();
+            auto rmpi = data.getRightMPIs();
             
             
-            f << "number,left,right" << std::endl;
+            f << "number,left,right,leftmpi,rightmpi" << std::endl;
             for (size_t i=0; i<lpupil.size(); ++i) {
                 f << i << ",";
                 f << lpupil[i] << ",";
-                f << rpupil[i] << "\n";
+                f << rpupil[i] << ",";
+                f << lmpi[i] << ",";
+                f << rmpi[i] << "\n";
             }
             
         }

@@ -101,6 +101,9 @@ namespace pw {
         float findPupilSize(const cv::Mat &colorEyeFrame,
                             cv::Point eyeCenter,
                             cv::Mat &debugImg) const;
+        
+        
+        float calMPI( const cv::Mat& grayEye, int irisRadius, cv::Point eyeCenter) const;
     };
 }
 

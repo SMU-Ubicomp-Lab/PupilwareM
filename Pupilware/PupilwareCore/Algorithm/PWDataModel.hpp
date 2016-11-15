@@ -24,6 +24,9 @@ namespace pw{
 
         const std::vector <float>&  getLeftPupilSizes() const;
         const std::vector <float>&  getRightPupilSizes() const;
+        
+        const std::vector <float>&  getLeftMPIs() const;
+        const std::vector <float>&  getRightMPIs() const;
 
         void                        resize( size_t newSize );
         
@@ -36,6 +39,9 @@ namespace pw{
 
         std::vector<float>          leftPupilSizes;
         std::vector<float>          rightPupilSizes;
+        
+        std::vector<float>          leftMPIs;
+        std::vector<float>          rightMPIs;
     };
 
 }
