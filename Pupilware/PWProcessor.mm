@@ -226,9 +226,9 @@
     pupilwareController->setFaceSegmentationAlgoirhtm(std::make_shared<pw::SimpleImageSegmenter>(filePath));
     
     // Load dlib landmark file
-    NSString *modelFileName = [[NSBundle mainBundle] pathForResource:@"shape_predictor_68_face_landmarks" ofType:@"dat"];
-    std::string modelFileNameCString = [modelFileName UTF8String];
-    pupilwareController->setLandMarkFile(modelFileNameCString);
+//    NSString *modelFileName = [[NSBundle mainBundle] pathForResource:@"shape_predictor_68_face_landmarks" ofType:@"dat"];
+//    std::string modelFileNameCString = [modelFileName UTF8String];
+//    pupilwareController->setLandMarkFile(modelFileNameCString);
   
     
 }

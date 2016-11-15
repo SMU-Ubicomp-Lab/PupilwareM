@@ -668,29 +668,11 @@ class DigitTest: Test{
             default:print("DIGIT TEST NOT FOUND")
             }
         case 6: //use fix number set for consitancy accross participants, and avoid prediable pattern.
-            switch iter{
-            case 1:return [6, 4, 8, 9, 2, 1]
-            case 2:return [3, 2, 3, 7, 1, 0]
-            case 3:return [5, 2, 6, 4, 2, 8]
-            case 4:return [1, 4, 7, 2, 1, 6]
-            default:print("DIGIT TEST NOT FOUND")
-            }
+            return getListOfDigits(6)
         case 7:
-            switch iter{
-            case 1:return [2, 4, 7, 5, 7, 2, 1]
-            case 2:return [4, 3, 6, 8, 0, 9, 7]
-            case 3:return [8, 2, 5, 7, 3, 0, 7]
-            case 4:return [3, 7, 4, 8, 6, 2, 0]
-            default:print("DIGIT TEST NOT FOUND")
-            }
+            return getListOfDigits(7)
         case 8:
-            switch iter{
-            case 1:return [1, 3, 8, 5, 7, 3, 9, 8]
-            case 2:return [5, 2, 4, 7, 0, 6, 3, 8]
-            case 3:return [6, 3, 1, 8, 5, 2, 0, 4]
-            case 4:return [0, 2, 6, 4, 9, 5, 8, 7]
-            default:print("DIGIT TEST NOT FOUND")
-            }
+            return getListOfDigits(8)
         default:
             print("DIGIT TEST NOT FOUND")
         }
