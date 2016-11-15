@@ -33,13 +33,9 @@ class ACTViewController: UIViewController, BridgeDelegate {
         
         self.model.bridgeDelegate = self
         
-        
-        self.questionLabel.layer.borderColor = UIColor.blackColor().CGColor
-        self.questionLabel.layer.borderWidth = 1
         submitButton.hidden = true
         participantId = model.currentSubjectID
         questionsModel.reset()
-        questionLabel.font = questionLabel.font.fontWithSize(20)
         questionsModel.shuffelQuestions()
         totalQuestions = questionsModel.getQuestionsNumber()
         currentQuestionIndex = questionsModel.getCurrentQuestionIndex()
@@ -97,8 +93,6 @@ class ACTViewController: UIViewController, BridgeDelegate {
     
     @IBAction func clearImage(sender: UIButton) {
         drawImageView.image = UIImage.init(named: "notepad.png")    }
-    
-    @IBOutlet weak var questionLabel: UILabel!
     
     @IBOutlet weak var answerA: UIButton!
     
@@ -217,7 +211,6 @@ class ACTViewController: UIViewController, BridgeDelegate {
         self.presentViewController(alertController, animated: true, completion: nil)
     }
     func updateQuestion() {
-        questionLabel.text = currentQuestion[0]
         answerA.setTitle(currentQuestion[1], forState: UIControlState.Normal)
         answerB.setTitle(currentQuestion[2], forState: UIControlState.Normal)
         answerC.setTitle(currentQuestion[3], forState: UIControlState.Normal)
