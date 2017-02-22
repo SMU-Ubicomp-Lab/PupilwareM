@@ -935,6 +935,178 @@ class ACTTest: Test{
 }
 
 
+class TypingTest: Test{
+    let model = DataModel.sharedInstance
+    let ID:String = String(Int64(NSDate().timeIntervalSince1970))
+    var itemID:Int, subjectID:String
+    var labels = (face:"", faceMetaFile:"", pupilFile:"", calFile:"")
+    var tobiiLabels = (pupilFile: "", calFile:"", leftPupilFile:"", rightPupilFile:"", leftPupilCenterFile:"", rightPupilCenterFile: "", leftGazeDirectFile:"",
+                       rightGazeDirectFile:"", gazePositionFile:"", gazePosition3DFile: "")
+    
+    
+    init(subjectID:String){
+        self.itemID = 0
+        self.subjectID = subjectID
+        
+        self.labels.face = "\(self.subjectID)_TT_\(self.itemID)_face.mp4"
+        self.labels.faceMetaFile = "\(self.subjectID)_TT_\(self.itemID)_fmeta.csv"
+        self.labels.pupilFile = "\(self.subjectID)_TT_\(self.itemID)_result.csv"
+        self.labels.calFile = "\(self.subjectID)_TT_\(self.itemID)_calib.csv"
+        self.tobiiLabels.pupilFile = "\(self.subjectID)_TT_\(self.itemID)_resultTobii.csv"
+        self.tobiiLabels.calFile = "\(self.subjectID)_TT_\(self.itemID)_calibTobii.csv"
+        self.tobiiLabels.leftPupilFile = "\(self.subjectID)_TT_\(self.itemID)_pupilLeftTobii.csv"
+        self.tobiiLabels.rightPupilFile = "\(self.subjectID)_TT_\(self.itemID)_pupilRightTobii.csv"
+        self.tobiiLabels.leftPupilCenterFile = "\(self.subjectID)_TT_\(self.itemID)_pupilLeftCenterTobii.csv"
+        self.tobiiLabels.rightPupilCenterFile = "\(self.subjectID)_TT_\(self.itemID)_pupilRightCenterTobii.csv"
+        self.tobiiLabels.leftGazeDirectFile = "\(self.subjectID)_TT_\(self.itemID)_gazeDirectLeftTobii.csv"
+        self.tobiiLabels.rightGazeDirectFile = "\(self.subjectID)_TT_\(self.itemID)_gazeDirectRightTobii.csv"
+        self.tobiiLabels.gazePositionFile = "\(self.subjectID)_TT_\(self.itemID)_gazePositionTobii.csv"
+        self.tobiiLabels.gazePosition3DFile =  "\(self.subjectID)_TTT_\(self.itemID)_gazePosition3DTobii.csv"
+    }
+    
+    
+    func getFaceVideoFileName() -> String {
+        return labels.face
+    }
+    
+    func getCALFileName() -> String {
+        return labels.calFile
+    }
+    
+    func getFaceMetaFileName() -> String {
+        return labels.faceMetaFile
+    }
+    
+    func getPupilSizeFileName() -> String {
+        return labels.pupilFile
+    }
+    
+    func getTobiiPupilFileName() -> String {
+        return tobiiLabels.pupilFile
+    }
+    
+    func getTobiiCaliFileName() -> String {
+        return tobiiLabels.calFile
+    }
+    
+    func getTobiiLeftPupilFileName() -> String {
+        return tobiiLabels.leftPupilFile
+    }
+    
+    func getTobiiRightPupilFileName() -> String {
+        return tobiiLabels.rightPupilFile
+    }
+    
+    func getTobiiLeftPupilCenterFileName() -> String {
+        return tobiiLabels.leftPupilCenterFile
+    }
+    
+    func getTobiiRightPupilCenterFileName() -> String {
+        return tobiiLabels.rightPupilCenterFile
+    }
+    
+    func getTobiiRightGazeDirectFileName() -> String {
+        return tobiiLabels.rightGazeDirectFile
+    }
+    
+    func getTobiiLeftGazeDirectFileName() -> String {
+        return tobiiLabels.leftGazeDirectFile
+    }
+    
+    func getTobiiGazePositionFileName() -> String {
+        return tobiiLabels.gazePositionFile
+    }
+    
+    func getTobiiGazePosition3DFileName() -> String {
+        return tobiiLabels.gazePosition3DFile
+    }
+    
+    func completeTest(){
+        self.writeData()
+    }
+    
+    
+    func getDigits()->[Int]{
+        // ??
+        return [];
+    }
+    
+    func getTimeStamp()->String{
+        let currentDateTime = NSDate()
+        let formatter = NSDateFormatter()
+        formatter.timeStyle = NSDateFormatterStyle.MediumStyle
+        formatter.dateStyle = NSDateFormatterStyle.ShortStyle
+        return formatter.stringFromDate(currentDateTime)
+    }
+    
+    func writeData(){
+        var attempt = 1
+        while (attempt <= 999){
+            let fileName = "\(self.subjectID)_digit_meta_\(self.ID)_\(String(format: "%03d", attempt)).json"
+            if(self.writeJSONFile(fileName)){
+                break
+            }
+            attempt += 1
+            print("WRITE FAILED CRITICAL ERROR ATTEMPT: \(attempt)")
+        }
+    }
+    
+    func writeJSONFile(fileName:String)->Bool{
+        let data: [String: AnyObject] = [
+            "user_id": self.subjectID,
+            "type" : "ACT",
+            "itemID" : self.itemID,
+            "face_file_name" : self.labels.face,
+            "pupil_data_file_name" : self.labels.pupilFile,
+            "calibration_face" : model.getCalibrationFaceVideoFileName(),
+            "parameter_file" : model.getCalibrationParamsFileName(),
+            "calibration_data_file" : model.getCalibrationDataFileName(),
+            "write_time" : self.getTimeStamp(),
+            "ID" : self.ID,
+            "tobii_recoding_id": model.tobiiCurrentRecording,
+            "tobii_subject_id": model.tobiiCurrentParticipant,
+            "tobii_project": model.tobiiProject
+        ]
+        
+        var jsonData: NSData!
+        do {
+            jsonData = try NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions())
+            let jsonString = String(data: jsonData, encoding: NSUTF8StringEncoding)
+            print(jsonString!)
+        } catch let error as NSError {
+            print("Array to JSON conversion failed: \(error.localizedDescription)")
+        }
+        
+        let documentsDirectoryPathString = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).first!
+        let documentsDirectoryPath = NSURL(string: documentsDirectoryPathString)!
+        
+        let jsonFilePath = documentsDirectoryPath.URLByAppendingPathComponent(fileName)
+        let fileManager = NSFileManager.defaultManager()
+        var isDirectory: ObjCBool = false
+        
+        // creating a .json file in the Documents folder
+        if !fileManager.fileExistsAtPath(jsonFilePath.absoluteString, isDirectory: &isDirectory) {
+            let created = fileManager.createFileAtPath(jsonFilePath.absoluteString, contents: nil, attributes: nil)
+            if created {
+                print("File created")
+                do {
+                    let file = try NSFileHandle(forWritingToURL: jsonFilePath)
+                    file.writeData(jsonData)
+                    print("JSON data was written to the file successfully!")
+                } catch let error as NSError {
+                    print("Couldn't write to file: \(error.localizedDescription)")
+                }
+            } else {
+                print("Couldn't create a file for some reasons")
+            }
+        } else {
+            print("File already exists")
+            return false
+        }
+        return true
+    }
+}
+
 
 @objc protocol BridgeDelegate{
     func trackingFaceDone()

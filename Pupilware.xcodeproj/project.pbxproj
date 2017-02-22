@@ -25,6 +25,12 @@
 		5CD140061D9DB7A800074E8E /* libdlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CD140041D9DB7A800074E8E /* libdlib.a */; };
 		5CD140071D9DB7A800074E8E /* shape_predictor_68_face_landmarks.dat in Resources */ = {isa = PBXBuildFile; fileRef = 5CD140051D9DB7A800074E8E /* shape_predictor_68_face_landmarks.dat */; };
 		5CD1400D1D9DBE0900074E8E /* PWFaceLandmarkDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CD1400B1D9DBE0900074E8E /* PWFaceLandmarkDetector.cpp */; };
+		5CDA211E1E5D59FE00E341E0 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDA211D1E5D59FE00E341E0 /* StringExtension.swift */; };
+		5CDA21211E5D5A1100E341E0 /* MainGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDA211F1E5D5A1100E341E0 /* MainGameViewController.swift */; };
+		5CDA21221E5D5A1100E341E0 /* GameOverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDA21201E5D5A1100E341E0 /* GameOverViewController.swift */; };
+		5CDA21241E5D5A1B00E341E0 /* TypingGameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDA21231E5D5A1B00E341E0 /* TypingGameController.swift */; };
+		5CDA21271E5D5A2400E341E0 /* en.png in Resources */ = {isa = PBXBuildFile; fileRef = 5CDA21251E5D5A2400E341E0 /* en.png */; };
+		5CDA21281E5D5A2400E341E0 /* gameLevel.json in Resources */ = {isa = PBXBuildFile; fileRef = 5CDA21261E5D5A2400E341E0 /* gameLevel.json */; };
 		5CF4D59B1D186FB30050CBBA /* ALOfflineFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D57C1D186FB30050CBBA /* ALOfflineFile.cpp */; };
 		5CF4D59C1D186FB30050CBBA /* DummyAlgo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D57E1D186FB30050CBBA /* DummyAlgo.cpp */; };
 		5CF4D59D1D186FB30050CBBA /* IPupilAlgorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF4D5801D186FB30050CBBA /* IPupilAlgorithm.cpp */; };
@@ -129,6 +135,12 @@
 		5CD140051D9DB7A800074E8E /* shape_predictor_68_face_landmarks.dat */ = {isa = PBXFileReference; lastKnownFileType = file; name = shape_predictor_68_face_landmarks.dat; path = lib/shape_predictor_68_face_landmarks.dat; sourceTree = "<group>"; };
 		5CD1400B1D9DBE0900074E8E /* PWFaceLandmarkDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWFaceLandmarkDetector.cpp; sourceTree = "<group>"; };
 		5CD1400C1D9DBE0900074E8E /* PWFaceLandmarkDetector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWFaceLandmarkDetector.hpp; sourceTree = "<group>"; };
+		5CDA211D1E5D59FE00E341E0 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		5CDA211F1E5D5A1100E341E0 /* MainGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainGameViewController.swift; sourceTree = "<group>"; };
+		5CDA21201E5D5A1100E341E0 /* GameOverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverViewController.swift; sourceTree = "<group>"; };
+		5CDA21231E5D5A1B00E341E0 /* TypingGameController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypingGameController.swift; sourceTree = "<group>"; };
+		5CDA21251E5D5A2400E341E0 /* en.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = en.png; sourceTree = "<group>"; };
+		5CDA21261E5D5A2400E341E0 /* gameLevel.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = gameLevel.json; sourceTree = "<group>"; };
 		5CF4D57C1D186FB30050CBBA /* ALOfflineFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ALOfflineFile.cpp; sourceTree = "<group>"; };
 		5CF4D57D1D186FB30050CBBA /* ALOfflineFile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ALOfflineFile.hpp; sourceTree = "<group>"; };
 		5CF4D57E1D186FB30050CBBA /* DummyAlgo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DummyAlgo.cpp; sourceTree = "<group>"; };
@@ -291,6 +303,19 @@
 			path = Resource;
 			sourceTree = "<group>";
 		};
+		5CDA211C1E5D59E300E341E0 /* Funtyping */ = {
+			isa = PBXGroup;
+			children = (
+				5CDA21251E5D5A2400E341E0 /* en.png */,
+				5CDA21261E5D5A2400E341E0 /* gameLevel.json */,
+				5CDA21231E5D5A1B00E341E0 /* TypingGameController.swift */,
+				5CDA211F1E5D5A1100E341E0 /* MainGameViewController.swift */,
+				5CDA21201E5D5A1100E341E0 /* GameOverViewController.swift */,
+				5CDA211D1E5D59FE00E341E0 /* StringExtension.swift */,
+			);
+			name = Funtyping;
+			sourceTree = "<group>";
+		};
 		5CF4D57A1D186FB30050CBBA /* PupilwareCore */ = {
 			isa = PBXGroup;
 			children = (
@@ -429,6 +454,7 @@
 		97A3213A1C59CDB300B1EB98 = {
 			isa = PBXGroup;
 			children = (
+				5CDA211C1E5D59E300E341E0 /* Funtyping */,
 				97A321451C59CDB300B1EB98 /* Pupilware */,
 				97A321441C59CDB300B1EB98 /* Products */,
 				97E94F691C5CB02900D652CB /* Frameworks */,
@@ -604,8 +630,10 @@
 				976803C81C97429E003D63C8 /* hash.png in Resources */,
 				9748FF731C6092B700143D54 /* beaker.png in Resources */,
 				5CD140071D9DB7A800074E8E /* shape_predictor_68_face_landmarks.dat in Resources */,
+				5CDA21281E5D5A2400E341E0 /* gameLevel.json in Resources */,
 				AEAE8A351D737A7700E3150D /* check.png in Resources */,
 				9748FF721C6092B700143D54 /* gear.png in Resources */,
+				5CDA21271E5D5A2400E341E0 /* en.png in Resources */,
 				976803C91C97429E003D63C8 /* target.png in Resources */,
 				97A3214E1C59CDB300B1EB98 /* Assets.xcassets in Resources */,
 				97A3214C1C59CDB300B1EB98 /* Main.storyboard in Resources */,
@@ -650,6 +678,7 @@
 				5C0B78171D7CA6AD0015B26B /* PWParameter.cpp in Sources */,
 				5CF4D5A51D186FB30050CBBA /* ISignalProcessor.cpp in Sources */,
 				5C90F5881D396E56006E6E71 /* CWClock.cpp in Sources */,
+				5CDA21241E5D5A1B00E341E0 /* TypingGameController.swift in Sources */,
 				5CC9A1231D25A25700ADB4BD /* PWCSVExporter.cpp in Sources */,
 				5CF4D5A21D186FB30050CBBA /* PWDataModel.cpp in Sources */,
 				5CF4D59F1D186FB30050CBBA /* MDStarbustG.cpp in Sources */,
@@ -679,10 +708,12 @@
 				AEAE8A371D7389C900E3150D /* ACTViewController.swift in Sources */,
 				5CCDBBA81D2046B3006C0B63 /* ObjCAdapter.mm in Sources */,
 				AEDC08D11D4F9AC100D547F8 /* tobiiGlass.swift in Sources */,
+				5CDA21221E5D5A1100E341E0 /* GameOverViewController.swift in Sources */,
 				975C29031CA074210001FF95 /* targetSetupVC.swift in Sources */,
 				5CF4D59C1D186FB30050CBBA /* DummyAlgo.cpp in Sources */,
 				97A321471C59CDB300B1EB98 /* AppDelegate.swift in Sources */,
 				9711B09A1C7F670F006EE548 /* iterCell.swift in Sources */,
+				5CDA21211E5D5A1100E341E0 /* MainGameViewController.swift in Sources */,
 				5CF4D5C51D1870020050CBBA /* GraphUtils.cpp in Sources */,
 				AE8C91E01D6901360067A0E6 /* PWProcessor.mm in Sources */,
 				97D487291C933F0A00774958 /* settingsVC.swift in Sources */,
@@ -696,6 +727,7 @@
 				5CD1400D1D9DBE0900074E8E /* PWFaceLandmarkDetector.cpp in Sources */,
 				97A3215A1C59CFF100B1EB98 /* DataModel.swift in Sources */,
 				5CF4D59E1D186FB30050CBBA /* MDStarbust.cpp in Sources */,
+				5CDA211E1E5D59FE00E341E0 /* StringExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
