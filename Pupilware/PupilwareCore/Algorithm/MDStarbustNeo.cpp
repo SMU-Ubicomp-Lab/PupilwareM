@@ -12,6 +12,9 @@
 #include "../SignalProcessing/SignalProcessingHelper.hpp"
 #include "../Helpers/math/Snakuscules.hpp"
 
+#include <cstdlib>
+#include <ctime>
+
 using namespace cv;
 using namespace std;
 
@@ -283,12 +286,6 @@ namespace pw {
             /* Prepare for next iteration */
             if( edgePointThisRound.size() > 0)
             {
-                /* Draw points to the debug image. */
-                for( int i=0; i<edgePointThisRound.size(); i++ )
-                {
-                    *debugColorEye.ptr<Vec3b>(edgePointThisRound[i].y, edgePointThisRound[i].x) = Vec3b(0,255,0);
-                }
-
 
                 int sum_x = 0;
                 int sum_y = 0;
@@ -300,15 +297,28 @@ namespace pw {
 
                 int mean_point_x = sum_x / edgePointThisRound.size();
                 int mean_point_y = sum_y / edgePointThisRound.size();
+                
+                
+                const int range = 6;
+                const int r_offset = range / 2;
+                int rand_offset_x = static_cast<int>((std::rand()/static_cast<float>(RAND_MAX)) *range) -r_offset;
+                int rand_offset_y = static_cast<int>((std::rand()/static_cast<float>(RAND_MAX)) *range) -r_offset;
+                
 
-                seedPoint.x = mean_point_x;
-                seedPoint.y = mean_point_y;
+                seedPoint.x = mean_point_x + rand_offset_x;
+                seedPoint.y = mean_point_y + rand_offset_y;
 
-                seedPoint.x = min(max(mean_point_x, 0),grayEye.cols - 1);
-                seedPoint.y = min(max(mean_point_y, 0),grayEye.rows - 1);
+                seedPoint.x = min(max(seedPoint.x, 0),grayEye.cols - 1);
+                seedPoint.y = min(max(seedPoint.y, 0),grayEye.rows - 1);
+                
+                
+                /* Draw points to the debug image. */
+                for( int i=0; i<edgePointThisRound.size(); i++ )
+                {
+                    *debugColorEye.ptr<Vec3b>(edgePointThisRound[i].y, edgePointThisRound[i].x) = Vec3b(0,255,0);
+                }
 
-                circle( debugColorEye, Point(mean_point_x, mean_point_y), 2, Scalar(0,255,255));
-
+                circle( debugColorEye, seedPoint, 3, Scalar(0,255,255));
 
             }
 

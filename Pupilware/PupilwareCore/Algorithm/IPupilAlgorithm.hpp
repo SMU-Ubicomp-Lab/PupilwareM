@@ -9,6 +9,7 @@
 #ifndef AlgorithmBase_hpp
 #define AlgorithmBase_hpp
 
+#include "../preHeader.hpp"
 #include <opencv2/opencv.hpp>
 #include "PWFaceMeta.hpp"
 

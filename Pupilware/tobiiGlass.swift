@@ -241,20 +241,20 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
     }
     
     func createProject() {
-        print("Create a new project...")
-        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/projects")!)
-        post(request) { (success: Bool, object: AnyObject?) in
-            print("Get json : \(object)")
-            var jsonData = object as? [String: String]
-            if let projectId = jsonData!["pr_id"] {
-                self.model.tobiiProject = projectId
-                print("New project created" + self.model.tobiiProject)
-            } else {
-                print("Creating project fails!")
-            }
-        }
+//        print("Create a new project...")
+//        let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/projects")!)
+//        post(request) { (success: Bool, object: AnyObject?) in
+//            print("Get json : \(object)")
+//            var jsonData = object as? [String: String]
+//            if let projectId = jsonData!["pr_id"] {
+//                self.model.tobiiProject = projectId
+//                print("New project created" + self.model.tobiiProject)
+//            } else {
+//                print("Creating project fails!")
+//            }
+//        }
         
-        //self.model.tobiiProject = "7ltj2ii" //This is just for debug purpose, remove this before start any real test
+        self.model.tobiiProject = "fxgyduo" //This is just for debug purpose, remove this before start any real test
     }
     
     func createParticipant(projectId: String) {

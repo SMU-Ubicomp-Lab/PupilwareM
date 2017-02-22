@@ -15,4 +15,8 @@
 #define REQUIRES throw_assert
 #define PROMISES throw_assert
 
+namespace pw{
+    const bool DEBUG = true;
+}
+
 #endif //PUPILWARE_PREHEADER_HPP

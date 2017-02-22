@@ -102,9 +102,8 @@ namespace pw{
             auto rmpi = data.getRightMPIs();
             
             
-            f << "number,left,right,leftmpi,rightmpi" << std::endl;
+            f << "left,right,leftmpi,rightmpi" << std::endl;
             for (size_t i=0; i<lpupil.size(); ++i) {
-                f << i << ",";
                 f << lpupil[i] << ",";
                 f << rpupil[i] << ",";
                 f << lmpi[i] << ",";

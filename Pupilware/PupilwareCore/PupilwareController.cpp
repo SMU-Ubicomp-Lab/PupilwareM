@@ -271,12 +271,16 @@ namespace pw{
         currentFrameNumber = frameNumber;
         float eyeDist = 0;
         
+        
+        
         /*------ Start Process -----*/
         
         if (imgSegAlgo == nullptr) {
             
             if(!faceMeta.hasFace()){
                 // There is no face detected.
+                storage.addPupilSize(PWPupilSize());
+                eyeDistancePx.push_back( 0 );
                 return;
             }
 
@@ -293,6 +297,9 @@ namespace pw{
             {
                 // Clear exiting face data, and return :)
                 faceMeta = PWFaceMeta();
+                faceMeta.setFrameNumber(currentFrameNumber);
+                storage.addPupilSize(PWPupilSize());
+                eyeDistancePx.push_back( 0 );
                 return;
             }
             
@@ -337,10 +344,9 @@ namespace pw{
         
 
         PROMISES(eyeDist >= 0, "Eye distance less than or equle zero. Please check ");
-        
-        
-        faceMeta.setFrameNumber(currentFrameNumber);
         faceMeta.setEyeDistancePx(eyeDist);
+        faceMeta.setFrameNumber(currentFrameNumber);
+        
         
         auto result = pwSegAlgo->process( srcBGR, faceMeta );
         
@@ -369,10 +375,12 @@ namespace pw{
                    20,
                    cv::Scalar(255,0,0));
         
-//        cv::Mat graph = getGraphImage();
-//        cv::flip(graph, graph, 1);
-//        graph.copyTo(debugImg(cv::Rect(0, debugImg.rows - graph.rows -2, graph.cols, graph.rows)));
-        
+        if(DEBUG)
+        {
+            cv::Mat graph = getGraphImage();
+            cv::flip(graph, graph, 1);
+            graph.copyTo(debugImg(cv::Rect(0, debugImg.rows - graph.rows -2, graph.cols, graph.rows)));
+        }
         
         cvtColor(debugImg, debugImg, CV_BGR2RGBA, 4);
     }
@@ -408,7 +416,7 @@ namespace pw{
     cv::Mat PupilwareControllerImpl::getGraphImage() const{
         
         const int graphHeight = 600;
-        const float maxValue = 0.07;
+        const float maxValue = 0.0;
         const float minValue = 0.0;
         
         PWGraph graph("PupilSignal");

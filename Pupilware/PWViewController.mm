@@ -178,7 +178,7 @@
         params.sbRayNumber=((int)[defaults integerForKey:kSBNumberOfRays]);
         params.degreeOffset=((int)[defaults integerForKey:kSBDegreeOffset]);
 
-        [self.processor setParameter:&params];
+//        [self.processor setParameter:&params];
         
         NSLog(@"[Waning] The processor does not pick up these parameter just yet.");
         NSLog(@"Prior = %f", params.prior);
