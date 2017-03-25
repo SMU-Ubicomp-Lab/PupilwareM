@@ -993,6 +993,9 @@
                                 <variation key="heightClass=regular" fixedFrame="YES">
                                     <rect key="frame" x="0.0" y="-13" width="600" height="114"/>
                                 </variation>
+                                <connections>
+                                    <segue destination="Bvi-Hr-i5i" kind="embed" id="AwF-OP-ePA"/>
+                                </connections>
                             </containerView>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -1203,7 +1206,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xgv-Qd-LX6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2645" y="1415"/>
+            <point key="canvasLocation" x="3413" y="-961.5"/>
         </scene>
         <!--Calibration-->
         <scene sceneID="0Lw-q4-v8J">
@@ -2165,6 +2168,9 @@
                                 <variation key="heightClass=regular" fixedFrame="YES">
                                     <rect key="frame" x="0.0" y="343" width="600" height="114"/>
                                 </variation>
+                                <connections>
+                                    <segue destination="Bvi-Hr-i5i" kind="embed" id="teF-wd-7vV"/>
+                                </connections>
                             </containerView>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -2308,13 +2314,13 @@
                                 <exclude reference="R8V-Bo-yZB"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="Grq-4k-dmn"/>
                                 <exclude reference="87t-6U-abz"/>
+                                <exclude reference="Grq-4k-dmn"/>
                                 <exclude reference="Wd5-JQ-hiQ"/>
                                 <exclude reference="h8o-np-9g0"/>
+                                <exclude reference="0Fu-9A-1UR"/>
                                 <exclude reference="TQV-1t-Qa3"/>
                                 <exclude reference="nyU-Ke-C02"/>
-                                <exclude reference="0Fu-9A-1UR"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -2323,13 +2329,13 @@
                                 <include reference="R8V-Bo-yZB"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="Grq-4k-dmn"/>
                                 <include reference="87t-6U-abz"/>
+                                <include reference="Grq-4k-dmn"/>
                                 <include reference="Wd5-JQ-hiQ"/>
                                 <include reference="h8o-np-9g0"/>
+                                <include reference="0Fu-9A-1UR"/>
                                 <include reference="TQV-1t-Qa3"/>
                                 <include reference="nyU-Ke-C02"/>
-                                <include reference="0Fu-9A-1UR"/>
                             </mask>
                         </variation>
                     </view>
@@ -2371,5 +2377,8 @@
         <image name="notepad.png" width="2673" height="2000"/>
         <image name="target.png" width="30" height="30"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="AwF-OP-ePA"/>
+    </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.60958526759999998" green="0.83835340810000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
