@@ -11,19 +11,18 @@ import CocoaAsyncSocket
 import UIKit
 
 
-
 class TobiiGlass: GCDAsyncUdpSocketDelegate {
     
-    static let sharedInstance = TobiiGlass(host: "192.168.71.50", port: 49152)
+    static let sharedInstance = TobiiGlass(host:  "192.168.71.50", port: 49152)
     let model = DataModel.sharedInstance
-    var host = "localhost"
+    var host = "192.168.71.50"
     var port: UInt16 = 49152
     var localPortData: UInt16 = 3000
     var localPortVideo: UInt16 = 3001
-    var baseUrl = "http://localhost"
+    var baseUrl = "http://192.168.71.50"
     var socketData: GCDAsyncUdpSocket?
     var socketVideo: GCDAsyncUdpSocket?
-    let timeout = 1
+    let timeout: UInt32 = 1
     var systemStatus = 0
     let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
     
@@ -54,7 +53,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
     func sendKeepAliveMsg(socket: GCDAsyncUdpSocket, msg:String) {
         while true {
             sendPacket(socket, msg: msg)
-            sleep(1)
+            sleep(timeout)
         }
     }
     
@@ -78,11 +77,10 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
     }
     
     @objc func udpSocket(sock: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress address: NSData!, withFilterContext filterContext: AnyObject!) {
-        guard let stringData = String(data: data, encoding: NSUTF8StringEncoding) else {
+        guard String(data: data, encoding: NSUTF8StringEncoding) != nil else {
 //            print(">>> Data received, but cannot be converted to String")
             return
         }
-//        print("Data received: \(stringData)")
         
         //Only write to file if in testing or calibration
         if (model.inTest || model.inCalibration) {
@@ -244,17 +242,16 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         print("Create a new project...")
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/projects")!)
         post(request) { (success: Bool, object: AnyObject?) in
-            print("Get json : \(object)")
+            print("Get project json object : \(object)")
             var jsonData = object as? [String: String]
             if let projectId = jsonData!["pr_id"] {
                 self.model.tobiiProject = projectId
                 print("New project created" + self.model.tobiiProject)
             } else {
-                print("Creating project fails!")
+                print("Creating project fails!, use the defualt tobiiProject 7ltj2ii")
+                self.model.tobiiProject = "7ltj2ii"
             }
         }
-        
-        //self.model.tobiiProject = "7ltj2ii" //This is just for debug purpose, remove this before start any real test
     }
     
     func createParticipant(projectId: String) {
@@ -269,7 +266,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         
         request.HTTPBody = jsonData
         post(request) { (success: Bool, object: AnyObject?) in
-            print("Get json : \(object)")
+            print("Get Participant json object: \(object)")
             var jsonData = object as? [String: String]
             
             if let participantId = jsonData!["pa_id"] {
@@ -295,7 +292,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         
         request.HTTPBody = jsonData
         post(request) { (success: Bool, object: AnyObject?) in
-            print("Get json : \(object)")
+            print("Get Calibration json object: \(object)")
             var jsonData = object as? [String: String]
             if let calibrationId = jsonData!["ca_id"] {
                 self.model.tobiiCurrentCalibration = calibrationId
@@ -311,7 +308,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         print("Start Calibration for " + calibrationId)
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/calibrations/" + String(calibrationId) + "/start")!)
         post(request) { (success: Bool, object: AnyObject?) in
-            print("Get json : \(object)")
+            print("Get start calibration json object: \(object)")
             var jsonData = object as? [String: String]
             if let calibrationState = jsonData!["ca_state"] {
                 self.model.tobiiCurrentCalibrationState = calibrationState
@@ -326,7 +323,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         print("Checking Calibration status for " + calibrationId)
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/calibrations/" + String(calibrationId) + "/status")!)
         get(request) { (success: Bool, object: AnyObject?) in
-            print("Get json : \(object)")
+            print("Get Check Calibration status json object: \(object)")
             var jsonData = object as? [String: String]
             if let calibrationState = jsonData!["ca_state"] {
                 self.model.tobiiCurrentCalibrationState = calibrationState
@@ -377,7 +374,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         
         request.HTTPBody = jsonData
         post(request) { (success: Bool, object: AnyObject?) in
-            print("Get json : \(object)")
+            print("Get recording json object: \(object)")
             var jsonData = object as? [String: AnyObject]
             
             if let recordingId = jsonData!["rec_id"] {
@@ -393,7 +390,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/recordings/" + String(recordingId) + "/start")!)
         
         post(request) { (success: Bool, object: AnyObject?) in
-            print("Get json : \(object)")
+            print("Get start recording json object: \(object)")
         }
     }
     
@@ -401,7 +398,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/recordings/" + String(recordingId) + "/stop")!)
         
         post(request) { (success: Bool, object: AnyObject?) in
-            print("Get json : \(object)")
+            print("Get stop recording json object: \(object)")
         }
     }
     
@@ -415,7 +412,6 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
         let data = row.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         
         if NSFileManager.defaultManager().fileExistsAtPath(fileName) {
-//            print("writing to " + fileName)
             if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
                 fileHandle.seekToEndOfFile()
                 fileHandle.writeData(data)

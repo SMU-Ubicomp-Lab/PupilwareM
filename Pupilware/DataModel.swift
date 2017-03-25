@@ -28,6 +28,7 @@ import Foundation
     var storageLevel = ""
     
     
+    var currentProject: String = ""
     var currentSubjectID:String = ""
     var allSubjectIDs:[String] = []
     var faceInView:Bool = false

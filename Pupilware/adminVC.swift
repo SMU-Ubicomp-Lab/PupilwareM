@@ -12,6 +12,8 @@ import UIKit
 
 class adminVC: UIViewController{
     var delegate:sendBackDelegate?
+    let model = DataModel.sharedInstance
+    let tobiiGlass = TobiiGlass.sharedInstance
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,4 +57,32 @@ class adminVC: UIViewController{
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+
+    @IBAction func newProject(sender: UIButton) {
+        let alertController = UIAlertController(title: "Enter Project ID", message: "", preferredStyle: .Alert)
+        let loginAction = UIAlertAction(title: "Done", style: .Default) { (_) in
+            let textBox = alertController.textFields![0] as UITextField
+            var name = ""
+            if textBox.text != nil{
+                name = textBox.text!
+            }
+            self.model.currentProject = name
+            self.tobiiGlass.createProject()
+        }
+        loginAction.enabled = false
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (_) in }
+        alertController.addTextFieldWithConfigurationHandler { (textField) in
+            textField.placeholder = "Project ID"
+            
+            NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: textField, queue: NSOperationQueue.mainQueue()) { (notification) in
+                loginAction.enabled = textField.text != ""
+            }
+        }
+        
+        alertController.addAction(loginAction)
+        alertController.addAction(cancelAction)
+        
+        self.presentViewController(alertController, animated: true){ (_) in}
+    }
 }

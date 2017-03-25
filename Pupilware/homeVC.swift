@@ -21,8 +21,7 @@ class homeVC: UITabBarController {
                        name: "SysUnavailable",
                        object: nil)
         tobiiGlass.startConnect()
-        tobiiGlass.createProject()
-        
+//        tobiiGlass.createProject()
         //let timer = NSTimer.scheduledTimerWithTimeInterval(10.0, target: self, selector: #selector(homeVC.checkSys), userInfo: nil, repeats: true)
     }
     
