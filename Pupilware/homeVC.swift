@@ -23,7 +23,7 @@ class homeVC: UITabBarController {
         tobiiGlass.startConnect()
         tobiiGlass.createProject()
         
-        let timer = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(homeVC.checkSys), userInfo: nil, repeats: true)
+        //let timer = NSTimer.scheduledTimerWithTimeInterval(10.0, target: self, selector: #selector(homeVC.checkSys), userInfo: nil, repeats: true)
     }
     
     func tobiiAlert() {

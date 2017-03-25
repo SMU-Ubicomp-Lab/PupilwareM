@@ -33,17 +33,24 @@ class ACTViewController: UIViewController, BridgeDelegate {
         
         self.model.bridgeDelegate = self
         
-        
-        self.questionLabel.layer.borderColor = UIColor.blackColor().CGColor
-        self.questionLabel.layer.borderWidth = 1
         submitButton.hidden = true
+        
+        answerA.layer.borderWidth = 1
+        answerB.layer.borderWidth = 1
+        answerC.layer.borderWidth = 1
+        answerD.layer.borderWidth = 1
+        answerE.layer.borderWidth = 1
+        
+
         participantId = model.currentSubjectID
         questionsModel.reset()
-        questionLabel.font = questionLabel.font.fontWithSize(20)
         questionsModel.shuffelQuestions()
         totalQuestions = questionsModel.getQuestionsNumber()
         currentQuestionIndex = questionsModel.getCurrentQuestionIndex()
         currentQuestion = questionsModel.getInitQuestion()
+    
+        print("current")
+        print(currentQuestion)
         currentQuizId = questionsModel.getPermutationIndex()
         self.updateQuestion()
     }
@@ -93,12 +100,11 @@ class ACTViewController: UIViewController, BridgeDelegate {
     
     //-----------------------------------------------------
     
+    @IBOutlet weak var actImage: UIImageView!
     @IBOutlet weak var drawImageView: UIImageView!
     
     @IBAction func clearImage(sender: UIButton) {
         drawImageView.image = UIImage.init(named: "notepad.png")    }
-    
-    @IBOutlet weak var questionLabel: UILabel!
     
     @IBOutlet weak var answerA: UIButton!
     
@@ -217,13 +223,25 @@ class ACTViewController: UIViewController, BridgeDelegate {
         self.presentViewController(alertController, animated: true, completion: nil)
     }
     func updateQuestion() {
-        questionLabel.text = currentQuestion[0]
-        answerA.setTitle(currentQuestion[1], forState: UIControlState.Normal)
-        answerB.setTitle(currentQuestion[2], forState: UIControlState.Normal)
-        answerC.setTitle(currentQuestion[3], forState: UIControlState.Normal)
-        answerD.setTitle(currentQuestion[4], forState: UIControlState.Normal)
-        answerE.setTitle(currentQuestion[5], forState: UIControlState.Normal)
         currentQuestionIndex = questionsModel.getCurrentQuestionIndex()
+        
+        let path =  NSBundle.mainBundle().pathForResource(currentQuestion[0], ofType: "png")
+        actImage.image = UIImage(contentsOfFile: path!)
+        
+        if (currentQuestion[1] == "1") {
+            answerA.setTitle("A", forState: UIControlState.Normal)
+            answerB.setTitle("B", forState: UIControlState.Normal)
+            answerC.setTitle("C", forState: UIControlState.Normal)
+            answerD.setTitle("D", forState: UIControlState.Normal)
+            answerE.setTitle("E", forState: UIControlState.Normal)
+        } else {
+            answerA.setTitle("F", forState: UIControlState.Normal)
+            answerB.setTitle("G", forState: UIControlState.Normal)
+            answerC.setTitle("H", forState: UIControlState.Normal)
+            answerD.setTitle("J", forState: UIControlState.Normal)
+            answerE.setTitle("K", forState: UIControlState.Normal)
+        }
+
         var selected = ""
 
         selected = participantAnswers[currentQuestionIndex]
