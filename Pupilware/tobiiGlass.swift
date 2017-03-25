@@ -306,6 +306,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
     
     func startCalibration(calibrationId: String) {
         print("Start Calibration for " + calibrationId)
+        self.model.tobiiCurrentCalibrationState = "not calibrated"
         let request = NSMutableURLRequest(URL: NSURL(string: self.baseUrl + "/api/calibrations/" + String(calibrationId) + "/start")!)
         post(request) { (success: Bool, object: AnyObject?) in
             print("Get start calibration json object: \(object)")
@@ -327,6 +328,7 @@ class TobiiGlass: GCDAsyncUdpSocketDelegate {
             var jsonData = object as? [String: String]
             if let calibrationState = jsonData!["ca_state"] {
                 self.model.tobiiCurrentCalibrationState = calibrationState
+                
             } else {
                 print("Checking calibration state fails")
             }
