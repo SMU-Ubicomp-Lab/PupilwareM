@@ -51,7 +51,8 @@ class subjectIDModalVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             //}
             
             self.model.archiveSubjectIDs()
-            self.tobiiGlass.createParticipant(self.model.tobiiProject)
+            // TODO : TOBII 
+            //self.tobiiGlass.createParticipant(self.model.tobiiProject)
             self.model.tobiiSubjectIds[name] = ""
             self.subjectTable.reloadData()
         }

@@ -45,6 +45,10 @@
 		5C7E25A01E86E94C00CEC80E /* act7.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C7E25801E86E94C00CEC80E /* act7.png */; };
 		5C7E25A11E86E94C00CEC80E /* act8.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C7E25811E86E94C00CEC80E /* act8.png */; };
 		5C7E25A21E86E94C00CEC80E /* act9.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C7E25821E86E94C00CEC80E /* act9.png */; };
+		5C7E25A71E877B0200CEC80E /* actR4.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C7E25A31E877B0200CEC80E /* actR4.png */; };
+		5C7E25A81E877B0200CEC80E /* actR1.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C7E25A41E877B0200CEC80E /* actR1.png */; };
+		5C7E25A91E877B0200CEC80E /* actR2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C7E25A51E877B0200CEC80E /* actR2.png */; };
+		5C7E25AA1E877B0200CEC80E /* actR3.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C7E25A61E877B0200CEC80E /* actR3.png */; };
 		5C82A9B01D2479C6001F5345 /* PWVideoWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C82A9AE1D2479C6001F5345 /* PWVideoWriter.cpp */; };
 		5C90AB1C1D34057D00FF7C5F /* PWIOSVideoReader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5C90AB1B1D34057D00FF7C5F /* PWIOSVideoReader.mm */; };
 		5C90F5881D396E56006E6E71 /* CWClock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C90F5841D396E56006E6E71 /* CWClock.cpp */; };
@@ -176,6 +180,10 @@
 		5C7E25801E86E94C00CEC80E /* act7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = act7.png; sourceTree = "<group>"; };
 		5C7E25811E86E94C00CEC80E /* act8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = act8.png; sourceTree = "<group>"; };
 		5C7E25821E86E94C00CEC80E /* act9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = act9.png; sourceTree = "<group>"; };
+		5C7E25A31E877B0200CEC80E /* actR4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = actR4.png; sourceTree = "<group>"; };
+		5C7E25A41E877B0200CEC80E /* actR1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = actR1.png; sourceTree = "<group>"; };
+		5C7E25A51E877B0200CEC80E /* actR2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = actR2.png; sourceTree = "<group>"; };
+		5C7E25A61E877B0200CEC80E /* actR3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = actR3.png; sourceTree = "<group>"; };
 		5C801D071D282C0B0008A378 /* Property.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Property.hpp; sourceTree = "<group>"; };
 		5C82A9AE1D2479C6001F5345 /* PWVideoWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PWVideoWriter.cpp; sourceTree = "<group>"; };
 		5C82A9AF1D2479C6001F5345 /* PWVideoWriter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PWVideoWriter.hpp; sourceTree = "<group>"; };
@@ -351,6 +359,10 @@
 		5C7E25621E86E94C00CEC80E /* acts */ = {
 			isa = PBXGroup;
 			children = (
+				5C7E25A31E877B0200CEC80E /* actR4.png */,
+				5C7E25A41E877B0200CEC80E /* actR1.png */,
+				5C7E25A51E877B0200CEC80E /* actR2.png */,
+				5C7E25A61E877B0200CEC80E /* actR3.png */,
 				5C7E25631E86E94C00CEC80E /* act1.png */,
 				5C7E25641E86E94C00CEC80E /* act10.png */,
 				5C7E25651E86E94C00CEC80E /* act11.png */,
@@ -735,14 +747,17 @@
 				AEA10AAB1D77F4420057FD96 /* refresh.png in Resources */,
 				AEA10AA91D77F2540057FD96 /* broom.png in Resources */,
 				5C7E258E1E86E94C00CEC80E /* act2.png in Resources */,
+				5C7E25A81E877B0200CEC80E /* actR1.png in Resources */,
 				5C7E259B1E86E94C00CEC80E /* act31.png in Resources */,
 				5C7E25991E86E94C00CEC80E /* act3.png in Resources */,
 				5C7E259D1E86E94C00CEC80E /* act4.png in Resources */,
 				5C7E259F1E86E94C00CEC80E /* act6.png in Resources */,
+				5C7E25A91E877B0200CEC80E /* actR2.png in Resources */,
 				5C9EA4AC1D1EE45B003BE62C /* haarcascade_frontalface_default.xml in Resources */,
 				5C7E25891E86E94C00CEC80E /* act15.png in Resources */,
 				976803C81C97429E003D63C8 /* hash.png in Resources */,
 				9748FF731C6092B700143D54 /* beaker.png in Resources */,
+				5C7E25A71E877B0200CEC80E /* actR4.png in Resources */,
 				5C7E25861E86E94C00CEC80E /* act12.png in Resources */,
 				5C7E25871E86E94C00CEC80E /* act13.png in Resources */,
 				5C7E25951E86E94C00CEC80E /* act26.png in Resources */,
@@ -764,6 +779,7 @@
 				5C7E25921E86E94C00CEC80E /* act23.png in Resources */,
 				5C7E259A1E86E94C00CEC80E /* act30.png in Resources */,
 				5C7E25961E86E94C00CEC80E /* act27.png in Resources */,
+				5C7E25AA1E877B0200CEC80E /* actR3.png in Resources */,
 				97A3214E1C59CDB300B1EB98 /* Assets.xcassets in Resources */,
 				5C7E258B1E86E94C00CEC80E /* act17.png in Resources */,
 				5C7E25981E86E94C00CEC80E /* act29.png in Resources */,

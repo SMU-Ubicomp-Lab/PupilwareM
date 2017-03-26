@@ -24,10 +24,13 @@ class ACTViewController: UIViewController, BridgeDelegate {
     var currentOptions = []
     var totalQuestions = 0
     var participantId = ""
-    var participantAnswers = [String](count: 9, repeatedValue: "")
+    var participantAnswers = [String](count: 25, repeatedValue: "")
     var currentQuestionAnswered = false
     var currentQuizId = 0
 
+    @IBOutlet weak var passageView: UITextView!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -58,10 +61,14 @@ class ACTViewController: UIViewController, BridgeDelegate {
     
     override func viewWillAppear(animated: Bool) {
         
+        self.passageView.backgroundColor = UIColor.whiteColor()
+        
         // Add new test to the Data Model,
         // Pupilware will get these file name from it. :P
         self.model.inTest = true
         self.model.currentTest = ACTTest(subjectID: self.model.currentSubjectID, itemID: currentQuestionIndex)
+        
+        
         
     }
     //-----------------------------------------------------
@@ -223,7 +230,12 @@ class ACTViewController: UIViewController, BridgeDelegate {
         self.presentViewController(alertController, animated: true, completion: nil)
     }
     func updateQuestion() {
+        
         currentQuestionIndex = questionsModel.getCurrentQuestionIndex()
+        
+        if(currentQuestionIndex >= 4){
+            self.passageView.hidden = true
+        }
         
         let path =  NSBundle.mainBundle().pathForResource(currentQuestion[0], ofType: "png")
         actImage.image = UIImage(contentsOfFile: path!)

@@ -899,10 +899,12 @@
                                     </mask>
                                 </variation>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dze-lC-FEO">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dze-lC-FEO">
                                 <rect key="frame" x="20" y="72" width="380" height="230"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="380" id="HQg-Ex-5Cd"/>
+                                    <constraint firstAttribute="width" constant="380" id="HQg-Ex-5Cd">
+                                        <variation key="heightClass=regular" constant="465"/>
+                                    </constraint>
                                     <constraint firstAttribute="height" constant="230" id="asl-o9-mym"/>
                                 </constraints>
                             </imageView>
@@ -987,27 +989,40 @@
                                         </connections>
                                     </button>
                                 </subviews>
+                                <variation key="heightClass=regular" fixedFrame="YES">
+                                    <rect key="frame" x="508" y="109" width="46" height="170"/>
+                                </variation>
                             </stackView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FV1-2M-Cqz">
                                 <rect key="frame" x="0.0" y="7" width="600" height="114"/>
                                 <variation key="heightClass=regular" fixedFrame="YES">
                                     <rect key="frame" x="0.0" y="-13" width="600" height="114"/>
                                 </variation>
-                                <connections>
-                                    <segue destination="Bvi-Hr-i5i" kind="embed" id="AwF-OP-ePA"/>
-                                </connections>
                             </containerView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Px4-0J-WyG">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" red="0.94179080309999996" green="0.94179080309999996" blue="0.94179080309999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <mutableString key="text">Public debate around climate change and its effects on agriculture tends to focus on the large-scale industrial farms of the North. Farmers who work on a small scale and use traditional methods have largely been ignored. However, as the world slowly comes to terms with the threat of climate change, Native farming traditions will warrant greater attention.     In the industrial model of agriculture, one or two crop varieties are grown over vast areas. Instead of trying to use local resources of soil and water optimally and sustainably, the natural environment is all but ignored and uniform growing conditions are fabricated through large-scale irrigation and the intensive use of artificial fertilizers and pesticides. For example, a handful of basically similar potato varieties, all of which require nearly identical soil conditions, temperature, rainfall, and growing seasons, account for almost all global production. When these global crops are no longer suited to the environment in which they are grown, when their resistance to disease and pests begins to fail, or the climate itself changes, the best way to rejuvenate the breeding stock will be to introduce new genetic material from the vast diversity of crop varieties still maintained by indigenous peoples.  In contrast to the industrial model, Andean potatoes and other Andean crops such as squash and beans grown by Quechuan farmers exhibit extraordinary genetic diversity, driven by the need to adapt crops to the extraordinary climatic diversity of the region. Along the two axes of latitude and altitude, the Andes encompasses fully two-thirds of all possible combinations of climate and geography found on Earth. The Andean potato has been adapted to every environment except the depth of the rainforest or the frozen peaks of the mountains. Today, facing the likelihood of major disruptions to the climatic conditions for agriculture worldwide, indigenous farmers provide a dramatic example of crop adaptation in an increasingly extreme environment. More importantly, Native farmers have also safeguarded the crop diversity essential for the future adaptations.</mutableString>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <variation key="heightClass=regular" misplaced="YES">
+                                    <rect key="frame" x="11" y="392" width="579" height="484"/>
+                                </variation>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="tintColor" red="0.0" green="0.30610767770000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="R04-SI-dx0" firstAttribute="leading" secondItem="m0M-ZF-HkW" secondAttribute="leadingMargin" constant="8" id="0aV-b1-Yab"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Px4-0J-WyG" secondAttribute="trailing" constant="-9" id="0zf-bQ-qsB"/>
                             <constraint firstAttribute="trailingMargin" secondItem="fzx-KP-m3b" secondAttribute="trailing" id="5nt-mD-KOl"/>
                             <constraint firstItem="dex-tY-c8n" firstAttribute="leading" secondItem="cmf-fG-sCU" secondAttribute="trailing" constant="365" id="7na-32-5j7"/>
                             <constraint firstAttribute="leadingMargin" secondItem="cmf-fG-sCU" secondAttribute="leading" constant="-10" id="9rX-yM-CFy"/>
                             <constraint firstAttribute="trailingMargin" secondItem="2db-Zz-3KF" secondAttribute="trailing" constant="26" id="DU9-Ib-nnx"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ysv-w2-qeg" secondAttribute="trailing" constant="239" id="GNJ-ka-RO0"/>
-                            <constraint firstItem="2a3-Ko-0E1" firstAttribute="leading" secondItem="dze-lC-FEO" secondAttribute="trailing" constant="72" id="Gfo-eE-J0g"/>
+                            <constraint firstItem="2a3-Ko-0E1" firstAttribute="leading" secondItem="dze-lC-FEO" secondAttribute="trailing" constant="72" id="Gfo-eE-J0g">
+                                <variation key="heightClass=regular" constant="23"/>
+                            </constraint>
                             <constraint firstItem="2db-Zz-3KF" firstAttribute="leading" secondItem="m0M-ZF-HkW" secondAttribute="leadingMargin" constant="8" id="Ggw-ma-vHi"/>
                             <constraint firstItem="dex-tY-c8n" firstAttribute="top" secondItem="2db-Zz-3KF" secondAttribute="bottom" constant="8" id="Hev-UQ-Jyt"/>
                             <constraint firstAttribute="trailingMargin" secondItem="71L-7f-RJB" secondAttribute="trailing" constant="79" id="IZ1-D7-feB"/>
@@ -1015,6 +1030,7 @@
                             <constraint firstItem="ysv-w2-qeg" firstAttribute="leading" secondItem="dex-tY-c8n" secondAttribute="trailing" constant="40" id="KF7-5r-hk6"/>
                             <constraint firstItem="2db-Zz-3KF" firstAttribute="centerX" secondItem="m0M-ZF-HkW" secondAttribute="centerX" id="LTZ-dP-AWK"/>
                             <constraint firstAttribute="trailingMargin" secondItem="R04-SI-dx0" secondAttribute="trailing" constant="388" id="Qao-KU-fnS"/>
+                            <constraint firstItem="icg-F2-dkq" firstAttribute="top" secondItem="Px4-0J-WyG" secondAttribute="bottom" constant="8" id="RvM-nB-9hH"/>
                             <constraint firstItem="2db-Zz-3KF" firstAttribute="top" secondItem="dze-lC-FEO" secondAttribute="bottom" constant="44" id="Yb6-WK-jXS"/>
                             <constraint firstItem="ysv-w2-qeg" firstAttribute="leading" secondItem="dex-tY-c8n" secondAttribute="trailing" constant="16" id="ZBr-KU-gpL"/>
                             <constraint firstItem="NcS-sX-ubU" firstAttribute="top" secondItem="K0p-WD-tnT" secondAttribute="bottom" constant="45" id="ZNT-mp-Za1"/>
@@ -1027,6 +1043,10 @@
                             <constraint firstAttribute="trailingMargin" secondItem="dex-tY-c8n" secondAttribute="trailing" id="fm3-BF-jBU"/>
                             <constraint firstAttribute="leadingMargin" secondItem="dze-lC-FEO" secondAttribute="leading" id="fn1-Hh-8CL"/>
                             <constraint firstItem="cmf-fG-sCU" firstAttribute="top" secondItem="2db-Zz-3KF" secondAttribute="bottom" constant="10" id="hXz-mT-4bG"/>
+                            <constraint firstItem="Px4-0J-WyG" firstAttribute="top" secondItem="dze-lC-FEO" secondAttribute="bottom" constant="8" id="lB2-72-gXV">
+                                <variation key="heightClass=regular" constant="90"/>
+                            </constraint>
+                            <constraint firstItem="Px4-0J-WyG" firstAttribute="leading" secondItem="m0M-ZF-HkW" secondAttribute="leadingMargin" constant="-10" id="moV-OB-wOi"/>
                             <constraint firstItem="fzx-KP-m3b" firstAttribute="top" secondItem="cmf-fG-sCU" secondAttribute="bottom" constant="15" id="nEz-LG-iUH"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ysv-w2-qeg" secondAttribute="trailing" constant="77" id="pJf-6x-wi3"/>
                             <constraint firstItem="fzx-KP-m3b" firstAttribute="top" secondItem="ysv-w2-qeg" secondAttribute="bottom" constant="12" id="twq-f5-7Ga"/>
@@ -1038,10 +1058,14 @@
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="FV1-2M-Cqz"/>
+                                <exclude reference="Px4-0J-WyG"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="0aV-b1-Yab"/>
                                 <exclude reference="Qao-KU-fnS"/>
+                                <exclude reference="0zf-bQ-qsB"/>
+                                <exclude reference="lB2-72-gXV"/>
+                                <exclude reference="moV-OB-wOi"/>
                                 <exclude reference="7na-32-5j7"/>
                                 <exclude reference="Hev-UQ-Jyt"/>
                                 <exclude reference="fm3-BF-jBU"/>
@@ -1051,15 +1075,21 @@
                                 <exclude reference="ZBr-KU-gpL"/>
                                 <exclude reference="pJf-6x-wi3"/>
                                 <exclude reference="w2h-Gx-hqd"/>
+                                <exclude reference="RvM-nB-9hH"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
                             <mask key="subviews">
                                 <include reference="FV1-2M-Cqz"/>
+                                <include reference="Px4-0J-WyG"/>
                             </mask>
                             <mask key="constraints">
                                 <include reference="0aV-b1-Yab"/>
                                 <include reference="Qao-KU-fnS"/>
+                                <include reference="0zf-bQ-qsB"/>
+                                <include reference="lB2-72-gXV"/>
+                                <include reference="moV-OB-wOi"/>
+                                <include reference="RvM-nB-9hH"/>
                             </mask>
                         </variation>
                     </view>
@@ -1074,6 +1104,7 @@
                         <outlet property="drawImageView" destination="fzx-KP-m3b" id="dwZ-DV-f5y"/>
                         <outlet property="faceLabel" destination="R04-SI-dx0" id="RoM-lu-Lpl"/>
                         <outlet property="nextButton" destination="dex-tY-c8n" id="NEq-ub-5eN"/>
+                        <outlet property="passageView" destination="Px4-0J-WyG" id="J8x-Eb-LtY"/>
                         <outlet property="submitButton" destination="ysv-w2-qeg" id="EhR-xQ-H2A"/>
                     </connections>
                 </viewController>
@@ -1101,13 +1132,55 @@
                                     <segue destination="eqf-NQ-KyT" kind="show" id="a6h-nQ-B0M"/>
                                 </connections>
                             </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aVA-bf-GKG">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <mutableString key="text">Direction
+1. Solve each problem, choose the correct answer, then tap "next" button.
+2. Once you tap "next", you are not allow to go back.
+3. Fill-in quick self-report for each question
+4. You may use a digital scrap paper but not allow using a calculater.
+
+Note: Unless otherwise stated, all of the following should be assumed.
+1. Illustrative figures are NOT necesssarily drawn to scale.
+2. Geometric figures lie in a plan.
+3. The word "line" indicates a straight line.
+4. The word "average" indicates arithmetic mean.</mutableString>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="tintColor" red="0.0" green="0.30610767770000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="aVA-bf-GKG" firstAttribute="top" secondItem="RRw-qd-m0S" secondAttribute="bottom" constant="43" id="9WM-rt-s1P"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="aVA-bf-GKG" secondAttribute="trailing" constant="36" id="9hM-2x-IDD"/>
                             <constraint firstItem="VLm-jo-7gD" firstAttribute="centerX" secondItem="ZTg-Qk-vdg" secondAttribute="centerX" id="BhV-5A-pfD"/>
                             <constraint firstItem="VLm-jo-7gD" firstAttribute="centerY" secondItem="ZTg-Qk-vdg" secondAttribute="centerY" id="IcK-z1-BDs"/>
+                            <constraint firstItem="aVA-bf-GKG" firstAttribute="leading" secondItem="ZTg-Qk-vdg" secondAttribute="leadingMargin" constant="38" id="KjG-Bj-TCW"/>
+                            <constraint firstItem="VLm-jo-7gD" firstAttribute="top" secondItem="aVA-bf-GKG" secondAttribute="bottom" constant="72" id="khz-Rx-oSw"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="aVA-bf-GKG"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="9WM-rt-s1P"/>
+                                <exclude reference="9hM-2x-IDD"/>
+                                <exclude reference="KjG-Bj-TCW"/>
+                                <exclude reference="khz-Rx-oSw"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular">
+                            <mask key="subviews">
+                                <include reference="aVA-bf-GKG"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="9WM-rt-s1P"/>
+                                <include reference="9hM-2x-IDD"/>
+                                <include reference="KjG-Bj-TCW"/>
+                                <include reference="khz-Rx-oSw"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="yhe-l6-Ei4"/>
                 </viewController>
@@ -1202,13 +1275,13 @@
                         <viewControllerLayoutGuide type="bottom" id="jiB-8w-x6Y"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="4w1-mP-Brd">
-                        <rect key="frame" x="0.0" y="0.0" width="560" height="520"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="114"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xgv-Qd-LX6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3413" y="-961.5"/>
+            <point key="canvasLocation" x="4261" y="-856.5"/>
         </scene>
         <!--Calibration-->
         <scene sceneID="0Lw-q4-v8J">
@@ -2382,7 +2455,7 @@
         <image name="target.png" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="AwF-OP-ePA"/>
+        <segue reference="teF-wd-7vV"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.60958526759999998" green="0.83835340810000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

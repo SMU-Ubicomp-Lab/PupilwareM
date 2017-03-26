@@ -15,20 +15,21 @@ class ACTModel {
     
     var currentQuestionIndex = 0
     var questionsEasy = [["act1", "1"], ["act2", "0"], ["act3", "1"], ["act4", "0"], ["act5", "1"],
-                         ["act6", "0"], ["act7", "1"], ["act8", "0"], ["act9", "1"], ["act10","0"],
-                         ["act11", "1"], ["act12", "0"], ["act13", "1"], ["act14", "0"], ["act15","1"]]
+                         ["act6", "0"], ["act7", "1"]]
     
     var questionsMedium = [["act16", "0"], ["act17", "1"], ["act18", "0"], ["act19", "1"], ["act20", "0"],
-                           ["act21", "1"], ["act22", "0"], ["act23", "1"], ["act24", "0"], ["act25","1"],
-                           ["act26", "0"], ["act27", "1"], ["act28", "0"], ["act29", "1"], ["act30","0"]]
+                           ["act21", "1"], ["act22", "0"]]
     
-    var questionsHard = [["act31", "1"], ["act32", "0"]]
+    var questionsHard = [["act31", "1"], ["act32", "0"],["act24", "0"], ["act25","1"],
+                         ["act26", "0"], ["act27", "1"], ["act28", "0"]]
+    
+    var readingQuestion = [["actR1", "1"], ["actR2", "1"],["actR3", "1"],["actR4", "1"]]
     
     var questions: [[String]] = []
     
-    var permutationEasy = Array(0...14)
-    var permutationMedium = Array(15...31)
-    var permutationHard = Array(32...33)
+    var permutationEasy = Array(4...10)
+    var permutationMedium = Array(11...17)
+    var permutationHard = Array(18...24)
     var permutation :[Int] = []
     
     func shuffelQuestions() {
@@ -37,8 +38,8 @@ class ACTModel {
         let shuffledMedium = GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(permutationMedium) as! [Int]
         let shuffledHard = GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(permutationHard) as! [Int]
         
-        questions = questionsEasy + questionsMedium + questionsHard
-        permutation = shuffledEasy + shuffledMedium + shuffledHard
+        questions = readingQuestion + questionsEasy + questionsMedium + questionsHard
+        permutation = Array(0...3) + shuffledEasy + shuffledMedium + shuffledHard
     }
     
     func getInitQuestion() -> Array<String> {
