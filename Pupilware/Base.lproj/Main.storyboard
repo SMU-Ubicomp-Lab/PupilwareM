@@ -998,6 +998,9 @@
                                 <variation key="heightClass=regular" fixedFrame="YES">
                                     <rect key="frame" x="0.0" y="-13" width="600" height="114"/>
                                 </variation>
+                                <connections>
+                                    <segue destination="Bvi-Hr-i5i" kind="embed" id="jjS-yd-o2q"/>
+                                </connections>
                             </containerView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Px4-0J-WyG">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
@@ -2200,6 +2203,25 @@ Note: Unless otherwise stated, all of the following should be assumed.
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Mistakes" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zi6-m9-Trr">
+                                <rect key="frame" x="177" y="273" width="246" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="246" id="LsY-I1-YkJ"/>
+                                    <constraint firstAttribute="height" constant="65" id="rM6-uW-12i"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cxz-7R-1pD">
+                                <rect key="frame" x="0.0" y="7" width="600" height="114"/>
+                                <variation key="heightClass=regular" fixedFrame="YES">
+                                    <rect key="frame" x="0.0" y="343" width="600" height="114"/>
+                                </variation>
+                                <connections>
+                                    <segue destination="Bvi-Hr-i5i" kind="embed" id="teF-wd-7vV"/>
+                                </connections>
+                            </containerView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9nJ-J6-wA8">
                                 <rect key="frame" x="40" y="30" width="520" height="235"/>
                                 <constraints>
@@ -2230,27 +2252,8 @@ Note: Unless otherwise stated, all of the following should be assumed.
                                 </attributedString>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Mistakes" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zi6-m9-Trr">
-                                <rect key="frame" x="177" y="273" width="246" height="65"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="246" id="LsY-I1-YkJ"/>
-                                    <constraint firstAttribute="height" constant="65" id="rM6-uW-12i"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cxz-7R-1pD">
-                                <rect key="frame" x="0.0" y="7" width="600" height="114"/>
-                                <variation key="heightClass=regular" fixedFrame="YES">
-                                    <rect key="frame" x="0.0" y="343" width="600" height="114"/>
-                                </variation>
-                                <connections>
-                                    <segue destination="Bvi-Hr-i5i" kind="embed" id="teF-wd-7vV"/>
-                                </connections>
-                            </containerView>
                         </subviews>
-                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Zi6-m9-Trr" firstAttribute="top" secondItem="9nJ-J6-wA8" secondAttribute="bottom" constant="8" symbolic="YES" id="9Lq-1I-qxX"/>
                             <constraint firstItem="9nJ-J6-wA8" firstAttribute="top" secondItem="jEK-7x-seh" secondAttribute="bottom" constant="10" id="EM9-eC-y8e"/>
@@ -2299,7 +2302,7 @@ Note: Unless otherwise stated, all of the following should be assumed.
                                     <constraint firstAttribute="height" constant="65" id="kPs-bZ-MMZ"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="thin" pointSize="40"/>
-                                <color key="textColor" red="0.94600064770000003" green="0.94600064770000003" blue="0.94600064770000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="textColor" red="0.038134849960000002" green="0.038536269429999999" blue="0.038536269429999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You Miss 0 times" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r4K-aO-Pmy">
@@ -2310,11 +2313,11 @@ Note: Unless otherwise stated, all of the following should be assumed.
                                     <constraint firstAttribute="width" constant="246" id="vQs-Xt-YMb"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                <color key="textColor" red="0.94600064770000003" green="0.94600064770000003" blue="0.94600064770000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="textColor" red="0.038134849960000002" green="0.038536269429999999" blue="0.038536269429999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="r4K-aO-Pmy" firstAttribute="top" secondItem="EDM-Dz-iyi" secondAttribute="bottom" constant="38" id="3ju-Dy-KIQ"/>
                             <constraint firstItem="EDM-Dz-iyi" firstAttribute="leading" secondItem="0bQ-9U-jBa" secondAttribute="leadingMargin" constant="148" id="43x-vO-sss"/>
@@ -2348,7 +2351,7 @@ Note: Unless otherwise stated, all of the following should be assumed.
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <string key="text">In this experient, you are asking to type some text with a bluetooth keyboard. Please keep your face in view at all time.   Tap "Start Typing" to start</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.94179080309999996" green="0.94179080309999996" blue="0.94179080309999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="textColor" red="0.038134849960000002" green="0.038536269429999999" blue="0.038536269429999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R8V-Bo-yZB">
@@ -2357,7 +2360,9 @@ Note: Unless otherwise stated, all of the following should be assumed.
                                     <constraint firstAttribute="height" constant="30" id="sBe-rz-gNe"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <state key="normal" title="Start Typing"/>
+                                <state key="normal" title="Start Typing">
+                                    <color key="titleColor" red="0.32034290864061576" green="0.41856534479225349" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="sBe-rz-gNe"/>
@@ -2375,7 +2380,7 @@ Note: Unless otherwise stated, all of the following should be assumed.
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="OH0-Pa-8b7" firstAttribute="leading" secondItem="M67-dl-Omx" secondAttribute="leadingMargin" constant="88" id="0Fu-9A-1UR"/>
                             <constraint firstAttribute="trailingMargin" secondItem="R8V-Bo-yZB" secondAttribute="trailing" constant="171" id="87t-6U-abz"/>
@@ -2455,7 +2460,7 @@ Note: Unless otherwise stated, all of the following should be assumed.
         <image name="target.png" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="teF-wd-7vV"/>
+        <segue reference="jjS-yd-o2q"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.60958526759999998" green="0.83835340810000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

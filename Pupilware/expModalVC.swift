@@ -73,7 +73,7 @@ class expModalVC: UIViewController, BridgeDelegate{
         
         self.indicator.text = "Keep Face In View"
         self.indicator.textColor = UIColor.greenColor().colorWithAlphaComponent(0.5)
-        self.progressBar.setProgress(self.progressBar.progress + 0.01, animated: true)
+        self.progressBar.setProgress(self.progressBar.progress + 0.0025, animated: true)
     }
     
     func faceNotInView(){

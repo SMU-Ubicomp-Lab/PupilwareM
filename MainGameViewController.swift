@@ -34,7 +34,7 @@ class MainGameViewController: UIViewController, TypingGameProtocol, BridgeDelega
         super.viewDidLoad()
         
         // register key events
-        for digit in "abcdefghijklmnopqrstuvwxyz .';,".characters
+        for digit in "abcdefghijklmnopqrstuvwxyz .';,-".characters
         {
             keys.append(UIKeyCommand(input: String(digit), modifierFlags: [], action:  #selector(MainGameViewController.keyPressed(_:))))
         }
