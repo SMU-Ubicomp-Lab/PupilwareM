@@ -162,13 +162,13 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 16
+        return 20
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell:iterCell = collectionView.dequeueReusableCellWithReuseIdentifier("header", forIndexPath: indexPath) as! iterCell
         cell.frame.size.width = self.settingsCollection.frame.width/4 - 10
-        cell.frame.size.height = self.settingsCollection.frame.height/4 - 10
+        cell.frame.size.height = self.settingsCollection.frame.height/5 - 10
         cell.digit = (indexPath.row%4) + 5
         cell.iter = indexPath.row/4
         
@@ -190,7 +190,7 @@ class tabViewController: UIViewController, UIPopoverPresentationControllerDelega
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSize(width: self.settingsCollection.frame.width/4 - 10,height: self.settingsCollection.frame.height/4 - 10);
+        return CGSize(width: self.settingsCollection.frame.width/4 - 10,height: self.settingsCollection.frame.height/5 - 10);
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {

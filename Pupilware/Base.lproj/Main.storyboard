@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="16E192b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="O8W-PF-cgo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="16F43c" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="O8W-PF-cgo">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -230,6 +230,20 @@
                                             <constraint firstAttribute="height" constant="30" id="vJh-CD-Eal"/>
                                         </constraints>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eBb-7e-dQp">
+                                        <rect key="frame" x="229" y="50" width="102" height="30"/>
+                                        <state key="normal" title="Calibrate glass"/>
+                                        <connections>
+                                            <action selector="calibrateGlass:" destination="N9n-Aa-AWL" eventType="touchUpInside" id="tec-68-fbg"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ddi-z0-ZtN">
+                                        <rect key="frame" x="241" y="26" width="62" height="30"/>
+                                        <state key="normal" title="Calibrate"/>
+                                        <connections>
+                                            <action selector="shortPressCalibrate:" destination="N9n-Aa-AWL" eventType="touchUpInside" id="naA-fC-Qea"/>
+                                        </connections>
+                                    </button>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="hEU-GR-NRf">
                                         <rect key="frame" x="0.0" y="113" width="560" height="257"/>
                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -275,20 +289,6 @@
                                             <outlet property="delegate" destination="N9n-Aa-AWL" id="V2a-gF-XCP"/>
                                         </connections>
                                     </collectionView>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eBb-7e-dQp">
-                                        <rect key="frame" x="229" y="50" width="102" height="30"/>
-                                        <state key="normal" title="Calibrate glass"/>
-                                        <connections>
-                                            <action selector="calibrateGlass:" destination="N9n-Aa-AWL" eventType="touchUpInside" id="tec-68-fbg"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ddi-z0-ZtN">
-                                        <rect key="frame" x="241" y="26" width="62" height="30"/>
-                                        <state key="normal" title="Calibrate"/>
-                                        <connections>
-                                            <action selector="shortPressCalibrate:" destination="N9n-Aa-AWL" eventType="touchUpInside" id="naA-fC-Qea"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
