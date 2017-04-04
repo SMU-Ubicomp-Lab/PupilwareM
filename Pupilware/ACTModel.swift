@@ -17,11 +17,14 @@ class ACTModel {
     var questionsEasy = [["act1", "1"], ["act2", "0"], ["act3", "1"], ["act4", "0"], ["act5", "1"],
                          ["act6", "0"], ["act7", "1"]]
     
-    var questionsMedium = [["act16", "0"], ["act17", "1"], ["act18", "0"], ["act19", "1"], ["act20", "0"],
-                           ["act21", "1"], ["act22", "0"]]
+    var questionsMedium = [["act22", "0"], ["act23", "1"], ["act24", "0"], ["act25", "1"], ["act32", "0"],
+                           ["act37", "1"], ["act31", "1"]]
     
-    var questionsHard = [["act31", "1"], ["act32", "0"],["act24", "0"], ["act25","1"],
-                         ["act26", "0"], ["act27", "1"], ["act28", "0"]]
+    var questionsHard = [["act46", "0"], ["act50", "0"],["act51", "1"], ["act53","1"],
+                         ["act54", "0"], ["act56", "0"], ["act59", "1"]]
+    
+
+    
     
     var readingQuestion = [["actR1", "1"], ["actR2", "1"],["actR3", "1"],["actR4", "1"]]
     

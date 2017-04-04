@@ -164,7 +164,6 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
 -(void)startSystem
 {
     if(![self.processor isStarted])
@@ -227,7 +226,7 @@
 
 - (void)initVideoManager
 {
-    
+
     /* Process from a video file, uncomment this block*/
 //    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 //    NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -271,10 +270,8 @@
             // NSLog(@">> add %lu", (unsigned long)blockSelf.currentFrameNumber);
 
         }
-
         
         [blockSelf advanceFrame];
-        
         
 //        NSLog(@"spf %f", blockSelf->mainClock.getTime());
 //        blockSelf->mainClock.reset();
@@ -284,7 +281,6 @@
     }];
 
 }
-
 
 
 -(void) updateUI:(bool) hasFace

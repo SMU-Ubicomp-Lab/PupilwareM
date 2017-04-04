@@ -347,8 +347,8 @@ namespace pw{
         faceMeta.setEyeDistancePx(eyeDist);
         faceMeta.setFrameNumber(currentFrameNumber);
         
-        
-        auto result = pwSegAlgo->process( srcBGR, faceMeta );
+        PWPupilSize result;
+//      result = pwSegAlgo->process( srcBGR, faceMeta );
         
         //-------------------------
         

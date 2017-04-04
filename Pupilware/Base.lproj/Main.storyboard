@@ -1005,12 +1005,9 @@
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Px4-0J-WyG">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <color key="backgroundColor" red="0.94179080309999996" green="0.94179080309999996" blue="0.94179080309999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <mutableString key="text">Public debate around climate change and its effects on agriculture tends to focus on the large-scale industrial farms of the North. Farmers who work on a small scale and use traditional methods have largely been ignored. However, as the world slowly comes to terms with the threat of climate change, Native farming traditions will warrant greater attention.     In the industrial model of agriculture, one or two crop varieties are grown over vast areas. Instead of trying to use local resources of soil and water optimally and sustainably, the natural environment is all but ignored and uniform growing conditions are fabricated through large-scale irrigation and the intensive use of artificial fertilizers and pesticides. For example, a handful of basically similar potato varieties, all of which require nearly identical soil conditions, temperature, rainfall, and growing seasons, account for almost all global production. When these global crops are no longer suited to the environment in which they are grown, when their resistance to disease and pests begins to fail, or the climate itself changes, the best way to rejuvenate the breeding stock will be to introduce new genetic material from the vast diversity of crop varieties still maintained by indigenous peoples.  In contrast to the industrial model, Andean potatoes and other Andean crops such as squash and beans grown by Quechuan farmers exhibit extraordinary genetic diversity, driven by the need to adapt crops to the extraordinary climatic diversity of the region. Along the two axes of latitude and altitude, the Andes encompasses fully two-thirds of all possible combinations of climate and geography found on Earth. The Andean potato has been adapted to every environment except the depth of the rainforest or the frozen peaks of the mountains. Today, facing the likelihood of major disruptions to the climatic conditions for agriculture worldwide, indigenous farmers provide a dramatic example of crop adaptation in an increasingly extreme environment. More importantly, Native farmers have also safeguarded the crop diversity essential for the future adaptations.</mutableString>
+                                <string key="text">Public debate around climate change and its effects on agriculture tends to focus on the large-scale industrial farms of the North. Farmers who work on a small scale and use traditional methods have largely been ignored. However, as the world slowly comes to terms with the threat of climate change, Native farming traditions will warrant greater attention.     In the industrial model of agriculture, one or two crop varieties are grown over vast areas. Instead of trying to use local resources of soil and water optimally and sustainably, the natural environment is all but ignored and uniform growing conditions are fabricated through large-scale irrigation and the intensive use of artificial fertilizers and pesticides. For example, a handful of basically similar potato varieties, all of which require nearly identical soil conditions, temperature, rainfall, and growing seasons, account for almost all global production. When these global crops are no longer suited to the environment in which they are grown, when their resistance to disease and pests begins to fail, or the climate itself changes, the best way to rejuvenate the breeding stock will be to introduce new genetic material from the vast diversity of crop varieties still maintained by indigenous peoples.  In contrast to the industrial model, Andean potatoes and other Andean crops such as squash and beans grown by Quechuan farmers exhibit extraordinary genetic diversity, driven by the need to adapt crops to the extraordinary climatic diversity of the region. Along the two axes of latitude and altitude, the Andes encompasses fully two-thirds of all possible combinations of climate and geography found on Earth. The Andean potato has been adapted to every environment except the depth of the rainforest or the frozen peaks of the mountains. Today, facing the likelihood of major disruptions to the climatic conditions for agriculture worldwide, indigenous farmers provide a dramatic example of crop adaptation in an increasingly extreme environment. More importantly, Native farmers have also safeguarded the crop diversity essential for the future adaptations.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                <variation key="heightClass=regular" misplaced="YES">
-                                    <rect key="frame" x="11" y="392" width="579" height="484"/>
-                                </variation>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1064,11 +1061,11 @@
                                 <exclude reference="Px4-0J-WyG"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="0aV-b1-Yab"/>
-                                <exclude reference="Qao-KU-fnS"/>
                                 <exclude reference="0zf-bQ-qsB"/>
                                 <exclude reference="lB2-72-gXV"/>
                                 <exclude reference="moV-OB-wOi"/>
+                                <exclude reference="0aV-b1-Yab"/>
+                                <exclude reference="Qao-KU-fnS"/>
                                 <exclude reference="7na-32-5j7"/>
                                 <exclude reference="Hev-UQ-Jyt"/>
                                 <exclude reference="fm3-BF-jBU"/>
@@ -1087,11 +1084,11 @@
                                 <include reference="Px4-0J-WyG"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="0aV-b1-Yab"/>
-                                <include reference="Qao-KU-fnS"/>
                                 <include reference="0zf-bQ-qsB"/>
                                 <include reference="lB2-72-gXV"/>
                                 <include reference="moV-OB-wOi"/>
+                                <include reference="0aV-b1-Yab"/>
+                                <include reference="Qao-KU-fnS"/>
                                 <include reference="RvM-nB-9hH"/>
                             </mask>
                         </variation>
@@ -1137,7 +1134,7 @@
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aVA-bf-GKG">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <mutableString key="text">Direction
+                                <string key="text">Direction
 1. Solve each problem, choose the correct answer, then tap "next" button.
 2. Once you tap "next", you are not allow to go back.
 3. Fill-in quick self-report for each question
@@ -1147,7 +1144,7 @@ Note: Unless otherwise stated, all of the following should be assumed.
 1. Illustrative figures are NOT necesssarily drawn to scale.
 2. Geometric figures lie in a plan.
 3. The word "line" indicates a straight line.
-4. The word "average" indicates arithmetic mean.</mutableString>
+4. The word "average" indicates arithmetic mean.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
