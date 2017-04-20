@@ -107,13 +107,13 @@ class targetSetupVC: UIViewController, UIPopoverPresentationControllerDelegate, 
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return 6
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell:iterCell = collectionView.dequeueReusableCellWithReuseIdentifier("header", forIndexPath: indexPath) as! iterCell
         cell.frame.size.width = self.targetCollection.frame.width - 10
-        cell.frame.size.height = self.targetCollection.frame.height/5 - 10
+        cell.frame.size.height = self.targetCollection.frame.height/6 - 10
         cell.digit = (indexPath.row%4) + 5
         cell.iter = indexPath.row
         
@@ -135,7 +135,7 @@ class targetSetupVC: UIViewController, UIPopoverPresentationControllerDelegate, 
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSize(width: self.targetCollection.frame.width - 10,height: self.targetCollection.frame.height/5 - 10);
+        return CGSize(width: self.targetCollection.frame.width - 10,height: self.targetCollection.frame.height/6 - 10);
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {

@@ -29,6 +29,7 @@
 
 @property (atomic) BOOL b_startedThread;
 @property (strong, nonatomic) dispatch_queue_t queue;
+@property (strong, nonatomic) dispatch_semaphore_t semaphore;
 @end
 
 
@@ -110,7 +111,10 @@
         
         // TODO: change the sleep function to waiting until the thread is returned.
         NSLog(@"[Info] Pupilware Start cleaning up.");
-        sleep(1);
+        
+//        dispatch_group_wait(self.group, dispatch_time(DISPATCH_TIME_NOW, DISPATCH_TIME_FOREVER));
+        
+        dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
         
         pw::PWCSVExporter::toCSV(pupilwareController->getRawPupilSignal(),
                                  [self.outputPupilFileName UTF8String]);
@@ -128,9 +132,11 @@
     self.b_startedThread = YES;
     
     self.queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    
+
+    self.semaphore = dispatch_semaphore_create(0);
+
     dispatch_async(self.queue, ^{
-        
+        @autoreleasepool {
         NSLog(@"[Info] Pupilware Thread is started.");
         
         while(self.b_startedThread){
@@ -178,9 +184,15 @@
 //            sleep(0.1);
 //            NSLog(@"spfP %f", c.stop());
             
+            
         }
+
+            
+        dispatch_semaphore_signal(self.semaphore);
         
         NSLog(@"[Info] Pupilware Thread is returned.");
+            
+        }
         
     });
 

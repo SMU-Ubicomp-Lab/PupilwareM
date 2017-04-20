@@ -79,7 +79,7 @@ class expModalVC: UIViewController, BridgeDelegate{
     func faceNotInView(){
         self.indicator.text = "Face Not In View"
         self.indicator.textColor = UIColor.redColor().colorWithAlphaComponent(0.5)
-        self.progressBar.setProgress(0, animated: true)
+//        self.progressBar.setProgress(0, animated: true)
     }
     
     
