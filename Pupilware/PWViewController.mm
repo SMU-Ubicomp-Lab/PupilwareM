@@ -35,6 +35,7 @@
 @property (strong, nonatomic) IOSFaceRecognizer *faceRecognizer;    /* recognize face from ICImage */
 @property (strong, nonatomic) DataModel *model;                      /* Connect with Swift UI       */
 @property (strong, nonatomic) PWProcessor *processor;
+@property (strong, nonatomic) dispatch_semaphore_t semaphore;
 
 @property NSUInteger currentFrameNumber;
 
@@ -202,7 +203,17 @@
     if([self.processor isStarted])
     {
         [self.processor stop];
-        videoWriter.close();
+        
+        //wait until the video finished writing.
+        long error = dispatch_semaphore_wait(self.semaphore, 2000);
+        
+        if(!error){
+            videoWriter.close();
+        }
+        else{
+            NSLog(@"ERROR!! Semaphore time out");
+            videoWriter.close();
+        }
         
     }
 }
@@ -241,15 +252,23 @@
     
     __block typeof(self) blockSelf = self;
     
+    
     [self.videoManager setProcessBlock:^(const cv::Mat& cvFrame){
         
+        blockSelf.semaphore = dispatch_semaphore_create(0);
+        
         if (![blockSelf.processor isStarted]) {
+            
+            dispatch_semaphore_signal(blockSelf.semaphore);
+            
             return cvFrame;
         }
         
         // if the vidoe is done?
         if (cvFrame.empty()) {
             [blockSelf closeSystem];
+            
+            dispatch_semaphore_signal(blockSelf.semaphore);
             return cvFrame;
         }
         
@@ -275,6 +294,9 @@
         
 //        NSLog(@"spf %f", blockSelf->mainClock.getTime());
 //        blockSelf->mainClock.reset();
+        
+        
+        dispatch_semaphore_signal(blockSelf.semaphore);
         
         return returnFrame;
      
