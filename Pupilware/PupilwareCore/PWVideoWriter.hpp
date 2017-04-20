@@ -25,6 +25,8 @@ namespace pw{
         
         void close();
         
+        bool isOpenned() const;
+        
         void writeFrame( const cv::Mat& frame );
         PWVideoWriter& operator<<( const cv::Mat& frame );
     

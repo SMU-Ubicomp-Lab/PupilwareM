@@ -70,6 +70,9 @@ namespace pw{
         return *this;
     }
     
+    bool PWVideoWriter::isOpenned() const{
+        return capture.isOpened();
+    }
     
     void PWVideoWriter::writeFrame( const cv::Mat& frame){
 

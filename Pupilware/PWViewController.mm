@@ -205,14 +205,22 @@
         [self.processor stop];
         
         //wait until the video finished writing.
-        long error = dispatch_semaphore_wait(self.semaphore, 2000);
+        if(self.semaphore == nil) return;
         
-        if(!error){
+        long error = dispatch_semaphore_wait(self.semaphore, 5000);
+        
+        if(!error)
+        {
             videoWriter.close();
         }
-        else{
+        else
+        {
             NSLog(@"ERROR!! Semaphore time out");
-            videoWriter.close();
+            
+            if (videoWriter.isOpenned()) {
+                videoWriter.close();
+            }
+            
         }
         
     }
@@ -257,6 +265,9 @@
         
         blockSelf.semaphore = dispatch_semaphore_create(0);
         
+        cv::Mat returnFrame;
+        
+        @autoreleasepool {
         if (![blockSelf.processor isStarted]) {
             
             dispatch_semaphore_signal(blockSelf.semaphore);
@@ -272,7 +283,7 @@
             return cvFrame;
         }
         
-        cv::Mat returnFrame = cvFrame;
+        returnFrame = cvFrame;
         
         blockSelf->videoWriter << cvFrame;
 
@@ -295,7 +306,7 @@
 //        NSLog(@"spf %f", blockSelf->mainClock.getTime());
 //        blockSelf->mainClock.reset();
         
-        
+        }
         dispatch_semaphore_signal(blockSelf.semaphore);
         
         return returnFrame;
