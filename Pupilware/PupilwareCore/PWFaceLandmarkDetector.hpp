@@ -12,23 +12,23 @@
 #include <stdio.h>
 #include <string>
 
-#include <dlib/image_processing.h>
-#include <dlib/image_io.h>
+//#include <dlib/image_processing.h>
+//#include <dlib/image_io.h>
 
 namespace pw{
 
-    class PWFaceLandmarkDetector{
-    
-    public:
-        PWFaceLandmarkDetector();
-        void loadLandmarkFile(const std::string& landmarkFilePath);
-        void searchLandMark( const cv::Mat& frameBGR,cv::Mat& out, cv::Rect faceLoc );
-        
-    private:
-        std::string landmarkFilePath;
-        dlib::shape_predictor sp;
-    };
-    
+//    class PWFaceLandmarkDetector{
+//    
+//    public:
+//        PWFaceLandmarkDetector();
+//        void loadLandmarkFile(const std::string& landmarkFilePath);
+//        void searchLandMark( const cv::Mat& frameBGR,cv::Mat& out, cv::Rect faceLoc );
+//        
+//    private:
+//        std::string landmarkFilePath;
+////        dlib::shape_predictor sp;
+//    };
+//    
 }
 
 #endif /* PWFaceLandmarkDetector_hpp */

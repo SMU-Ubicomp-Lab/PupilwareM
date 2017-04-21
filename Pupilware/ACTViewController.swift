@@ -46,15 +46,14 @@ class ACTViewController: UIViewController, BridgeDelegate {
         
 
         participantId = model.currentSubjectID
-        questionsModel.reset()
-        questionsModel.shuffelQuestions()
+        questionsModel.setQuestions()
         totalQuestions = questionsModel.getQuestionsNumber()
         currentQuestionIndex = questionsModel.getCurrentQuestionIndex()
         currentQuestion = questionsModel.getInitQuestion()
     
         print("current")
         print(currentQuestion)
-        currentQuizId = questionsModel.getPermutationIndex()
+        currentQuizId = questionsModel.getQuizId()
         self.updateQuestion()
     }
     
@@ -181,6 +180,8 @@ class ACTViewController: UIViewController, BridgeDelegate {
     
     @IBAction func submitTest(sender: UIButton) {
         saveData()
+        savePermutationIndex()
+        questionsModel.reset()
         let alertController = UIAlertController(title: "ACT TEST", message:
             "Test submitted, Thank you", preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
@@ -190,7 +191,6 @@ class ACTViewController: UIViewController, BridgeDelegate {
         // Tell pupilware to stop system.
         self.model.inTest = false
         self.testFinished = true;
-        
     }
     
     @IBOutlet weak var submitButton: UIButton!
@@ -217,7 +217,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
             self.updateQuestion()
         }
         self.presentSurveyModal()
-        currentQuizId = questionsModel.getPermutationIndex()
+        currentQuizId = questionsModel.getQuizId()
     }
     
     func sendAlert() {
@@ -231,6 +231,7 @@ class ACTViewController: UIViewController, BridgeDelegate {
     }
     func updateQuestion() {
         
+        saveData()
         currentQuestionIndex = questionsModel.getCurrentQuestionIndex()
         
         if(currentQuestionIndex >= 4){
@@ -347,29 +348,40 @@ class ACTViewController: UIViewController, BridgeDelegate {
     func writeToCSV(fileName: String, row: String) {
         let data = row.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         
-        NSFileManager.defaultManager().createFileAtPath(fileName, contents: nil, attributes: nil)
-        print("File not exist")
-        print("created" + fileName)
-        if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
-            fileHandle.seekToEndOfFile()
-            fileHandle.writeData(data)
-            fileHandle.closeFile()
+        if NSFileManager.defaultManager().fileExistsAtPath(fileName) {
+            //            print("writing to " + fileName)
+            if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
+                fileHandle.seekToEndOfFile()
+                fileHandle.writeData(data)
+                fileHandle.closeFile()
+            }
+            else {
+                print("Can't open fileHandle")
+            }
         }
         else {
-            print("Can't open fileHandle")
+            NSFileManager.defaultManager().createFileAtPath(fileName, contents: nil, attributes: nil)
+            print("File not exist")
+            print("created" + fileName)
+            if let fileHandle = NSFileHandle(forUpdatingAtPath: fileName) {
+                fileHandle.seekToEndOfFile()
+                fileHandle.writeData(data)
+                fileHandle.closeFile()
+            }
+            else {
+                print("Can't open fileHandle")
+            }
         }
+    }
+    
+    func savePermutationIndex() {
+        let filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.currentSubjectID + "_ACT_Answers.csv")
+        writeToCSV(filePath, row: String(questionsModel.getPermutationIndex()) + "\n")
     }
     
     func saveData() {
         let filePath = getDocumentsDirectory().stringByAppendingPathComponent(model.currentSubjectID + "_ACT_Answers.csv")
-        let stringAnswers = participantAnswers.joinWithSeparator(",")
-        let tmpPermutation = questionsModel.getPermutation()
-        let strPermutation = tmpPermutation.map
-            {
-                String($0)
-        }
-        let stringPermutation = strPermutation.joinWithSeparator(",")
-        writeToCSV(filePath, row: stringPermutation + "\n" + stringAnswers)
+        writeToCSV(filePath, row: participantAnswers[currentQuestionIndex] + "\n")
     }
     
     func presentSurveyModal(){

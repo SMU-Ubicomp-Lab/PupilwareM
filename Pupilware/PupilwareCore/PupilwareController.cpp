@@ -136,7 +136,7 @@ namespace pw{
         Mat measurement = Mat::zeros(1, 1, CV_32F);
         
         
-        PWFaceLandmarkDetector landmark;
+//        PWFaceLandmarkDetector landmark;
     };
     
     
@@ -155,7 +155,7 @@ namespace pw{
      */
     
     void PupilwareControllerImpl::setLandMarkFile(const std::string &landmarkFilename){
-        landmark.loadLandmarkFile(landmarkFilename);
+//        landmark.loadLandmarkFile(landmarkFilename);
     }
     
     bool PupilwareControllerImpl::hasStarted() const{

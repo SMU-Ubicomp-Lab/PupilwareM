@@ -80,7 +80,6 @@
 		5CC9A1231D25A25700ADB4BD /* PWCSVExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CC9A1211D25A25700ADB4BD /* PWCSVExporter.cpp */; };
 		5CCDBBA81D2046B3006C0B63 /* ObjCAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5CCDBBA71D2046B3006C0B63 /* ObjCAdapter.mm */; };
 		5CCDBBAB1D205D2B006C0B63 /* IOSFaceRecognizer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5CCDBBAA1D205D2B006C0B63 /* IOSFaceRecognizer.mm */; };
-		5CD140061D9DB7A800074E8E /* libdlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CD140041D9DB7A800074E8E /* libdlib.a */; };
 		5CD140071D9DB7A800074E8E /* shape_predictor_68_face_landmarks.dat in Resources */ = {isa = PBXBuildFile; fileRef = 5CD140051D9DB7A800074E8E /* shape_predictor_68_face_landmarks.dat */; };
 		5CD1400D1D9DBE0900074E8E /* PWFaceLandmarkDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CD1400B1D9DBE0900074E8E /* PWFaceLandmarkDetector.cpp */; };
 		5CDA211E1E5D59FE00E341E0 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDA211D1E5D59FE00E341E0 /* StringExtension.swift */; };
@@ -364,7 +363,6 @@
 			files = (
 				AEAE8A311D715E4600E3150D /* opencv2.framework in Frameworks */,
 				AEDC08D31D4FD82000D547F8 /* CocoaAsyncSocket.framework in Frameworks */,
-				5CD140061D9DB7A800074E8E /* libdlib.a in Frameworks */,
 				97E94F661C5CAFFD00D652CB /* AssetsLibrary.framework in Frameworks */,
 				97E94F641C5CAFF700D652CB /* Accelerate.framework in Frameworks */,
 				97E94F621C5CAFEB00D652CB /* Foundation.framework in Frameworks */,
@@ -1108,15 +1106,13 @@
 					DLIB_USE_BLAS,
 					DLIB_USE_LAPACK,
 				);
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Pupilware/PupilwareCore/Thirdparties/lib";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Pupilware/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/opencv2.framework",
-					"$(PROJECT_DIR)/Pupilware/PupilwareCore/Thirdparties",
-					"$(PROJECT_DIR)/Pupilware/PupilwareCore/Thirdparties/lib",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = smu.PupilwareM;
@@ -1153,15 +1149,13 @@
 					DLIB_USE_BLAS,
 					DLIB_USE_LAPACK,
 				);
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Pupilware/PupilwareCore/Thirdparties/lib";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Pupilware/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/opencv2.framework",
-					"$(PROJECT_DIR)/Pupilware/PupilwareCore/Thirdparties",
-					"$(PROJECT_DIR)/Pupilware/PupilwareCore/Thirdparties/lib",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = smu.PupilwareM;
